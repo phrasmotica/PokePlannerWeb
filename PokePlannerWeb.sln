@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokePlannerWeb", "PokePlannerWeb\PokePlannerWeb.csproj", "{F8BF6E63-0B5A-4F4A-B827-2598141D7C9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PokePlannerWeb", "PokePlannerWeb\PokePlannerWeb.csproj", "{F8BF6E63-0B5A-4F4A-B827-2598141D7C9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokePlannerWeb.Data", "PokePlannerWeb.Data\PokePlannerWeb.Data.csproj", "{EC60AA9A-69D1-409C-A10B-DF90611722F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{F8BF6E63-0B5A-4F4A-B827-2598141D7C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8BF6E63-0B5A-4F4A-B827-2598141D7C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8BF6E63-0B5A-4F4A-B827-2598141D7C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC60AA9A-69D1-409C-A10B-DF90611722F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC60AA9A-69D1-409C-A10B-DF90611722F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC60AA9A-69D1-409C-A10B-DF90611722F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC60AA9A-69D1-409C-A10B-DF90611722F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
