@@ -1,35 +1,43 @@
 import React, { Component } from 'react';
 
-export class FetchData extends Component {
-    static displayName = FetchData.name;
+export class FetchData extends Component<{}, {
+    /**
+     * The Pokemon to display.
+     */
+    pokemon: any[],
 
-    constructor(props) {
+    /**
+     * Whether the page is loading.
+     */
+    loading: boolean
+}> {
+
+    constructor(props: any) {
         super(props);
-        this.state = { forecasts: [], loading: true };
+        this.state = {
+            pokemon: [],
+            loading: true
+        }
     }
 
     componentDidMount() {
-        this.populateWeatherData();
+        this.populatePokemonData();
     }
 
-    static renderForecastsTable(forecasts) {
+    static renderPokemonTable(pokemon: any) {
         return (
-            <table className='table table-striped' aria-labelledby="tabelLabel">
+            <table className='table table-striped' aria-labelledby="tableLabel">
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
+                        <th>Id</th>
+                        <th>Name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {forecasts.map(forecast =>
-                        <tr key={forecast.date}>
-                            <td>{forecast.date}</td>
-                            <td>{forecast.temperatureC}</td>
-                            <td>{forecast.temperatureF}</td>
-                            <td>{forecast.summary}</td>
+                    {pokemon.map((p: any) =>
+                        <tr key={p.id}>
+                            <td>{p.id}</td>
+                            <td>{p.name}</td>
                         </tr>
                     )}
                 </tbody>
@@ -40,20 +48,24 @@ export class FetchData extends Component {
     render() {
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
-            : FetchData.renderForecastsTable(this.state.forecasts);
+            : FetchData.renderPokemonTable(this.state.pokemon);
 
         return (
             <div>
-                <h1 id="tabelLabel" >Weather forecast</h1>
+                <h1 id="tableLabel">Pokemon</h1>
                 <p>This component demonstrates fetching data from the server.</p>
                 {contents}
             </div>
         );
     }
 
-    async populateWeatherData() {
-        const response = await fetch('weatherforecast');
+    // fetches data from PokemonController
+    async populatePokemonData() {
+        const response = await fetch('pokemon');
         const data = await response.json();
-        this.setState({ forecasts: data, loading: false });
+        this.setState({
+            pokemon: data,
+            loading: false
+        })
     }
 }
