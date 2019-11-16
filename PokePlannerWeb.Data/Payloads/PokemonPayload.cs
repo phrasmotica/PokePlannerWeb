@@ -29,6 +29,11 @@ namespace PokePlannerWeb.Data.Payloads
         public Pokemon Pokemon => Resource;
 
         /// <summary>
+        /// The Pokemon's order in the National Dex.
+        /// </summary>
+        public int Order => Pokemon.Order;
+
+        /// <summary>
         /// The URL of the Pokemon's sprite.
         /// </summary>
         public string SpriteUrl => Pokemon.Sprites.FrontDefault;

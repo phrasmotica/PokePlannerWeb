@@ -46,5 +46,15 @@ namespace PokePlannerWeb.Controllers
             });
             return await Task.WhenAll(tasks);
         }
+
+        /// <summary>
+        /// Returns the Pokemon with the given species name.
+        /// </summary>
+        [HttpGet("{speciesName}")]
+        public async Task<PokemonPayload> GetPokemonAsync(string speciesName)
+        {
+            var pokemon = await PokeApiData.Get<Pokemon>(speciesName);
+            return await pokemon.AsPayload();
+        }
     }
 }
