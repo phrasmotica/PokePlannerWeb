@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Payloads;
 using PokePlannerWeb.Data.Util;
 using System;
 using System.Collections.Generic;
@@ -31,13 +33,16 @@ namespace PokePlannerWeb.Controllers
         /// Returns a collection of Pokemon.
         /// </summary>
         [HttpGet]
-        public async Task<IEnumerable<Pokemon>> GetAsync()
+        public async Task<IEnumerable<PokemonPayload>> GetAsync()
         {
             var rng = new Random();
             var range = Enumerable.Repeat(0, Constants.TEAM_SIZE).Select(x => rng.Next(493) + 1);
             var tasks = range.Select(async id => {
                 Logger.LogInformation($"Getting Pokemon {id}...");
-                return await PokeApiData.Get<Pokemon>(id);
+
+                // construct a payload with all the properties we need
+                var pokemon = await PokeApiData.Get<Pokemon>(id);
+                return await pokemon.AsPayload();
             });
             return await Task.WhenAll(tasks);
         }

@@ -30,6 +30,7 @@ export class FetchData extends Component<{}, {
                 <thead>
                     <tr>
                         <th>Id</th>
+                        <th>Sprite</th>
                         <th>Name</th>
                     </tr>
                 </thead>
@@ -37,7 +38,13 @@ export class FetchData extends Component<{}, {
                     {pokemon.map((p: any) =>
                         <tr key={p.id}>
                             <td>{p.id}</td>
-                            <td>{p.name}</td>
+                            <td>
+                                <img src={p.spriteUrl}
+                                    alt={p.englishName}
+                                    style={{ width: 60, height: 60 }}>
+                                </img>
+                            </td>
+                            <td>{p.englishName}</td>
                         </tr>
                     )}
                 </tbody>
