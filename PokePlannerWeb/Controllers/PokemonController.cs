@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<IEnumerable<Pokemon>> GetAsync()
         {
             var rng = new Random();
-            var range = Enumerable.Repeat(0, 6).Select(x => rng.Next(493) + 1);
+            var range = Enumerable.Repeat(0, Constants.TEAM_SIZE).Select(x => rng.Next(493) + 1);
             var tasks = range.Select(async id => {
                 Logger.LogInformation($"Getting Pokemon {id}...");
                 return await PokeApiData.Get<Pokemon>(id);
