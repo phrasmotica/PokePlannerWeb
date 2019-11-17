@@ -15,14 +15,20 @@ export class PokemonSelector extends Component<{
     /**
      * The Pokemon to display.
      */
-    pokemon: any
+    pokemon: any,
+
+    /**
+     * Whether we're loading the selected Pokemon.
+     */
+    loading: boolean
 }> {
 
     constructor(props: any) {
         super(props);
         this.state = {
             speciesName: '',
-            pokemon: {}
+            pokemon: {},
+            loading: true
         }
 
         // bind event handlers to this object
@@ -32,9 +38,15 @@ export class PokemonSelector extends Component<{
 
     componentDidMount() {
         // finished loading
+        this.setState({
+            loading: false
+        })
     }
 
     renderPokemon(pokemon: any) {
+        // display message if we're loading
+        let loadingElement = this.state.loading ? <p><em>Loading {this.state.speciesName}...</em></p> : null
+
         return (
             <tr key={pokemon.id}>
                 <td>
@@ -44,6 +56,7 @@ export class PokemonSelector extends Component<{
                         onChange={this.handleSearchChange}
                         onKeyDown={this.findPokemon}
                     />
+                    {loadingElement}
                 </td>
                 <td>{pokemon.order}</td>
                 <td>
@@ -65,7 +78,7 @@ export class PokemonSelector extends Component<{
     // updates the component state with the newly-searched species name
     handleSearchChange(e: any) {
         // get new value from input field
-        const newName = e.target.value
+        const newName = e.target.value.toLowerCase()
         console.log(`Pokemon selector ${this.props.index}: got new name '${newName}'`)
 
         // set new state
@@ -76,7 +89,12 @@ export class PokemonSelector extends Component<{
 
     // retrieves the given Pokemon species from PokemonController
     async findPokemon(e: any) {
-        if (e.key === 'Enter') {
+        // only update if we need to
+        if (e.key === 'Enter' && this.state.speciesName !== this.state.pokemon.name) {
+            this.setState({
+                loading: true
+            })
+
             // get Pokemon data
             const speciesName = this.state.speciesName
             console.log(`Pokemon selector ${this.props.index}: getting new species '${speciesName}'...`)
@@ -87,7 +105,7 @@ export class PokemonSelector extends Component<{
                 const newPokemon = await response.json()
                 console.log(`Pokemon selector ${this.props.index}: got new species '${speciesName}'`)
 
-                // set new state
+                // set new Pokemon in state
                 this.setState({
                     pokemon: newPokemon
                 })
@@ -96,6 +114,11 @@ export class PokemonSelector extends Component<{
                 // species is invalid
                 console.log(`Pokemon selector ${this.props.index}: species '${speciesName}' is invalid!`)
             }
+
+            // no longer loading
+            this.setState({
+                loading: false
+            })
         }
     }
 }
