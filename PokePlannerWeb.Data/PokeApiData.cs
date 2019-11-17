@@ -21,7 +21,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Client for PokeApi.
         /// </summary>
-        public static PokeApiClient Client { get; } = new PokeApiClient();
+        public PokeApiClient Client { get; } = new PokeApiClient();
 
         /// <summary>
         /// The selected version group.
@@ -42,7 +42,7 @@ namespace PokePlannerWeb.Data
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception handling.
         /// Returns null if an exception was thrown.
         /// </summary>
-        public static async Task<T> Get<T>(int id) where T : ResourceBase
+        public async Task<T> Get<T>(int id) where T : ResourceBase
         {
             T res;
             try
@@ -65,7 +65,7 @@ namespace PokePlannerWeb.Data
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(string)"/> with exception handling.
         /// Returns null if an exception was thrown.
         /// </summary>
-        public static async Task<T> Get<T>(string name) where T : NamedApiResource
+        public async Task<T> Get<T>(string name) where T : NamedApiResource
         {
             T res;
             try
@@ -88,7 +88,7 @@ namespace PokePlannerWeb.Data
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(UrlNavigation{T})"/> with exception handling.
         /// Returns null if an exception was thrown.
         /// </summary>
-        public static async Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase
+        public async Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase
         {
             T res;
             try
@@ -111,7 +111,7 @@ namespace PokePlannerWeb.Data
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception handling.
         /// Returns null if an exception was thrown.
         /// </summary>
-        public static async Task<IList<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
+        public async Task<IList<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
         {
             List<T> resList;
             try
@@ -134,7 +134,7 @@ namespace PokePlannerWeb.Data
         /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception handling.
         /// Returns null if an exception was thrown.
         /// </summary>
-        public static async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
+        public async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
         {
             NamedApiResourceList<T> resList;
             try
