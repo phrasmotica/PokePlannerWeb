@@ -54,6 +54,11 @@ namespace PokePlannerWeb.Controllers
         public async Task<PokemonPayload> GetPokemonAsync(string speciesName)
         {
             var pokemon = await PokeApiData.Get<Pokemon>(speciesName);
+            if (pokemon == null)
+            {
+                return null;
+            }
+
             return await pokemon.AsPayload();
         }
     }

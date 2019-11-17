@@ -66,7 +66,7 @@ export class PokemonSelector extends Component<{
     handleSearchChange(e: any) {
         // get new value from input field
         const newName = e.target.value
-        console.log(`Pokemon selector ${this.props.index} got new name '${newName}'`)
+        console.log(`Pokemon selector ${this.props.index}: got new name '${newName}'`)
 
         // set new state
         this.setState({
@@ -79,15 +79,23 @@ export class PokemonSelector extends Component<{
         if (e.key === 'Enter') {
             // get Pokemon data
             const speciesName = this.state.speciesName
-            console.log(`Pokemon selector ${this.props.index} getting new species '${speciesName}'...`)
+            console.log(`Pokemon selector ${this.props.index}: getting new species '${speciesName}'...`)
             const response = await fetch(`pokemon/${speciesName}`)
-            const newPokemon = await response.json()
-            console.log(`Pokemon selector ${this.props.index} got new species '${speciesName}'`)
 
-            // set new state
-            this.setState({
-                pokemon: newPokemon
-            })
+            if (response.status === 200) {
+                // get JSON payload
+                const newPokemon = await response.json()
+                console.log(`Pokemon selector ${this.props.index}: got new species '${speciesName}'`)
+
+                // set new state
+                this.setState({
+                    pokemon: newPokemon
+                })
+            }
+            else {
+                // species is invalid
+                console.log(`Pokemon selector ${this.props.index}: species '${speciesName}' is invalid!`)
+            }
         }
     }
 }
