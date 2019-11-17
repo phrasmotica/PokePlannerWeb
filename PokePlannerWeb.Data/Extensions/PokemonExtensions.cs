@@ -1,8 +1,6 @@
 ﻿using PokeApiNet.Models;
 using PokePlannerWeb.Data.Payloads;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Type = PokePlannerWeb.Data.Mechanics.Type;
 
@@ -13,6 +11,14 @@ namespace PokePlannerWeb.Data.Extensions
     /// </summary>
     public static class PokemonExtensions
     {
+        /// <summary>
+        /// Returns this Pokemon's latest type data.
+        /// </summary>
+        public static IEnumerable<Type> GetCurrentTypes(this Pokemon pokemon)
+        {
+            return pokemon.Types.ToTypes();
+        }
+
         /// <summary>
         /// Returns a minimal representation of this Pokemon resource.
         /// </summary>
