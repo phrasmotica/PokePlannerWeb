@@ -67,6 +67,7 @@ export class PokemonSelector extends Component<{
                     </img>
                 </td>
                 <td>{pokemon.englishName}</td>
+                <td>{pokemon.typeDescription}</td>
             </tr>
         );
     }

@@ -1,4 +1,6 @@
 ﻿using PokeApiNet.Models;
+using PokePlannerWeb.Data.Extensions;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Data.Payloads
@@ -29,12 +31,17 @@ namespace PokePlannerWeb.Data.Payloads
         public Pokemon Pokemon => Resource;
 
         /// <summary>
-        /// The Pokemon's order in the National Dex.
+        /// Gets the Pokemon's order in the National Dex.
         /// </summary>
         public int Order => Pokemon.Order;
 
         /// <summary>
-        /// The URL of the Pokemon's sprite.
+        /// Gets a description of the Pokemon's types.
+        /// </summary>
+        public string TypeDescription => string.Join(" / ", Pokemon.GetCurrentTypes().Select(t => t.ToString()));
+
+        /// <summary>
+        /// Gets the URL of the Pokemon's sprite.
         /// </summary>
         public string SpriteUrl => Pokemon.Sprites.FrontDefault;
 
