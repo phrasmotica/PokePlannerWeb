@@ -9,7 +9,7 @@ namespace PokePlannerWeb.Data
     public class PokeApiData
     {
         /// <summary>
-        /// Singleton constructor;
+        /// Singleton constructor.
         /// </summary>
         private PokeApiData() { }
 
@@ -39,115 +39,115 @@ namespace PokePlannerWeb.Data
         public IList<Move> HMMoves { get; set; }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception handling.
-        /// Returns null if an exception was thrown.
+        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception logging.
         /// </summary>
         public async Task<T> Get<T>(int id) where T : ResourceBase
         {
+            var call = $"Get<{typeof(T)}>({id})";
             T res;
             try
             {
-                Console.WriteLine($@"Get<{typeof(T)}>({id}) started...");
+                Console.WriteLine($"{call} started...");
                 res = await Client.GetResourceAsync<T>(id);
-                Console.WriteLine($@"Get<{typeof(T)}>({id}) finished.");
+                Console.WriteLine($"{call} finished.");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine($@"Get() failed to retrieve {typeof(T)} resource by id.");
-                return null;
+                Console.WriteLine($"{call} failed.");
+                throw;
             }
 
             return res;
         }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(string)"/> with exception handling.
-        /// Returns null if an exception was thrown.
+        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(string)"/> with exception logging.
         /// </summary>
         public async Task<T> Get<T>(string name) where T : NamedApiResource
         {
+            var call = $"Get<{typeof(T)}>(\"{name}\")";
             T res;
             try
             {
-                Console.WriteLine($@"Get<{typeof(T)}>({name}) started...");
+                Console.WriteLine($"{call} started...");
                 res = await Client.GetResourceAsync<T>(name);
-                Console.WriteLine($@"Get<{typeof(T)}>({name}) finished.");
+                Console.WriteLine($"{call} finished.");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine($@"Get() failed to retrieve {typeof(T)} resource by name.");
-                return null;
+                Console.WriteLine($"{call} failed.");
+                throw;
             }
 
             return res;
         }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(UrlNavigation{T})"/> with exception handling.
-        /// Returns null if an exception was thrown.
+        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(UrlNavigation{T})"/> with exception logging.
         /// </summary>
         public async Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase
         {
+            var call = $"Get<{typeof(T)}>(\"{nav.Url}\")";
             T res;
             try
             {
-                Console.WriteLine($@"Get<{typeof(T)}>({nav.Url}) started...");
+                Console.WriteLine($"{call} started...");
                 res = await Client.GetResourceAsync(nav);
-                Console.WriteLine($@"Get<{typeof(T)}>({nav.Url}) finished.");
+                Console.WriteLine($"{call} finished.");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine($@"Get() failed to retrieve {typeof(T)} resource from UrlNavigation object.");
-                return null;
+                Console.WriteLine($"{call} from UrlNavigation object failed.");
+                throw;
             }
 
             return res;
         }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception handling.
-        /// Returns null if an exception was thrown.
+        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception logging.
         /// </summary>
         public async Task<IList<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
         {
+            var call = $"Get<{typeof(T)}>(urlList)";
             List<T> resList;
             try
             {
-                Console.WriteLine($@"Get<{typeof(T)}>(urlList) started...");
+                Console.WriteLine($"{call} started...");
                 resList = await Client.GetResourceAsync(nav);
-                Console.WriteLine($@"Get<{typeof(T)}>(urlList) finished.");
+                Console.WriteLine($"{call} finished.");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine($@"Get() failed to retrieve {typeof(T)} resources from UrlNavigation objects.");
-                return null;
+                Console.WriteLine($"{call} from UrlNavigation objects failed.");
+                throw;
             }
 
             return resList;
         }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception handling.
-        /// Returns null if an exception was thrown.
+        /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception logging.
         /// </summary>
         public async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
         {
+            var call = $"GetPage<{typeof(T)}>()";
             NamedApiResourceList<T> resList;
             try
             {
-                Console.WriteLine($@"GetPage<{typeof(T)}>() started...");
+                Console.WriteLine($"{call} started...");
                 resList = await Client.GetNamedResourcePageAsync<T>();
-                Console.WriteLine($@"GetPage<{typeof(T)}>() finished.");
+                Console.WriteLine($"{call} finished.");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                Console.WriteLine($@"Get() failed to retrieve page of {typeof(T)} resources.");
-                return null;
+                Console.WriteLine($"{call} failed.");
+                throw;
             }
 
             return resList;

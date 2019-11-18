@@ -80,7 +80,7 @@ export class PokemonSelector extends Component<{
     handleSearchChange(e: any) {
         // get new value from input field
         const newName = e.target.value.toLowerCase()
-        console.log(`Pokemon selector ${this.props.index}: got new name '${newName}'`)
+        console.log(`Pokemon selector ${this.props.index}: set search term to '${newName}'`)
 
         // set new state
         this.setState({
@@ -98,22 +98,30 @@ export class PokemonSelector extends Component<{
 
             // get Pokemon data
             const speciesName = this.state.speciesName
-            console.log(`Pokemon selector ${this.props.index}: getting new species '${speciesName}'...`)
+            console.log(`Pokemon selector ${this.props.index}: getting species '${speciesName}'...`)
             const response = await fetch(`pokemon/${speciesName}`)
 
             if (response.status === 200) {
                 // get JSON payload
                 const newPokemon = await response.json()
-                console.log(`Pokemon selector ${this.props.index}: got new species '${speciesName}'`)
+                console.log(`Pokemon selector ${this.props.index}: got species '${speciesName}'`)
 
                 // set new Pokemon in state
                 this.setState({
                     pokemon: newPokemon
                 })
             }
+            else if (response.status === 500) {
+                // species endpoint couldn't be found
+                console.log(`Pokemon selector ${this.props.index}: couldn't get species '${speciesName}'!`)
+                console.log(`(if '${speciesName}' looks valid, PokeAPI might be down!)`)
+                console.log(response)
+            }
             else {
-                // species is invalid
-                console.log(`Pokemon selector ${this.props.index}: species '${speciesName}' is invalid!`)
+                // some other error
+                console.log(`Pokemon selector ${this.props.index}: tried to get species '${speciesName}' but failed with status ${response.status}!`)
+                console.log("(ya boi needs to add some logic to handle this...)")
+                console.log(response)
             }
 
             // no longer loading
