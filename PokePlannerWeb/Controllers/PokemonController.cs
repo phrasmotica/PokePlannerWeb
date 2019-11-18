@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Controllers
 {
+    /// <summary>
+    /// Controller for calling Pokemon resource endpoints.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class PokemonController : ControllerBase
