@@ -31,7 +31,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Returns the Type with the given numeric ID.
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<ResourcePayload<Type>> GetTypeById(int id)
         {
             Logger.LogInformation($"Getting type with ID {id}...");

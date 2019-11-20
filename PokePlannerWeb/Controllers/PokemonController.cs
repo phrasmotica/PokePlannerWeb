@@ -31,7 +31,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Returns the Pokemon with the given numeric ID.
         /// </summary>
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<PokemonPayload> GetPokemonById(int id)
         {
             Logger.LogInformation($"Getting Pokemon with ID {id}...");
