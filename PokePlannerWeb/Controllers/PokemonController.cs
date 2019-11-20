@@ -4,10 +4,6 @@ using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Payloads;
-using PokePlannerWeb.Data.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Controllers
@@ -33,30 +29,24 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns a collection of Pokemon.
+        /// Returns the Pokemon with the given numeric ID.
         /// </summary>
-        [HttpGet]
-        public async Task<IEnumerable<PokemonPayload>> GetAsync()
+        [HttpGet("{id}")]
+        public async Task<PokemonPayload> GetPokemonById(int id)
         {
-            var rng = new Random();
-            var range = Enumerable.Repeat(0, Constants.TEAM_SIZE).Select(x => rng.Next(493) + 1);
-            var tasks = range.Select(async id => {
-                Logger.LogInformation($"Getting Pokemon {id}...");
-
-                // construct a payload with all the properties we need
-                var pokemon = await PokeApiData.Instance.Get<Pokemon>(id);
-                return await pokemon.AsPayload();
-            });
-            return await Task.WhenAll(tasks);
+            Logger.LogInformation($"Getting Pokemon with ID \"{id}\"...");
+            var pokemon = await PokeApiData.Instance.Get<Pokemon>(id);
+            return await pokemon.AsPayload();
         }
 
         /// <summary>
         /// Returns the Pokemon with the given species name.
         /// </summary>
-        [HttpGet("{speciesName}")]
-        public async Task<PokemonPayload> GetPokemonAsync(string speciesName)
+        [HttpGet("{name}")]
+        public async Task<PokemonPayload> GetPokemonByName(string name)
         {
-            var pokemon = await PokeApiData.Instance.Get<Pokemon>(speciesName);
+            Logger.LogInformation($"Getting Pokemon \"{name}\"...");
+            var pokemon = await PokeApiData.Instance.Get<Pokemon>(name);
             return await pokemon.AsPayload();
         }
     }
