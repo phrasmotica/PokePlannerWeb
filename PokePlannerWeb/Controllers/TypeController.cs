@@ -34,7 +34,7 @@ namespace PokePlannerWeb.Controllers
         [HttpGet("{id}")]
         public async Task<ResourcePayload<Type>> GetTypeById(int id)
         {
-            Logger.LogInformation($"Getting type with ID \"{id}\"...");
+            Logger.LogInformation($"Getting type with ID {id}...");
             var type = await PokeApiData.Instance.Get<Type>(id);
             return type.AsPayload();
         }

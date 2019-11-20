@@ -34,7 +34,7 @@ namespace PokePlannerWeb.Controllers
         [HttpGet("{id}")]
         public async Task<PokemonPayload> GetPokemonById(int id)
         {
-            Logger.LogInformation($"Getting Pokemon with ID \"{id}\"...");
+            Logger.LogInformation($"Getting Pokemon with ID {id}...");
             var pokemon = await PokeApiData.Instance.Get<Pokemon>(id);
             return await pokemon.AsPayload();
         }
