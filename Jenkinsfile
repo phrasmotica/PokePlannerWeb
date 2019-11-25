@@ -13,14 +13,6 @@ node {
         stage("Build PokeApiNet") {
             powershell "dotnet build"
         }
-
-        stage("Run unit tests") {
-            powershell "dotnet test --filter \"Category = Unit\""
-        }
-
-        stage("Run integration tests") {
-            powershell "dotnet test --filter \"Category = Integration\""
-        }
     }
     
     dir("PokePlannerWeb") {
@@ -31,5 +23,9 @@ node {
         stage("Build PokePlannerWeb") {
             powershell "dotnet build"
         }
+    }
+
+    stage("Clean workspace") {
+        deleteDir()
     }
 }
