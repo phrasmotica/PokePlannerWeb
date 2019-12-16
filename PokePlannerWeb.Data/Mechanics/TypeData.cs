@@ -121,6 +121,31 @@ namespace PokePlannerWeb.Data.Mechanics
         /// <summary>
         /// Returns the efficacy dictionary for the given defensive type.
         /// </summary>
+        public double[] GetEfficacyArr(Type defType)
+        {
+            return GetEfficacyMap(defType).OrderBy(kvp => kvp.Key)
+                                          .Select(kvp => kvp.Value)
+                                          .ToArray();
+        }
+
+        /// <summary>
+        /// Returns the efficacy array for the given defensive types.
+        /// </summary>
+        public double[] GetEfficacyArr(IEnumerable<Type> types)
+        {
+            var eff = Enumerable.Repeat(1d, ConcreteTypes.Count()).ToArray();
+
+            foreach (var type in types)
+            {
+                eff = eff.Product(GetEfficacyArr(type));
+            }
+
+            return eff;
+        }
+
+        /// <summary>
+        /// Returns the efficacy dictionary for the given defensive type.
+        /// </summary>
         public IDictionary<Type, double> GetEfficacyMap(Type defType)
         {
             return Efficacy[defType];
