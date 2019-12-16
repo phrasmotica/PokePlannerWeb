@@ -27,9 +27,21 @@ namespace PokePlannerWeb.Data
             if (Instance == null)
             {
                 Instance = new PokeApiData();
+                await Instance.LoadLatestVersionGroup();
             }
 
             return Instance;
+        }
+
+        /// <summary>
+        /// Loads the latest version group and generation data.
+        /// </summary>
+        private async Task LoadLatestVersionGroup()
+        {
+            Console.WriteLine("PokeApiData: getting version group and generation data...");
+            VersionGroup = await GetLast<VersionGroup>();
+            Generation = await Get(VersionGroup.Generation);
+            Console.WriteLine("PokeApiData: got version group and generation data.");
         }
 
         /// <summary>
