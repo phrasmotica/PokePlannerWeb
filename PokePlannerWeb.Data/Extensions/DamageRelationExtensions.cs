@@ -14,7 +14,8 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static async Task<TypeRelations> GetDamageRelations(this Type type)
         {
-            var versionGroup = PokeApiData.Instance.VersionGroup;
+            var data = await PokeApiData.GetInstance();
+            var versionGroup = data.VersionGroup;
             var relations = await type.GetDamageRelations(versionGroup);
             return relations;
         }
@@ -24,8 +25,9 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         private static async Task<TypeRelations> GetPastDamageRelations(this Type type, Generation generation)
         {
+            var data = await PokeApiData.GetInstance();
             var pastDamageRelations = type.PastDamageRelations;
-            var pastGenerations = await PokeApiData.Instance.Get(pastDamageRelations.Select(t => t.Generation));
+            var pastGenerations = await data.Get(pastDamageRelations.Select(t => t.Generation));
 
             if (pastGenerations.Any())
             {
@@ -47,7 +49,8 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         private static async Task<TypeRelations> GetDamageRelations(this Type type, VersionGroup versionGroup)
         {
-            var generation = await PokeApiData.Instance.Get(versionGroup.Generation);
+            var data = await PokeApiData.GetInstance();
+            var generation = await data.Get(versionGroup.Generation);
             var pastDamageRelations = await type.GetPastDamageRelations(generation);
             return pastDamageRelations ?? type.DamageRelations;
         }

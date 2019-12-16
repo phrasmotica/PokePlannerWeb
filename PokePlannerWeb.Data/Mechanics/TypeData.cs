@@ -62,15 +62,16 @@ namespace PokePlannerWeb.Data.Mechanics
         /// <summary>
         /// Reads Type data into the efficacy map.
         /// </summary>
-        public async void LoadTypeData()
+        public async Task LoadTypeData()
         {
             Efficacy = new Dictionary<Type, Dictionary<Type, double>>();
+            var data = await PokeApiData.GetInstance();
 
             var tasks = ConcreteTypes.Select(async thisType =>
             {
                 // retrieve type object from PokeAPI
                 var typeName = thisType.ToString().ToLower();
-                var typeObj = await PokeApiData.Instance.Get<PokeApiNet.Models.Type>(typeName);
+                var typeObj = await data.Get<PokeApiNet.Models.Type>(typeName);
 
                 Console.WriteLine($@"Setting {typeName} efficacy data...");
                 Efficacy[thisType] = new Dictionary<Type, double>();

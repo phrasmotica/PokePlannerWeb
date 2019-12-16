@@ -10,14 +10,27 @@ namespace PokePlannerWeb.Data
     public class PokeApiData
     {
         /// <summary>
+        /// Gets or sets the singleton instance.
+        /// </summary>
+        private static PokeApiData Instance { get; set; }
+
+        /// <summary>
         /// Singleton constructor.
         /// </summary>
         private PokeApiData() { }
 
         /// <summary>
-        /// Singleton instance.
+        /// Gets the singleton instance.
         /// </summary>
-        public static PokeApiData Instance { get; set; } = new PokeApiData();
+        public static async Task<PokeApiData> GetInstance()
+        {
+            if (Instance == null)
+            {
+                Instance = new PokeApiData();
+            }
+
+            return Instance;
+        }
 
         /// <summary>
         /// Client for PokeApi.
