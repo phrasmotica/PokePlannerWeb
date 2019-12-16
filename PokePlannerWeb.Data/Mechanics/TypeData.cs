@@ -27,7 +27,7 @@ namespace PokePlannerWeb.Data.Mechanics
         /// Keys are defensive types, values are offensive types
         /// mapped to their effectivenesses against the key.
         /// </summary>
-        private IDictionary<Type, Dictionary<Type, double>> Efficacy;
+        private IDictionary<Type, Dictionary<Type, double>> Efficacy { get; set; }
 
         /// <summary>
         /// Private constructor.
@@ -38,6 +38,11 @@ namespace PokePlannerWeb.Data.Mechanics
         /// Singleton instance.
         /// </summary>
         public static TypeData Instance { get; } = new TypeData();
+
+        /// <summary>
+        /// Gets the number of types whose efficacies are loaded.
+        /// </summary>
+        public int EfficacyMapCount => Efficacy.Count;
 
         /// <summary>
         /// Returns an array of all types.
@@ -67,7 +72,7 @@ namespace PokePlannerWeb.Data.Mechanics
             Efficacy = new Dictionary<Type, Dictionary<Type, double>>();
             var data = await PokeApiData.GetInstance();
 
-            var tasks = ConcreteTypes.Select(async thisType =>
+            foreach (var thisType in ConcreteTypes)
             {
                 // retrieve type object from PokeAPI
                 var typeName = thisType.ToString().ToLower();
@@ -97,8 +102,7 @@ namespace PokePlannerWeb.Data.Mechanics
                 }
 
                 Console.WriteLine($@"Set {typeName} efficacy data.");
-            });
-            await Task.WhenAll(tasks);
+            }
         }
 
         /// <summary>
