@@ -127,6 +127,21 @@ namespace PokePlannerWeb.Data.Mechanics
         }
 
         /// <summary>
+        /// Returns the efficacy dictionary for the given defensive types.
+        /// </summary>
+        public IDictionary<Type, double> GetEfficacyMap(IEnumerable<Type> types)
+        {
+            var eff = ConcreteTypes.ToDictionary(1d);
+
+            foreach (var type in types)
+            {
+                eff = eff.Product(GetEfficacyMap(type));
+            }
+
+            return eff;
+        }
+
+        /// <summary>
         /// Returns the effectiveness multiplier for the
         /// given offensive type against the defensive type.
         /// </summary>
