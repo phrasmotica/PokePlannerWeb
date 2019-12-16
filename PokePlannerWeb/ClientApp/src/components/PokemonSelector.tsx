@@ -1,5 +1,6 @@
 ﻿import { Component } from "react";
 import React from "react";
+import { EfficacyList } from "./EfficacyList";
 
 export class PokemonSelector extends Component<{
     /**
@@ -65,7 +66,9 @@ export class PokemonSelector extends Component<{
                 </td>
                 <td>{pokemon.englishName}</td>
                 <td>{pokemon.typeDescription}</td>
-                <td>{pokemon.typeEfficacy}</td>
+                <td>
+                    <EfficacyList index={this.props.index} species={this.state.speciesName} />
+                </td>
             </tr>
         );
     }

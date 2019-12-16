@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\components\EfficacyList.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\PokePlannerWeb.Data\PokePlannerWeb.Data.csproj" />
   </ItemGroup>
 
@@ -37,6 +41,12 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\components\TeamBuilder.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\PokemonSelector.tsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Update="ClientApp\src\components\EfficacyList.tsx">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
