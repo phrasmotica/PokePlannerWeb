@@ -104,7 +104,7 @@ namespace PokePlannerWeb.Data.Mechanics
         /// <summary>
         /// Returns the efficacy dictionary for the given defensive type.
         /// </summary>
-        public IDictionary<Type, double> GetEfficacy(Type defType)
+        public IDictionary<Type, double> GetEfficacyMap(Type defType)
         {
             return Efficacy[defType];
         }
@@ -115,7 +115,7 @@ namespace PokePlannerWeb.Data.Mechanics
         /// </summary>
         public double GetEfficacy(Type offType, Type defType)
         {
-            return GetEfficacy(defType)[offType];
+            return GetEfficacyMap(defType)[offType];
         }
 
         /// <summary>
