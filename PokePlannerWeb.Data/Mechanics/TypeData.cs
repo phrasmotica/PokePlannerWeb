@@ -93,8 +93,7 @@ namespace PokePlannerWeb.Data.Mechanics
                 var typeObj = await data.Get<PokeApiNet.Models.Type>(typeName);
 
                 Console.WriteLine($@"Setting {typeName} efficacy data...");
-                Efficacy[thisType] = new Dictionary<Type, double>();
-                Efficacy[thisType].Initialise(ConcreteTypes, 1);
+                Efficacy[thisType] = ConcreteTypes.ToDictionary(1d);
 
                 // populate damage relations
                 // wen can do this with the 'from' relations alone

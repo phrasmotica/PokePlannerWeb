@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PokePlannerWeb.Data.Extensions
 {
@@ -22,14 +23,11 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Initialises a finite dictionary with initial key-value pairs.
+        /// Creates a finite dictionary with initial key-value pairs.
         /// </summary>
-        public static void Initialise<TKey, TValue>(this IDictionary<TKey, TValue> dict, IEnumerable<TKey> keys, TValue initValue) where TKey : Enum
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<TKey> keys, TValue initialValue) where TKey : Enum
         {
-            foreach (var key in keys)
-            {
-                dict[key] = initValue;
-            }
+            return keys.ToDictionary(k => k, _ => initialValue);
         }
     }
 }
