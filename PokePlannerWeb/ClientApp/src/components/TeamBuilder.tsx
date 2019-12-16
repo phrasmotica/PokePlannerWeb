@@ -32,6 +32,7 @@ export class TeamBuilder extends Component<{}, {
                         <th>Sprite</th>
                         <th>Name</th>
                         <th>Type</th>
+                        <th>Efficacy</th>
                     </tr>
                 </thead>
                 <tbody>

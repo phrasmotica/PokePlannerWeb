@@ -48,7 +48,7 @@ namespace PokePlannerWeb.Data.Payloads
         /// <summary>
         /// Gets the type efficacy of the Pokemon.
         /// </summary>
-        public double[] TypeEfficacy { get; set; }
+        public string TypeEfficacy { get; set; }
 
         /// <summary>
         /// Assigns any properties that require an asynchronous operation.
@@ -56,7 +56,8 @@ namespace PokePlannerWeb.Data.Payloads
         public override async Task FetchAsync()
         {
             EnglishName = await Pokemon.GetEnglishName();
-            TypeEfficacy = await Pokemon.GetTypeEfficacyArr();
+            var effArr = await Pokemon.GetTypeEfficacyArr();
+            TypeEfficacy = string.Join(", ", effArr);
         }
     }
 }
