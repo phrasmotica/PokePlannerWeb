@@ -2,6 +2,7 @@
 using PokeApiNet.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Data
@@ -135,12 +136,20 @@ namespace PokePlannerWeb.Data
         /// </summary>
         public async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
         {
-            var call = $"GetPage<{typeof(T)}>()";
+            return await GetPage<T>(20, 0);
+        }
+
+        /// <summary>
+        /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception logging.
+        /// </summary>
+        public async Task<NamedApiResourceList<T>> GetPage<T>(int limit, int offset) where T : NamedApiResource
+        {
+            var call = $"GetPage<{typeof(T)}>(limit={limit}, offset={offset})";
             NamedApiResourceList<T> resList;
             try
             {
                 Console.WriteLine($"{call} started...");
-                resList = await Client.GetNamedResourcePageAsync<T>();
+                resList = await Client.GetNamedResourcePageAsync<T>(limit, offset);
                 Console.WriteLine($"{call} finished.");
             }
             catch (Exception e)
@@ -151,6 +160,38 @@ namespace PokePlannerWeb.Data
             }
 
             return resList;
+        }
+
+        /// <summary>
+        /// Returns the last named API resource of the given type.
+        /// </summary>
+        public async Task<T> GetLast<T>() where T : NamedApiResource
+        {
+            var call = $"GetLast<{typeof(T)}>()";
+            T res;
+            try
+            {
+                Console.WriteLine($"{call} started...");
+
+                // get a page to find the resource count
+                var page = await GetPage<T>();
+                if (!string.IsNullOrEmpty(page.Next))
+                {
+                    // get the last page if that wasn't it
+                    page = await GetPage<T>(page.Count - 1, 1);
+                }
+
+                res = await Get(page.Results.Last());
+                Console.WriteLine($"{call} finished.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine($"{call} failed.");
+                throw;
+            }
+
+            return res;
         }
     }
 }
