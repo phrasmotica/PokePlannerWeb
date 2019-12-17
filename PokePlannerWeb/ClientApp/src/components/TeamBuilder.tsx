@@ -43,6 +43,14 @@ export class TeamBuilder extends Component<{}, {
         fetch("efficacy")
     }
 
+    renderVersionGroupMenu() {
+        return (
+            <select>
+                <option selected>{this.state.versionGroup}</option>
+            </select>
+        )
+    }
+    
     renderPokemonTable() {
         return (
             <table className='table table-striped' aria-labelledby="tableLabel">
@@ -73,11 +81,13 @@ export class TeamBuilder extends Component<{}, {
             ? <p><em>Loading...</em></p>
             : this.renderPokemonTable();
 
+        let versionGroupMenu = this.renderVersionGroupMenu()
+
         return (
             <div>
                 <h1 id="tableLabel">Pokemon</h1>
                 <p>Build your Pokemon team!</p>
-                <p>Game version: {this.state.versionGroup}</p>
+                <p>Game version: {versionGroupMenu}</p>
                 {contents}
             </div>
         );
