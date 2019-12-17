@@ -40,7 +40,7 @@ export class TeamBuilder extends Component<{}, {
 
     // loads type efficacy data
     async loadTypeEfficacy() {
-        fetch("efficacy")
+        await fetch("efficacy", { method: "POST" })
     }
 
     renderVersionGroupMenu() {

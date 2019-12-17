@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Controllers
         /// Loads the type efficacy data from PokeAPI.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         public async Task LoadTypeEfficacy()
         {
             await TypeData.Instance.LoadTypeData();
