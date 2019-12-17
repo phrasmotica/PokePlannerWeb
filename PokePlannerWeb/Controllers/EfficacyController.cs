@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Mechanics;
 using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Controllers
@@ -25,6 +26,16 @@ namespace PokePlannerWeb.Controllers
         public EfficacyController(ILogger<EfficacyController> logger)
         {
             Logger = logger;
+        }
+
+        /// <summary>
+        /// Loads the type efficacy data from PokeAPI.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task LoadTypeEfficacy()
+        {
+            await TypeData.Instance.LoadTypeData();
         }
 
         /// <summary>

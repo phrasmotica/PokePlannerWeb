@@ -20,6 +20,9 @@ export class TeamBuilder extends Component<{}, {
         this.setState({
             loading: false
         })
+
+        // load type efficacy data
+        fetch("efficacy")
     }
 
     renderPokemonTable() {

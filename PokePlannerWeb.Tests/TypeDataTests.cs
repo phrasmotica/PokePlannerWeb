@@ -17,10 +17,10 @@ namespace PokePlannerWeb.Tests
         public async Task TypeEfficacyLoadingTest()
         {
             // load type data
-            var typeData = await TypeData.GetInstance();
+            await TypeData.Instance.LoadTypeData();
 
             // verify it's all loaded
-            Assert.AreEqual(18, typeData.EfficacyMapCount);
+            Assert.AreEqual(18, TypeData.Instance.EfficacyMapCount);
         }
     }
 }

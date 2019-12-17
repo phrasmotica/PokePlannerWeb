@@ -74,8 +74,7 @@ namespace PokePlannerWeb.Data.Extensions
         public static async Task<double[]> GetTypeEfficacyArr(this Pokemon pokemon)
         {
             var types = await pokemon.GetTypes();
-            var typeData = await TypeData.GetInstance();
-            return typeData.GetEfficacyArr(types);
+            return TypeData.Instance.GetEfficacyArr(types);
         }
 
         /// <summary>

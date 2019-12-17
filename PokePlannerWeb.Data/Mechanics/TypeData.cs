@@ -30,28 +30,14 @@ namespace PokePlannerWeb.Data.Mechanics
         private IDictionary<Type, Dictionary<Type, double>> Efficacy { get; set; }
 
         /// <summary>
-        /// Gets or sets the singleton instance.
+        /// Gets the singleton instance.
         /// </summary>
-        private static TypeData Instance { get; set; }
+        public static TypeData Instance { get; } = new TypeData();
 
         /// <summary>
         /// Private constructor.
         /// </summary>
         private TypeData() { }
-
-        /// <summary>
-        /// Gets the singleton instance.
-        /// </summary>
-        public static async Task<TypeData> GetInstance()
-        {
-            if (Instance == null)
-            {
-                Instance = new TypeData();
-                await Instance.LoadTypeData();
-            }
-
-            return Instance;
-        }
 
         /// <summary>
         /// Gets the number of types whose efficacies are loaded.
