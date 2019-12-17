@@ -52,9 +52,19 @@ export class TeamBuilder extends Component<{}, {
     }
 
     renderVersionGroupMenu() {
+        if (this.state.loading) {
+            return (
+                <select disabled>
+                    <option>Loading...</option>
+                </select>
+            )
+        }
+
         return (
             <select>
-                <option selected>{this.state.versionGroup}</option>
+                {this.state.versionGroups.map(vg => {
+                    return <option>{vg}</option>
+                })}
             </select>
         )
     }
