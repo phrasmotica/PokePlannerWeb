@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PokeApiNet;
 using PokeApiNet.Models;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data
 {
@@ -20,49 +21,48 @@ namespace PokePlannerWeb.Data
         private PokeApiData() { }
 
         /// <summary>
-        /// Loads the latest version group and generation data.
+        /// Client for PokeApi.
+        /// </summary>
+        public PokeApiClient Client { get; } = new PokeApiClient();
+
+        #region Version group/generation
+
+        /// <summary>
+        /// Loads all version group data.
         /// </summary>
         public async Task LoadVersionGroups()
         {
             Console.WriteLine("PokeApiData: getting version group data...");
             VersionGroups = (await GetMany<VersionGroup>()).ToArray();
-            VersionGroup = VersionGroups.Last();
-            Generation = await Get(VersionGroup.Generation);
-            Console.WriteLine("PokeApiData: got version group data.");
+            Console.WriteLine($"PokeApiData: got data for {VersionGroups.Length} version groups.");
         }
 
         /// <summary>
-        /// Client for PokeApi.
+        /// Gets or sets the index of the selected version group.
         /// </summary>
-        public PokeApiClient Client { get; } = new PokeApiClient();
+        public int VersionGroupIndex { get; set; }
 
         /// <summary>
-        /// The selected version group.
+        /// Gets the selected version group.
         /// </summary>
-        public VersionGroup VersionGroup { get; set; }
+        public VersionGroup VersionGroup => VersionGroups[VersionGroupIndex];
 
         /// <summary>
-        /// The version groups.
+        /// Gets or sets the version groups.
         /// </summary>
         public VersionGroup[] VersionGroups { get; set; }
 
         /// <summary>
-        /// The selected version group's generation.
+        /// Returns the selected version group's generation.
         /// </summary>
-        public Generation Generation { get; set; }
+        public async Task<Generation> GetGeneration() => await Get(VersionGroup.Generation);
+
+        #endregion
 
         /// <summary>
         /// The selected version group's HM moves.
         /// </summary>
         public IList<Move> HMMoves { get; set; }
-
-        /// <summary>
-        /// Sets the version group at the given index.
-        /// </summary>
-        public void SetVersionGroup(int index)
-        {
-            VersionGroup = VersionGroups[index];
-        }
 
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception logging.

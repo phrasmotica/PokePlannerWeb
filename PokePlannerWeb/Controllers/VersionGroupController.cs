@@ -55,21 +55,21 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the name of the selected version group.
+        /// Returns the index of the selected version group.
         /// </summary>
         [HttpGet("selected")]
-        public async Task<string> GetSelectedVersionGroup()
+        public int GetSelectedVersionGroup()
         {
-            return await PokeApiData.Instance.VersionGroup.GetName();
+            return PokeApiData.Instance.VersionGroupIndex;
         }
 
         /// <summary>
-        /// Returns the name of the selected version group.
+        /// Sets the index of the selected version group.
         /// </summary>
         [HttpPost("selected")]
-        public void SetSelectedVersionGroup([FromBody] SetSelectedVersionGroupModel versionGroup)
+        public void SetSelectedVersionGroup([FromBody] SetSelectedVersionGroupModel requestBody)
         {
-            PokeApiData.Instance.SetVersionGroup(versionGroup.Index);
+            PokeApiData.Instance.VersionGroupIndex = requestBody.Index;
         }
 
         /// <summary>
