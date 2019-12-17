@@ -3,6 +3,11 @@ import { PokemonSelector } from './PokemonSelector';
 
 export class TeamBuilder extends Component<{}, {
     /**
+     * List of version groups.
+     */
+    versionGroups: string[],
+
+    /**
      * The selected version group.
      */
     versionGroup: string,
@@ -16,26 +21,29 @@ export class TeamBuilder extends Component<{}, {
     constructor(props: any) {
         super(props);
         this.state = {
+            versionGroups: [],
             versionGroup: "",
             loading: true
         }
     }
 
     componentDidMount() {
-        // finished loading
-        this.setState({
-            loading: false
-        })
-
-        this.getVersionGroup()
+        this.loadVersionGroups()
         this.loadTypeEfficacy()
     }
 
-    // loads the latest version group and then displays it
-    async getVersionGroup() {
-        await fetch("versionGroup")
-        let versionGroup = await (await fetch("versionGroup/selected")).text()
-        this.setState({ versionGroup: versionGroup })
+    // load all version groups
+    async loadVersionGroups() {
+        fetch("versionGroup", { method: "POST" })
+            .then(() => fetch("versionGroup/all"))
+            .then((response) => response.json())
+            .then((groups) => {
+                this.setState({
+                    versionGroups: groups,
+                    loading: false
+                })
+                }
+            )
     }
 
     // loads type efficacy data

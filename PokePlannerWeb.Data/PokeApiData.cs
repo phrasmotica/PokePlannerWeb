@@ -22,12 +22,13 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Loads the latest version group and generation data.
         /// </summary>
-        public async Task LoadLatestVersionGroup()
+        public async Task LoadVersionGroups()
         {
-            Console.WriteLine("PokeApiData: getting version group and generation data...");
-            VersionGroup = await GetLast<VersionGroup>();
+            Console.WriteLine("PokeApiData: getting version group data...");
+            VersionGroups = (await GetMany<VersionGroup>()).ToArray();
+            VersionGroup = VersionGroups.Last();
             Generation = await Get(VersionGroup.Generation);
-            Console.WriteLine("PokeApiData: got version group and generation data.");
+            Console.WriteLine("PokeApiData: got version group data.");
         }
 
         /// <summary>
@@ -39,6 +40,11 @@ namespace PokePlannerWeb.Data
         /// The selected version group.
         /// </summary>
         public VersionGroup VersionGroup { get; set; }
+
+        /// <summary>
+        /// The version groups.
+        /// </summary>
+        public VersionGroup[] VersionGroups { get; set; }
 
         /// <summary>
         /// The selected version group's generation.
@@ -122,7 +128,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception logging.
         /// </summary>
-        public async Task<IList<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
+        public async Task<IEnumerable<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
         {
             var call = $"Get<{typeof(T)}>(urlList)";
             List<T> resList;
@@ -171,6 +177,32 @@ namespace PokePlannerWeb.Data
             }
 
             return resList;
+        }
+
+        /// <summary>
+        /// Returns many named API resources of the given type.
+        /// </summary>
+        public async Task<IEnumerable<T>> GetMany<T>(int limit = 20, int offset = 0) where T : NamedApiResource
+        {
+            var call = $"GetMany<{typeof(T)}>(limit={limit}, offset={offset})";
+            IEnumerable<T> res;
+            try
+            {
+                Console.WriteLine($"{call} started...");
+
+                var page = await GetPage<T>(limit, offset);
+                res = await Get(page.Results);
+
+                Console.WriteLine($"{call} finished.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine($"{call} failed.");
+                throw;
+            }
+
+            return res;
         }
 
         /// <summary>

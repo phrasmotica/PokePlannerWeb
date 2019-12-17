@@ -31,10 +31,10 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Loads the version group data from PokeAPI.
         /// </summary>
-        [HttpGet]
+        [HttpPost]
         public async Task LoadVersionGroups()
         {
-            await PokeApiData.Instance.LoadLatestVersionGroup();
+            await PokeApiData.Instance.LoadVersionGroups();
         }
 
         /// <summary>
