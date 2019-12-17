@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static async Task<string> GetName(this VersionGroup vg)
         {
-            var versions = await PokeApiData.Instance.Get(vg.Versions);
+            var versions = await PokeAPI.Get(vg.Versions);
             return string.Join("/", versions.Select(v => v.GetEnglishName()));
         }
     }

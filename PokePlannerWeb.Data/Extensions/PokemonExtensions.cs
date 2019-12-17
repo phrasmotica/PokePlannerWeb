@@ -26,7 +26,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon)
         {
-            var versionGroup = PokeApiData.Instance.VersionGroup;
+            var versionGroup = VersionGroupData.Instance.VersionGroup;
             var types = await pokemon.GetTypes(versionGroup);
             return types;
         }
@@ -36,7 +36,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         private static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon, VersionGroup versionGroup)
         {
-            var generation = await PokeApiData.Instance.Get(versionGroup.Generation);
+            var generation = await PokeAPI.Get(versionGroup.Generation);
             var pastTypes = await pokemon.GetPastTypes(generation);
             return pastTypes.Any() ? pastTypes : pokemon.GetCurrentTypes();
         }
@@ -47,7 +47,7 @@ namespace PokePlannerWeb.Data.Extensions
         private static async Task<IEnumerable<Type>> GetPastTypes(this Pokemon pokemon, Generation generation)
         {
             var pastTypes = pokemon.PastTypes;
-            var pastTypeGenerations = await PokeApiData.Instance.Get(pastTypes.Select(t => t.Generation));
+            var pastTypeGenerations = await PokeAPI.Get(pastTypes.Select(t => t.Generation));
 
             if (pastTypeGenerations.Any())
             {

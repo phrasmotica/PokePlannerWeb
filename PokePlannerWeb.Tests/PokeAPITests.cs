@@ -2,14 +2,15 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Payloads;
 
 namespace PokePlannerWeb.Tests
 {
     /// <summary>
-    /// Tests for the <see cref="PokeApiData"/> singleton.
+    /// Tests for the <see cref="PokeAPI"/> singleton.
     /// </summary>
-    public class PokeApiDataTests
+    public class PokeAPITests
     {
         /// <summary>
         /// Verifies that version group loading works correctly.
@@ -19,10 +20,10 @@ namespace PokePlannerWeb.Tests
         public async Task VersionGroupsLoadingTest()
         {
             // load version groups
-            await PokeApiData.Instance.LoadVersionGroups();
+            await VersionGroupData.Instance.LoadVersionGroups();
 
             // verify it's all loaded
-            Assert.AreEqual(18, PokeApiData.Instance.VersionGroups.Length);
+            Assert.AreEqual(18, VersionGroupData.Instance.VersionGroups.Length);
         }
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace PokePlannerWeb.Tests
         public async Task PokemonPayloadCreationTest()
         {
             // get Pokemon resource
-            var pokemon = await PokeApiData.Instance.Get<Pokemon>(1);
+            var pokemon = await PokeAPI.Get<Pokemon>(1);
 
             // create payload
             var payload = await PokemonPayload.Create(pokemon);

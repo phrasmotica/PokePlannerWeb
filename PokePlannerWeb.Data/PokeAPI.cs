@@ -4,72 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using PokeApiNet;
 using PokeApiNet.Models;
-using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data
 {
-    public class PokeApiData
+    /// <summary>
+    /// Class for fetching PokeAPI resources through static functions.
+    /// </summary>
+    public class PokeAPI
     {
         #region Singleton members
 
         /// <summary>
         /// Gets or sets the singleton instance.
         /// </summary>
-        public static PokeApiData Instance { get; } = new PokeApiData();
+        public static PokeAPI Instance { get; } = new PokeAPI();
 
         /// <summary>
         /// Singleton constructor.
         /// </summary>
-        private PokeApiData() { }
+        private PokeAPI() { }
 
         #endregion
 
-        /// <summary>
-        /// Client for PokeApi.
-        /// </summary>
-        public PokeApiClient Client { get; } = new PokeApiClient();
-
-        #region Version groups/generations
+        #region PokeAPI client
 
         /// <summary>
-        /// Loads all version group data.
+        /// Client for PokeAPI.
         /// </summary>
-        public async Task LoadVersionGroups()
-        {
-            Console.WriteLine("PokeApiData: getting version group data...");
-            VersionGroups = (await GetMany<VersionGroup>()).ToArray();
-            VersionGroupIndex = VersionGroups.Length - 1;
-            Console.WriteLine($"PokeApiData: got data for {VersionGroups.Length} version groups.");
-        }
-
-        /// <summary>
-        /// Gets or sets the version groups.
-        /// </summary>
-        public VersionGroup[] VersionGroups { get; set; }
-
-        /// <summary>
-        /// Gets or sets the index of the selected version group.
-        /// </summary>
-        public int VersionGroupIndex { get; set; }
-
-        /// <summary>
-        /// Gets the selected version group.
-        /// </summary>
-        public VersionGroup VersionGroup => VersionGroups[VersionGroupIndex];
-
-        /// <summary>
-        /// Returns the selected version group's generation.
-        /// </summary>
-        public async Task<Generation> GetGeneration() => await Get(VersionGroup.Generation);
-
-        #endregion
-
-        #region HM moves
-
-        /// <summary>
-        /// Returns the selected version group's HM moves.
-        /// </summary>
-        public async Task<IEnumerable<Move>> GetHMMoves() => await VersionGroup.GetHMMoves();
+        private static PokeApiClient Client { get; } = new PokeApiClient();
 
         #endregion
 
@@ -78,7 +40,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception logging.
         /// </summary>
-        public async Task<T> Get<T>(int id) where T : ResourceBase
+        public static async Task<T> Get<T>(int id) where T : ResourceBase
         {
             var call = $"Get<{typeof(T)}>({id})";
             T res;
@@ -101,7 +63,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(string)"/> with exception logging.
         /// </summary>
-        public async Task<T> Get<T>(string name) where T : NamedApiResource
+        public static async Task<T> Get<T>(string name) where T : NamedApiResource
         {
             var call = $"Get<{typeof(T)}>(\"{name}\")";
             T res;
@@ -124,7 +86,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(UrlNavigation{T})"/> with exception logging.
         /// </summary>
-        public async Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase
+        public static async Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase
         {
             var call = $"Get<{typeof(T)}>(\"{nav.Url}\")";
             T res;
@@ -147,7 +109,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception logging.
         /// </summary>
-        public async Task<IEnumerable<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
+        public static async Task<IEnumerable<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
         {
             var call = $"Get<{typeof(T)}>(urlList)";
             List<T> resList;
@@ -170,7 +132,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception logging.
         /// </summary>
-        public async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
+        public static async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
         {
             return await GetPage<T>(20, 0);
         }
@@ -178,7 +140,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception logging.
         /// </summary>
-        public async Task<NamedApiResourceList<T>> GetPage<T>(int limit, int offset) where T : NamedApiResource
+        public static async Task<NamedApiResourceList<T>> GetPage<T>(int limit, int offset) where T : NamedApiResource
         {
             var call = $"GetPage<{typeof(T)}>(limit={limit}, offset={offset})";
             NamedApiResourceList<T> resList;
@@ -201,7 +163,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Returns many named API resources of the given type.
         /// </summary>
-        public async Task<IEnumerable<T>> GetMany<T>(int limit = 20, int offset = 0) where T : NamedApiResource
+        public static async Task<IEnumerable<T>> GetMany<T>(int limit = 20, int offset = 0) where T : NamedApiResource
         {
             var call = $"GetMany<{typeof(T)}>(limit={limit}, offset={offset})";
             IEnumerable<T> res;
@@ -227,7 +189,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Returns the last named API resource of the given type.
         /// </summary>
-        public async Task<T> GetLast<T>() where T : NamedApiResource
+        public static async Task<T> GetLast<T>() where T : NamedApiResource
         {
             var call = $"GetLast<{typeof(T)}>()";
             T res;

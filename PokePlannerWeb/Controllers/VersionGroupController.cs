@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Models;
 
 namespace PokePlannerWeb.Controllers
@@ -35,7 +36,7 @@ namespace PokePlannerWeb.Controllers
         [HttpPost]
         public async Task LoadVersionGroups()
         {
-            await PokeApiData.Instance.LoadVersionGroups();
+            await VersionGroupData.Instance.LoadVersionGroups();
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<List<string>> GetVersionGroups()
         {
             var versionGroups = new List<string>();
-            foreach (var vg in PokeApiData.Instance.VersionGroups)
+            foreach (var vg in VersionGroupData.Instance.VersionGroups)
             {
                 var name = await vg.GetName();
                 versionGroups.Add(name);
@@ -60,7 +61,7 @@ namespace PokePlannerWeb.Controllers
         [HttpGet("selected")]
         public int GetSelectedVersionGroup()
         {
-            return PokeApiData.Instance.VersionGroupIndex;
+            return VersionGroupData.Instance.VersionGroupIndex;
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace PokePlannerWeb.Controllers
         [HttpPost("selected")]
         public void SetSelectedVersionGroup([FromBody] SetSelectedVersionGroupModel requestBody)
         {
-            PokeApiData.Instance.VersionGroupIndex = requestBody.Index;
+            VersionGroupData.Instance.VersionGroupIndex = requestBody.Index;
         }
 
         /// <summary>
@@ -79,7 +80,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<VersionGroup> GetVersionGroupByName(string name)
         {
             Logger.LogInformation($"Getting version group \"{name}\"...");
-            return await PokeApiData.Instance.Get<VersionGroup>(name);
+            return await PokeAPI.Get<VersionGroup>(name);
         }
     }
 }

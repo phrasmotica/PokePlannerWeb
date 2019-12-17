@@ -45,7 +45,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<double[]> GetEfficacyByName(string name)
         {
             Logger.LogInformation($"Getting efficacy for Pokemon \"{name}\"...");
-            var pokemon = await PokeApiData.Instance.Get<Pokemon>(name);
+            var pokemon = await PokeAPI.Get<Pokemon>(name);
             return await pokemon.GetTypeEfficacyArr();
         }
     }

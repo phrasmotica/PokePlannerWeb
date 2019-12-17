@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using PokeApiNet.Models;
+using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Data.Extensions
 {
@@ -12,9 +13,9 @@ namespace PokePlannerWeb.Data.Extensions
         /// <summary>
         /// Returns this type's damage relations in the current version group.
         /// </summary>
-        public static async Task<TypeRelations> GetDamageRelations(this Type type)
+        public static async Task<TypeRelations> GetDamageRelations(this PokeApiNet.Models.Type type)
         {
-            var versionGroup = PokeApiData.Instance.VersionGroup;
+            var versionGroup = VersionGroupData.Instance.VersionGroup;
             var relations = await type.GetDamageRelations(versionGroup);
             return relations;
         }
@@ -22,10 +23,10 @@ namespace PokePlannerWeb.Data.Extensions
         /// <summary>
         /// Returns this type's damage relations data for the given generation, if any.
         /// </summary>
-        private static async Task<TypeRelations> GetPastDamageRelations(this Type type, Generation generation)
+        private static async Task<TypeRelations> GetPastDamageRelations(this PokeApiNet.Models.Type type, Generation generation)
         {
             var pastDamageRelations = type.PastDamageRelations;
-            var pastGenerations = await PokeApiData.Instance.Get(pastDamageRelations.Select(t => t.Generation));
+            var pastGenerations = await PokeAPI.Get(pastDamageRelations.Select(t => t.Generation));
 
             if (pastGenerations.Any())
             {
@@ -45,9 +46,9 @@ namespace PokePlannerWeb.Data.Extensions
         /// <summary>
         /// Returns this type's damage relations in the given version group.
         /// </summary>
-        private static async Task<TypeRelations> GetDamageRelations(this Type type, VersionGroup versionGroup)
+        private static async Task<TypeRelations> GetDamageRelations(this PokeApiNet.Models.Type type, VersionGroup versionGroup)
         {
-            var generation = await PokeApiData.Instance.Get(versionGroup.Generation);
+            var generation = await PokeAPI.Get(versionGroup.Generation);
             var pastDamageRelations = await type.GetPastDamageRelations(generation);
             return pastDamageRelations ?? type.DamageRelations;
         }
