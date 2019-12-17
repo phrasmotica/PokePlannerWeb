@@ -1,9 +1,9 @@
-﻿using PokeApiNet.Models;
-using PokePlannerWeb.Data.Mechanics;
-using PokePlannerWeb.Data.Payloads;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PokeApiNet.Models;
+using PokePlannerWeb.Data.Mechanics;
+using PokePlannerWeb.Data.Payloads;
 using Type = PokePlannerWeb.Data.Mechanics.Type;
 
 namespace PokePlannerWeb.Data.Extensions

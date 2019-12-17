@@ -23,7 +23,6 @@ export class PokemonSelector extends Component<{
      */
     loading: boolean
 }> {
-
     constructor(props: any) {
         super(props);
         this.state = {

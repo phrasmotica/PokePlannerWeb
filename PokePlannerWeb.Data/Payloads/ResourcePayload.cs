@@ -1,6 +1,6 @@
-﻿using PokeApiNet.Models;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using PokeApiNet.Models;
 
 namespace PokePlannerWeb.Data.Payloads
 {

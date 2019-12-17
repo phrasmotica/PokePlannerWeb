@@ -17,7 +17,6 @@ export class TeamBuilder extends Component<{}, {
      */
     loading: boolean
 }> {
-
     constructor(props: any) {
         super(props);
         this.state = {
@@ -44,7 +43,7 @@ export class TeamBuilder extends Component<{}, {
                     versionGroups: groups,
                     loading: false
                 })
-                }
+            }
             )
     }
 
@@ -75,7 +74,7 @@ export class TeamBuilder extends Component<{}, {
             </select>
         )
     }
-    
+
     renderPokemonTable() {
         return (
             <table className='table table-striped' aria-labelledby="tableLabel">
@@ -90,12 +89,12 @@ export class TeamBuilder extends Component<{}, {
                     </tr>
                 </thead>
                 <tbody>
-                    <PokemonSelector index={0}/>
-                    <PokemonSelector index={1}/>
-                    <PokemonSelector index={2}/>
-                    <PokemonSelector index={3}/>
-                    <PokemonSelector index={4}/>
-                    <PokemonSelector index={5}/>
+                    <PokemonSelector index={0} />
+                    <PokemonSelector index={1} />
+                    <PokemonSelector index={2} />
+                    <PokemonSelector index={3} />
+                    <PokemonSelector index={4} />
+                    <PokemonSelector index={5} />
                 </tbody>
             </table>
         );

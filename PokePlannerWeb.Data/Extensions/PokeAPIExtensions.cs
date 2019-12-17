@@ -1,6 +1,6 @@
-﻿using PokeApiNet.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using PokeApiNet.Models;
 using Type = PokePlannerWeb.Data.Mechanics.Type;
 
 namespace PokePlannerWeb.Data.Extensions

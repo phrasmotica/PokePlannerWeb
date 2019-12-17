@@ -22,7 +22,6 @@ export class EfficacyList extends Component<{
      */
     loading: boolean
 }> {
-
     constructor(props: any) {
         super(props);
         this.state = {

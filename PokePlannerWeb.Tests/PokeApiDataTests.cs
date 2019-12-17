@@ -1,8 +1,8 @@
+using System.Threading.Tasks;
 using NUnit.Framework;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Payloads;
-using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Tests
 {

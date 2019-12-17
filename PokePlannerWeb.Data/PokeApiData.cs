@@ -1,9 +1,9 @@
-﻿using PokeApiNet;
-using PokeApiNet.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PokeApiNet;
+using PokeApiNet.Models;
 
 namespace PokePlannerWeb.Data
 {
