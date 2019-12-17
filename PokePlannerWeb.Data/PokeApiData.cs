@@ -12,7 +12,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Gets or sets the singleton instance.
         /// </summary>
-        private static PokeApiData Instance { get; set; }
+        public static PokeApiData Instance { get; } = new PokeApiData();
 
         /// <summary>
         /// Singleton constructor.
@@ -20,23 +20,9 @@ namespace PokePlannerWeb.Data
         private PokeApiData() { }
 
         /// <summary>
-        /// Gets the singleton instance.
-        /// </summary>
-        public static async Task<PokeApiData> GetInstance()
-        {
-            if (Instance == null)
-            {
-                Instance = new PokeApiData();
-                await Instance.LoadLatestVersionGroup();
-            }
-
-            return Instance;
-        }
-
-        /// <summary>
         /// Loads the latest version group and generation data.
         /// </summary>
-        private async Task LoadLatestVersionGroup()
+        public async Task LoadLatestVersionGroup()
         {
             Console.WriteLine("PokeApiData: getting version group and generation data...");
             VersionGroup = await GetLast<VersionGroup>();

@@ -19,8 +19,7 @@ namespace PokePlannerWeb.Tests
         public async Task PokemonPayloadCreationTest()
         {
             // get Pokemon resource
-            var data = await PokeApiData.GetInstance();
-            var pokemon = await data.Get<Pokemon>(1);
+            var pokemon = await PokeApiData.Instance.Get<Pokemon>(1);
 
             // create payload
             var payload = await PokemonPayload.Create(pokemon);
