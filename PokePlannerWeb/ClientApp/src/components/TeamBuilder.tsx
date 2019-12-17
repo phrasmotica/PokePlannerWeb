@@ -59,19 +59,19 @@ export class TeamBuilder extends Component<{}, {
 
     renderVersionGroupMenu() {
         if (this.state.loading) {
-            return (
-                <select disabled>
-                    <option>Loading...</option>
-                </select>
-            )
+            return null
         }
 
-        return (
+        let versionGroupMenu = (
             <select onChange={this.handleVersionGroupChange}>
                 {this.state.versionGroups.map(vg => {
                     return <option value={vg}>{vg}</option>
                 })}
             </select>
+        )
+
+        return (
+            <p>Game version: {versionGroupMenu}</p>
         )
     }
 
@@ -111,7 +111,7 @@ export class TeamBuilder extends Component<{}, {
             <div>
                 <h1 id="tableLabel">Pokemon</h1>
                 <p>Build your Pokemon team!</p>
-                <p>Game version: {versionGroupMenu}</p>
+                {versionGroupMenu}
                 {pokemonTable}
             </div>
         );
