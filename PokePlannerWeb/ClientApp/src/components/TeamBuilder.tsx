@@ -21,6 +21,9 @@ export class TeamBuilder extends Component<{}, {
             loading: false
         })
 
+        // load version group/generation data
+        fetch("versionGroup")
+
         // load type efficacy data
         fetch("efficacy")
     }
