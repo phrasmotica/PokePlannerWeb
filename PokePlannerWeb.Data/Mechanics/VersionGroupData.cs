@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PokeApiNet.Models;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Mechanics
 {
@@ -49,6 +51,21 @@ namespace PokePlannerWeb.Data.Mechanics
         /// Gets the selected version group.
         /// </summary>
         public VersionGroup VersionGroup => VersionGroups[VersionGroupIndex];
+
+        /// <summary>
+        /// Returns the names of all version groups.
+        /// </summary>
+        public async Task<IEnumerable<string>> GetVersionGroupNames()
+        {
+            var names = new List<string>();
+            foreach (var vg in VersionGroups)
+            {
+                var name = await vg.GetName();
+                names.Add(name);
+            }
+
+            return names;
+        }
 
         /// <summary>
         /// Returns the selected version group's generation.

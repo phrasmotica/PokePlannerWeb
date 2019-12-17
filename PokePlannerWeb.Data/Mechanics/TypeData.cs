@@ -55,7 +55,7 @@ namespace PokePlannerWeb.Data.Mechanics
                 Efficacy[thisType] = ConcreteTypes.ToDictionary(1d);
 
                 // populate damage relations
-                // wen can do this with the 'from' relations alone
+                // we can do this with the 'from' relations alone
                 var damageRelations = await typeObj.GetDamageRelations();
 
                 foreach (var typeFrom in damageRelations.DoubleDamageFrom.Select(x => x.Name.ToEnum<Type>()))

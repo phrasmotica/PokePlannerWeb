@@ -2,9 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet.Models;
-using PokePlannerWeb.Data;
-using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Models;
 
@@ -36,22 +33,20 @@ namespace PokePlannerWeb.Controllers
         [HttpPost]
         public async Task LoadVersionGroups()
         {
+            Logger.LogInformation("VersionGroupController: loading version group data...");
             await VersionGroupData.Instance.LoadVersionGroups();
+            Logger.LogInformation("VersionGroupController: loaded version group data.");
         }
 
         /// <summary>
-        /// Loads the version group data from PokeAPI.
+        /// Returns the names of all version groups.
         /// </summary>
         [HttpGet("all")]
-        public async Task<List<string>> GetVersionGroups()
+        public async Task<IEnumerable<string>> GetVersionGroups()
         {
-            var versionGroups = new List<string>();
-            foreach (var vg in VersionGroupData.Instance.VersionGroups)
-            {
-                var name = await vg.GetName();
-                versionGroups.Add(name);
-            }
-
+            Logger.LogInformation("VersionGroupController: getting version groups...");
+            var versionGroups = await VersionGroupData.Instance.GetVersionGroupNames();
+            Logger.LogInformation("VersionGroupController: got version groups.");
             return versionGroups;
         }
 
@@ -61,7 +56,9 @@ namespace PokePlannerWeb.Controllers
         [HttpGet("selected")]
         public int GetSelectedVersionGroup()
         {
-            return VersionGroupData.Instance.VersionGroupIndex;
+            var index = VersionGroupData.Instance.VersionGroupIndex;
+            Logger.LogInformation($"VersionGroupController: selected version group index is {index}");
+            return index;
         }
 
         /// <summary>
@@ -70,17 +67,9 @@ namespace PokePlannerWeb.Controllers
         [HttpPost("selected")]
         public void SetSelectedVersionGroup([FromBody] SetSelectedVersionGroupModel requestBody)
         {
+            var newIndex = requestBody.Index;
+            Logger.LogInformation($"VersionGroupController: setting selected version group index to {newIndex}");
             VersionGroupData.Instance.VersionGroupIndex = requestBody.Index;
-        }
-
-        /// <summary>
-        /// Returns the version group with the given name.
-        /// </summary>
-        [HttpGet("{name}")]
-        public async Task<VersionGroup> GetVersionGroupByName(string name)
-        {
-            Logger.LogInformation($"Getting version group \"{name}\"...");
-            return await PokeAPI.Get<VersionGroup>(name);
         }
     }
 }
