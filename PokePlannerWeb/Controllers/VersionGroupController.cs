@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PokePlannerWeb.Controllers
@@ -34,6 +35,22 @@ namespace PokePlannerWeb.Controllers
         public async Task LoadVersionGroups()
         {
             await PokeApiData.Instance.LoadLatestVersionGroup();
+        }
+
+        /// <summary>
+        /// Loads the version group data from PokeAPI.
+        /// </summary>
+        [HttpGet("all")]
+        public async Task<List<string>> GetVersionGroups()
+        {
+            var versionGroups = new List<string>();
+            foreach (var vg in PokeApiData.Instance.VersionGroups)
+            {
+                var name = await vg.GetName();
+                versionGroups.Add(name);
+            }
+
+            return versionGroups;
         }
 
         /// <summary>
