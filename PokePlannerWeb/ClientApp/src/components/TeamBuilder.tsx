@@ -95,18 +95,18 @@ export class TeamBuilder extends Component<{}, {
     }
 
     render() {
-        let contents = this.state.loading
+        let versionGroupMenu = this.renderVersionGroupMenu()
+
+        let pokemonTable = this.state.loading
             ? <p><em>Loading...</em></p>
             : this.renderPokemonTable();
-
-        let versionGroupMenu = this.renderVersionGroupMenu()
 
         return (
             <div>
                 <h1 id="tableLabel">Pokemon</h1>
                 <p>Build your Pokemon team!</p>
                 <p>Game version: {versionGroupMenu}</p>
-                {contents}
+                {pokemonTable}
             </div>
         );
     }
