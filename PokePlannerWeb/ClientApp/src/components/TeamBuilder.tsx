@@ -30,12 +30,12 @@ export class TeamBuilder extends Component<{}, {
 
     componentDidMount() {
         this.loadVersionGroups()
-        this.loadTypeEfficacy()
+            .then(() => this.loadTypeEfficacy())
     }
 
     // load all version groups
     async loadVersionGroups() {
-        fetch("versionGroup", { method: "POST" })
+        await fetch("versionGroup", { method: "POST" })
             .then(() => fetch("versionGroup/all"))
             .then((response) => response.json())
             .then((groups) => {
