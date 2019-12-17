@@ -25,6 +25,8 @@ export class TeamBuilder extends Component<{}, {
             versionGroup: "",
             loading: true
         }
+
+        this.handleVersionGroupChange = this.handleVersionGroupChange.bind(this)
     }
 
     componentDidMount() {
@@ -51,6 +53,11 @@ export class TeamBuilder extends Component<{}, {
         await fetch("efficacy", { method: "POST" })
     }
 
+    // set selected version group
+    handleVersionGroupChange(e: any) {
+        this.setState({ versionGroup: e.target.value });
+    }
+
     renderVersionGroupMenu() {
         if (this.state.loading) {
             return (
@@ -61,9 +68,9 @@ export class TeamBuilder extends Component<{}, {
         }
 
         return (
-            <select>
+            <select onChange={this.handleVersionGroupChange}>
                 {this.state.versionGroups.map(vg => {
-                    return <option>{vg}</option>
+                    return <option value={vg}>{vg}</option>
                 })}
             </select>
         )
