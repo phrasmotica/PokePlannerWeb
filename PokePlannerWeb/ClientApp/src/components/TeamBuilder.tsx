@@ -8,9 +8,9 @@ export class TeamBuilder extends Component<{}, {
     versionGroups: string[],
 
     /**
-     * The selected version group.
+     * The index of the selected version group.
      */
-    versionGroup: string,
+    versionGroup: number,
 
     /**
      * Whether the page is loading.
@@ -21,7 +21,7 @@ export class TeamBuilder extends Component<{}, {
         super(props);
         this.state = {
             versionGroups: [],
-            versionGroup: "",
+            versionGroup: -1,
             loading: true
         }
 
@@ -53,8 +53,13 @@ export class TeamBuilder extends Component<{}, {
     }
 
     // set selected version group
-    handleVersionGroupChange(e: any) {
+    async handleVersionGroupChange(e: any) {
         this.setState({ versionGroup: e.target.value });
+        await fetch("versionGroup/selected", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ index: Number(e.target.value) })
+        })
     }
 
     renderVersionGroupMenu() {
@@ -64,8 +69,8 @@ export class TeamBuilder extends Component<{}, {
 
         let versionGroupMenu = (
             <select onChange={this.handleVersionGroupChange}>
-                {this.state.versionGroups.map(vg => {
-                    return <option value={vg}>{vg}</option>
+                {this.state.versionGroups.map((vg, index) => {
+                    return <option value={index}>{vg}</option>
                 })}
             </select>
         )

@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Models;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -60,6 +61,15 @@ namespace PokePlannerWeb.Controllers
         public async Task<string> GetSelectedVersionGroup()
         {
             return await PokeApiData.Instance.VersionGroup.GetName();
+        }
+
+        /// <summary>
+        /// Returns the name of the selected version group.
+        /// </summary>
+        [HttpPost("selected")]
+        public void SetSelectedVersionGroup([FromBody] SetSelectedVersionGroupModel versionGroup)
+        {
+            PokeApiData.Instance.SetVersionGroup(versionGroup.Index);
         }
 
         /// <summary>

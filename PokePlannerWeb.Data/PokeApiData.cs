@@ -57,6 +57,14 @@ namespace PokePlannerWeb.Data
         public IList<Move> HMMoves { get; set; }
 
         /// <summary>
+        /// Sets the version group at the given index.
+        /// </summary>
+        public void SetVersionGroup(int index)
+        {
+            VersionGroup = VersionGroups[index];
+        }
+
+        /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception logging.
         /// </summary>
         public async Task<T> Get<T>(int id) where T : ResourceBase
