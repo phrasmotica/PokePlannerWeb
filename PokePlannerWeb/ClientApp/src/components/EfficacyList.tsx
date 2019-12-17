@@ -37,7 +37,9 @@ export class EfficacyList extends Component<{
             loading: false
         })
 
-        this.getEfficacy(this.props.species)
+        if (this.props.species && this.props.species !== "") {
+            this.getEfficacy(this.props.species)
+        }
     }
 
     render() {
@@ -51,11 +53,11 @@ export class EfficacyList extends Component<{
         return (
             <table className='table table-striped' aria-labelledby="tableLabel">
                 <tbody>
-                    <tr>
+                    <tr key={this.props.index}>
                         {this.state.efficacy.map((value, index) => {
                             return (
-                                <td>
-                                    <em>{index}</em>: <b>{value}</b>
+                                <td key={index}>
+                                    <em>{index}</em>: <b>{value}x</b>
                                 </td>
                             )
                         })}
