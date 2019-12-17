@@ -10,6 +10,8 @@ namespace PokePlannerWeb.Data
 {
     public class PokeApiData
     {
+        #region Singleton members
+
         /// <summary>
         /// Gets or sets the singleton instance.
         /// </summary>
@@ -20,12 +22,14 @@ namespace PokePlannerWeb.Data
         /// </summary>
         private PokeApiData() { }
 
+        #endregion
+
         /// <summary>
         /// Client for PokeApi.
         /// </summary>
         public PokeApiClient Client { get; } = new PokeApiClient();
 
-        #region Version group/generation
+        #region Version groups/generations
 
         /// <summary>
         /// Loads all version group data.
@@ -39,6 +43,11 @@ namespace PokePlannerWeb.Data
         }
 
         /// <summary>
+        /// Gets or sets the version groups.
+        /// </summary>
+        public VersionGroup[] VersionGroups { get; set; }
+
+        /// <summary>
         /// Gets or sets the index of the selected version group.
         /// </summary>
         public int VersionGroupIndex { get; set; }
@@ -49,21 +58,22 @@ namespace PokePlannerWeb.Data
         public VersionGroup VersionGroup => VersionGroups[VersionGroupIndex];
 
         /// <summary>
-        /// Gets or sets the version groups.
-        /// </summary>
-        public VersionGroup[] VersionGroups { get; set; }
-
-        /// <summary>
         /// Returns the selected version group's generation.
         /// </summary>
         public async Task<Generation> GetGeneration() => await Get(VersionGroup.Generation);
 
         #endregion
 
+        #region HM moves
+
         /// <summary>
-        /// The selected version group's HM moves.
+        /// Returns the selected version group's HM moves.
         /// </summary>
-        public IList<Move> HMMoves { get; set; }
+        public async Task<IEnumerable<Move>> GetHMMoves() => await VersionGroup.GetHMMoves();
+
+        #endregion
+
+        #region Resource Get() methods
 
         /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(int)"/> with exception logging.
@@ -245,5 +255,7 @@ namespace PokePlannerWeb.Data
 
             return res;
         }
+
+        #endregion
     }
 }

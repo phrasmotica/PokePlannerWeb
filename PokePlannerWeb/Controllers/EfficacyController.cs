@@ -35,7 +35,7 @@ namespace PokePlannerWeb.Controllers
         [HttpPost]
         public async Task LoadTypeEfficacy()
         {
-            await TypeData.Instance.LoadTypeData();
+            await TypeData.Instance.LoadTypeEfficacy();
         }
 
         /// <summary>

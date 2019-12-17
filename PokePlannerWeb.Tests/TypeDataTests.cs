@@ -17,7 +17,7 @@ namespace PokePlannerWeb.Tests
         public async Task TypeEfficacyLoadingTest()
         {
             // load type data
-            await TypeData.Instance.LoadTypeData();
+            await TypeData.Instance.LoadTypeEfficacy();
 
             // verify it's all loaded
             Assert.AreEqual(18, TypeData.Instance.EfficacyMapCount);
