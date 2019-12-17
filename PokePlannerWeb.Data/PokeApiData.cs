@@ -34,6 +34,7 @@ namespace PokePlannerWeb.Data
         {
             Console.WriteLine("PokeApiData: getting version group data...");
             VersionGroups = (await GetMany<VersionGroup>()).ToArray();
+            VersionGroupIndex = VersionGroups.Length - 1;
             Console.WriteLine($"PokeApiData: got data for {VersionGroups.Length} version groups.");
         }
 

@@ -10,7 +10,7 @@ export class TeamBuilder extends Component<{}, {
     /**
      * The index of the selected version group.
      */
-    versionGroup: number,
+    versionGroupIndex: number,
 
     /**
      * Whether the page is loading.
@@ -21,7 +21,7 @@ export class TeamBuilder extends Component<{}, {
         super(props);
         this.state = {
             versionGroups: [],
-            versionGroup: -1,
+            versionGroupIndex: -1,
             loading: true
         }
 
@@ -40,7 +40,15 @@ export class TeamBuilder extends Component<{}, {
             .then((response) => response.json())
             .then((groups) => {
                 this.setState({
-                    versionGroups: groups,
+                    versionGroups: groups
+                })
+            }
+            )
+            .then(() => fetch("versionGroup/selected"))
+            .then((response) => response.text())
+            .then((idx) => {
+                this.setState({
+                    versionGroupIndex: Number(idx),
                     loading: false
                 })
             }
@@ -54,11 +62,12 @@ export class TeamBuilder extends Component<{}, {
 
     // set selected version group
     async handleVersionGroupChange(e: any) {
-        this.setState({ versionGroup: e.target.value });
+        const idx = Number(e.target.value)
+        this.setState({ versionGroupIndex: idx });
         await fetch("versionGroup/selected", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ index: Number(e.target.value) })
+            body: JSON.stringify({ index: idx })
         })
     }
 
@@ -68,7 +77,7 @@ export class TeamBuilder extends Component<{}, {
         }
 
         let versionGroupMenu = (
-            <select onChange={this.handleVersionGroupChange}>
+            <select value={this.state.versionGroupIndex} onChange={this.handleVersionGroupChange}>
                 {this.state.versionGroups.map((vg, index) => {
                     return <option value={index}>{vg}</option>
                 })}
