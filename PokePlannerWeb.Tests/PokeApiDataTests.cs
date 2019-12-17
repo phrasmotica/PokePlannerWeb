@@ -12,6 +12,20 @@ namespace PokePlannerWeb.Tests
     public class PokeApiDataTests
     {
         /// <summary>
+        /// Verifies that version group loading works correctly.
+        /// </summary>
+        [Test]
+        [Category("Integration")]
+        public async Task VersionGroupsLoadingTest()
+        {
+            // load version groups
+            await PokeApiData.Instance.LoadVersionGroups();
+
+            // verify it's all loaded
+            Assert.AreEqual(18, PokeApiData.Instance.VersionGroups.Length);
+        }
+
+        /// <summary>
         /// Verifies that a Pokemon payload is created correctly.
         /// </summary>
         [Test]
