@@ -36,11 +36,6 @@ namespace PokePlannerWeb.Data.Payloads
         public int Order => Pokemon.Order;
 
         /// <summary>
-        /// Gets or sets a description of the Pokemon's types.
-        /// </summary>
-        public string TypeDescription { get; protected set; }
-
-        /// <summary>
         /// Gets the URL of the Pokemon's sprite.
         /// </summary>
         public string SpriteUrl => Pokemon.Sprites.FrontDefault;
@@ -51,8 +46,6 @@ namespace PokePlannerWeb.Data.Payloads
         public override async Task FetchAsync()
         {
             EnglishName = await Pokemon.GetEnglishName();
-            var types = await Pokemon.GetTypes();
-            TypeDescription = string.Join(" / ", types.Select(t => t.ToString()));
         }
     }
 }
