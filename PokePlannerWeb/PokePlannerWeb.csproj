@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <None Remove="ClientApp\src\components\EfficacyList.tsx" />
+    <None Remove="ClientApp\src\models\TypeSet.ts" />
   </ItemGroup>
 
   <ItemGroup>
