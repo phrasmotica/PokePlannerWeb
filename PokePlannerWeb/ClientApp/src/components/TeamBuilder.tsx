@@ -97,11 +97,11 @@ export class TeamBuilder extends Component<{}, {
             <Table>
                 <thead>
                     <tr>
-                        <th>Search</th>
-                        <th>Id</th>
-                        <th>Sprite</th>
-                        <th>Name</th>
-                        <th>Type</th>
+                        <th style={{ width: 150 }}>Search</th>
+                        <th style={{ width: 50 }}>Id</th>
+                        <th style={{ width: 60 }}>Sprite</th>
+                        <th style={{ width: 100 }}>Name</th>
+                        <th style={{ width: 100 }}>Type</th>
                         <th>Efficacy</th>
                     </tr>
                 </thead>
