@@ -93,20 +93,20 @@ export class EfficacyList extends Component<{
     }
 
     renderTypeEfficacy() {
-        // display message if we're loading
-        if (this.state.loadingEfficacy) {
-            return this.makeSpinner()
-        }
-
         // only display types that are present
         let typeSet = this.state.typeSet
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
             if (typeSet.typesArePresent[i]) {
+                let multiplier = !this.hasSpecies()
+                    ? <b>-</b>
+                    : this.state.loadingEfficacy
+                        ? this.makeSpinner()
+                        : <b>{efficacy[i]}x</b>
                 items.push(
                     <td key={i}>
-                        <em>{typeSet.types[i]}</em> <b>{efficacy[i]}x</b>
+                        <em>{typeSet.types[i]}</em> {multiplier}
                     </td>
                 )
             }
@@ -130,15 +130,20 @@ export class EfficacyList extends Component<{
         )
     }
 
+    // returns true if we have a species
+    hasSpecies() {
+        return this.props.species && this.props.species !== ""
+    }
+
     // returns a loading spinner
     makeSpinner() {
-        return <Spinner animation="border" />
+        return <Spinner animation="border" size="sm" />
     }
 
     // retrieves the Pokemon's efficacy from EfficacyController
     getEfficacy() {
-        let species = this.props.species
-        if (species && species !== "") {
+        if (this.hasSpecies()) {
+            let species = this.props.species
             console.log(`Efficacy list ${this.props.index}: getting efficacy for '${species}'...`)
 
             // loading begins
