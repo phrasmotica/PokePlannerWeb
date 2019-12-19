@@ -81,7 +81,7 @@ export class TeamBuilder extends Component<{}, {
         let versionGroupMenu = (
             <select value={this.state.versionGroupIndex} onChange={this.handleVersionGroupChange}>
                 {this.state.versionGroups.map((vg, index) => {
-                    return <option value={index}>{vg}</option>
+                    return <option key={index} value={index}>{vg}</option>
                 })}
             </select>
         )
