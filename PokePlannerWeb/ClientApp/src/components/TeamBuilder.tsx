@@ -57,7 +57,8 @@ export class TeamBuilder extends Component<{}, {
 
     // loads type efficacy data
     async loadTypeEfficacy() {
-        await fetch("efficacy", { method: "POST" })
+        let index = this.state.versionGroupIndex
+        await fetch(`efficacy/${index}`, { method: "POST" })
     }
 
     // set selected version group

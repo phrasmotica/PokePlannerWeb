@@ -11,13 +11,18 @@ namespace PokePlannerWeb.Data.Extensions
     public static class DamageRelationExtensions
     {
         /// <summary>
-        /// Returns this type's damage relations in the current version group.
+        /// Returns this type's damage relations in the version group with the given ID.
         /// </summary>
-        public static async Task<TypeRelations> GetDamageRelations(this PokeApiNet.Models.Type type)
+        public static async Task<TypeRelations> GetDamageRelations(this PokeApiNet.Models.Type type, int? versionGroupId = null)
         {
-            var versionGroup = VersionGroupData.Instance.VersionGroup;
-            var relations = await type.GetDamageRelations(versionGroup);
-            return relations;
+            if (!versionGroupId.HasValue)
+            {
+                return type.DamageRelations;
+            }
+
+            var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
+            var pastDamageRelations = await type.GetPastDamageRelations(generation);
+            return pastDamageRelations ?? type.DamageRelations;
         }
 
         /// <summary>
@@ -41,16 +46,6 @@ namespace PokePlannerWeb.Data.Extensions
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Returns this type's damage relations in the given version group.
-        /// </summary>
-        private static async Task<TypeRelations> GetDamageRelations(this PokeApiNet.Models.Type type, VersionGroup versionGroup)
-        {
-            var generation = await PokeAPI.Get(versionGroup.Generation);
-            var pastDamageRelations = await type.GetPastDamageRelations(generation);
-            return pastDamageRelations ?? type.DamageRelations;
         }
     }
 }

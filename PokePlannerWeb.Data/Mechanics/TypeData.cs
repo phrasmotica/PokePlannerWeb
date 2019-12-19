@@ -39,9 +39,10 @@ namespace PokePlannerWeb.Data.Mechanics
         #region Efficacy data
 
         /// <summary>
-        /// Loads type efficacy data.
+        /// Loads type efficacy data for the version group with the given ID, or for the latest
+        /// version group if no ID is supplied.
         /// </summary>
-        public async Task LoadTypeEfficacy()
+        public async Task LoadTypeEfficacy(int? versionGroupId = null)
         {
             Efficacy = new Dictionary<Type, Dictionary<Type, double>>();
 
@@ -56,7 +57,7 @@ namespace PokePlannerWeb.Data.Mechanics
 
                 // populate damage relations
                 // we can do this with the 'from' relations alone
-                var damageRelations = await typeObj.GetDamageRelations();
+                var damageRelations = await typeObj.GetDamageRelations(versionGroupId);
 
                 foreach (var typeFrom in damageRelations.DoubleDamageFrom.Select(x => x.Name.ToEnum<Type>()))
                 {

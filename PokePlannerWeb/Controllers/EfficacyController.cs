@@ -29,12 +29,23 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Loads the type efficacy data from PokeAPI.
+        /// Loads the type efficacy data for the latest version group from PokeAPI.
         /// </summary>
         [HttpPost]
         public async Task LoadTypeEfficacy()
         {
+            Logger.LogInformation($"Loading efficacy for latest version group...");
             await TypeData.Instance.LoadTypeEfficacy();
+        }
+
+        /// <summary>
+        /// Loads the type efficacy data for the given version group from PokeAPI.
+        /// </summary>
+        [HttpPost("{versionGroupId:int}")]
+        public async Task LoadTypeEfficacy(int versionGroupId)
+        {
+            Logger.LogInformation($"Loading efficacy for version group {versionGroupId}...");
+            await TypeData.Instance.LoadTypeEfficacy(versionGroupId);
         }
 
         /// <summary>

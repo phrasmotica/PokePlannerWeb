@@ -48,11 +48,6 @@ namespace PokePlannerWeb.Data.Mechanics
         public int VersionGroupIndex { get; set; }
 
         /// <summary>
-        /// Gets the selected version group.
-        /// </summary>
-        public VersionGroup VersionGroup => VersionGroups[VersionGroupIndex];
-
-        /// <summary>
         /// Returns the names of all version groups.
         /// </summary>
         public async Task<IEnumerable<string>> GetVersionGroupNames()
@@ -68,8 +63,12 @@ namespace PokePlannerWeb.Data.Mechanics
         }
 
         /// <summary>
-        /// Returns the selected version group's generation.
+        /// Returns the generation of the version group with the given ID.
         /// </summary>
-        public async Task<Generation> GetGeneration() => await PokeAPI.Get(VersionGroup.Generation);
+        public async Task<Generation> GetGeneration(int versionGroupId)
+        {
+            var versionGroup = VersionGroups[versionGroupId];
+            return await PokeAPI.Get(versionGroup.Generation);
+        }
     }
 }

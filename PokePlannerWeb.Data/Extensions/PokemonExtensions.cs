@@ -22,25 +22,6 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Returns this Pokemon's types in the current version group.
-        /// </summary>
-        public static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon)
-        {
-            var versionGroup = VersionGroupData.Instance.VersionGroup;
-            var types = await pokemon.GetTypes(versionGroup);
-            return types;
-        }
-
-        /// <summary>
-        /// Returns a description of the Pokemon's types in the current version group.
-        /// </summary>
-        public static async Task<string> GetTypesDescription(this Pokemon pokemon)
-        {
-            var versionGroup = VersionGroupData.Instance.VersionGroup;
-            return await pokemon.GetTypesDescription(versionGroup);
-        }
-
-        /// <summary>
         /// Returns a description of the Pokemon's types in the version group with the given ID.
         /// </summary>
         public static async Task<string> GetTypesDescription(this Pokemon pokemon, int versionGroupId)
@@ -56,6 +37,15 @@ namespace PokePlannerWeb.Data.Extensions
         {
             var types = await pokemon.GetTypes(versionGroup);
             return string.Join(" / ", types.Select(t => t.ToString()));
+        }
+
+        /// <summary>
+        /// Returns this Pokemon's types in the version group with the given ID.
+        /// </summary>
+        private static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon, int versionGroupId)
+        {
+            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
+            return await pokemon.GetTypes(versionGroup);
         }
 
         /// <summary>
@@ -97,17 +87,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static async Task<double[]> GetTypeEfficacyArr(this Pokemon pokemon, int versionGroupId)
         {
-            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
-            var types = await pokemon.GetTypes(versionGroup);
-            return TypeData.Instance.GetEfficacyArr(types);
-        }
-
-        /// <summary>
-        /// Returns this Pokemon's type efficacy as an array.
-        /// </summary>
-        public static async Task<double[]> GetTypeEfficacyArr(this Pokemon pokemon)
-        {
-            var types = await pokemon.GetTypes();
+            var types = await pokemon.GetTypes(versionGroupId);
             return TypeData.Instance.GetEfficacyArr(types);
         }
 

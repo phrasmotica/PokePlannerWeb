@@ -25,8 +25,12 @@ namespace PokePlannerWeb.Data.Mechanics
         #endregion
 
         /// <summary>
-        /// Returns the selected version group's HM moves.
+        /// Returns the HM moves in the version group with the given ID.
         /// </summary>
-        public async Task<IEnumerable<Move>> GetHMMoves() => await VersionGroupData.Instance.VersionGroup.GetHMMoves();
+        public async Task<IEnumerable<Move>> GetHMMoves(int versionGroupId)
+        {
+            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
+            return await versionGroup.GetHMMoves();
+        }
     }
 }
