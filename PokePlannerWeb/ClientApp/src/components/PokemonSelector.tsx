@@ -44,6 +44,8 @@ export class PokemonSelector extends Component<{
 
         // bind event handlers to this object
         this.handleSearch = this.handleSearch.bind(this)
+        this.handleResponse = this.handleResponse.bind(this)
+        this.catchErrorAndFinishLoading = this.catchErrorAndFinishLoading.bind(this)
     }
 
     componentDidMount() {
@@ -108,7 +110,9 @@ export class PokemonSelector extends Component<{
     }
 
     // retrieves the given Pokemon species from PokemonController
-    async findPokemon(species: string) {
+    findPokemon(species: string) {
+        console.log(`Pokemon selector ${this.props.index}: getting species '${species}'...`)
+
         // loading begins
         this.setState({
             speciesName: species,
@@ -116,43 +120,56 @@ export class PokemonSelector extends Component<{
         })
 
         // get Pokemon data
-        console.log(`Pokemon selector ${this.props.index}: getting species '${species}'...`)
-        const response = await fetch(`pokemon/${species}`)
+        fetch(`pokemon/${species}`)
+            .then(this.handleResponse)
+            .then(response => response.json())
+            .then(newPokemon => this.setState({
+                pokemon: newPokemon,
+                loading: false
+            }))
+            .catch(this.catchErrorAndFinishLoading)
+    }
 
+    // retrieves the Pokemon's types description from PokemonController
+    getTypesDescription(species: string) {
+        console.log(`Pokemon selector ${this.props.index}: getting types description for ${species}...`)
+
+        // loading begins
+        this.setState({
+            loading: true
+        })
+
+        fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
+            .then(this.handleResponse)
+            .then(response => response.text())
+            .then(typesDescription => this.setState({
+                typesDescription: typesDescription,
+                loading: false
+            }))
+            .catch(this.catchErrorAndFinishLoading)
+    }
+
+    // handle PokeAPI responses
+    handleResponse(response: Response) {
         if (response.status === 200) {
-            // get JSON payload
-            const newPokemon = await response.json()
-            console.log(`Pokemon selector ${this.props.index}: got species '${species}'`)
-
-            // set new Pokemon and update species name
-            this.setState({
-                pokemon: newPokemon
-            })
+            return response
         }
-        else if (response.status === 500) {
+
+        let species = this.state.speciesName
+        if (response.status === 500) {
             // species endpoint couldn't be found
-            console.log(`Pokemon selector ${this.props.index}: couldn't get species '${species}'!`)
-            console.log(`(if '${species}' looks valid, PokeAPI might be down!)`)
-            console.log(response)
-        }
-        else {
-            // some other error
-            console.log(`Pokemon selector ${this.props.index}: tried to get species '${species}' but failed with status ${response.status}!`)
-            console.log("(ya boi needs to add some logic to handle this...)")
-            console.log(response)
+            throw new Error(`Pokemon selector ${this.props.index}: couldn't get species '${species}'!`)
         }
 
-        // finished loading
+        // some other error
+        throw new Error(`Pokemon selector ${this.props.index}: tried to get species '${species}' but failed with status ${response.status}!`)
+    }
+
+    // logs the error to console and stops loading
+    catchErrorAndFinishLoading(error: any) {
+        console.log(error)
         this.setState({
             loading: false
         })
-    }
-
-    // gets the types description
-    getTypesDescription(species: string) {
-        console.log(`Pokemon selector ${this.props.index}: getting types description for ${species}...`)
-        fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
-            .then((response) => response.text())
-            .then((typesDescription => this.setState({ typesDescription: typesDescription })))
     }
 }
