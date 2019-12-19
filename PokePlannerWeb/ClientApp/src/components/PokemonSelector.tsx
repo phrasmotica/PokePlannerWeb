@@ -68,17 +68,8 @@ export class PokemonSelector extends Component<{
         }
     }
 
-    // handler for searching for a Pokemon
-    handleSearch(e: any) {
-        // only update if we need to
-        const newSpeciesName = e.target.value.toLowerCase()
-        if (e.key === 'Enter' && newSpeciesName !== this.state.pokemon.name) {
-            // get Pokemon payload
-            this.findPokemon(newSpeciesName)
-
-            // get types description
-            this.getTypesDescription(newSpeciesName)
-        }
+    render() {
+        return this.renderPokemon(this.state.pokemon)
     }
 
     renderPokemon(pokemon: any) {
@@ -105,8 +96,17 @@ export class PokemonSelector extends Component<{
         );
     }
 
-    render() {
-        return this.renderPokemon(this.state.pokemon)
+    // handler for searching for a Pokemon
+    handleSearch(e: any) {
+        // only update if we need to
+        const newSpeciesName = e.target.value.toLowerCase()
+        if (e.key === 'Enter' && newSpeciesName !== this.state.pokemon.name) {
+            // get Pokemon payload
+            this.findPokemon(newSpeciesName)
+
+            // get types description
+            this.getTypesDescription(newSpeciesName)
+        }
     }
 
     // retrieves the given Pokemon species from PokemonController
