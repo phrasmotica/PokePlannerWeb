@@ -31,10 +31,10 @@ namespace PokePlannerWeb.Data.Mechanics
         /// </summary>
         public async Task LoadVersionGroups()
         {
-            Console.WriteLine("PokeApiData: getting version group data...");
+            Console.WriteLine("VersionGroupData: getting version group data...");
             VersionGroups = (await PokeAPI.GetMany<VersionGroup>()).ToArray();
             VersionGroupIndex = VersionGroups.Length - 1;
-            Console.WriteLine($"PokeApiData: got data for {VersionGroups.Length} version groups.");
+            Console.WriteLine($"VersionGroupData: got data for {VersionGroups.Length} version groups.");
         }
 
         /// <summary>
