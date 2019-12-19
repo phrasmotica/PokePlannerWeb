@@ -97,7 +97,7 @@ export class PokemonSelector extends Component<{
                 <td>{pokemon.englishName}</td>
                 <td>{this.state.typesDescription}</td>
                 <td>
-                    <EfficacyList index={this.props.index} species={species} />
+                    <EfficacyList index={this.props.index} species={species} versionGroupIndex={this.props.versionGroupIndex} />
                 </td>
             </tr>
         );

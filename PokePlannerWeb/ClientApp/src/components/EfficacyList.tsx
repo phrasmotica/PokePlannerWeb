@@ -10,7 +10,12 @@ export class EfficacyList extends Component<{
     /**
      * The Pokemon to show efficacy for.
      */
-    species: string
+    species: string,
+
+    /**
+     * The index of the selected version group.
+     */
+    versionGroupIndex: number
 }, {
     /**
      * The efficacy to show.
@@ -18,7 +23,7 @@ export class EfficacyList extends Component<{
     efficacy: number[],
 
     /**
-     * Whether we're loading the Pokemon's efficacy.
+     * The index of the selected version group.
      */
     loading: boolean
 }> {
@@ -28,16 +33,27 @@ export class EfficacyList extends Component<{
             efficacy: [],
             loading: true
         }
+
+        // bind stuff to this object
+        this.handleResponse = this.handleResponse.bind(this)
     }
 
     componentDidMount() {
+        // get efficacy
+        this.getEfficacy()
+
         // finished loading
         this.setState({
             loading: false
         })
+    }
 
-        if (this.props.species && this.props.species !== "") {
-            this.getEfficacy(this.props.species)
+    componentDidUpdate(previousProps: any) {
+        // refresh efficacy if the version group index changed
+        let previousVersionGroupIndex = previousProps.versionGroupIndex
+        let versionGroupIndex = this.props.versionGroupIndex
+        if (versionGroupIndex !== previousVersionGroupIndex) {
+            this.getEfficacy()
         }
     }
 
@@ -68,42 +84,39 @@ export class EfficacyList extends Component<{
     }
 
     // retrieves the Pokemon's efficacy from EfficacyController
-    async getEfficacy(species: string) {
-        // loading begins
-        this.setState({
-            loading: true
-        })
+    getEfficacy() {
+        let species = this.props.species
+        if (species && species !== "") {
+            console.log(`Efficacy list ${this.props.index}: getting efficacy for '${species}'...`)
 
-        // get efficacy data
-        console.log(`Efficacy list ${this.props.index}: getting efficacy for '${species}'...`)
-        const response = await fetch(`efficacy/${species}`)
-
-        if (response.status === 200) {
-            // get JSON payload
-            const efficacy = await response.json()
-            console.log(`Efficacy list ${this.props.index}: got efficacy for '${species}'`)
-
-            // set new efficacy
+            // loading begins
             this.setState({
-                efficacy: efficacy
+                loading: true
             })
+
+            // get efficacy data
+            fetch(`efficacy/${species}/${this.props.versionGroupIndex}`)
+                .then(this.handleResponse)
+                .then(response => response.json())
+                .then(efficacy => this.setState({ efficacy: efficacy }))
+                .catch(error => console.log(error))
+                .then(() => this.setState({ loading: false }))
         }
-        else if (response.status === 500) {
-            // efficacy endpoint couldn't be found
-            console.log(`Efficacy list ${this.props.index}: couldn't get efficacy for '${species}'!`)
-            console.log(`(if '${species}' looks valid, PokeAPI might be down!)`)
-            console.log(response)
-        }
-        else {
-            // some other error
-            console.log(`Efficacy list ${this.props.index}: tried to get efficacy for '${species}' but failed with status ${response.status}!`)
-            console.log("(ya boi needs to add some logic to handle this...)")
-            console.log(response)
+    }
+
+    // handle PokeAPI responses
+    handleResponse(response: Response) {
+        if (response.status === 200) {
+            return response
         }
 
-        // finished loading
-        this.setState({
-            loading: false
-        })
+        let species = this.props.species
+        if (response.status === 500) {
+            // efficacy endpoint couldn't be found
+            throw new Error(`Efficacy list ${this.props.index}: couldn't get efficacy for ${species}'!`)
+        }
+
+        // some other error
+        throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${species}' but failed with status ${response.status}!`)
     }
 }

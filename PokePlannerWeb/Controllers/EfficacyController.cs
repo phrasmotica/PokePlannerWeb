@@ -38,14 +38,14 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the efficacy of the Pokemon with the given species name.
+        /// Returns the efficacy of the Pokemon with the given species name in the version group with the given ID.
         /// </summary>
-        [HttpGet("{name}")]
-        public async Task<double[]> GetEfficacyByName(string name)
+        [HttpGet("{name}/{versionGroupId:int}")]
+        public async Task<double[]> GetEfficacyInVersionGroupByName(string name, int versionGroupId)
         {
             Logger.LogInformation($"Getting efficacy for Pokemon \"{name}\"...");
             var pokemon = await PokeAPI.Get<Pokemon>(name);
-            return await pokemon.GetTypeEfficacyArr();
+            return await pokemon.GetTypeEfficacyArr(versionGroupId);
         }
     }
 }

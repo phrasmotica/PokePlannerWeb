@@ -93,6 +93,16 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
+        /// Returns this Pokemon's type efficacy in the version group with the given ID as an array.
+        /// </summary>
+        public static async Task<double[]> GetTypeEfficacyArr(this Pokemon pokemon, int versionGroupId)
+        {
+            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
+            var types = await pokemon.GetTypes(versionGroup);
+            return TypeData.Instance.GetEfficacyArr(types);
+        }
+
+        /// <summary>
         /// Returns this Pokemon's type efficacy as an array.
         /// </summary>
         public static async Task<double[]> GetTypeEfficacyArr(this Pokemon pokemon)
