@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NUnit.Framework;
-using PokePlannerWeb.Data.Mechanics;
+using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb.Tests
 {

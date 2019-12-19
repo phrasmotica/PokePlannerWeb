@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using PokeApiNet.Models;
-using Type = PokePlannerWeb.Data.Mechanics.Type;
+using Type = PokePlannerWeb.Data.Types.Type;
 
 namespace PokePlannerWeb.Data.Extensions
 {

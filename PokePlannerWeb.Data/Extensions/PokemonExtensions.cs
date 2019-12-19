@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Payloads;
-using Type = PokePlannerWeb.Data.Mechanics.Type;
+using PokePlannerWeb.Data.Types;
+using Type = PokePlannerWeb.Data.Types.Type;
 
 namespace PokePlannerWeb.Data.Extensions
 {

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Mechanics;
 
-namespace PokePlannerWeb.Data.Mechanics
+namespace PokePlannerWeb.Data.Types
 {
     /// <summary>
     /// Enumeration of Pokemon types.
