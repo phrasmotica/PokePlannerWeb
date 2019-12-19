@@ -1,6 +1,7 @@
 ﻿import { Component } from "react";
 import React from "react";
 import { EfficacyList } from "./EfficacyList";
+import { Spinner } from "reactstrap";
 
 export class PokemonSelector extends Component<{
     /**
@@ -26,7 +27,7 @@ export class PokemonSelector extends Component<{
     /**
      * Whether we're loading the selected Pokemon.
      */
-    loadingPokemon: boolean
+    loadingPokemon: boolean,
 
     /**
      * The types description to display.
@@ -82,20 +83,21 @@ export class PokemonSelector extends Component<{
         // display message if we're loading
         let species = this.state.species
         let isLoading = this.isLoading()
-        let loadingElement = isLoading ? <p><em>Loading {species}...</em></p> : null
 
         return (
             <tr key={pokemon.id}>
                 <td>
                     <input type="text" onKeyDown={this.handleSearch} />
-                    {loadingElement}
                 </td>
-                <td>{pokemon.order}</td>
+                <td>{isLoading ? this.makeSpinner() : pokemon.order}</td>
                 <td>
-                    <img src={pokemon.spriteUrl} alt={pokemon.englishName} style={{ width: 60, height: 60 }} />
+                    {isLoading
+                        ? this.makeSpinner()
+                        : <img src={pokemon.spriteUrl} alt={pokemon.englishName} style={{ width: 60, height: 60 }} />
+                    }
                 </td>
-                <td>{pokemon.englishName}</td>
-                <td>{this.state.typesDescription}</td>
+                <td>{isLoading ? this.makeSpinner() : pokemon.englishName}</td>
+                <td>{this.state.loadingTypesDescription ? this.makeSpinner() : this.state.typesDescription}</td>
                 <td>
                     <EfficacyList index={this.props.index} species={species} versionGroupIndex={this.props.versionGroupIndex} />
                 </td>
@@ -106,6 +108,11 @@ export class PokemonSelector extends Component<{
     // returns whether this component is loading
     isLoading() {
         return this.state.loadingPokemon || this.state.loadingTypesDescription
+    }
+
+    // returns a loading spinner
+    makeSpinner() {
+        return <Spinner animation="border" />
     }
 
     // handler for searching for a Pokemon

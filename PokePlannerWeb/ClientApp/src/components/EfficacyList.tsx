@@ -1,5 +1,6 @@
 ﻿import { Component } from "react";
 import React from "react";
+import { Spinner } from "reactstrap";
 
 export class EfficacyList extends Component<{
     /**
@@ -63,7 +64,9 @@ export class EfficacyList extends Component<{
 
     renderTypeEfficacy() {
         // display message if we're loading
-        let loadingElement = this.state.loading ? <p><em>Loading...</em></p> : null
+        if (this.state.loading) {
+            return this.makeSpinner()
+        }
 
         return (
             <table className='table table-striped' aria-labelledby="tableLabel">
@@ -76,11 +79,15 @@ export class EfficacyList extends Component<{
                                 </td>
                             )
                         })}
-                        {loadingElement}
                     </tr>
                 </tbody>
             </table>
         )
+    }
+
+    // returns a loading spinner
+    makeSpinner() {
+        return <Spinner animation="border" />
     }
 
     // retrieves the Pokemon's efficacy from EfficacyController
