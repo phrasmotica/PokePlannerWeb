@@ -48,6 +48,11 @@ namespace PokePlannerWeb.Data.Mechanics
         public int VersionGroupIndex { get; set; }
 
         /// <summary>
+        /// Gets the index of the latest version group.
+        /// </summary>
+        public int LatestVersionGroupIndex => VersionGroups.Length - 1;
+
+        /// <summary>
         /// Returns the names of all version groups.
         /// </summary>
         public async Task<IEnumerable<string>> GetVersionGroupNames()

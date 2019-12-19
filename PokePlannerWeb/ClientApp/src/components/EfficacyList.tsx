@@ -1,6 +1,7 @@
 ﻿import { Component } from "react";
 import React from "react";
 import { Spinner, Table } from "reactstrap";
+import { TypeSet } from "../models/TypeSet";
 
 export class EfficacyList extends Component<{
     /**
@@ -31,20 +32,24 @@ export class EfficacyList extends Component<{
     /**
      * The list of concrete type names.
      */
-    concreteTypes: string[],
+    typeSet: TypeSet,
 
     /**
      * Whether we're loading the concrete type names.
      */
-    loadingConcreteTypes: boolean
+    loadingTypeSet: boolean
 }> {
     constructor(props: any) {
         super(props);
         this.state = {
             efficacy: [],
             loadingEfficacy: true,
-            concreteTypes: [],
-            loadingConcreteTypes: true
+            typeSet: {
+                versionGroupId: this.props.versionGroupIndex,
+                types: [],
+                typesArePresent: []
+            },
+            loadingTypeSet: true
         }
 
         // bind stuff to this object
@@ -55,12 +60,13 @@ export class EfficacyList extends Component<{
         // get efficacy
         this.getEfficacy()
 
-        // get list of concrete types
-        this.getConcreteTypeNames()
+        // get type set
+        this.getTypeSet()
 
         // finished loading
         this.setState({
-            loadingEfficacy: false
+            loadingEfficacy: false,
+            loadingTypeSet: false
         })
     }
 
@@ -70,7 +76,7 @@ export class EfficacyList extends Component<{
         let versionGroupIndex = this.props.versionGroupIndex
         if (versionGroupIndex !== previousVersionGroupIndex) {
             this.getEfficacy()
-            this.getConcreteTypeNames()
+            this.getTypeSet()
         }
     }
 
@@ -84,19 +90,32 @@ export class EfficacyList extends Component<{
             return this.makeSpinner()
         }
 
-        let types = this.state.concreteTypes
+        // only display types that are present
+        let typeSet = this.state.typeSet
         let efficacy = this.state.efficacy
+        let items = []
+        for (let i = 0; i < typeSet.types.length; i++) {
+            if (typeSet.typesArePresent[i]) {
+                items.push(
+                    <td key={i}>
+                        <em>{typeSet.types[i]}</em> <b>{efficacy[i]}x</b>
+                    </td>
+                )
+            }
+            else {
+                items.push(
+                    <td key={i}>
+                        <em>{typeSet.types[i]}</em> <b>N/A</b>
+                    </td>
+                )
+            }
+        }
+
         return (
             <Table>
                 <tbody>
                     <tr key={this.props.index}>
-                        {types.map((type, index) => {
-                            return (
-                                <td key={index}>
-                                    <em>{type}</em> <b>{efficacy[index]}x</b>
-                                </td>
-                            )
-                        })}
+                        {items}
                     </tr>
                 </tbody>
             </Table>
@@ -129,29 +148,30 @@ export class EfficacyList extends Component<{
         }
     }
 
-    // retrieves the names of the concrete types from TypeController
-    getConcreteTypeNames() {
-        console.log(`Efficacy list ${this.props.index}: getting concrete type names...`)
+    // retrieves the type set from TypeController
+    getTypeSet() {
+        let index = this.props.versionGroupIndex
+        console.log(`Efficacy list ${this.props.index}: getting type set for version group ${index}...`)
 
         // loading begins
         this.setState({
-            loadingConcreteTypes: true
+            loadingTypeSet: true
         })
 
-        // get concrete type names
-        fetch(`type/concrete/${this.props.versionGroupIndex}`)
+        // get type set
+        fetch(`type/typeSet/${index}`)
             .then(response => {
                 if (response.status === 200) {
                     return response
                 }
 
                 // concrete types endpoint couldn't be found
-                throw new Error(`Efficacy list ${this.props.index}: couldn't get concrete type names!`)
+                throw new Error(`Efficacy list ${this.props.index}: couldn't get type set for version group ${index}!`)
             })
             .then(response => response.json())
-            .then(concreteTypes => this.setState({ concreteTypes: concreteTypes }))
+            .then(typeSet => this.setState({ typeSet: typeSet }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingConcreteTypes: false }))
+            .then(() => this.setState({ loadingTypeSet: false }))
     }
 
     // handle PokeAPI responses

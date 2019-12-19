@@ -120,27 +120,30 @@ namespace PokePlannerWeb.Data.Types
         public static IEnumerable<Type> ConcreteTypes => PokemonTypes.Intersect(MoveTypes);
 
         /// <summary>
-        /// Returns the names of all concrete types.
+        /// Returns the type set for the version group with the given ID.
         /// </summary>
-        public async Task<IEnumerable<string>> GetConcreteTypeNames(int? versionGroupId = null)
+        public async Task<TypeSet> GetTypeSet(int? versionGroupId = null)
         {
-            var types = ConcreteTypes;
-            if (versionGroupId.HasValue)
-            {
-                var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
-                var validTypes = new List<Type>();
-                foreach (var type in types)
-                {
-                    if (await generation.HasType(type))
-                    {
-                        validTypes.Add(type);
-                    }
-                }
+            var types = ConcreteTypes.ToArray();
+            var typesArePresent = Enumerable.Repeat(false, types.Length).ToArray();
 
-                return validTypes.Select(t => t.ToString());
+            versionGroupId ??= VersionGroupData.Instance.LatestVersionGroupIndex;
+            var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
+            for (var i = 0; i < types.Length; i++)
+            {
+                var type = types[i];
+                if (await generation.HasType(type))
+                {
+                    typesArePresent[i] = true;
+                }
             }
 
-            return types.Select(t => t.ToString());
+            return new TypeSet
+            {
+                VersionGroupId = versionGroupId.Value,
+                Types = types.Select(t => t.ToString()).ToArray(),
+                TypesArePresent = typesArePresent
+            };
         }
 
         #endregion
