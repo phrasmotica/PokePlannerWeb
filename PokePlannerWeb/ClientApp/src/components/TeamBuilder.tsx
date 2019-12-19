@@ -90,6 +90,7 @@ export class TeamBuilder extends Component<{}, {
     }
 
     renderPokemonTable() {
+        let versionGroupIndex = this.state.versionGroupIndex
         return (
             <table className='table table-striped' aria-labelledby="tableLabel">
                 <thead>
@@ -103,12 +104,12 @@ export class TeamBuilder extends Component<{}, {
                     </tr>
                 </thead>
                 <tbody>
-                    <PokemonSelector index={0} />
-                    <PokemonSelector index={1} />
-                    <PokemonSelector index={2} />
-                    <PokemonSelector index={3} />
-                    <PokemonSelector index={4} />
-                    <PokemonSelector index={5} />
+                    <PokemonSelector index={0} versionGroupIndex={versionGroupIndex} />
+                    <PokemonSelector index={1} versionGroupIndex={versionGroupIndex} />
+                    <PokemonSelector index={2} versionGroupIndex={versionGroupIndex} />
+                    <PokemonSelector index={3} versionGroupIndex={versionGroupIndex} />
+                    <PokemonSelector index={4} versionGroupIndex={versionGroupIndex} />
+                    <PokemonSelector index={5} versionGroupIndex={versionGroupIndex} />
                 </tbody>
             </table>
         );
