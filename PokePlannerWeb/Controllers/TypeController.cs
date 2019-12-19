@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokePlannerWeb.Data.Mechanics;
@@ -26,13 +27,14 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the names of all concrete types.
+        /// Returns the names of all concrete types in the version group with the given ID.
         /// </summary>
-        [HttpGet("concrete")]
-        public string[] GetConcreteTypeNames()
+        [HttpGet("concrete/{versionGroupId:int}")]
+        public async Task<string[]> GetConcreteTypeNames(int versionGroupId)
         {
-            Logger.LogInformation("Getting concrete type names...");
-            return TypeData.Instance.GetConcreteTypeNames().ToArray();
+            Logger.LogInformation($"Getting concrete type names for version group {versionGroupId}...");
+            var typeNames = await TypeData.Instance.GetConcreteTypeNames(versionGroupId);
+            return typeNames.ToArray();
         }
     }
 }

@@ -24,37 +24,53 @@ export class EfficacyList extends Component<{
     efficacy: number[],
 
     /**
-     * The index of the selected version group.
+     * Whether we're loading the efficacy.
      */
-    loading: boolean
+    loadingEfficacy: boolean,
+
+    /**
+     * The list of concrete type names.
+     */
+    concreteTypes: string[],
+
+    /**
+     * Whether we're loading the concrete type names.
+     */
+    loadingConcreteTypes: boolean
 }> {
     constructor(props: any) {
         super(props);
         this.state = {
             efficacy: [],
-            loading: true
+            loadingEfficacy: true,
+            concreteTypes: [],
+            loadingConcreteTypes: true
         }
 
         // bind stuff to this object
-        this.handleResponse = this.handleResponse.bind(this)
+        this.handleEfficacyResponse = this.handleEfficacyResponse.bind(this)
     }
 
     componentDidMount() {
         // get efficacy
         this.getEfficacy()
 
+        // get list of concrete types
+        this.getConcreteTypeNames()
+
         // finished loading
         this.setState({
-            loading: false
+            loadingEfficacy: false
         })
     }
 
     componentDidUpdate(previousProps: any) {
-        // refresh efficacy if the version group index changed
+        // refresh efficacy and concrete type names if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
         if (versionGroupIndex !== previousVersionGroupIndex) {
             this.getEfficacy()
+            this.getConcreteTypeNames()
         }
     }
 
@@ -64,18 +80,20 @@ export class EfficacyList extends Component<{
 
     renderTypeEfficacy() {
         // display message if we're loading
-        if (this.state.loading) {
+        if (this.state.loadingEfficacy) {
             return this.makeSpinner()
         }
 
+        let types = this.state.concreteTypes
+        let efficacy = this.state.efficacy
         return (
             <Table>
                 <tbody>
                     <tr key={this.props.index}>
-                        {this.state.efficacy.map((value, index) => {
+                        {types.map((type, index) => {
                             return (
                                 <td key={index}>
-                                    <em>{index}</em>: <b>{value}x</b>
+                                    <em>{type}</em> <b>{efficacy[index]}x</b>
                                 </td>
                             )
                         })}
@@ -98,21 +116,46 @@ export class EfficacyList extends Component<{
 
             // loading begins
             this.setState({
-                loading: true
+                loadingEfficacy: true
             })
 
             // get efficacy data
             fetch(`efficacy/${species}/${this.props.versionGroupIndex}`)
-                .then(this.handleResponse)
+                .then(this.handleEfficacyResponse)
                 .then(response => response.json())
                 .then(efficacy => this.setState({ efficacy: efficacy }))
                 .catch(error => console.log(error))
-                .then(() => this.setState({ loading: false }))
+                .then(() => this.setState({ loadingEfficacy: false }))
         }
     }
 
+    // retrieves the names of the concrete types from TypeController
+    getConcreteTypeNames() {
+        console.log(`Efficacy list ${this.props.index}: getting concrete type names...`)
+
+        // loading begins
+        this.setState({
+            loadingConcreteTypes: true
+        })
+
+        // get concrete type names
+        fetch(`type/concrete/${this.props.versionGroupIndex}`)
+            .then(response => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                // concrete types endpoint couldn't be found
+                throw new Error(`Efficacy list ${this.props.index}: couldn't get concrete type names!`)
+            })
+            .then(response => response.json())
+            .then(concreteTypes => this.setState({ concreteTypes: concreteTypes }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingConcreteTypes: false }))
+    }
+
     // handle PokeAPI responses
-    handleResponse(response: Response) {
+    handleEfficacyResponse(response: Response) {
         if (response.status === 200) {
             return response
         }

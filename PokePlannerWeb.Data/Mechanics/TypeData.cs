@@ -44,6 +44,8 @@ namespace PokePlannerWeb.Data.Mechanics
         /// </summary>
         public async Task LoadTypeEfficacy(int? versionGroupId = null)
         {
+            Console.WriteLine($"Started loading efficacy data for version group {versionGroupId}...");
+
             Efficacy = new Dictionary<Type, Dictionary<Type, double>>();
 
             foreach (var thisType in ConcreteTypes)
@@ -76,6 +78,8 @@ namespace PokePlannerWeb.Data.Mechanics
 
                 Console.WriteLine($@"Set {typeName} efficacy data.");
             }
+
+            Console.WriteLine($"Finished loading efficacy data for version group {versionGroupId}.");
         }
 
         /// <summary>
@@ -117,9 +121,25 @@ namespace PokePlannerWeb.Data.Mechanics
         /// <summary>
         /// Returns the names of all concrete types.
         /// </summary>
-        public IEnumerable<string> GetConcreteTypeNames()
+        public async Task<IEnumerable<string>> GetConcreteTypeNames(int? versionGroupId = null)
         {
-            return ConcreteTypes.Select(t => t.ToString());
+            var types = ConcreteTypes;
+            if (versionGroupId.HasValue)
+            {
+                var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
+                var validTypes = new List<Type>();
+                foreach (var type in types)
+                {
+                    if (await generation.HasType(type))
+                    {
+                        validTypes.Add(type);
+                    }
+                }
+
+                return validTypes.Select(t => t.ToString());
+            }
+
+            return types.Select(t => t.ToString());
         }
 
         #endregion
