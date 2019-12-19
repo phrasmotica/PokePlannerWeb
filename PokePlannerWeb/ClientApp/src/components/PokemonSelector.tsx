@@ -87,19 +87,12 @@ export class PokemonSelector extends Component<{
         return (
             <tr key={pokemon.id}>
                 <td>
-                    <input
-                        type="text"
-                        onKeyDown={this.handleSearch}
-                    />
+                    <input type="text" onKeyDown={this.handleSearch} />
                     {loadingElement}
                 </td>
                 <td>{pokemon.order}</td>
                 <td>
-                    <img
-                        src={pokemon.spriteUrl}
-                        alt={pokemon.englishName}
-                        style={{ width: 60, height: 60 }}>
-                    </img>
+                    <img src={pokemon.spriteUrl} alt={pokemon.englishName} style={{ width: 60, height: 60 }} />
                 </td>
                 <td>{pokemon.englishName}</td>
                 <td>{this.state.typesDescription}</td>
