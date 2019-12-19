@@ -30,12 +30,12 @@ export class EfficacyList extends Component<{
     loadingEfficacy: boolean,
 
     /**
-     * The list of concrete type names.
+     * The type set.
      */
     typeSet: TypeSet,
 
     /**
-     * Whether we're loading the concrete type names.
+     * Whether we're loading the type set.
      */
     loadingTypeSet: boolean
 }> {
@@ -71,12 +71,20 @@ export class EfficacyList extends Component<{
     }
 
     componentDidUpdate(previousProps: any) {
-        // refresh efficacy and concrete type names if the version group index changed
+        // refresh efficacy and type set if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
         if (versionGroupIndex !== previousVersionGroupIndex) {
             this.getEfficacy()
             this.getTypeSet()
+        }
+        else {
+            // just refresh efficacy if the species changed
+            let previousSpecies = previousProps.species
+            let species = this.props.species
+            if (species !== previousSpecies) {
+                this.getEfficacy()
+            }
         }
     }
 
