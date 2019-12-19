@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using PokeApiNet.Models;
-using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Payloads
 {
