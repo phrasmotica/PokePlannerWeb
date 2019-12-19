@@ -107,7 +107,7 @@ export class PokemonSelector extends Component<{
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingPokemon || this.state.loadingTypesDescription
+        return this.state.loadingPokemon
     }
 
     // returns a loading spinner
