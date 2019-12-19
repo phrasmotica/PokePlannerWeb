@@ -16,7 +16,7 @@ export class PokemonSelector extends Component<{
     /**
      * The names of Pokemon species entered into the input field.
      */
-    speciesName: string,
+    species: string,
 
     /**
      * The Pokemon to display.
@@ -41,7 +41,7 @@ export class PokemonSelector extends Component<{
     constructor(props: any) {
         super(props);
         this.state = {
-            speciesName: '',
+            species: '',
             pokemon: {},
             loadingPokemon: true,
             typesDescription: '',
@@ -67,7 +67,7 @@ export class PokemonSelector extends Component<{
         let versionGroupIndex = this.props.versionGroupIndex
         if (versionGroupIndex !== previousVersionGroupIndex) {
             console.log(`Pokemon selector ${this.props.index}: version group index ${previousVersionGroupIndex} -> ${versionGroupIndex}`)
-            let species = this.state.speciesName
+            let species = this.state.species
             if (species && species !== "") {
                 this.getTypesDescription(species)
             }
@@ -80,7 +80,7 @@ export class PokemonSelector extends Component<{
 
     renderPokemon(pokemon: any) {
         // display message if we're loading
-        let species = this.state.speciesName
+        let species = this.state.species
         let isLoading = this.isLoading()
         let loadingElement = isLoading ? <p><em>Loading {species}...</em></p> : null
 
@@ -114,7 +114,7 @@ export class PokemonSelector extends Component<{
         const newSpeciesName = e.target.value.toLowerCase()
         if (e.key === 'Enter' && newSpeciesName !== this.state.pokemon.name) {
             // get Pokemon payload
-            this.findPokemon(newSpeciesName)
+            this.getPokemon(newSpeciesName)
 
             // get types description
             this.getTypesDescription(newSpeciesName)
@@ -122,12 +122,12 @@ export class PokemonSelector extends Component<{
     }
 
     // retrieves the given Pokemon species from PokemonController
-    findPokemon(species: string) {
+    getPokemon(species: string) {
         console.log(`Pokemon selector ${this.props.index}: getting species '${species}'...`)
 
         // loading begins
         this.setState({
-            speciesName: species,
+            species: species,
             loadingPokemon: true
         })
 
@@ -163,7 +163,7 @@ export class PokemonSelector extends Component<{
             return response
         }
 
-        let species = this.state.speciesName
+        let species = this.state.species
         if (response.status === 500) {
             // species endpoint couldn't be found
             throw new Error(`Pokemon selector ${this.props.index}: couldn't get species '${species}'!`)
