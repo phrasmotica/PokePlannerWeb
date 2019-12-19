@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { PokemonSelector } from './PokemonSelector';
+import { Table } from 'reactstrap';
 
 export class TeamBuilder extends Component<{}, {
     /**
@@ -93,7 +94,7 @@ export class TeamBuilder extends Component<{}, {
     renderPokemonTable() {
         let versionGroupIndex = this.state.versionGroupIndex
         return (
-            <table className='table table-striped' aria-labelledby="tableLabel">
+            <Table>
                 <thead>
                     <tr>
                         <th>Search</th>
@@ -112,7 +113,7 @@ export class TeamBuilder extends Component<{}, {
                     <PokemonSelector index={4} versionGroupIndex={versionGroupIndex} />
                     <PokemonSelector index={5} versionGroupIndex={versionGroupIndex} />
                 </tbody>
-            </table>
+            </Table>
         );
     }
 

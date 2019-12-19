@@ -1,6 +1,6 @@
 ﻿import { Component } from "react";
 import React from "react";
-import { Spinner } from "reactstrap";
+import { Spinner, Table } from "reactstrap";
 
 export class EfficacyList extends Component<{
     /**
@@ -69,7 +69,7 @@ export class EfficacyList extends Component<{
         }
 
         return (
-            <table className='table table-striped' aria-labelledby="tableLabel">
+            <Table>
                 <tbody>
                     <tr key={this.props.index}>
                         {this.state.efficacy.map((value, index) => {
@@ -81,7 +81,7 @@ export class EfficacyList extends Component<{
                         })}
                     </tr>
                 </tbody>
-            </table>
+            </Table>
         )
     }
 
