@@ -49,5 +49,17 @@ namespace PokePlannerWeb.Controllers
             var pokemon = await PokeAPI.Get<Pokemon>(name);
             return await pokemon.AsPayload();
         }
+
+        /// <summary>
+        /// Returns a description of the types of the Pokemon with the given species name in the
+        /// version group with the given ID.
+        /// </summary>
+        [HttpGet("{name}/types/{versionGroupId:int}")]
+        public async Task<string> GetPokemonTypesDescriptionByVersionGroup(string name, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting types for Pokemon \"{name}\" in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(name);
+            return await pokemon.GetTypesDescription(versionGroupId);
+        }
     }
 }
