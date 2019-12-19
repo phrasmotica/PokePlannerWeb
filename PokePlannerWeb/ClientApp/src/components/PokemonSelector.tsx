@@ -24,34 +24,40 @@ export class PokemonSelector extends Component<{
     pokemon: any,
 
     /**
+     * Whether we're loading the selected Pokemon.
+     */
+    loadingPokemon: boolean
+
+    /**
      * The types description to display.
      */
     typesDescription: string,
 
     /**
-     * Whether we're loading the selected Pokemon.
+     * Whether we're loading the types description.
      */
-    loading: boolean
+    loadingTypesDescription: boolean
 }> {
     constructor(props: any) {
         super(props);
         this.state = {
             speciesName: '',
             pokemon: {},
+            loadingPokemon: true,
             typesDescription: '',
-            loading: true
+            loadingTypesDescription: true
         }
 
-        // bind event handlers to this object
+        // bind stuff to this object
         this.handleSearch = this.handleSearch.bind(this)
         this.handleResponse = this.handleResponse.bind(this)
-        this.catchErrorAndFinishLoading = this.catchErrorAndFinishLoading.bind(this)
     }
 
     componentDidMount() {
         // finished loading
         this.setState({
-            loading: false
+            loadingPokemon: false,
+            loadingTypesDescription: false
         })
     }
 
@@ -75,7 +81,8 @@ export class PokemonSelector extends Component<{
     renderPokemon(pokemon: any) {
         // display message if we're loading
         let species = this.state.speciesName
-        let loadingElement = this.state.loading ? <p><em>Loading {species}...</em></p> : null
+        let isLoading = this.isLoading()
+        let loadingElement = isLoading ? <p><em>Loading {species}...</em></p> : null
 
         return (
             <tr key={pokemon.id}>
@@ -94,6 +101,11 @@ export class PokemonSelector extends Component<{
                 </td>
             </tr>
         );
+    }
+
+    // returns whether this component is loading
+    isLoading() {
+        return this.state.loadingPokemon || this.state.loadingTypesDescription
     }
 
     // handler for searching for a Pokemon
@@ -116,18 +128,16 @@ export class PokemonSelector extends Component<{
         // loading begins
         this.setState({
             speciesName: species,
-            loading: true
+            loadingPokemon: true
         })
 
         // get Pokemon data
         fetch(`pokemon/${species}`)
             .then(this.handleResponse)
             .then(response => response.json())
-            .then(newPokemon => this.setState({
-                pokemon: newPokemon,
-                loading: false
-            }))
-            .catch(this.catchErrorAndFinishLoading)
+            .then(newPokemon => this.setState({ pokemon: newPokemon }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemon: false }))
     }
 
     // retrieves the Pokemon's types description from PokemonController
@@ -136,17 +146,15 @@ export class PokemonSelector extends Component<{
 
         // loading begins
         this.setState({
-            loading: true
+            loadingTypesDescription: true
         })
 
         fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
             .then(this.handleResponse)
             .then(response => response.text())
-            .then(typesDescription => this.setState({
-                typesDescription: typesDescription,
-                loading: false
-            }))
-            .catch(this.catchErrorAndFinishLoading)
+            .then(typesDescription => this.setState({ typesDescription: typesDescription }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingTypesDescription: false }))
     }
 
     // handle PokeAPI responses
@@ -163,13 +171,5 @@ export class PokemonSelector extends Component<{
 
         // some other error
         throw new Error(`Pokemon selector ${this.props.index}: tried to get species '${species}' but failed with status ${response.status}!`)
-    }
-
-    // logs the error to console and stops loading
-    catchErrorAndFinishLoading(error: any) {
-        console.log(error)
-        this.setState({
-            loading: false
-        })
     }
 }
