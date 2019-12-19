@@ -114,6 +114,14 @@ namespace PokePlannerWeb.Data.Mechanics
         /// </summary>
         public static IEnumerable<Type> ConcreteTypes => PokemonTypes.Intersect(MoveTypes);
 
+        /// <summary>
+        /// Returns the names of all concrete types.
+        /// </summary>
+        public IEnumerable<string> GetConcreteTypeNames()
+        {
+            return ConcreteTypes.Select(t => t.ToString());
+        }
+
         #endregion
 
         /// <summary>
