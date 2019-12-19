@@ -53,6 +53,19 @@ export class PokemonSelector extends Component<{
         })
     }
 
+    componentDidUpdate(previousProps: any) {
+        // refresh types description if the version group index changed
+        let previousVersionGroupIndex = previousProps.versionGroupIndex
+        let versionGroupIndex = this.props.versionGroupIndex
+        if (versionGroupIndex !== previousVersionGroupIndex) {
+            console.log(`Pokemon selector ${this.props.index}: version group index ${previousVersionGroupIndex} -> ${versionGroupIndex}`)
+            let species = this.state.speciesName
+            if (species && species !== "") {
+                this.getTypesDescription(species)
+            }
+        }
+    }
+
     // handler for searching for a Pokemon
     handleSearch(e: any) {
         // only update if we need to
