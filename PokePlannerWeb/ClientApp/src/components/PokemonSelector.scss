@@ -1,0 +1,83 @@
+﻿@use "../styles/types";
+
+.type {
+    &-unknown {
+        background-color: types.$unknown;
+    }
+
+    &-normal {
+        background-color: types.$normal;
+    }
+
+    &-fighting {
+        background-color: types.$fighting;
+    }
+
+    &-flying {
+        background-color: types.$flying;
+    }
+
+    &-poison {
+        background-color: types.$poison;
+    }
+
+    &-ground {
+        background-color: types.$ground;
+    }
+
+    &-rock {
+        background-color: types.$rock;
+    }
+
+    &-bug {
+        background-color: types.$bug;
+    }
+
+    &-ghost {
+        background-color: types.$ghost;
+    }
+
+    &-steel {
+        background-color: types.$steel;
+    }
+
+    &-fire {
+        background-color: types.$fire;
+    }
+
+    &-water {
+        background-color: types.$water;
+    }
+
+    &-grass {
+        background-color: types.$grass;
+    }
+
+    &-electric {
+        background-color: types.$electric;
+    }
+
+    &-psychic {
+        background-color: types.$psychic;
+    }
+
+    &-ice {
+        background-color: types.$ice;
+    }
+
+    &-dragon {
+        background-color: types.$dragon;
+    }
+
+    &-dark {
+        background-color: types.$dark;
+    }
+
+    &-fairy {
+        background-color: types.$fairy;
+    }
+
+    &-shadow {
+        background-color: types.$shadow;
+    }
+}
