@@ -3,6 +3,8 @@ import React from "react";
 import { EfficacyList } from "./EfficacyList";
 import { Spinner } from "reactstrap";
 
+import "./PokemonSelector.scss"
+
 export class PokemonSelector extends Component<{
     /**
      * The index of this Pokemon selector.
@@ -84,6 +86,16 @@ export class PokemonSelector extends Component<{
         let species = this.state.species
         let isLoading = this.isLoading()
 
+        let primaryTypeStr = "unknown"
+        if (pokemon.primaryType) {
+            primaryTypeStr = pokemon.primaryType.toLowerCase()
+        }
+
+        let secondaryTypeStr = null
+        if (pokemon.secondaryType) {
+            secondaryTypeStr = pokemon.secondaryType.toLowerCase()
+        }
+
         return (
             <tr key={pokemon.id}>
                 <td>
@@ -97,7 +109,14 @@ export class PokemonSelector extends Component<{
                     }
                 </td>
                 <td>{isLoading ? this.makeSpinner() : pokemon.englishName}</td>
-                <td>{this.state.loadingTypesDescription ? this.makeSpinner() : this.state.typesDescription}</td>
+                <td>
+                    <p className={'type-' + primaryTypeStr}>
+                        {this.state.loadingTypesDescription ? this.makeSpinner() : primaryTypeStr}
+                    </p>
+                    <p className={'type-' + (secondaryTypeStr ?? primaryTypeStr)}>
+                        {this.state.loadingTypesDescription ? this.makeSpinner() : secondaryTypeStr}
+                    </p>
+                </td>
                 <td>
                     <EfficacyList index={this.props.index} species={species} versionGroupIndex={this.props.versionGroupIndex} />
                 </td>
