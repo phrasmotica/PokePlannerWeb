@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using PokeApiNet.Models;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Payloads
 {
@@ -34,6 +36,16 @@ namespace PokePlannerWeb.Data.Payloads
         public int Order => Pokemon.Order;
 
         /// <summary>
+        /// Gets or sets the Pokemon's primary type.
+        /// </summary>
+        public string PrimaryType { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the Pokemon's secondary type.
+        /// </summary>
+        public string SecondaryType { get; protected set; }
+
+        /// <summary>
         /// Gets the URL of the Pokemon's sprite.
         /// </summary>
         public string SpriteUrl => Pokemon.Sprites.FrontDefault;
@@ -44,6 +56,10 @@ namespace PokePlannerWeb.Data.Payloads
         public override async Task FetchAsync()
         {
             EnglishName = await Pokemon.GetEnglishName();
+
+            var types = (await Pokemon.GetTypes()).ToArray();
+            PrimaryType = types[0].ToString();
+            SecondaryType = types.Length > 1 ? types[1].ToString() : null;
         }
     }
 }

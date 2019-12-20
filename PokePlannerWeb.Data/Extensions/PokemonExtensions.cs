@@ -43,9 +43,10 @@ namespace PokePlannerWeb.Data.Extensions
         /// <summary>
         /// Returns this Pokemon's types in the version group with the given ID.
         /// </summary>
-        private static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon, int versionGroupId)
+        public static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon, int? versionGroupId = null)
         {
-            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
+            versionGroupId ??= VersionGroupData.Instance.VersionGroupIndex;
+            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId.Value];
             return await pokemon.GetTypes(versionGroup);
         }
 
