@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PokemonSelector } from './PokemonSelector';
-import { Table } from 'reactstrap';
+import { Container } from 'reactstrap';
 
 export class TeamBuilder extends Component<{}, {
     /**
@@ -94,26 +94,14 @@ export class TeamBuilder extends Component<{}, {
     renderPokemonTable() {
         let versionGroupIndex = this.state.versionGroupIndex
         return (
-            <Table>
-                <thead>
-                    <tr>
-                        <th style={{ width: 150 }}>Search</th>
-                        <th style={{ width: 50 }}>Id</th>
-                        <th style={{ width: 60 }}>Sprite</th>
-                        <th style={{ width: 100 }}>Name</th>
-                        <th style={{ width: 100 }}>Type</th>
-                        <th>Efficacy</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <PokemonSelector index={0} versionGroupIndex={versionGroupIndex} />
-                    <PokemonSelector index={1} versionGroupIndex={versionGroupIndex} />
-                    <PokemonSelector index={2} versionGroupIndex={versionGroupIndex} />
-                    <PokemonSelector index={3} versionGroupIndex={versionGroupIndex} />
-                    <PokemonSelector index={4} versionGroupIndex={versionGroupIndex} />
-                    <PokemonSelector index={5} versionGroupIndex={versionGroupIndex} />
-                </tbody>
-            </Table>
+            <Container>
+                <PokemonSelector index={0} versionGroupIndex={versionGroupIndex} />
+                <PokemonSelector index={1} versionGroupIndex={versionGroupIndex} />
+                <PokemonSelector index={2} versionGroupIndex={versionGroupIndex} />
+                <PokemonSelector index={3} versionGroupIndex={versionGroupIndex} />
+                <PokemonSelector index={4} versionGroupIndex={versionGroupIndex} />
+                <PokemonSelector index={5} versionGroupIndex={versionGroupIndex} />
+            </Container>
         );
     }
 

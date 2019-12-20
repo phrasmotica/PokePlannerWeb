@@ -1,6 +1,6 @@
 ﻿import { Component } from "react";
 import React from "react";
-import { Spinner, Table } from "reactstrap";
+import { Spinner, Container, Row, Col } from "reactstrap";
 import { TypeSet } from "../models/TypeSet";
 
 export class EfficacyList extends Component<{
@@ -120,13 +120,11 @@ export class EfficacyList extends Component<{
         }
 
         return (
-            <Table>
-                <tbody>
-                    <tr key={this.props.index}>
-                        {items}
-                    </tr>
-                </tbody>
-            </Table>
+            <Container>
+                <Row style={{ width: 1080 }}>
+                    {items}
+                </Row>
+            </Container>
         )
     }
 
