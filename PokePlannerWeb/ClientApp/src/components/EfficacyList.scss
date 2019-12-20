@@ -1,0 +1,27 @@
+﻿.efficacy {
+    text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.multiplier {
+    &-super {
+        color: orange;
+
+        &-extra {
+            color: red;
+        }
+    }
+
+    &-notvery {
+        color: green;
+
+        &-extra {
+            color: limegreen;
+        }
+    }
+
+    &-immune {
+        color: deepskyblue;
+    }
+}

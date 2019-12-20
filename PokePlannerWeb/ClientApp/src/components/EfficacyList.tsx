@@ -3,6 +3,8 @@ import React from "react";
 import { Spinner, Container, Row, Col } from "reactstrap";
 import { TypeSet } from "../models/TypeSet";
 
+import "./EfficacyList.scss"
+
 export class EfficacyList extends Component<{
     /**
      * The index of this efficacy list.
@@ -93,28 +95,27 @@ export class EfficacyList extends Component<{
     }
 
     renderTypeEfficacy() {
-        // only display types that are present
         let typeSet = this.state.typeSet
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
             if (typeSet.typesArePresent[i]) {
-                let multiplier = !this.hasSpecies()
-                    ? <b>-</b>
-                    : this.state.loadingEfficacy
-                        ? this.makeSpinner()
-                        : <b>{efficacy[i]}x</b>
+                let multiplierElement = this.getElementFromMultiplier(efficacy[i])
                 items.push(
-                    <td key={i}>
-                        <em>{typeSet.types[i]}</em> {multiplier}
-                    </td>
+                    <Col className="efficacy">
+                        <em>{typeSet.types[i]}</em>
+                        <br />
+                        {multiplierElement}
+                    </Col>
                 )
             }
             else {
                 items.push(
-                    <td key={i}>
-                        <em>{typeSet.types[i]}</em> <b>N/A</b>
-                    </td>
+                    <Col className="efficacy">
+                        <em>{typeSet.types[i]}</em>
+                        <br />
+                        <b>N/A</b>
+                    </Col>
                 )
             }
         }
@@ -136,6 +137,50 @@ export class EfficacyList extends Component<{
     // returns a loading spinner
     makeSpinner() {
         return <Spinner animation="border" size="sm" />
+    }
+
+    // returns the style class to use for the given multiplier
+    getElementFromMultiplier(multiplier: number) {
+        let multiplierClass = this.getClassFromMultiplier(multiplier)
+
+        if (!this.hasSpecies) {
+            return <b>-</b>
+        }
+
+        if (this.state.loadingEfficacy) {
+            return this.makeSpinner()
+        }
+
+        return (
+            <p className={multiplierClass}>
+                <b>{multiplier}x</b>
+            </p>
+        )
+    }
+
+    // returns the style class to use for the given multiplier
+    getClassFromMultiplier(multiplier: number) {
+        let multiplierClass = "multiplier"
+
+        if (multiplier <= 0) {
+            multiplierClass += "-immune"
+        }
+        else if (multiplier < 1) {
+            multiplierClass += "-notvery"
+
+            if (multiplier < 0.5) {
+                multiplierClass += "-extra"
+            }
+        }
+        else if (multiplier > 1) {
+            multiplierClass += "-super"
+
+            if (multiplier > 2) {
+                multiplierClass += "-extra"
+            }
+        }
+
+        return multiplierClass
     }
 
     // retrieves the Pokemon's efficacy from EfficacyController
