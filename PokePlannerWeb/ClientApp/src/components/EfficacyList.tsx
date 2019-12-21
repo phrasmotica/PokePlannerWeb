@@ -167,9 +167,7 @@ export class EfficacyList extends Component<{
             console.log(`Efficacy list ${this.props.index}: getting efficacy for '${species}'...`)
 
             // loading begins
-            this.setState({
-                loadingEfficacy: true
-            })
+            this.setState({ loadingEfficacy: true })
 
             // get efficacy data
             fetch(`efficacy/${species}/${this.props.versionGroupIndex}`)
