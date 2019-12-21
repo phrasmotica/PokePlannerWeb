@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Payloads;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -29,36 +28,35 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the Pokemon with the given numeric ID.
+        /// Returns the given Pokemon's name.
         /// </summary>
-        [HttpGet("{id:int}")]
-        public async Task<PokemonPayload> GetPokemonById(int id)
+        [HttpGet("{species}/name")]
+        public async Task<string> GetPokemonName(string species)
         {
-            Logger.LogInformation($"Getting Pokemon with ID {id}...");
-            var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return await pokemon.AsPayload();
+            Logger.LogInformation($"Getting name of Pokemon \"{species}\"...");
+            var pokemon = await PokeAPI.Get<Pokemon>(species);
+            return await pokemon.GetEnglishName();
         }
 
         /// <summary>
-        /// Returns the Pokemon with the given species name.
+        /// Returns the given Pokemon's name.
         /// </summary>
-        [HttpGet("{name}")]
-        public async Task<PokemonPayload> GetPokemonByName(string name)
+        [HttpGet("{species}/sprite")]
+        public async Task<string> GetPokemonSpriteUrl(string species)
         {
-            Logger.LogInformation($"Getting Pokemon \"{name}\"...");
-            var pokemon = await PokeAPI.Get<Pokemon>(name);
-            return await pokemon.AsPayload();
+            Logger.LogInformation($"Getting sprite URL of Pokemon \"{species}\"...");
+            var pokemon = await PokeAPI.Get<Pokemon>(species);
+            return pokemon.Sprites.FrontDefault;
         }
 
         /// <summary>
-        /// Returns a description of the types of the Pokemon with the given species name in the
-        /// version group with the given ID.
+        /// Returns the given Pokemon's types description in the version group with the given ID.
         /// </summary>
-        [HttpGet("{name}/types/{versionGroupId:int}")]
-        public async Task<string> GetPokemonTypesDescriptionByVersionGroup(string name, int versionGroupId)
+        [HttpGet("{species}/types/{versionGroupId:int}")]
+        public async Task<string> GetPokemonTypesDescriptionInVersionGroup(string species, int versionGroupId)
         {
-            Logger.LogInformation($"Getting types for Pokemon \"{name}\" in version group {versionGroupId}...");
-            var pokemon = await PokeAPI.Get<Pokemon>(name);
+            Logger.LogInformation($"Getting types for Pokemon \"{species}\" in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(species);
             return await pokemon.GetTypesDescription(versionGroupId);
         }
     }

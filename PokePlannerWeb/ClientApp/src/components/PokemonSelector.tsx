@@ -23,51 +23,63 @@ export class PokemonSelector extends Component<{
     typeSet: TypeSet
 }, {
     /**
-     * The names of Pokemon species entered into the input field.
+     * The Pokemon species.
      */
     species: string,
 
     /**
-     * The Pokemon to display.
+     * The Pokemon's name.
      */
-    pokemon: any,
+    pokemonName: string,
 
     /**
-     * Whether we're loading the selected Pokemon.
+     * Whether we're loading the Pokemon's name.
      */
-    loadingPokemon: boolean,
+    loadingPokemonName: boolean,
 
     /**
-     * The types description to display.
+     * The URL of the Pokemon's sprite.
      */
-    typesDescription: string,
+    pokemonSpriteUrl: string,
 
     /**
-     * Whether we're loading the types description.
+     * Whether we're loading the URL of the Pokemon's sprite.
      */
-    loadingTypesDescription: boolean
+    loadingPokemonSpriteUrl: boolean,
+
+    /**
+     * The Pokemon's types description.
+     */
+    pokemonTypesDescription: string,
+
+    /**
+     * Whether we're loading the Pokemon's types description.
+     */
+    loadingPokemonTypesDescription: boolean
 }> {
     constructor(props: any) {
         super(props)
         this.state = {
-            species: '',
-            pokemon: {},
-            loadingPokemon: true,
-            typesDescription: '',
-            loadingTypesDescription: true
+            species: "",
+            pokemonName: "",
+            loadingPokemonName: true,
+            pokemonSpriteUrl: "",
+            loadingPokemonSpriteUrl: true,
+            pokemonTypesDescription: '',
+            loadingPokemonTypesDescription: true
         }
 
         // bind stuff to this object
         this.handleSearch = this.handleSearch.bind(this)
         this.clearPokemon = this.clearPokemon.bind(this)
-        this.handleResponse = this.handleResponse.bind(this)
     }
 
     componentDidMount() {
         // finished loading
         this.setState({
-            loadingPokemon: false,
-            loadingTypesDescription: false
+            loadingPokemonName: false,
+            loadingPokemonSpriteUrl: false,
+            loadingPokemonTypesDescription: false
         })
     }
 
@@ -79,43 +91,42 @@ export class PokemonSelector extends Component<{
             console.log(`Pokemon selector ${this.props.index}: version group index ${previousVersionGroupIndex} -> ${versionGroupIndex}`)
             let species = this.state.species
             if (species && species !== "") {
-                this.getTypesDescription(species)
+                this.fetchTypesDescription(species)
             }
         }
     }
 
     render() {
-        return this.renderPokemon(this.state.pokemon)
+        return this.renderPokemon()
     }
 
-    renderPokemon(pokemon: any) {
-        // display message if we're loading
-        let species = this.state.species
+    renderPokemon() {
         let isLoading = this.isLoading()
 
         return (
-            <tr key={pokemon.id}>
+            <tr key={this.props.index}>
                 <td>
                     <Button onMouseUp={this.clearPokemon}>Clear</Button>
                 </td>
                 <td>
                     <input type="text" onKeyDown={this.handleSearch} />
                 </td>
-                <td>{isLoading ? this.makeSpinner() : pokemon.order}</td>
                 <td>
                     {isLoading
                         ? this.makeSpinner()
-                        : <img src={pokemon.spriteUrl} alt={pokemon.englishName} style={{ width: 60, height: 60 }} />
+                        : <img
+                            src={this.state.pokemonSpriteUrl}
+                            style={{ width: 60, height: 60 }} />
                     }
                 </td>
-                <td>{isLoading ? this.makeSpinner() : pokemon.englishName}</td>
+                <td>{isLoading ? this.makeSpinner() : this.state.pokemonName}</td>
                 <td>
-                    {isLoading ? this.makeSpinner() : this.state.typesDescription}
+                    {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                 </td>
                 <td>
                     <EfficacyList
                         index={this.props.index}
-                        species={species}
+                        species={this.state.species}
                         typeSet={this.props.typeSet}
                         versionGroupIndex={this.props.versionGroupIndex} />
                 </td>
@@ -125,7 +136,9 @@ export class PokemonSelector extends Component<{
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingPokemon || this.state.loadingTypesDescription
+        return this.state.loadingPokemonName
+            || this.state.loadingPokemonSpriteUrl
+            || this.state.loadingPokemonTypesDescription
     }
 
     // returns a loading spinner
@@ -135,14 +148,13 @@ export class PokemonSelector extends Component<{
 
     // handler for searching for a Pokemon
     handleSearch(e: any) {
-        // only update if we need to
+        // only fetch if we need to
         const newSpeciesName = e.target.value.toLowerCase()
-        if (e.key === 'Enter' && newSpeciesName !== this.state.pokemon.name) {
-            // get Pokemon payload
-            this.getPokemon(newSpeciesName)
-
-            // get types description
-            this.getTypesDescription(newSpeciesName)
+        if (e.key === 'Enter' && newSpeciesName !== this.state.species) {
+            // fetch name, sprite and types description
+            this.fetchPokemonName(newSpeciesName)
+            this.fetchSpriteUrl(newSpeciesName)
+            this.fetchTypesDescription(newSpeciesName)
         }
     }
 
@@ -150,66 +162,75 @@ export class PokemonSelector extends Component<{
     clearPokemon(_: any) {
         this.setState({
             species: "",
-            pokemon: {},
-            typesDescription: ""
+            pokemonName: "",
+            pokemonSpriteUrl: "",
+            pokemonTypesDescription: ""
         })
     }
 
-    // retrieves the given Pokemon species from PokemonController
-    getPokemon(species: string) {
-        console.log(`Pokemon selector ${this.props.index}: getting species '${species}'...`)
+    // fetches the name for the given Pokemon species from PokemonController
+    fetchPokemonName(species: string) {
+        console.log(`Selector ${this.props.index}: fetching name for '${species}'...`)
 
-        // loading begins
-        this.setState({
-            loadingPokemon: true
-        })
+        this.setState({ loadingPokemonName: true })
 
-        // get Pokemon data
-        fetch(`pokemon/${species}`)
-            .then(this.handleResponse)
-            .then(response => response.json())
-            .then(newPokemon => this.setState({
-                species: species,
-                pokemon: newPokemon
-            }))
-            .catch(error => {
-                console.log(error)
+        // fetch name
+        fetch(`pokemon/${species}/name`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch name for '${species}' but failed with status ${response.status}!`)
             })
-            .then(() => this.setState({
-                loadingPokemon: false
-            }))
-    }
-
-    // retrieves the Pokemon's types description from PokemonController
-    getTypesDescription(species: string) {
-        console.log(`Pokemon selector ${this.props.index}: getting types description for ${species}...`)
-
-        // loading begins
-        this.setState({
-            loadingTypesDescription: true
-        })
-
-        fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
-            .then(this.handleResponse)
             .then(response => response.text())
-            .then(typesDescription => this.setState({ typesDescription: typesDescription }))
+            .then(pokemonName => this.setState({
+                species: species,
+                pokemonName: pokemonName
+            }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingTypesDescription: false }))
+            .then(() => this.setState({ loadingPokemonName: false }))
     }
 
-    // handle PokeAPI responses
-    handleResponse(response: Response) {
-        if (response.status === 200) {
-            return response
-        }
+    // fetches the sprite for the given Pokemon species from PokemonController
+    fetchSpriteUrl(species: string) {
+        console.log(`Selector ${this.props.index}: fetching sprite for '${species}'...`)
 
-        let species = this.state.species
-        if (response.status === 500) {
-            // species endpoint couldn't be found
-            throw new Error(`Pokemon selector ${this.props.index}: couldn't get species '${species}'!`)
-        }
+        this.setState({ loadingPokemonSpriteUrl: true })
 
-        // some other error
-        throw new Error(`Pokemon selector ${this.props.index}: tried to get species '${species}' but failed with status ${response.status}!`)
+        // fetch sprite URL
+        fetch(`pokemon/${species}/sprite`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch sprite URL for '${species}' but failed with status ${response.status}!`)
+            })
+            .then(response => response.text())
+            .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
+    }
+
+    // fetches the types description for the given Pokemon from PokemonController
+    fetchTypesDescription(species: string) {
+        console.log(`Selector ${this.props.index}: fetching types description for '${species}'...`)
+
+        this.setState({ loadingPokemonTypesDescription: true })
+
+        // fetch types description
+        fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch types description for '${species}' but failed with status ${response.status}!`)
+            })
+            .then(response => response.text())
+            .then(typesDescription => this.setState({ pokemonTypesDescription: typesDescription }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemonTypesDescription: false }))
     }
 }
