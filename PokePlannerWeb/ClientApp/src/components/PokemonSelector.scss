@@ -81,3 +81,20 @@
         background-color: types.$shadow;
     }
 }
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex-center {
+    @include flex-center;
+}
+
+$dim: 96px;
+.sprite {
+    @include flex-center;
+    height: $dim;
+    width: $dim;
+}

@@ -108,6 +108,7 @@ export class PokemonSelector extends Component<{
     }
 
     renderPokemon() {
+        // flags
         let isLoading = this.isLoading()
         let hideSpecies = !this.hasSpecies()
         let showEfficacy = this.state.showEfficacy
@@ -115,19 +116,19 @@ export class PokemonSelector extends Component<{
         return (
             <Container>
                 <Row style={{ height: 60 }}>
-                    <Col xs="auto">
+                    <Col xs="auto" className="flex-center">
                         <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
                     </Col>
-                    <Col xs="auto">
+                    <Col xs="auto" className="flex-center">
                         <Button color="primary" onClick={this.toggleShowEfficacy}>{showEfficacy ? "Hide" : "Show"} efficacy</Button>
                     </Col>
-                    <Col xs="auto">
+                    <Col xs="auto" className="flex-center">
                         <Input
                             type="search"
                             placeholder="Search for a Pokemon!"
                             onKeyDown={this.handleSearch} />
                     </Col>
-                    <Col xs="auto">
+                    <Col className="sprite">
                         {isLoading
                             ? this.makeSpinner()
                             : <Media
@@ -137,10 +138,10 @@ export class PokemonSelector extends Component<{
                                 hidden={hideSpecies} />
                         }
                     </Col>
-                    <Col xs="auto">
+                    <Col xs="auto" className="flex-center">
                         {isLoading ? this.makeSpinner() : this.state.pokemonName}
                     </Col>
-                    <Col xs="auto">
+                    <Col xs="auto" className="flex-center">
                         {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                     </Col>
                 </Row>
