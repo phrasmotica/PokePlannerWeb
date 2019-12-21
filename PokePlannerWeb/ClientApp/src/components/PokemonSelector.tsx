@@ -116,7 +116,7 @@ export class PokemonSelector extends Component<{
         let efficacyList = this.renderEfficacyList()
 
         return (
-            <Container>
+            <div>
                 <Row>
                     <Col xs="auto" className="flex-center">
                         <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
@@ -135,7 +135,7 @@ export class PokemonSelector extends Component<{
                 <Collapse isOpen={showEfficacy}>
                     {efficacyList}
                 </Collapse>
-            </Container>
+            </div>
         );
     }
 

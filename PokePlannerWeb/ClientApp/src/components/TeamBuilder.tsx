@@ -138,7 +138,7 @@ export class TeamBuilder extends Component<{}, {
         let versionGroupMenu = this.renderVersionGroupMenu()
 
         return (
-            <Container>
+            <div>
                 <Row>
                     <Col>
                         {versionGroupMenu}
@@ -150,7 +150,7 @@ export class TeamBuilder extends Component<{}, {
                         
                     </Col>
                 </Row>
-            </Container>
+            </div>
         )
     }
 
@@ -183,9 +183,9 @@ export class TeamBuilder extends Component<{}, {
         }
 
         return (
-            <Container>
+            <div>
                 {pokemonSelectors}
-            </Container>
+            </div>
         )
     }
 
