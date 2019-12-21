@@ -138,9 +138,7 @@ export class PokemonSelector extends Component<{
                         {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                     </Col>
                 </Row>
-                <Row>
-                    {pokemonInfo}
-                </Row>
+                {pokemonInfo}
                 <Collapse isOpen={showEfficacy}>
                     {efficacyList}
                 </Collapse>
@@ -169,17 +167,15 @@ export class PokemonSelector extends Component<{
     renderPokemonInfo() {
         // flags
         let isLoading = this.isLoading()
-        let hideSpecies = !this.hasSpecies()
 
         return (
-            <Container>
-                <Col className="sprite">
+            <Row>
+                <Col xs="auto" className="sprite">
                     {isLoading
                         ? this.makeSpinner()
                         : <Media
                             object
-                            src={this.state.pokemonSpriteUrl}
-                            hidden={hideSpecies} />
+                            src={this.state.pokemonSpriteUrl} />
                     }
                 </Col>
                 <Col>
@@ -188,7 +184,7 @@ export class PokemonSelector extends Component<{
                 <Col>
 
                 </Col>
-            </Container>
+            </Row>
         )
     }
 
