@@ -98,11 +98,9 @@ export class EfficacyList extends Component<{
         }
 
         return (
-            <Container>
-                <Row style={{ width: 1080 }}>
-                    {items}
-                </Row>
-            </Container>
+            <Row style={{ width: 1080, height: 60 }}>
+                {items}
+            </Row>
         )
     }
 
@@ -129,9 +127,9 @@ export class EfficacyList extends Component<{
         }
 
         return (
-            <p className={multiplierClass}>
-                <b>{multiplier}x</b>
-            </p>
+            <b className={multiplierClass}>
+                {multiplier}x
+            </b>
         )
     }
 
