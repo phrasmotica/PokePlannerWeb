@@ -40,7 +40,7 @@ export class EfficacyList extends Component<{
         super(props)
         this.state = {
             efficacy: [],
-            loadingEfficacy: true
+            loadingEfficacy: false
         }
 
         // bind stuff to this object
