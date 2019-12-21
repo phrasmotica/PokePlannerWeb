@@ -31,7 +31,7 @@ export class TeamBuilder extends Component<{}, {
 
     componentDidMount() {
         this.loadVersionGroups()
-            .then(() => this.loadTypeEfficacy())
+            .then(() => this.loadTypeEfficacy(this.state.versionGroupIndex))
     }
 
     // load all version groups
@@ -57,20 +57,21 @@ export class TeamBuilder extends Component<{}, {
     }
 
     // loads type efficacy data
-    async loadTypeEfficacy() {
-        let index = this.state.versionGroupIndex
-        await fetch(`efficacy/${index}`, { method: "POST" })
+    async loadTypeEfficacy(versionGroupIndex: number) {
+        await fetch(`efficacy/${versionGroupIndex}`, { method: "POST" })
     }
 
     // set selected version group
     async handleVersionGroupChange(e: any) {
         const idx = Number(e.target.value)
-        this.setState({ versionGroupIndex: idx });
-        await fetch("versionGroup/selected", {
+        this.setState({ versionGroupIndex: idx })
+        this.loadTypeEfficacy(idx)
+        fetch("versionGroup/selected", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ index: idx })
         })
+            .catch(error => console.log(error))
     }
 
     renderVersionGroupMenu() {
