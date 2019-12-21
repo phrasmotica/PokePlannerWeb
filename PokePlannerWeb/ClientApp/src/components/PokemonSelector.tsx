@@ -148,7 +148,6 @@ export class PokemonSelector extends Component<{
 
         // loading begins
         this.setState({
-            species: species,
             loadingPokemon: true
         })
 
@@ -156,9 +155,16 @@ export class PokemonSelector extends Component<{
         fetch(`pokemon/${species}`)
             .then(this.handleResponse)
             .then(response => response.json())
-            .then(newPokemon => this.setState({ pokemon: newPokemon }))
-            .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemon: false }))
+            .then(newPokemon => this.setState({
+                species: species,
+                pokemon: newPokemon
+            }))
+            .catch(error => {
+                console.log(error)
+            })
+            .then(() => this.setState({
+                loadingPokemon: false
+            }))
     }
 
     // retrieves the Pokemon's types description from PokemonController
