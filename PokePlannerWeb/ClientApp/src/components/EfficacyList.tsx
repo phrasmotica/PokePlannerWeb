@@ -1,6 +1,6 @@
 ﻿import { Component } from "react"
 import React from "react"
-import { Spinner, Container, Row, Col } from "reactstrap"
+import { Spinner, Row, Col } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
 import "./EfficacyList.scss"
@@ -98,9 +98,9 @@ export class EfficacyList extends Component<{
         }
 
         return (
-            <Row style={{ width: 1080, height: 60 }}>
+            <div style={{ display: "flex", paddingBottom: 20 }}>
                 {items}
-            </Row>
+            </div>
         )
     }
 

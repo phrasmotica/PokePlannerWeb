@@ -118,7 +118,7 @@ export class PokemonSelector extends Component<{
 
         return (
             <Container>
-                <Row style={{ height: 60 }}>
+                <Row>
                     <Col xs="auto" className="flex-center">
                         <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
                     </Col>
