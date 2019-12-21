@@ -110,12 +110,7 @@ export class PokemonSelector extends Component<{
                 </td>
                 <td>{isLoading ? this.makeSpinner() : pokemon.englishName}</td>
                 <td>
-                    <p className={'type-' + primaryTypeStr}>
-                        {isLoading ? this.makeSpinner() : primaryTypeStr}
-                    </p>
-                    <p className={'type-' + (secondaryTypeStr || primaryTypeStr)}>
-                        {isLoading ? this.makeSpinner() : secondaryTypeStr}
-                    </p>
+                    {this.state.loadingTypesDescription ? this.makeSpinner() : this.state.typesDescription}
                 </td>
                 <td>
                     <EfficacyList index={this.props.index} species={species} versionGroupIndex={this.props.versionGroupIndex} />
