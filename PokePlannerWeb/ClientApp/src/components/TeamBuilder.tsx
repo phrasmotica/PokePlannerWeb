@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { PokemonSelector } from './PokemonSelector';
-import { Container } from 'reactstrap';
+import React, { Component } from 'react'
+import { PokemonSelector } from './PokemonSelector'
+import { Container } from 'reactstrap'
 
 export class TeamBuilder extends Component<{}, {
     /**
@@ -19,7 +19,7 @@ export class TeamBuilder extends Component<{}, {
     loading: boolean
 }> {
     constructor(props: any) {
-        super(props);
+        super(props)
         this.state = {
             versionGroups: [],
             versionGroupIndex: -1,
@@ -103,7 +103,7 @@ export class TeamBuilder extends Component<{}, {
                 <PokemonSelector index={4} versionGroupIndex={versionGroupIndex} />
                 <PokemonSelector index={5} versionGroupIndex={versionGroupIndex} />
             </Container>
-        );
+        )
     }
 
     render() {
@@ -111,7 +111,7 @@ export class TeamBuilder extends Component<{}, {
 
         let pokemonTable = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderPokemonTable();
+            : this.renderPokemonTable()
 
         return (
             <div>
@@ -120,6 +120,6 @@ export class TeamBuilder extends Component<{}, {
                 {versionGroupMenu}
                 {pokemonTable}
             </div>
-        );
+        )
     }
 }

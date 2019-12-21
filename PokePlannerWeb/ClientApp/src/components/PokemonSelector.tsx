@@ -1,7 +1,7 @@
-﻿import { Component } from "react";
-import React from "react";
-import { EfficacyList } from "./EfficacyList";
-import { Spinner } from "reactstrap";
+﻿import { Component } from "react"
+import React from "react"
+import { EfficacyList } from "./EfficacyList"
+import { Spinner } from "reactstrap"
 
 import "./PokemonSelector.scss"
 
@@ -42,7 +42,7 @@ export class PokemonSelector extends Component<{
     loadingTypesDescription: boolean
 }> {
     constructor(props: any) {
-        super(props);
+        super(props)
         this.state = {
             species: '',
             pokemon: {},

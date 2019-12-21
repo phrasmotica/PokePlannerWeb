@@ -1,7 +1,7 @@
-﻿import { Component } from "react";
-import React from "react";
-import { Spinner, Container, Row, Col } from "reactstrap";
-import { TypeSet } from "../models/TypeSet";
+﻿import { Component } from "react"
+import React from "react"
+import { Spinner, Container, Row, Col } from "reactstrap"
+import { TypeSet } from "../models/TypeSet"
 
 import "./EfficacyList.scss"
 
@@ -42,7 +42,7 @@ export class EfficacyList extends Component<{
     loadingTypeSet: boolean
 }> {
     constructor(props: any) {
-        super(props);
+        super(props)
         this.state = {
             efficacy: [],
             loadingEfficacy: true,
