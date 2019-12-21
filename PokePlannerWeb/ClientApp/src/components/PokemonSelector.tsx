@@ -102,10 +102,11 @@ export class PokemonSelector extends Component<{
 
     renderPokemon() {
         let isLoading = this.isLoading()
+        let hideSpecies = !this.hasSpecies()
 
         return (
             <Container>
-                <Row>
+                <Row style={{ height: 60 }}>
                     <Col xs="auto">
                         <Button onMouseUp={this.clearPokemon}>Clear</Button>
                     </Col>
@@ -121,7 +122,8 @@ export class PokemonSelector extends Component<{
                             : <Media
                                 object
                                 src={this.state.pokemonSpriteUrl}
-                                style={{ width: 60, height: 60 }} />
+                                style={{ width: 60, height: 60 }}
+                                hidden={hideSpecies} />
                         }
                     </Col>
                     <Col xs="auto">
@@ -130,7 +132,6 @@ export class PokemonSelector extends Component<{
                     <Col xs="auto">
                         {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                     </Col>
-                
                 </Row>
                 <Row style={{ height: 60 }}>
                     <Col>
@@ -150,6 +151,11 @@ export class PokemonSelector extends Component<{
         return this.state.loadingPokemonName
             || this.state.loadingPokemonSpriteUrl
             || this.state.loadingPokemonTypesDescription
+    }
+
+    // returns true if we have a species
+    hasSpecies() {
+        return this.state.species && this.state.species !== ""
     }
 
     // returns a loading spinner
