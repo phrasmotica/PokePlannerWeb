@@ -110,8 +110,10 @@ export class PokemonSelector extends Component<{
     renderPokemon() {
         // flags
         let isLoading = this.isLoading()
-        let hideSpecies = !this.hasSpecies()
         let showEfficacy = this.state.showEfficacy
+
+        // sub-components
+        let efficacyList = this.renderEfficacyList()
 
         return (
             <Container>
@@ -146,11 +148,7 @@ export class PokemonSelector extends Component<{
                     </Col>
                 </Row>
                 <Collapse isOpen={showEfficacy}>
-                    <EfficacyList
-                        index={this.props.index}
-                        species={this.state.species}
-                        typeSet={this.props.typeSet}
-                        versionGroupIndex={this.props.versionGroupIndex} />
+                    {efficacyList}
                 </Collapse>
             </Container>
         );
@@ -171,6 +169,17 @@ export class PokemonSelector extends Component<{
     // returns a loading spinner
     makeSpinner() {
         return <Spinner animation="border" />
+    }
+
+    // returns the efficacy list
+    renderEfficacyList() {
+        return (
+            <EfficacyList
+                index={this.props.index}
+                species={this.state.species}
+                typeSet={this.props.typeSet}
+                versionGroupIndex={this.props.versionGroupIndex} />
+        )
     }
 
     // toggle the efficacy panel
