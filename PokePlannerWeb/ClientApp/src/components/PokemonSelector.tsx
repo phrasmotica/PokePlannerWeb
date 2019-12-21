@@ -1,7 +1,7 @@
 ﻿import { Component } from "react"
 import React from "react"
 import { EfficacyList } from "./EfficacyList"
-import { Spinner, Button } from "reactstrap"
+import { Spinner, Button, Row, Col, Input, Media } from "reactstrap"
 
 import "./PokemonSelector.scss"
 import { TypeSet } from "../models/TypeSet"
@@ -104,33 +104,37 @@ export class PokemonSelector extends Component<{
         let isLoading = this.isLoading()
 
         return (
-            <tr key={this.props.index}>
-                <td>
+            <Row>
+                <Col>
                     <Button onMouseUp={this.clearPokemon}>Clear</Button>
-                </td>
-                <td>
-                    <input type="text" onKeyDown={this.handleSearch} />
-                </td>
-                <td>
+                </Col>
+                <Col>
+                    <Input
+                        type="search"
+                        placeholder="Search for a Pokemon!"
+                        onKeyDown={this.handleSearch} />
+                </Col>
+                <Col>
                     {isLoading
                         ? this.makeSpinner()
-                        : <img
+                        : <Media
+                            object
                             src={this.state.pokemonSpriteUrl}
                             style={{ width: 60, height: 60 }} />
                     }
-                </td>
-                <td>{isLoading ? this.makeSpinner() : this.state.pokemonName}</td>
-                <td>
+                </Col>
+                <Col>{isLoading ? this.makeSpinner() : this.state.pokemonName}</Col>
+                <Col>
                     {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
-                </td>
-                <td>
+                </Col>
+                <Col>
                     <EfficacyList
                         index={this.props.index}
                         species={this.state.species}
                         typeSet={this.props.typeSet}
                         versionGroupIndex={this.props.versionGroupIndex} />
-                </td>
-            </tr>
+                </Col>
+            </Row>
         );
     }
 

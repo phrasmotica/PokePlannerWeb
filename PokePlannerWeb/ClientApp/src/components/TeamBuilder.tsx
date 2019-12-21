@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { PokemonSelector } from './PokemonSelector'
-import { Container } from 'reactstrap'
+import { Container, Input, FormGroup, Label, Row, Col } from 'reactstrap'
 import { TypeSet } from '../models/TypeSet'
 
 const TEAM_SIZE: number = 6
@@ -130,21 +130,44 @@ export class TeamBuilder extends Component<{}, {
             .catch(error => console.log(error))
     }
 
-    renderVersionGroupMenu() {
+    renderMenu() {
         if (this.state.loading) {
             return null
         }
 
-        let versionGroupMenu = (
-            <select value={this.state.versionGroupIndex} onChange={this.handleVersionGroupChange}>
-                {this.state.versionGroups.map((vg, index) => {
-                    return <option key={index} value={index}>{vg}</option>
-                })}
-            </select>
-        )
+        let versionGroupMenu = this.renderVersionGroupMenu()
 
         return (
-            <p>Game version: {versionGroupMenu}</p>
+            <Container>
+                <Row>
+                    <Col>
+                        {versionGroupMenu}
+                    </Col>
+                    <Col>
+                        
+                    </Col>
+                    <Col>
+                        
+                    </Col>
+                </Row>
+            </Container>
+        )
+    }
+
+    renderVersionGroupMenu() {
+        return (
+            <FormGroup>
+                <Label for="versionGroupSelect">Game Version</Label>
+                <Input
+                    type="select"
+                    id="versionGroupSelect"
+                    value={this.state.versionGroupIndex}
+                    onChange={this.handleVersionGroupChange}>
+                    {this.state.versionGroups.map((vg, index) => {
+                        return <option key={index} value={index}>{vg}</option>
+                    })}
+                </Input>
+            </FormGroup>
         )
     }
 
@@ -167,7 +190,7 @@ export class TeamBuilder extends Component<{}, {
     }
 
     render() {
-        let versionGroupMenu = this.renderVersionGroupMenu()
+        let menu = this.renderMenu()
 
         let pokemonTable = this.state.loading
             ? <p><em>Loading...</em></p>
@@ -177,7 +200,7 @@ export class TeamBuilder extends Component<{}, {
             <div>
                 <h1 id="tableLabel">Pokemon</h1>
                 <p>Build your Pokemon team!</p>
-                {versionGroupMenu}
+                {menu}
                 {pokemonTable}
             </div>
         )
