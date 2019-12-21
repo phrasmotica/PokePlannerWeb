@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { PokemonSelector } from './PokemonSelector'
 import { Container } from 'reactstrap'
+import { TypeSet } from '../models/TypeSet'
 
 export class TeamBuilder extends Component<{}, {
     /**
@@ -16,14 +17,30 @@ export class TeamBuilder extends Component<{}, {
     /**
      * Whether the page is loading.
      */
-    loading: boolean
+    loading: boolean,
+
+    /**
+     * The type set.
+     */
+    typeSet: TypeSet,
+
+    /**
+     * Whether we're loading the type set.
+     */
+    loadingTypeSet: boolean
 }> {
     constructor(props: any) {
         super(props)
         this.state = {
             versionGroups: [],
             versionGroupIndex: -1,
-            loading: true
+            loading: true,
+            typeSet: {
+                versionGroupId: -1,
+                types: [],
+                typesArePresent: []
+            },
+            loadingTypeSet: true
         }
 
         this.handleVersionGroupChange = this.handleVersionGroupChange.bind(this)
@@ -31,7 +48,10 @@ export class TeamBuilder extends Component<{}, {
 
     componentDidMount() {
         this.loadVersionGroups()
-            .then(() => this.loadTypeEfficacy(this.state.versionGroupIndex))
+            .then(() => {
+                this.getTypeSet(this.state.versionGroupIndex)
+                this.loadTypeEfficacy(this.state.versionGroupIndex)
+            })
     }
 
     // load all version groups
@@ -59,6 +79,31 @@ export class TeamBuilder extends Component<{}, {
             .catch(error => console.log(error))
     }
 
+    // retrieves the type set for the given version group from TypeController
+    async getTypeSet(versionGroupIndex: number) {
+        console.log(`Team builder: getting type set for version group ${versionGroupIndex}...`)
+
+        // loading begins
+        this.setState({
+            loadingTypeSet: true
+        })
+
+        // get type set
+        fetch(`type/typeSet/${versionGroupIndex}`)
+            .then(response => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                // concrete types endpoint couldn't be found
+                throw new Error(`Team builder: couldn't get type set for version group ${versionGroupIndex}!`)
+            })
+            .then(response => response.json())
+            .then(typeSet => this.setState({ typeSet: typeSet }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingTypeSet: false }))
+    }
+
     // loads type efficacy data
     async loadTypeEfficacy(versionGroupIndex: number) {
         fetch(`efficacy/${versionGroupIndex}`, { method: "POST" })
@@ -70,7 +115,8 @@ export class TeamBuilder extends Component<{}, {
         const idx = Number(e.target.value)
         this.setState({ versionGroupIndex: idx })
 
-        // reload type efficacy
+        // reload type set and efficacy
+        this.getTypeSet(idx)
         this.loadTypeEfficacy(idx)
 
         // set index in backend
@@ -104,12 +150,30 @@ export class TeamBuilder extends Component<{}, {
         let versionGroupIndex = this.state.versionGroupIndex
         return (
             <Container>
-                <PokemonSelector index={0} versionGroupIndex={versionGroupIndex} />
-                <PokemonSelector index={1} versionGroupIndex={versionGroupIndex} />
-                <PokemonSelector index={2} versionGroupIndex={versionGroupIndex} />
-                <PokemonSelector index={3} versionGroupIndex={versionGroupIndex} />
-                <PokemonSelector index={4} versionGroupIndex={versionGroupIndex} />
-                <PokemonSelector index={5} versionGroupIndex={versionGroupIndex} />
+                <PokemonSelector
+                    index={0}
+                    versionGroupIndex={versionGroupIndex}
+                    typeSet={this.state.typeSet} />
+                <PokemonSelector
+                    index={1}
+                    versionGroupIndex={versionGroupIndex}
+                    typeSet={this.state.typeSet} />
+                <PokemonSelector
+                    index={2}
+                    versionGroupIndex={versionGroupIndex}
+                    typeSet={this.state.typeSet} />
+                <PokemonSelector
+                    index={3}
+                    versionGroupIndex={versionGroupIndex}
+                    typeSet={this.state.typeSet} />
+                <PokemonSelector
+                    index={4}
+                    versionGroupIndex={versionGroupIndex}
+                    typeSet={this.state.typeSet} />
+                <PokemonSelector
+                    index={5}
+                    versionGroupIndex={versionGroupIndex}
+                    typeSet={this.state.typeSet} />
             </Container>
         )
     }

@@ -4,6 +4,7 @@ import { EfficacyList } from "./EfficacyList"
 import { Spinner } from "reactstrap"
 
 import "./PokemonSelector.scss"
+import { TypeSet } from "../models/TypeSet"
 
 export class PokemonSelector extends Component<{
     /**
@@ -15,6 +16,11 @@ export class PokemonSelector extends Component<{
      * The index of the selected version group.
      */
     versionGroupIndex: number,
+
+    /**
+     * The type set.
+     */
+    typeSet: TypeSet
 }, {
     /**
      * The names of Pokemon species entered into the input field.
@@ -113,7 +119,11 @@ export class PokemonSelector extends Component<{
                     {this.state.loadingTypesDescription ? this.makeSpinner() : this.state.typesDescription}
                 </td>
                 <td>
-                    <EfficacyList index={this.props.index} species={species} versionGroupIndex={this.props.versionGroupIndex} />
+                    <EfficacyList
+                        index={this.props.index}
+                        species={species}
+                        typeSet={this.props.typeSet}
+                        versionGroupIndex={this.props.versionGroupIndex} />
                 </td>
             </tr>
         );

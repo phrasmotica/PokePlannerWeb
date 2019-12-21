@@ -19,7 +19,12 @@ export class EfficacyList extends Component<{
     /**
      * The index of the selected version group.
      */
-    versionGroupIndex: number
+    versionGroupIndex: number,
+
+    /**
+     * The type set.
+     */
+    typeSet: TypeSet
 }, {
     /**
      * The efficacy to show.
@@ -29,29 +34,13 @@ export class EfficacyList extends Component<{
     /**
      * Whether we're loading the efficacy.
      */
-    loadingEfficacy: boolean,
-
-    /**
-     * The type set.
-     */
-    typeSet: TypeSet,
-
-    /**
-     * Whether we're loading the type set.
-     */
-    loadingTypeSet: boolean
+    loadingEfficacy: boolean
 }> {
     constructor(props: any) {
         super(props)
         this.state = {
             efficacy: [],
-            loadingEfficacy: true,
-            typeSet: {
-                versionGroupId: this.props.versionGroupIndex,
-                types: [],
-                typesArePresent: []
-            },
-            loadingTypeSet: true
+            loadingEfficacy: true
         }
 
         // bind stuff to this object
@@ -61,32 +50,20 @@ export class EfficacyList extends Component<{
     componentDidMount() {
         // get efficacy
         this.getEfficacy()
-
-        // get type set
-        this.getTypeSet()
-
-        // finished loading
-        this.setState({
-            loadingEfficacy: false,
-            loadingTypeSet: false
-        })
     }
 
     componentDidUpdate(previousProps: any) {
-        // refresh efficacy and type set if the version group index changed
+        // refresh efficacy if the version group index or species changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
-        if (versionGroupIndex !== previousVersionGroupIndex) {
+        let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
+
+        let previousSpecies = previousProps.species
+        let species = this.props.species
+        let speciesChanged = species !== previousSpecies
+
+        if (versionGroupChanged || speciesChanged) {
             this.getEfficacy()
-            this.getTypeSet()
-        }
-        else {
-            // just refresh efficacy if the species changed
-            let previousSpecies = previousProps.species
-            let species = this.props.species
-            if (species !== previousSpecies) {
-                this.getEfficacy()
-            }
         }
     }
 
@@ -95,7 +72,7 @@ export class EfficacyList extends Component<{
     }
 
     renderTypeEfficacy() {
-        let typeSet = this.state.typeSet
+        let typeSet = this.props.typeSet
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
@@ -202,32 +179,6 @@ export class EfficacyList extends Component<{
                 .catch(error => console.log(error))
                 .then(() => this.setState({ loadingEfficacy: false }))
         }
-    }
-
-    // retrieves the type set from TypeController
-    getTypeSet() {
-        let index = this.props.versionGroupIndex
-        console.log(`Efficacy list ${this.props.index}: getting type set for version group ${index}...`)
-
-        // loading begins
-        this.setState({
-            loadingTypeSet: true
-        })
-
-        // get type set
-        fetch(`type/typeSet/${index}`)
-            .then(response => {
-                if (response.status === 200) {
-                    return response
-                }
-
-                // concrete types endpoint couldn't be found
-                throw new Error(`Efficacy list ${this.props.index}: couldn't get type set for version group ${index}!`)
-            })
-            .then(response => response.json())
-            .then(typeSet => this.setState({ typeSet: typeSet }))
-            .catch(error => console.log(error))
-            .then(() => this.setState({ loadingTypeSet: false }))
     }
 
     // handle PokeAPI responses
