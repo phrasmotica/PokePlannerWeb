@@ -118,20 +118,23 @@ export class PokemonSelector extends Component<{
         return (
             <div>
                 <Row>
-                    <Col xs="auto" className="flex-center">
-                        <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
-                    </Col>
-                    <Col xs="auto" className="flex-center">
-                        <Button color="primary" onClick={this.toggleShowEfficacy}>{showEfficacy ? "Hide" : "Show"} efficacy</Button>
-                    </Col>
-                    <Col xs="auto" className="flex-center">
+                    <Col xs="auto">
                         <Input
                             type="search"
                             placeholder="Search for a Pokemon!"
                             onKeyDown={this.handleSearch} />
                     </Col>
+                    <Col xs="auto">
+                        <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
+                    </Col>
                 </Row>
                 {pokemonInfo}
+                <Button
+                    color="primary"
+                    style={{ marginBottom: '1rem' }}
+                    onClick={this.toggleShowEfficacy}>
+                    {showEfficacy ? "Hide" : "Show"} efficacy
+                </Button>
                 <Collapse isOpen={showEfficacy}>
                     {efficacyList}
                 </Collapse>
