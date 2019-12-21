@@ -109,7 +109,6 @@ export class PokemonSelector extends Component<{
 
     renderPokemon() {
         // flags
-        let isLoading = this.isLoading()
         let showEfficacy = this.state.showEfficacy
 
         // sub-components
@@ -130,12 +129,6 @@ export class PokemonSelector extends Component<{
                             type="search"
                             placeholder="Search for a Pokemon!"
                             onKeyDown={this.handleSearch} />
-                    </Col>
-                    <Col xs="auto" className="flex-center">
-                        {isLoading ? this.makeSpinner() : this.state.pokemonName}
-                    </Col>
-                    <Col xs="auto" className="flex-center">
-                        {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                     </Col>
                 </Row>
                 {pokemonInfo}
@@ -163,6 +156,11 @@ export class PokemonSelector extends Component<{
         return <Spinner animation="border" />
     }
 
+    // returns a small loading spinner
+    makeSmallSpinner() {
+        return <Spinner animation="border" size="sm" />
+    }
+
     // returns the Pokemon info
     renderPokemonInfo() {
         // flags
@@ -178,8 +176,13 @@ export class PokemonSelector extends Component<{
                             src={this.state.pokemonSpriteUrl} />
                     }
                 </Col>
-                <Col>
-
+                <Col xs="auto" style={{ padding: 10 }}>
+                    <div>
+                        {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
+                    </div>
+                    <div>
+                        {isLoading ? this.makeSmallSpinner() : this.state.pokemonTypesDescription}
+                    </div>
                 </Col>
                 <Col>
 
