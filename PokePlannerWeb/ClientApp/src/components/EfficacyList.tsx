@@ -120,7 +120,7 @@ export class EfficacyList extends Component<{
     getElementFromMultiplier(multiplier: number) {
         let multiplierClass = this.getClassFromMultiplier(multiplier)
 
-        if (!this.hasSpecies) {
+        if (!this.hasSpecies()) {
             return <b>-</b>
         }
 
