@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Mechanics;
+using PokePlannerWeb.Data.Util;
 
 namespace PokePlannerWeb.Data.Types
 {
@@ -127,14 +128,18 @@ namespace PokePlannerWeb.Data.Types
             var types = ConcreteTypes.ToArray();
             var typesArePresent = Enumerable.Repeat(false, types.Length).ToArray();
 
-            versionGroupId ??= VersionGroupData.Instance.LatestVersionGroupIndex;
-            var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
-            for (var i = 0; i < types.Length; i++)
+            // TODO: make this quicker! Pre-loading all generations doesn't seem to help...
+            using (new CodeTimer("Generate type set"))
             {
-                var type = types[i];
-                if (await generation.HasType(type))
+                versionGroupId ??= VersionGroupData.Instance.LatestVersionGroupIndex;
+                var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
+                for (var i = 0; i < types.Length; i++)
                 {
-                    typesArePresent[i] = true;
+                    var type = types[i];
+                    if (await generation.HasType(type))
+                    {
+                        typesArePresent[i] = true;
+                    }
                 }
             }
 
