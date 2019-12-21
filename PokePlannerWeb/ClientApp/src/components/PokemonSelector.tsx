@@ -92,16 +92,6 @@ export class PokemonSelector extends Component<{
         let species = this.state.species
         let isLoading = this.isLoading()
 
-        let primaryTypeStr = "unknown"
-        if (pokemon.primaryType) {
-            primaryTypeStr = pokemon.primaryType.toLowerCase()
-        }
-
-        let secondaryTypeStr = null
-        if (pokemon.secondaryType) {
-            secondaryTypeStr = pokemon.secondaryType.toLowerCase()
-        }
-
         return (
             <tr key={pokemon.id}>
                 <td>
@@ -116,7 +106,7 @@ export class PokemonSelector extends Component<{
                 </td>
                 <td>{isLoading ? this.makeSpinner() : pokemon.englishName}</td>
                 <td>
-                    {this.state.loadingTypesDescription ? this.makeSpinner() : this.state.typesDescription}
+                    {isLoading ? this.makeSpinner() : this.state.typesDescription}
                 </td>
                 <td>
                     <EfficacyList
@@ -131,7 +121,7 @@ export class PokemonSelector extends Component<{
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingPokemon
+        return this.state.loadingPokemon || this.state.loadingTypesDescription
     }
 
     // returns a loading spinner
