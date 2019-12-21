@@ -113,6 +113,7 @@ export class PokemonSelector extends Component<{
         let showEfficacy = this.state.showEfficacy
 
         // sub-components
+        let pokemonInfo = this.renderPokemonInfo()
         let efficacyList = this.renderEfficacyList()
 
         return (
@@ -130,22 +131,15 @@ export class PokemonSelector extends Component<{
                             placeholder="Search for a Pokemon!"
                             onKeyDown={this.handleSearch} />
                     </Col>
-                    <Col className="sprite">
-                        {isLoading
-                            ? this.makeSpinner()
-                            : <Media
-                                object
-                                src={this.state.pokemonSpriteUrl}
-                                style={{ width: 60, height: 60 }}
-                                hidden={hideSpecies} />
-                        }
-                    </Col>
                     <Col xs="auto" className="flex-center">
                         {isLoading ? this.makeSpinner() : this.state.pokemonName}
                     </Col>
                     <Col xs="auto" className="flex-center">
                         {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                     </Col>
+                </Row>
+                <Row>
+                    {pokemonInfo}
                 </Row>
                 <Collapse isOpen={showEfficacy}>
                     {efficacyList}
@@ -169,6 +163,33 @@ export class PokemonSelector extends Component<{
     // returns a loading spinner
     makeSpinner() {
         return <Spinner animation="border" />
+    }
+
+    // returns the Pokemon info
+    renderPokemonInfo() {
+        // flags
+        let isLoading = this.isLoading()
+        let hideSpecies = !this.hasSpecies()
+
+        return (
+            <Container>
+                <Col className="sprite">
+                    {isLoading
+                        ? this.makeSpinner()
+                        : <Media
+                            object
+                            src={this.state.pokemonSpriteUrl}
+                            hidden={hideSpecies} />
+                    }
+                </Col>
+                <Col>
+
+                </Col>
+                <Col>
+
+                </Col>
+            </Container>
+        )
     }
 
     // returns the efficacy list
