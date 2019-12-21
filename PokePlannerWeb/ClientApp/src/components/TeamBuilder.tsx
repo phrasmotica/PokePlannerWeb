@@ -3,6 +3,8 @@ import { PokemonSelector } from './PokemonSelector'
 import { Container } from 'reactstrap'
 import { TypeSet } from '../models/TypeSet'
 
+const TEAM_SIZE: number = 6
+
 export class TeamBuilder extends Component<{}, {
     /**
      * List of version groups.
@@ -147,33 +149,19 @@ export class TeamBuilder extends Component<{}, {
     }
 
     renderPokemonTable() {
-        let versionGroupIndex = this.state.versionGroupIndex
+        let pokemonSelectors = []
+        for (var i = 0; i < TEAM_SIZE; i++) {
+            pokemonSelectors.push(
+                <PokemonSelector
+                    index={i}
+                    versionGroupIndex={this.state.versionGroupIndex}
+                    typeSet={this.state.typeSet} />
+            )
+        }
+
         return (
             <Container>
-                <PokemonSelector
-                    index={0}
-                    versionGroupIndex={versionGroupIndex}
-                    typeSet={this.state.typeSet} />
-                <PokemonSelector
-                    index={1}
-                    versionGroupIndex={versionGroupIndex}
-                    typeSet={this.state.typeSet} />
-                <PokemonSelector
-                    index={2}
-                    versionGroupIndex={versionGroupIndex}
-                    typeSet={this.state.typeSet} />
-                <PokemonSelector
-                    index={3}
-                    versionGroupIndex={versionGroupIndex}
-                    typeSet={this.state.typeSet} />
-                <PokemonSelector
-                    index={4}
-                    versionGroupIndex={versionGroupIndex}
-                    typeSet={this.state.typeSet} />
-                <PokemonSelector
-                    index={5}
-                    versionGroupIndex={versionGroupIndex}
-                    typeSet={this.state.typeSet} />
+                {pokemonSelectors}
             </Container>
         )
     }
