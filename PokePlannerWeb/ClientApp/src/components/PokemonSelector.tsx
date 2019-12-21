@@ -1,7 +1,7 @@
 ﻿import { Component } from "react"
 import React from "react"
 import { EfficacyList } from "./EfficacyList"
-import { Spinner, Button, Row, Col, Input, Media, Container } from "reactstrap"
+import { Spinner, Button, Row, Col, Input, Media, Container, Collapse } from "reactstrap"
 
 import "./PokemonSelector.scss"
 import { TypeSet } from "../models/TypeSet"
@@ -55,7 +55,12 @@ export class PokemonSelector extends Component<{
     /**
      * Whether we're loading the Pokemon's types description.
      */
-    loadingPokemonTypesDescription: boolean
+    loadingPokemonTypesDescription: boolean,
+
+    /**
+     * Whether to show the efficacy list.
+     */
+    showEfficacy: boolean
 }> {
     constructor(props: any) {
         super(props)
@@ -66,12 +71,14 @@ export class PokemonSelector extends Component<{
             pokemonSpriteUrl: "",
             loadingPokemonSpriteUrl: true,
             pokemonTypesDescription: '',
-            loadingPokemonTypesDescription: true
+            loadingPokemonTypesDescription: true,
+            showEfficacy: false
         }
 
         // bind stuff to this object
         this.handleSearch = this.handleSearch.bind(this)
         this.clearPokemon = this.clearPokemon.bind(this)
+        this.toggleShowEfficacy = this.toggleShowEfficacy.bind(this)
     }
 
     componentDidMount() {
@@ -103,12 +110,16 @@ export class PokemonSelector extends Component<{
     renderPokemon() {
         let isLoading = this.isLoading()
         let hideSpecies = !this.hasSpecies()
+        let showEfficacy = this.state.showEfficacy
 
         return (
             <Container>
                 <Row style={{ height: 60 }}>
                     <Col xs="auto">
-                        <Button onMouseUp={this.clearPokemon}>Clear</Button>
+                        <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
+                    </Col>
+                    <Col xs="auto">
+                        <Button color="primary" onClick={this.toggleShowEfficacy}>{showEfficacy ? "Hide" : "Show"} efficacy</Button>
                     </Col>
                     <Col xs="auto">
                         <Input
@@ -133,15 +144,13 @@ export class PokemonSelector extends Component<{
                         {isLoading ? this.makeSpinner() : this.state.pokemonTypesDescription}
                     </Col>
                 </Row>
-                <Row style={{ height: 60 }}>
-                    <Col>
-                        <EfficacyList
-                            index={this.props.index}
-                            species={this.state.species}
-                            typeSet={this.props.typeSet}
-                            versionGroupIndex={this.props.versionGroupIndex} />
-                    </Col>
-                </Row>
+                <Collapse isOpen={showEfficacy}>
+                    <EfficacyList
+                        index={this.props.index}
+                        species={this.state.species}
+                        typeSet={this.props.typeSet}
+                        versionGroupIndex={this.props.versionGroupIndex} />
+                </Collapse>
             </Container>
         );
     }
@@ -161,6 +170,13 @@ export class PokemonSelector extends Component<{
     // returns a loading spinner
     makeSpinner() {
         return <Spinner animation="border" />
+    }
+
+    // toggle the efficacy panel
+    toggleShowEfficacy() {
+        this.setState((previousState) => ({
+            showEfficacy: !previousState.showEfficacy
+        }))
     }
 
     // handler for searching for a Pokemon
