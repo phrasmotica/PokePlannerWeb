@@ -36,6 +36,7 @@ export class TeamBuilder extends Component<{}, {
 
     // load all version groups
     async loadVersionGroups() {
+        // get list of version groups
         await fetch("versionGroup", { method: "POST" })
             .then(() => fetch("versionGroup/all"))
             .then((response) => response.json())
@@ -43,8 +44,10 @@ export class TeamBuilder extends Component<{}, {
                 this.setState({
                     versionGroups: groups
                 })
-            }
-            )
+            })
+            .catch(error => console.log(error))
+
+            // get selected version group
             .then(() => fetch("versionGroup/selected"))
             .then((response) => response.text())
             .then((idx) => {
@@ -52,20 +55,25 @@ export class TeamBuilder extends Component<{}, {
                     versionGroupIndex: Number(idx),
                     loading: false
                 })
-            }
-            )
+            })
+            .catch(error => console.log(error))
     }
 
     // loads type efficacy data
     async loadTypeEfficacy(versionGroupIndex: number) {
-        await fetch(`efficacy/${versionGroupIndex}`, { method: "POST" })
+        fetch(`efficacy/${versionGroupIndex}`, { method: "POST" })
+            .catch(error => console.log(error))
     }
 
     // set selected version group
     async handleVersionGroupChange(e: any) {
         const idx = Number(e.target.value)
         this.setState({ versionGroupIndex: idx })
+
+        // reload type efficacy
         this.loadTypeEfficacy(idx)
+
+        // set index in backend
         fetch("versionGroup/selected", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
