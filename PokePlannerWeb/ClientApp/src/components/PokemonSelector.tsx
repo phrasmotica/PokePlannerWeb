@@ -1,7 +1,7 @@
 ﻿import { Component } from "react"
 import React from "react"
 import { EfficacyList } from "./EfficacyList"
-import { Spinner } from "reactstrap"
+import { Spinner, Button } from "reactstrap"
 
 import "./PokemonSelector.scss"
 import { TypeSet } from "../models/TypeSet"
@@ -59,6 +59,7 @@ export class PokemonSelector extends Component<{
 
         // bind stuff to this object
         this.handleSearch = this.handleSearch.bind(this)
+        this.clearPokemon = this.clearPokemon.bind(this)
         this.handleResponse = this.handleResponse.bind(this)
     }
 
@@ -94,6 +95,9 @@ export class PokemonSelector extends Component<{
 
         return (
             <tr key={pokemon.id}>
+                <td>
+                    <Button onMouseUp={this.clearPokemon}>Clear</Button>
+                </td>
                 <td>
                     <input type="text" onKeyDown={this.handleSearch} />
                 </td>
@@ -140,6 +144,15 @@ export class PokemonSelector extends Component<{
             // get types description
             this.getTypesDescription(newSpeciesName)
         }
+    }
+
+    // handler for clearing the Pokemon
+    clearPokemon(_: any) {
+        this.setState({
+            species: "",
+            pokemon: {},
+            typesDescription: ""
+        })
     }
 
     // retrieves the given Pokemon species from PokemonController
