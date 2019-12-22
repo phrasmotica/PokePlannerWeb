@@ -133,6 +133,9 @@ export class PokemonSelector extends Component<{
 
                             this.fetchTypesDescription(species)
                         }
+                        else {
+                            this.invalidatePokemon()
+                        }
                     })
             }
         }
@@ -300,6 +303,16 @@ export class PokemonSelector extends Component<{
     clearPokemon(_: any) {
         this.setState({
             species: "",
+            speciesIsValid: false,
+            pokemonName: "",
+            pokemonSpriteUrl: "",
+            pokemonTypesDescription: ""
+        })
+    }
+
+    // invalidate the Pokemon but don't clear the species
+    invalidatePokemon() {
+        this.setState({
             speciesIsValid: false,
             pokemonName: "",
             pokemonSpriteUrl: "",
