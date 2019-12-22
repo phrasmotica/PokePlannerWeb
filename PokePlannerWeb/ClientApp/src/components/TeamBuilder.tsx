@@ -71,7 +71,7 @@ export class TeamBuilder extends Component<{}, {
 
             // get selected version group
             .then(() => fetch("versionGroup/selected"))
-            .then((response) => response.text())
+            .then((response) => response.json())
             .then((idx) => {
                 this.setState({
                     versionGroupIndex: Number(idx),
