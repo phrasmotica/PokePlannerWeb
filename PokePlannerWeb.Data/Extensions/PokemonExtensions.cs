@@ -94,6 +94,35 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
+        /// Returns true if this Pokemon can be obtained in the version group with the given ID.
+        /// </summary>
+        public static async Task<bool> IsValid(this Pokemon pokemon, int? versionGroupId = null)
+        {
+            versionGroupId ??= VersionGroupData.Instance.VersionGroupIndex;
+            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId.Value];
+            return await pokemon.IsValid(versionGroup);
+        }
+
+        /// <summary>
+        /// Returns true if this Pokemon can be obtained in the given version group.
+        /// </summary>
+        private static async Task<bool> IsValid(this Pokemon pokemon, VersionGroup versionGroup)
+        {
+            var pokemonSpecies = await PokeAPI.Get(pokemon.Species);
+            return pokemonSpecies.IsValid(versionGroup);
+        }
+
+        /// <summary>
+        /// Returns true if this Pokemon can be obtained in the given version group.
+        /// </summary>
+        private static bool IsValid(this PokemonSpecies pokemonSpecies, VersionGroup versionGroup)
+        {
+            var versionGroupPokedexes = versionGroup.Pokedexes.Select(p => p.Name);
+            var pokemonPokedexes = pokemonSpecies.PokedexNumbers.Select(pn => pn.Pokedex.Name);
+            return versionGroupPokedexes.Intersect(pokemonPokedexes).Any();
+        }
+
+        /// <summary>
         /// Returns a minimal representation of this Pokemon resource.
         /// </summary>
         public static async Task<PokemonPayload> AsPayload(this Pokemon pokemon)

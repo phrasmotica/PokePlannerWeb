@@ -59,5 +59,16 @@ namespace PokePlannerWeb.Controllers
             var pokemon = await PokeAPI.Get<Pokemon>(species);
             return await pokemon.GetTypesDescription(versionGroupId);
         }
+
+        /// <summary>
+        /// Returns the given Pokemon's validity in the version group with the given ID.
+        /// </summary>
+        [HttpGet("{species}/validity/{versionGroupId:int}")]
+        public async Task<bool> GetPokemonValidityInVersionGroup(string species, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting validity for Pokemon \"{species}\" in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(species);
+            return await pokemon.IsValid(versionGroupId);
+        }
     }
 }
