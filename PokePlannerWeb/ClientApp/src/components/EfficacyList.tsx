@@ -1,5 +1,4 @@
-﻿import { Component } from "react"
-import React from "react"
+﻿import React, { Component } from "react"
 import { Spinner, Col } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
@@ -42,9 +41,6 @@ export class EfficacyList extends Component<{
             efficacy: [],
             loadingEfficacy: false
         }
-
-        // bind stuff to this object
-        this.handleEfficacyResponse = this.handleEfficacyResponse.bind(this)
     }
 
     componentDidMount() {
@@ -76,6 +72,7 @@ export class EfficacyList extends Component<{
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
+            // TODO: create icons for each type
             let typeHeader = <em>{typeSet.types[i]}</em>
 
             if (typeSet.typesArePresent[i]) {
@@ -104,16 +101,6 @@ export class EfficacyList extends Component<{
                 {items}
             </div>
         )
-    }
-
-    // returns true if we have a species
-    hasSpecies() {
-        return this.props.species && this.props.species !== ""
-    }
-
-    // returns a loading spinner
-    makeSpinner() {
-        return <Spinner animation="border" size="sm" />
     }
 
     // returns the style class to use for the given multiplier
@@ -160,6 +147,16 @@ export class EfficacyList extends Component<{
         return multiplierClass
     }
 
+    // returns a loading spinner
+    makeSpinner() {
+        return <Spinner animation="border" size="sm" />
+    }
+
+    // returns true if we have a species
+    hasSpecies() {
+        return this.props.species && this.props.species !== ""
+    }
+
     // retrieves the Pokemon's efficacy from EfficacyController
     getEfficacy() {
         if (this.hasSpecies()) {
@@ -171,27 +168,17 @@ export class EfficacyList extends Component<{
 
             // get efficacy data
             fetch(`efficacy/${species}/${this.props.versionGroupIndex}`)
-                .then(this.handleEfficacyResponse)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response
+                    }
+
+                    throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${species}' but failed with status ${response.status}!`)
+                })
                 .then(response => response.json())
                 .then(efficacy => this.setState({ efficacy: efficacy }))
                 .catch(error => console.log(error))
                 .then(() => this.setState({ loadingEfficacy: false }))
         }
-    }
-
-    // handle PokeAPI responses
-    handleEfficacyResponse(response: Response) {
-        if (response.status === 200) {
-            return response
-        }
-
-        let species = this.props.species
-        if (response.status === 500) {
-            // efficacy endpoint couldn't be found
-            throw new Error(`Efficacy list ${this.props.index}: couldn't get efficacy for ${species}'!`)
-        }
-
-        // some other error
-        throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${species}' but failed with status ${response.status}!`)
     }
 }
