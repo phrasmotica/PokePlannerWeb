@@ -1,6 +1,6 @@
 ﻿import { Component } from "react"
 import React from "react"
-import { Spinner, Row, Col } from "reactstrap"
+import { Spinner, Col } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
 import "./EfficacyList.scss"
@@ -76,11 +76,13 @@ export class EfficacyList extends Component<{
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
+            let typeHeader = <em>typeSet.types[i]</em>
+
             if (typeSet.typesArePresent[i]) {
                 let multiplierElement = this.getElementFromMultiplier(efficacy[i])
                 items.push(
                     <Col className="efficacy">
-                        <em>{typeSet.types[i]}</em>
+                        {typeHeader}
                         <br />
                         {multiplierElement}
                     </Col>
@@ -89,7 +91,7 @@ export class EfficacyList extends Component<{
             else {
                 items.push(
                     <Col className="efficacy">
-                        <em>{typeSet.types[i]}</em>
+                        {typeHeader}
                         <br />
                         <b>N/A</b>
                     </Col>
