@@ -121,6 +121,16 @@ export class PokemonSelector extends Component<{
                 this.fetchSpeciesIsValid(species)
                     .then(() => {
                         if (this.state.speciesIsValid) {
+                            // invalid might've become valid with the version group change, so we
+                            // should fetch things that don't change between version groups
+                            if (this.state.pokemonName === "") {
+                                this.fetchPokemonName(species)
+                            }
+
+                            if (this.state.pokemonSpriteUrl === "") {
+                                this.fetchSpriteUrl(species)
+                            }
+
                             this.fetchTypesDescription(species)
                         }
                     })
