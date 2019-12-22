@@ -1,7 +1,7 @@
 ﻿import { Component } from "react"
 import React from "react"
 import { EfficacyList } from "./EfficacyList"
-import { Spinner, Button, Row, Col, Input, Media, Collapse } from "reactstrap"
+import { Spinner, Button, Row, Col, Input, Media, Collapse, Tooltip } from "reactstrap"
 
 import "./PokemonSelector.scss"
 import { TypeSet } from "../models/TypeSet"
@@ -36,6 +36,11 @@ export class PokemonSelector extends Component<{
      * Whether we're loading the species validity.
      */
     loadingSpeciesIsValid: boolean,
+
+    /**
+     * Whether the validity tooltip is open.
+     */
+    validityTooltipOpen: boolean,
 
     /**
      * The Pokemon's name.
@@ -78,6 +83,7 @@ export class PokemonSelector extends Component<{
             species: "",
             speciesIsValid: true,
             loadingSpeciesIsValid: true,
+            validityTooltipOpen: false,
             pokemonName: "",
             loadingPokemonName: true,
             pokemonSpriteUrl: "",
@@ -90,6 +96,7 @@ export class PokemonSelector extends Component<{
         // bind stuff to this object
         this.handleSearch = this.handleSearch.bind(this)
         this.clearPokemon = this.clearPokemon.bind(this)
+        this.toggleValidityTooltip = this.toggleValidityTooltip.bind(this)
         this.toggleShowEfficacy = this.toggleShowEfficacy.bind(this)
     }
 
@@ -130,6 +137,19 @@ export class PokemonSelector extends Component<{
         let speciesIsInvalid = hasSpecies && !loadingValidity && !this.state.speciesIsValid
 
         // sub-components
+        let validityTooltip = null
+        if (speciesIsInvalid) {
+            validityTooltip = (
+                <Tooltip
+                    isOpen={this.state.validityTooltipOpen}
+                    toggle={this.toggleValidityTooltip}
+                    placement="bottom"
+                    target="speciesInput">
+                    {this.state.species} cannot be obtained!
+                </Tooltip>
+            )
+        }
+
         let pokemonInfo = this.renderPokemonInfo()
         let efficacyList = this.renderEfficacyList()
 
@@ -139,9 +159,11 @@ export class PokemonSelector extends Component<{
                     <Col xs="auto">
                         <Input
                             type="text"
+                            id="speciesInput"
                             placeholder="Search for a Pokemon!"
                             invalid={speciesIsInvalid}
                             onKeyDown={this.handleSearch} />
+                        {validityTooltip}
                     </Col>
                     <Col xs="auto">
                         <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
@@ -222,6 +244,13 @@ export class PokemonSelector extends Component<{
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex} />
         )
+    }
+
+    // toggle the validity tooltip
+    toggleValidityTooltip() {
+        this.setState((previousState) => ({
+            validityTooltipOpen: !previousState.validityTooltipOpen
+        }))
     }
 
     // toggle the efficacy panel
