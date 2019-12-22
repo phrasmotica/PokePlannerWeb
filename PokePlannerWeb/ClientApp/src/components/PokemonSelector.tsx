@@ -81,7 +81,7 @@ export class PokemonSelector extends Component<{
         super(props)
         this.state = {
             species: "",
-            speciesIsValid: true,
+            speciesIsValid: false,
             loadingSpeciesIsValid: true,
             validityTooltipOpen: false,
             pokemonName: "",
@@ -290,7 +290,7 @@ export class PokemonSelector extends Component<{
     clearPokemon(_: any) {
         this.setState({
             species: "",
-            speciesIsValid: true,
+            speciesIsValid: false,
             pokemonName: "",
             pokemonSpriteUrl: "",
             pokemonTypesDescription: ""
