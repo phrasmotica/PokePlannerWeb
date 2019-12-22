@@ -314,6 +314,9 @@ export class PokemonSelector extends Component<{
                         this.fetchSpriteUrl(newSpeciesName)
                         this.fetchTypesDescription(newSpeciesName)
                     }
+                    else {
+                        this.invalidatePokemon()
+                    }
                 })
         }
     }
