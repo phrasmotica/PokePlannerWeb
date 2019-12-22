@@ -76,7 +76,7 @@ export class EfficacyList extends Component<{
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
-            let typeHeader = <em>typeSet.types[i]</em>
+            let typeHeader = <em>{typeSet.types[i]}</em>
 
             if (typeSet.typesArePresent[i]) {
                 let multiplierElement = this.getElementFromMultiplier(efficacy[i])
