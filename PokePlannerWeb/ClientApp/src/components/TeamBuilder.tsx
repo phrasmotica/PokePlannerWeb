@@ -193,6 +193,7 @@ export class TeamBuilder extends Component<{}, {
         for (var i = 0; i < TEAM_SIZE; i++) {
             pokemonSelectors.push(
                 <PokemonSelector
+                    key={i}
                     index={i}
                     versionGroupIndex={this.state.versionGroupIndex}
                     typeSet={this.state.typeSet} />

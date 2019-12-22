@@ -78,7 +78,9 @@ export class EfficacyList extends Component<{
             if (typeSet.typesArePresent[i]) {
                 let multiplierElement = this.getElementFromMultiplier(efficacy[i])
                 items.push(
-                    <Col className="efficacy">
+                    <Col
+                        key={i}
+                        className="efficacy">
                         {typeHeader}
                         <br />
                         {multiplierElement}
@@ -87,7 +89,9 @@ export class EfficacyList extends Component<{
             }
             else {
                 items.push(
-                    <Col className="efficacy">
+                    <Col
+                        key={i}
+                        className="efficacy">
                         {typeHeader}
                         <br />
                         <b>N/A</b>

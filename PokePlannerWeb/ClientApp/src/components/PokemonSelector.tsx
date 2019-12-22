@@ -195,7 +195,7 @@ export class PokemonSelector extends Component<{
                     isOpen={this.state.validityTooltipOpen}
                     toggle={this.toggleValidityTooltip}
                     placement="bottom"
-                    target="speciesInput">
+                    target={"speciesInput" + this.props.index}>
                     {message}
                 </Tooltip>
             )
@@ -205,7 +205,7 @@ export class PokemonSelector extends Component<{
             <Col xs="auto">
                 <Input
                     type="text"
-                    id="speciesInput"
+                    id={"speciesInput" + this.props.index}
                     placeholder="Search for a Pokemon!"
                     invalid={speciesCheckedAndInvalid}
                     onKeyDown={this.handleSearch} />
