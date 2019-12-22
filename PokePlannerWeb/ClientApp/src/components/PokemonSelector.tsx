@@ -2,6 +2,7 @@
 import React from "react"
 import { EfficacyList } from "./EfficacyList"
 import { Spinner, Button, Row, Col, Input, Media, Collapse, Tooltip } from "reactstrap"
+import { SpeciesValidity } from "../models/SpeciesValidity"
 
 import "./PokemonSelector.scss"
 import { TypeSet } from "../models/TypeSet"
@@ -28,9 +29,9 @@ export class PokemonSelector extends Component<{
     species: string,
 
     /**
-     * Whether the species is valid.
+     * Value describing the species validity.
      */
-    speciesIsValid: boolean,
+    speciesValidity: SpeciesValidity,
 
     /**
      * Whether we're loading the species validity.
@@ -81,7 +82,7 @@ export class PokemonSelector extends Component<{
         super(props)
         this.state = {
             species: "",
-            speciesIsValid: false,
+            speciesValidity: SpeciesValidity.Nonexistent,
             loadingSpeciesIsValid: true,
             validityTooltipOpen: false,
             pokemonName: "",
@@ -120,7 +121,7 @@ export class PokemonSelector extends Component<{
             if (species && species !== "") {
                 this.fetchSpeciesIsValid(species)
                     .then(() => {
-                        if (this.state.speciesIsValid) {
+                        if (this.speciesIsValid()) {
                             // invalid might've become valid with the version group change, so we
                             // should fetch things that don't change between version groups
                             if (this.state.pokemonName === "") {
@@ -149,39 +150,15 @@ export class PokemonSelector extends Component<{
         // flags
         let showEfficacy = this.state.showEfficacy
 
-        let hasSpecies = this.hasSpecies()
-        let loadingValidity = this.state.loadingSpeciesIsValid
-        let speciesIsInvalid = hasSpecies && !loadingValidity && !this.state.speciesIsValid
-
         // sub-components
-        let validityTooltip = null
-        if (speciesIsInvalid) {
-            validityTooltip = (
-                <Tooltip
-                    isOpen={this.state.validityTooltipOpen}
-                    toggle={this.toggleValidityTooltip}
-                    placement="bottom"
-                    target="speciesInput">
-                    {this.state.species} cannot be obtained!
-                </Tooltip>
-            )
-        }
-
+        let searchBox = this.renderSearchBox()
         let pokemonInfo = this.renderPokemonInfo()
         let efficacyList = this.renderEfficacyList()
 
         return (
             <div>
                 <Row>
-                    <Col xs="auto">
-                        <Input
-                            type="text"
-                            id="speciesInput"
-                            placeholder="Search for a Pokemon!"
-                            invalid={speciesIsInvalid}
-                            onKeyDown={this.handleSearch} />
-                        {validityTooltip}
-                    </Col>
+                    {searchBox}
                     <Col xs="auto">
                         <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
                     </Col>
@@ -212,6 +189,11 @@ export class PokemonSelector extends Component<{
         return this.state.species != null && this.state.species !== ""
     }
 
+    // returns true if the species is valid
+    speciesIsValid() {
+        return this.state.speciesValidity === SpeciesValidity.Valid
+    }
+
     // returns a loading spinner
     makeSpinner() {
         return <Spinner animation="border" />
@@ -220,6 +202,43 @@ export class PokemonSelector extends Component<{
     // returns a small loading spinner
     makeSmallSpinner() {
         return <Spinner animation="border" size="sm" />
+    }
+
+    // returns a box for searching for a species
+    renderSearchBox() {
+        let loadingValidity = this.state.loadingSpeciesIsValid
+        let speciesCheckedAndInvalid = this.hasSpecies() && !loadingValidity && !this.speciesIsValid()
+
+        let validityTooltip = null
+        if (speciesCheckedAndInvalid) {
+            // determine message from validity status
+            let message = `${this.state.species} cannot be obtained in this game version!`
+            if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
+                message = `${this.state.species} does not exist!`
+            }
+
+            validityTooltip = (
+                <Tooltip
+                    isOpen={this.state.validityTooltipOpen}
+                    toggle={this.toggleValidityTooltip}
+                    placement="bottom"
+                    target="speciesInput">
+                    {message}
+                </Tooltip>
+            )
+        }
+
+        return (
+            <Col xs="auto">
+                <Input
+                    type="text"
+                    id="speciesInput"
+                    placeholder="Search for a Pokemon!"
+                    invalid={speciesCheckedAndInvalid}
+                    onKeyDown={this.handleSearch} />
+                {validityTooltip}
+            </Col>
+        )
     }
 
     // returns the Pokemon info
@@ -255,7 +274,7 @@ export class PokemonSelector extends Component<{
     // returns the efficacy list
     renderEfficacyList() {
         let species = this.state.species
-        if (this.state.loadingSpeciesIsValid || !this.state.speciesIsValid) {
+        if (this.state.loadingSpeciesIsValid || !this.speciesIsValid()) {
             species = ""
         }
 
@@ -290,7 +309,7 @@ export class PokemonSelector extends Component<{
             // fetch name, sprite and types description
             this.fetchSpeciesIsValid(newSpeciesName)
                 .then(() => {
-                    if (this.state.speciesIsValid) {
+                    if (this.speciesIsValid()) {
                         this.fetchPokemonName(newSpeciesName)
                         this.fetchSpriteUrl(newSpeciesName)
                         this.fetchTypesDescription(newSpeciesName)
@@ -303,7 +322,7 @@ export class PokemonSelector extends Component<{
     clearPokemon(_: any) {
         this.setState({
             species: "",
-            speciesIsValid: false,
+            speciesValidity: SpeciesValidity.Nonexistent,
             pokemonName: "",
             pokemonSpriteUrl: "",
             pokemonTypesDescription: ""
@@ -313,7 +332,6 @@ export class PokemonSelector extends Component<{
     // invalidate the Pokemon but don't clear the species
     invalidatePokemon() {
         this.setState({
-            speciesIsValid: false,
             pokemonName: "",
             pokemonSpriteUrl: "",
             pokemonTypesDescription: ""
@@ -343,8 +361,14 @@ export class PokemonSelector extends Component<{
                 throw new Error(`Selector ${this.props.index}: tried to fetch validity for '${species}' but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(validity => this.setState({ speciesIsValid: Boolean(validity) }))
-            .catch(error => console.log(error))
+            .then(validity => {
+                let isValid = Boolean(validity)
+                this.setState({ speciesValidity: isValid ? SpeciesValidity.Valid : SpeciesValidity.Invalid })
+            })
+            .catch(error => {
+                console.log(error)
+                this.setState({ speciesValidity: SpeciesValidity.Nonexistent })
+            })
             .then(() => this.setState({ loadingSpeciesIsValid: false }))
     }
 
