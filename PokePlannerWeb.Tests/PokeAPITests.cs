@@ -27,6 +27,20 @@ namespace PokePlannerWeb.Tests
         }
 
         /// <summary>
+        /// Verifies that stat loading works correctly.
+        /// </summary>
+        [Test]
+        [Category("Integration")]
+        public async Task StatsLoadingTest()
+        {
+            // load stats
+            await StatData.Instance.LoadStats();
+
+            // verify it's all loaded
+            Assert.AreEqual(8, StatData.Instance.Stats.Length);
+        }
+
+        /// <summary>
         /// Verifies that a Pokemon payload is created correctly.
         /// </summary>
         [Test]
