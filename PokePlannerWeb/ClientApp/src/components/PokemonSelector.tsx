@@ -168,13 +168,8 @@ export class PokemonSelector extends Component<{
 
     // returns a box for searching for a species
     renderSearchBox() {
-        let loadingValidity = this.state.loadingSpeciesValidity
-        let speciesValidity = this.state.speciesValidity
-        let speciesCheckedAndInvalid = this.hasSpecies() && !loadingValidity && !this.speciesIsValid()
-        let shouldCreateTooltip = (this.hasSpecies() && speciesValidity === SpeciesValidity.Nonexistent)
-                               || (!this.props.ignoreValidity && speciesCheckedAndInvalid)
-
         let validityTooltip = null
+        let shouldCreateTooltip = this.shouldCreateTooltip()
         if (shouldCreateTooltip) {
             // determine message from validity status
             let message = `${this.state.species} cannot be obtained in this game version!`
@@ -299,6 +294,17 @@ export class PokemonSelector extends Component<{
                                     && this.hasSpecies()
                                     && this.state.speciesValidity !== SpeciesValidity.Nonexistent
         return shouldShowInvalidSpecies || this.speciesIsValid()
+    }
+
+    // returns true if a validity tooltip should be shown
+    shouldCreateTooltip() {
+        let speciesChecked = this.hasSpecies() && !this.state.loadingSpeciesValidity
+        let speciesValidity = this.state.speciesValidity
+        let shouldCreateTooltip = speciesChecked
+                               && (speciesValidity === SpeciesValidity.Nonexistent
+                                    || (!this.props.ignoreValidity && speciesValidity === SpeciesValidity.Invalid))
+
+        return shouldCreateTooltip
     }
 
     // handler for searching for a Pokemon
