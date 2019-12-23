@@ -4,6 +4,9 @@ import { TypeSet } from "../models/TypeSet"
 
 import "./EfficacyList.scss"
 
+/**
+ * Component for displaying defensive type efficacy.
+ */
 export class EfficacyList extends Component<{
     /**
      * The index of this efficacy list.

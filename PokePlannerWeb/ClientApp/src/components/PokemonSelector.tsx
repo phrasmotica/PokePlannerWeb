@@ -6,6 +6,9 @@ import { TypeSet } from "../models/TypeSet"
 
 import "./PokemonSelector.scss"
 
+/**
+ * Component for selecting a Pokemon and displaying information about it.
+ */
 export class PokemonSelector extends Component<{
     /**
      * The index of this Pokemon selector.

@@ -5,6 +5,9 @@ import { TypeSet } from '../models/TypeSet'
 
 const TEAM_SIZE: number = 6
 
+/**
+ * Component for building a Pokemon team.
+ */
 export class TeamBuilder extends Component<{}, {
     /**
      * List of version groups.
