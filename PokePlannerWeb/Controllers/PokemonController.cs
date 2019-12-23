@@ -61,6 +61,17 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
+        /// Returns the given Pokemon's base stats in the version group with the given ID.
+        /// </summary>
+        [HttpGet("{species}/baseStats/{versionGroupId:int}")]
+        public async Task<int[]> GetPokemonBaseStatsInVersionGroup(string species, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting base stats for Pokemon \"{species}\" in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(species);
+            return pokemon.GetBaseStats(versionGroupId);
+        }
+
+        /// <summary>
         /// Returns the given Pokemon's validity in the version group with the given ID.
         /// </summary>
         [HttpGet("{species}/validity/{versionGroupId:int}")]
