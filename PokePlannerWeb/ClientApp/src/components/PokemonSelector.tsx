@@ -25,7 +25,12 @@ export class PokemonSelector extends Component<{
     /**
      * The type set.
      */
-    typeSet: TypeSet
+    typeSet: TypeSet,
+
+    /**
+     * Whether tooltips should be hidden.
+     */
+    hideTooltips: boolean
 }, {
     /**
      * The Pokemon species.
@@ -169,8 +174,8 @@ export class PokemonSelector extends Component<{
     // returns a box for searching for a species
     renderSearchBox() {
         let validityTooltip = null
-        let shouldCreateTooltip = this.shouldCreateTooltip()
-        if (shouldCreateTooltip) {
+        let shouldMarkInvalidSpecies = this.shouldMarkSpeciesInvalid()
+        if (!this.props.hideTooltips && shouldMarkInvalidSpecies) {
             // determine message from validity status
             let message = `${this.state.species} cannot be obtained in this game version!`
             if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
@@ -194,7 +199,7 @@ export class PokemonSelector extends Component<{
                     type="text"
                     id={"speciesInput" + this.props.index}
                     placeholder="Search for a Pokemon!"
-                    invalid={shouldCreateTooltip}
+                    invalid={shouldMarkInvalidSpecies}
                     onKeyDown={this.handleSearch} />
                 {validityTooltip}
             </Col>
@@ -296,15 +301,15 @@ export class PokemonSelector extends Component<{
         return shouldShowInvalidSpecies || this.speciesIsValid()
     }
 
-    // returns true if a validity tooltip should be shown
-    shouldCreateTooltip() {
+    // returns true if the species should be marked as invalid
+    shouldMarkSpeciesInvalid() {
         let speciesChecked = this.hasSpecies() && !this.state.loadingSpeciesValidity
         let speciesValidity = this.state.speciesValidity
-        let shouldCreateTooltip = speciesChecked
+        let shouldMarkInvalid = speciesChecked
                                && (speciesValidity === SpeciesValidity.Nonexistent
                                     || (!this.props.ignoreValidity && speciesValidity === SpeciesValidity.Invalid))
 
-        return shouldCreateTooltip
+        return shouldMarkInvalid
     }
 
     // handler for searching for a Pokemon

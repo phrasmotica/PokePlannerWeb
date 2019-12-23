@@ -34,7 +34,12 @@ export class TeamBuilder extends Component<{}, {
     /**
      * Whether species validity in the selected version group should be ignored.
      */
-    ignoreValidity: boolean
+    ignoreValidity: boolean,
+
+    /**
+     * Whether tooltips should be hidden.
+     */
+    hideTooltips: boolean
 }> {
     constructor(props: any) {
         super(props)
@@ -48,11 +53,13 @@ export class TeamBuilder extends Component<{}, {
                 typesArePresent: []
             },
             loadingTypeSet: true,
-            ignoreValidity: false
+            ignoreValidity: false,
+            hideTooltips: false
         }
 
         this.handleVersionGroupChange = this.handleVersionGroupChange.bind(this)
         this.handleIgnoreValidityChange = this.handleIgnoreValidityChange.bind(this)
+        this.handleHideTooltipsChange = this.handleHideTooltipsChange.bind(this)
     }
 
     componentDidMount() {
@@ -138,9 +145,16 @@ export class TeamBuilder extends Component<{}, {
     }
 
     // toggle validity check on species
-    handleIgnoreValidityChange(_: any) {
+    handleIgnoreValidityChange() {
         this.setState((previousState) => ({
             ignoreValidity: !previousState.ignoreValidity
+        }))
+    }
+
+    // toggle tooltip hiding
+    handleHideTooltipsChange() {
+        this.setState((previousState) => ({
+            hideTooltips: !previousState.hideTooltips
         }))
     }
 
@@ -206,16 +220,29 @@ export class TeamBuilder extends Component<{}, {
     // returns the set of toggles for the menu
     renderToggleSet() {
         return (
-            <FormGroup check>
-                <Input
-                    type="checkbox"
-                    id="IgnoreValidityCheckbox"
-                    checked={this.state.ignoreValidity}
-                    onChange={this.handleIgnoreValidityChange} />
-                <Label for="IgnoreValidityCheckbox" check>
-                    Ignore Pokemon validity in game version
+            <div>
+                <FormGroup check>
+                    <Input
+                        type="checkbox"
+                        id="ignoreValidityCheckbox"
+                        checked={this.state.ignoreValidity}
+                        onChange={() => this.handleIgnoreValidityChange()} />
+                    <Label for="ignoreValidityCheckbox" check>
+                        Ignore Pokemon validity in game version
+                    </Label>
+                </FormGroup>
+
+                <FormGroup check>
+                    <Input
+                        type="checkbox"
+                        id="hideTooltipsCheckbox"
+                        checked={this.state.hideTooltips}
+                        onChange={() => this.handleHideTooltipsChange()} />
+                    <Label for="hideTooltipsCheckbox" check>
+                        Hide tooltips
                 </Label>
-            </FormGroup>
+                </FormGroup>
+            </div>
         )
     }
 
@@ -228,6 +255,7 @@ export class TeamBuilder extends Component<{}, {
                     index={i}
                     versionGroupIndex={this.state.versionGroupIndex}
                     ignoreValidity={this.state.ignoreValidity}
+                    hideTooltips={this.state.hideTooltips}
                     typeSet={this.state.typeSet} />
             )
         }
