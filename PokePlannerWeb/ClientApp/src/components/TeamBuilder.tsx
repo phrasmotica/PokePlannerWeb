@@ -32,6 +32,16 @@ export class TeamBuilder extends Component<{}, {
     loadingTypeSet: boolean,
 
     /**
+     * The base stat names.
+     */
+    baseStatNames: string[],
+
+    /**
+     * Whether we're loading the base stat names.
+     */
+    loadingBaseStatNames: boolean,
+
+    /**
      * Whether species validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean,
@@ -53,6 +63,8 @@ export class TeamBuilder extends Component<{}, {
                 typesArePresent: []
             },
             loadingTypeSet: true,
+            baseStatNames: [],
+            loadingBaseStatNames: true,
             ignoreValidity: false,
             hideTooltips: false
         }
@@ -61,6 +73,8 @@ export class TeamBuilder extends Component<{}, {
     componentDidMount() {
         this.loadVersionGroups()
             .then(() => {
+                this.loadStats()
+                    .then(() => this.getBaseStatNames(this.state.versionGroupIndex))
                 this.getTypeSet(this.state.versionGroupIndex)
                 this.loadTypeEfficacy(this.state.versionGroupIndex)
             })
@@ -91,6 +105,11 @@ export class TeamBuilder extends Component<{}, {
             .catch(error => console.log(error))
     }
 
+    // load all stats
+    async loadStats() {
+        await fetch("stat", { method: "POST" })
+    }
+
     // retrieves the type set for the given version group from TypeController
     async getTypeSet(versionGroupIndex: number) {
         console.log(`Team builder: getting type set for version group ${versionGroupIndex}...`)
@@ -114,6 +133,32 @@ export class TeamBuilder extends Component<{}, {
             .then(typeSet => this.setState({ typeSet: typeSet }))
             .catch(error => console.log(error))
             .then(() => this.setState({ loadingTypeSet: false }))
+    }
+
+    // retrieves the type set for the given version group from TypeController
+    async getBaseStatNames(versionGroupIndex: number) {
+        console.log(`Team builder: getting base stat names for version group ${versionGroupIndex}...`)
+
+        // loading begins
+        this.setState({
+            loadingBaseStatNames: true
+        })
+
+        // get base stat names
+        fetch(`stat/baseStatNames/${versionGroupIndex}`)
+            .then(response => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                // concrete types endpoint couldn't be found
+                throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupIndex}!`)
+            })
+            .then(response => response.json())
+            .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingBaseStatNames: false }))
+            .then(() => console.log(this.state.baseStatNames))
     }
 
     // loads type efficacy data
