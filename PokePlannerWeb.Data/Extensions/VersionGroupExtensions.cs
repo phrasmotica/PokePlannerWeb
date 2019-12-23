@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PokeApiNet.Models;
-using PokePlannerWeb.Data.Util;
+using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Data.Extensions
 {
@@ -18,6 +18,15 @@ namespace PokePlannerWeb.Data.Extensions
         {
             var versions = await PokeAPI.Get(vg.Versions);
             return string.Join("/", versions.Select(v => v.GetEnglishName()));
+        }
+
+        /// <summary>
+        /// Returns the names of the base stats in the version group with the given ID.
+        /// </summary>
+        public static IEnumerable<string> GetBaseStatNames(this VersionGroup versionGroup)
+        {
+            return StatData.Instance.Stats.Where(s => !s.IsBattleOnly)
+                                          .Select(s => s.GetEnglishName());
         }
     }
 }
