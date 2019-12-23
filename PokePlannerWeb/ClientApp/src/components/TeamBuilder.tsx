@@ -161,7 +161,6 @@ export class TeamBuilder extends Component<{}, {
             .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
             .catch(error => console.log(error))
             .then(() => this.setState({ loadingBaseStatNames: false }))
-            .then(() => console.log(this.state.baseStatNames))
     }
 
     // loads type efficacy data
