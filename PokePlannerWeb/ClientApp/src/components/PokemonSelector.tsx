@@ -40,7 +40,7 @@ export class PokemonSelector extends Component<{
     /**
      * Whether we're loading the species validity.
      */
-    loadingSpeciesIsValid: boolean,
+    loadingSpeciesValidity: boolean,
 
     /**
      * Whether the validity tooltip is open.
@@ -87,7 +87,7 @@ export class PokemonSelector extends Component<{
         this.state = {
             species: "",
             speciesValidity: SpeciesValidity.Nonexistent,
-            loadingSpeciesIsValid: true,
+            loadingSpeciesValidity: true,
             validityTooltipOpen: false,
             pokemonName: "",
             loadingPokemonName: true,
@@ -108,7 +108,7 @@ export class PokemonSelector extends Component<{
     componentDidMount() {
         // finished loading
         this.setState({
-            loadingSpeciesIsValid: false,
+            loadingSpeciesValidity: false,
             loadingPokemonName: false,
             loadingPokemonSpriteUrl: false,
             loadingPokemonTypesDescription: false
@@ -168,7 +168,7 @@ export class PokemonSelector extends Component<{
 
     // returns a box for searching for a species
     renderSearchBox() {
-        let loadingValidity = this.state.loadingSpeciesIsValid
+        let loadingValidity = this.state.loadingSpeciesValidity
         let speciesValidity = this.state.speciesValidity
         let speciesCheckedAndInvalid = this.hasSpecies() && !loadingValidity && !this.speciesIsValid()
         let shouldCreateTooltip = (this.hasSpecies() && speciesValidity === SpeciesValidity.Nonexistent)
@@ -247,6 +247,7 @@ export class PokemonSelector extends Component<{
                 species={this.state.species}
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex}
+                loadingSpeciesValidity={this.state.loadingSpeciesValidity}
                 showMultipliers={this.shouldShowSpecies()} />
         )
     }
@@ -338,7 +339,7 @@ export class PokemonSelector extends Component<{
 
         this.setState({
             species: species,
-            loadingSpeciesIsValid: true
+            loadingSpeciesValidity: true
         })
 
         // fetch validity
@@ -359,7 +360,7 @@ export class PokemonSelector extends Component<{
                 console.log(error)
                 this.setState({ speciesValidity: SpeciesValidity.Nonexistent })
             })
-            .then(() => this.setState({ loadingSpeciesIsValid: false }))
+            .then(() => this.setState({ loadingSpeciesValidity: false }))
     }
 
     // fetches the name of the species from PokemonController
