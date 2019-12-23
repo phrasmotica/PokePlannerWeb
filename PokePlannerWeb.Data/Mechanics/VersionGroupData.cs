@@ -10,14 +10,14 @@ namespace PokePlannerWeb.Data.Mechanics
     /// <summary>
     /// For version group/generation information and calculations.
     /// </summary>
-    public class VersionGroupData
+    public class VersionGroupData : ResourceData<VersionGroup>
     {
         #region Singleton members
 
         /// <summary>
         /// Gets the singleton instance.
         /// </summary>
-        public static VersionGroupData Instance { get; } = new VersionGroupData();
+        public static new VersionGroupData Instance { get; } = new VersionGroupData();
 
         /// <summary>
         /// Singleton constructor.
@@ -29,18 +29,20 @@ namespace PokePlannerWeb.Data.Mechanics
         /// <summary>
         /// Loads all version group data.
         /// </summary>
-        public async Task LoadVersionGroups()
+        public override async Task LoadData()
         {
-            Console.WriteLine("VersionGroupData: getting version group data...");
-            VersionGroups = (await PokeAPI.GetMany<VersionGroup>()).ToArray();
+            await base.LoadData();
             VersionGroupIndex = VersionGroups.Length - 1;
-            Console.WriteLine($"VersionGroupData: got data for {VersionGroups.Length} version groups.");
         }
 
         /// <summary>
         /// Gets or sets the version groups.
         /// </summary>
-        public VersionGroup[] VersionGroups { get; set; }
+        public VersionGroup[] VersionGroups
+        { 
+            get => Data;
+            set => Data = value;
+        }
 
         /// <summary>
         /// Gets or sets the index of the selected version group.

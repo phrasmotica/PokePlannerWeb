@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data.Extensions;
 
@@ -10,14 +7,14 @@ namespace PokePlannerWeb.Data.Mechanics
     /// <summary>
     /// For stat information and calculations.
     /// </summary>
-    public class StatData
+    public class StatData : ResourceData<Stat>
     {
         #region Singleton members
 
         /// <summary>
         /// Gets the singleton instance.
         /// </summary>
-        public static StatData Instance { get; } = new StatData();
+        public static new StatData Instance { get; } = new StatData();
 
         /// <summary>
         /// Singleton constructor.
@@ -27,19 +24,13 @@ namespace PokePlannerWeb.Data.Mechanics
         #endregion
 
         /// <summary>
-        /// Loads all stat data.
-        /// </summary>
-        public async Task LoadStats()
-        {
-            Console.WriteLine("StatData: getting stat data...");
-            Stats = (await PokeAPI.GetMany<Stat>()).ToArray();
-            Console.WriteLine($"StatData: got data for {Stats.Length} stats.");
-        }
-
-        /// <summary>
         /// Gets or sets the stats.
         /// </summary>
-        public Stat[] Stats { get; set; }
+        public Stat[] Stats
+        {
+            get => Data;
+            set => Data = value;
+        }
 
         /// <summary>
         /// Returns the names of the base stats in the version group with the given ID.

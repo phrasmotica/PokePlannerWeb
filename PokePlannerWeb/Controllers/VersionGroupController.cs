@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PokeApiNet.Models;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Models;
 
@@ -12,30 +13,21 @@ namespace PokePlannerWeb.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class VersionGroupController : ControllerBase
+    public class VersionGroupController : ResourceController<VersionGroup>
     {
-        /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<VersionGroupController> Logger;
-
         /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupController(ILogger<VersionGroupController> logger)
+        public VersionGroupController(ILogger<ResourceController<VersionGroup>> logger) : base(logger)
         {
-            Logger = logger;
         }
 
         /// <summary>
         /// Loads the version group data from PokeAPI.
         /// </summary>
-        [HttpPost]
-        public async Task LoadVersionGroups()
+        protected override Task LoadResources()
         {
-            Logger.LogInformation("VersionGroupController: loading version group data...");
-            await VersionGroupData.Instance.LoadVersionGroups();
-            Logger.LogInformation("VersionGroupController: loaded version group data.");
+            return VersionGroupData.Instance.LoadData();
         }
 
         /// <summary>

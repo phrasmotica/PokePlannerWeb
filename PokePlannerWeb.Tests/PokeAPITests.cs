@@ -20,10 +20,10 @@ namespace PokePlannerWeb.Tests
         public async Task VersionGroupsLoadingTest()
         {
             // load version groups
-            await VersionGroupData.Instance.LoadVersionGroups();
+            await VersionGroupData.Instance.LoadData();
 
             // verify it's all loaded
-            Assert.AreEqual(18, VersionGroupData.Instance.VersionGroups.Length);
+            Assert.AreEqual(18, VersionGroupData.Instance.DataCount);
         }
 
         /// <summary>
@@ -34,10 +34,10 @@ namespace PokePlannerWeb.Tests
         public async Task StatsLoadingTest()
         {
             // load stats
-            await StatData.Instance.LoadStats();
+            await StatData.Instance.LoadData();
 
             // verify it's all loaded
-            Assert.AreEqual(8, StatData.Instance.Stats.Length);
+            Assert.AreEqual(8, StatData.Instance.DataCount);
         }
 
         /// <summary>
