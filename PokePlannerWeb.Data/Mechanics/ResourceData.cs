@@ -37,7 +37,7 @@ namespace PokePlannerWeb.Data.Mechanics
         /// <summary>
         /// Gets or sets the data.
         /// </summary>
-        public T[] Data { get; set; }
+        protected T[] Data { get; set; }
 
         /// <summary>
         /// Gets the number of data items.
