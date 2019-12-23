@@ -248,7 +248,8 @@ export class PokemonSelector extends Component<{
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex}
                 loadingSpeciesValidity={this.state.loadingSpeciesValidity}
-                showMultipliers={this.shouldShowSpecies()} />
+                showMultipliers={this.shouldShowSpecies()}
+                hideTooltips={this.props.hideTooltips} />
         )
     }
 

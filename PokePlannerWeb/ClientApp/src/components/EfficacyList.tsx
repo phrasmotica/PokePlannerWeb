@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Col } from "reactstrap"
+import { Spinner, Col, Tooltip } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
 import "./EfficacyList.scss"
@@ -33,7 +33,12 @@ export class EfficacyList extends Component<{
     /**
      * Whether to show the multipliers.
      */
-    showMultipliers: boolean
+    showMultipliers: boolean,
+
+    /**
+     * Whether tooltips should be hidden.
+     */
+    hideTooltips: boolean
 }, {
     /**
      * The efficacy to show.
@@ -43,13 +48,19 @@ export class EfficacyList extends Component<{
     /**
      * Whether we're loading the efficacy.
      */
-    loadingEfficacy: boolean
+    loadingEfficacy: boolean,
+
+    /**
+     * Whether the type tooltips are open.
+     */
+    typeTooltipOpen: boolean[]
 }> {
     constructor(props: any) {
         super(props)
         this.state = {
             efficacy: [],
-            loadingEfficacy: false
+            loadingEfficacy: false,
+            typeTooltipOpen: []
         }
     }
 
@@ -72,6 +83,17 @@ export class EfficacyList extends Component<{
         if (versionGroupChanged || speciesChanged) {
             this.getEfficacy()
         }
+
+        // refresh tooltip states if the type set changed
+        let previousTypeSet = previousProps.typeSet
+        let typeSet = this.props.typeSet
+        let typeSetChanged = typeSet !== previousTypeSet
+
+        if (typeSetChanged) {
+            this.setState({
+                typeTooltipOpen: typeSet.types.map(_ => false)
+            })
+        }
     }
 
     render() {
@@ -84,7 +106,8 @@ export class EfficacyList extends Component<{
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
             // TODO: create icons for each type
-            let typeHeader = <em>{typeSet.types[i]}</em>
+            let type = typeSet.types[i]
+            let typeHeader = <em>{type}</em>
 
             if (typeSet.typesArePresent[i]) {
                 let multiplierElement = this.getElementFromMultiplier(efficacy[i])
@@ -99,13 +122,27 @@ export class EfficacyList extends Component<{
                 )
             }
             else {
+                let tooltip = null
+                if (!this.props.hideTooltips) {
+                    tooltip = (
+                        <Tooltip
+                            isOpen={this.state.typeTooltipOpen[i]}
+                            toggle={() => this.toggleTypeTooltip(i)}
+                            placement="top"
+                            target={"type" + i}>
+                            {type} is absent from this game version
+                        </Tooltip>
+                    )
+                }
+
                 items.push(
                     <Col
                         key={i}
                         className="efficacy">
                         {typeHeader}
                         <br />
-                        <b>N/A</b>
+                        <b id={"type" + i}>N/A</b>
+                        {tooltip}
                     </Col>
                 )
             }
@@ -165,6 +202,21 @@ export class EfficacyList extends Component<{
     // returns a loading spinner
     makeSpinner() {
         return <Spinner animation="border" size="sm" />
+    }
+
+    // toggle the type tooltip with the given index
+    toggleTypeTooltip(index: number) {
+        let newTypeTooltipOpen = this.state.typeTooltipOpen.map((item, j) => {
+            if (j == index) {
+                return !item
+            }
+
+            return item
+        })
+
+        this.setState({
+            typeTooltipOpen: newTypeTooltipOpen
+        })
     }
 
     // returns true if we have a species
