@@ -116,38 +116,16 @@ export class PokemonSelector extends Component<{
     }
 
     componentDidUpdate(previousProps: any) {
-        // refresh if the version group index changed...
+        // refresh if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
-        // ...or if the ignore validity flag changed
-        let previousIgnoreValidity = previousProps.ignoreValidity
-        let ignoreValidity = this.props.ignoreValidity
-        let ignoreValidityChanged = ignoreValidity !== previousIgnoreValidity
-
-        if (versionGroupChanged || ignoreValidityChanged) {
+        if (versionGroupChanged) {
             let species = this.state.species
             if (species && species !== "") {
                 this.fetchSpeciesIsValid(species)
-                    .then(() => {
-                        if (this.shouldShowSpecies()) {
-                            // invalid might've become valid with the version group change, so we
-                            // should fetch things that don't change between version groups
-                            if (this.state.pokemonName === "") {
-                                this.fetchPokemonName(species)
-                            }
-
-                            if (this.state.pokemonSpriteUrl === "") {
-                                this.fetchSpriteUrl(species)
-                            }
-
-                            this.fetchTypesDescription(species)
-                        }
-                        else {
-                            this.invalidatePokemon()
-                        }
-                    })
+                    .then(() => this.fetchTypesDescription(species))
             }
         }
     }
@@ -230,9 +208,11 @@ export class PokemonSelector extends Component<{
 
     // returns the Pokemon info
     renderPokemonInfo() {
-        // flags
-        let isLoading = this.isLoading()
+        // don't show loading spinners if we shouldn't show the species
+        let shouldShowSpecies = this.shouldShowSpecies()
+        let isLoading = shouldShowSpecies && this.isLoading()
 
+        let className = shouldShowSpecies ? "" : "hidden"
         return (
             <Row>
                 <Col xs="auto" className="sprite">
@@ -240,14 +220,15 @@ export class PokemonSelector extends Component<{
                         ? this.makeSpinner()
                         : <Media
                             object
+                            className={className}
                             src={this.state.pokemonSpriteUrl} />
                     }
                 </Col>
                 <Col xs="auto" style={{ padding: 10 }}>
-                    <div>
+                    <div className={className}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
                     </div>
-                    <div>
+                    <div className={className}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonTypesDescription}
                     </div>
                 </Col>
@@ -327,13 +308,10 @@ export class PokemonSelector extends Component<{
             // fetch name, sprite and types description
             this.fetchSpeciesIsValid(newSpeciesName)
                 .then(() => {
-                    if (this.shouldShowSpecies()) {
+                    if (this.state.speciesValidity !== SpeciesValidity.Nonexistent) {
                         this.fetchPokemonName(newSpeciesName)
                         this.fetchSpriteUrl(newSpeciesName)
                         this.fetchTypesDescription(newSpeciesName)
-                    }
-                    else {
-                        this.invalidatePokemon()
                     }
                 })
         }
@@ -344,15 +322,6 @@ export class PokemonSelector extends Component<{
         this.setState({
             species: "",
             speciesValidity: SpeciesValidity.Nonexistent,
-            pokemonName: "",
-            pokemonSpriteUrl: "",
-            pokemonTypesDescription: ""
-        })
-    }
-
-    // invalidate the Pokemon but don't clear the species
-    invalidatePokemon() {
-        this.setState({
             pokemonName: "",
             pokemonSpriteUrl: "",
             pokemonTypesDescription: ""
