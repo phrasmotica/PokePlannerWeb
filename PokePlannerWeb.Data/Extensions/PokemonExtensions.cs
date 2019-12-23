@@ -123,6 +123,15 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
+        /// Returns this Pokemon's base stats in the version group with the given ID.
+        /// </summary>
+        public static int[] GetBaseStats(this Pokemon pokemon, int versionGroupId)
+        {
+            // reverse because PokeAPI spits them out as speed -> spdef -> spatk -> def -> atk -> hp
+            return pokemon.Stats.Select(bs => bs.BaseStat).Reverse().ToArray();
+        }
+
+        /// <summary>
         /// Returns a minimal representation of this Pokemon resource.
         /// </summary>
         public static async Task<PokemonPayload> AsPayload(this Pokemon pokemon)
