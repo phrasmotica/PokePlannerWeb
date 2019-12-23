@@ -23,7 +23,12 @@ export class EfficacyList extends Component<{
     /**
      * The type set.
      */
-    typeSet: TypeSet
+    typeSet: TypeSet,
+
+    /**
+     * Whether to show the multipliers.
+     */
+    showMultipliers: boolean
 }, {
     /**
      * The efficacy to show.
@@ -49,11 +54,12 @@ export class EfficacyList extends Component<{
     }
 
     componentDidUpdate(previousProps: any) {
-        // refresh efficacy if the version group index or species changed
+        // refresh efficacy if the version group changed...
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
+        // ...or if the species changed
         let previousSpecies = previousProps.species
         let species = this.props.species
         let speciesChanged = species !== previousSpecies
@@ -111,7 +117,7 @@ export class EfficacyList extends Component<{
     getElementFromMultiplier(multiplier: number) {
         let multiplierClass = this.getClassFromMultiplier(multiplier)
 
-        if (!this.hasSpecies()) {
+        if (!this.hasSpecies() || !this.props.showMultipliers) {
             return <b>-</b>
         }
 

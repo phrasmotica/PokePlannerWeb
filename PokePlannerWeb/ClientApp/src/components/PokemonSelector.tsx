@@ -18,6 +18,11 @@ export class PokemonSelector extends Component<{
     versionGroupIndex: number,
 
     /**
+     * Whether species validity in the selected version group should be ignored.
+     */
+    ignoreValidity: boolean,
+
+    /**
      * The type set.
      */
     typeSet: TypeSet
@@ -111,16 +116,22 @@ export class PokemonSelector extends Component<{
     }
 
     componentDidUpdate(previousProps: any) {
-        // refresh types description if the version group index changed
+        // refresh if the version group index changed...
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
-        if (versionGroupIndex !== previousVersionGroupIndex) {
-            console.log(`Pokemon selector ${this.props.index}: version group index ${previousVersionGroupIndex} -> ${versionGroupIndex}`)
+        let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
+
+        // ...or if the ignore validity flag changed
+        let previousIgnoreValidity = previousProps.ignoreValidity
+        let ignoreValidity = this.props.ignoreValidity
+        let ignoreValidityChanged = ignoreValidity !== previousIgnoreValidity
+
+        if (versionGroupChanged || ignoreValidityChanged) {
             let species = this.state.species
             if (species && species !== "") {
                 this.fetchSpeciesIsValid(species)
                     .then(() => {
-                        if (this.speciesIsValid()) {
+                        if (this.shouldShowSpecies()) {
                             // invalid might've become valid with the version group change, so we
                             // should fetch things that don't change between version groups
                             if (this.state.pokemonName === "") {
@@ -183,7 +194,7 @@ export class PokemonSelector extends Component<{
         let speciesCheckedAndInvalid = this.hasSpecies() && !loadingValidity && !this.speciesIsValid()
 
         let validityTooltip = null
-        if (speciesCheckedAndInvalid) {
+        if (!this.props.ignoreValidity && speciesCheckedAndInvalid) {
             // determine message from validity status
             let message = `${this.state.species} cannot be obtained in this game version!`
             if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
@@ -207,7 +218,7 @@ export class PokemonSelector extends Component<{
                     type="text"
                     id={"speciesInput" + this.props.index}
                     placeholder="Search for a Pokemon!"
-                    invalid={speciesCheckedAndInvalid}
+                    invalid={!this.props.ignoreValidity && speciesCheckedAndInvalid}
                     onKeyDown={this.handleSearch} />
                 {validityTooltip}
             </Col>
@@ -246,17 +257,13 @@ export class PokemonSelector extends Component<{
 
     // returns the efficacy list
     renderEfficacyList() {
-        let species = this.state.species
-        if (this.state.loadingSpeciesIsValid || !this.speciesIsValid()) {
-            species = ""
-        }
-
         return (
             <EfficacyList
                 index={this.props.index}
-                species={species}
+                species={this.state.species}
                 typeSet={this.props.typeSet}
-                versionGroupIndex={this.props.versionGroupIndex} />
+                versionGroupIndex={this.props.versionGroupIndex}
+                showMultipliers={this.shouldShowSpecies()} />
         )
     }
 
@@ -301,6 +308,11 @@ export class PokemonSelector extends Component<{
         return this.state.speciesValidity === SpeciesValidity.Valid
     }
 
+    // returns true if the species should be displayed
+    shouldShowSpecies() {
+        return this.props.ignoreValidity || this.speciesIsValid()
+    }
+
     // handler for searching for a Pokemon
     handleSearch(e: any) {
         // only fetch if we need to
@@ -309,7 +321,7 @@ export class PokemonSelector extends Component<{
             // fetch name, sprite and types description
             this.fetchSpeciesIsValid(newSpeciesName)
                 .then(() => {
-                    if (this.speciesIsValid()) {
+                    if (this.shouldShowSpecies()) {
                         this.fetchPokemonName(newSpeciesName)
                         this.fetchSpriteUrl(newSpeciesName)
                         this.fetchTypesDescription(newSpeciesName)
@@ -343,7 +355,7 @@ export class PokemonSelector extends Component<{
 
     // fetches the validity of the species from PokemonController
     async fetchSpeciesIsValid(species: string) {
-        if (!species || species == "") {
+        if (this.props.ignoreValidity || species == null || species == "") {
             return
         }
 

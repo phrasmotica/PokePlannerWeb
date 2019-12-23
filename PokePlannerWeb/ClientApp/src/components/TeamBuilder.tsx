@@ -227,6 +227,7 @@ export class TeamBuilder extends Component<{}, {
                     key={i}
                     index={i}
                     versionGroupIndex={this.state.versionGroupIndex}
+                    ignoreValidity={this.state.ignoreValidity}
                     typeSet={this.state.typeSet} />
             )
         }
