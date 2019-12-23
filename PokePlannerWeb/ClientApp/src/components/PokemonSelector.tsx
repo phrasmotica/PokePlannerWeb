@@ -191,10 +191,13 @@ export class PokemonSelector extends Component<{
     // returns a box for searching for a species
     renderSearchBox() {
         let loadingValidity = this.state.loadingSpeciesIsValid
+        let speciesValidity = this.state.speciesValidity
         let speciesCheckedAndInvalid = this.hasSpecies() && !loadingValidity && !this.speciesIsValid()
+        let shouldCreateTooltip = (this.hasSpecies() && speciesValidity === SpeciesValidity.Nonexistent)
+                               || (!this.props.ignoreValidity && speciesCheckedAndInvalid)
 
         let validityTooltip = null
-        if (!this.props.ignoreValidity && speciesCheckedAndInvalid) {
+        if (shouldCreateTooltip) {
             // determine message from validity status
             let message = `${this.state.species} cannot be obtained in this game version!`
             if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
@@ -218,7 +221,7 @@ export class PokemonSelector extends Component<{
                     type="text"
                     id={"speciesInput" + this.props.index}
                     placeholder="Search for a Pokemon!"
-                    invalid={!this.props.ignoreValidity && speciesCheckedAndInvalid}
+                    invalid={shouldCreateTooltip}
                     onKeyDown={this.handleSearch} />
                 {validityTooltip}
             </Col>
@@ -310,7 +313,10 @@ export class PokemonSelector extends Component<{
 
     // returns true if the species should be displayed
     shouldShowSpecies() {
-        return this.props.ignoreValidity || this.speciesIsValid()
+        let shouldShowInvalidSpecies = this.props.ignoreValidity
+                                    && this.hasSpecies()
+                                    && this.state.speciesValidity !== SpeciesValidity.Nonexistent
+        return shouldShowInvalidSpecies || this.speciesIsValid()
     }
 
     // handler for searching for a Pokemon
@@ -355,7 +361,7 @@ export class PokemonSelector extends Component<{
 
     // fetches the validity of the species from PokemonController
     async fetchSpeciesIsValid(species: string) {
-        if (this.props.ignoreValidity || species == null || species == "") {
+        if (species == null || species == "") {
             return
         }
 
