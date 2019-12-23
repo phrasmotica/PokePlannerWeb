@@ -29,7 +29,12 @@ export class TeamBuilder extends Component<{}, {
     /**
      * Whether we're loading the type set.
      */
-    loadingTypeSet: boolean
+    loadingTypeSet: boolean,
+
+    /**
+     * Whether species validity in the selected version group should be ignored.
+     */
+    ignoreValidity: boolean
 }> {
     constructor(props: any) {
         super(props)
@@ -42,10 +47,12 @@ export class TeamBuilder extends Component<{}, {
                 types: [],
                 typesArePresent: []
             },
-            loadingTypeSet: true
+            loadingTypeSet: true,
+            ignoreValidity: false
         }
 
         this.handleVersionGroupChange = this.handleVersionGroupChange.bind(this)
+        this.handleIgnoreValidityChange = this.handleIgnoreValidityChange.bind(this)
     }
 
     componentDidMount() {
@@ -130,6 +137,13 @@ export class TeamBuilder extends Component<{}, {
             .catch(error => console.log(error))
     }
 
+    // toggle validity check on species
+    handleIgnoreValidityChange(_: any) {
+        this.setState((previousState) => ({
+            ignoreValidity: !previousState.ignoreValidity
+        }))
+    }
+
     render() {
         let menu = this.renderMenu()
 
@@ -153,6 +167,7 @@ export class TeamBuilder extends Component<{}, {
         }
 
         let versionGroupMenu = this.renderVersionGroupMenu()
+        let toggleSet = this.renderToggleSet()
 
         return (
             <div>
@@ -161,7 +176,7 @@ export class TeamBuilder extends Component<{}, {
                         {versionGroupMenu}
                     </Col>
                     <Col>
-                        
+                        {toggleSet}
                     </Col>
                     <Col>
                         
@@ -184,6 +199,22 @@ export class TeamBuilder extends Component<{}, {
                         return <option key={index} value={index}>{vg}</option>
                     })}
                 </Input>
+            </FormGroup>
+        )
+    }
+
+    // returns the set of toggles for the menu
+    renderToggleSet() {
+        return (
+            <FormGroup check>
+                <Input
+                    type="checkbox"
+                    id="IgnoreValidityCheckbox"
+                    checked={this.state.ignoreValidity}
+                    onChange={this.handleIgnoreValidityChange} />
+                <Label for="IgnoreValidityCheckbox" check>
+                    Ignore Pokemon validity in game version
+                </Label>
             </FormGroup>
         )
     }
