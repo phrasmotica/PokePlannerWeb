@@ -102,12 +102,6 @@ export class PokemonSelector extends Component<{
             loadingPokemonTypesDescription: true,
             showEfficacy: false
         }
-
-        // bind stuff to this object
-        this.handleSearch = this.handleSearch.bind(this)
-        this.clearPokemon = this.clearPokemon.bind(this)
-        this.toggleValidityTooltip = this.toggleValidityTooltip.bind(this)
-        this.toggleShowEfficacy = this.toggleShowEfficacy.bind(this)
     }
 
     componentDidMount() {
@@ -154,14 +148,14 @@ export class PokemonSelector extends Component<{
                 <Row>
                     {searchBox}
                     <Col xs="auto">
-                        <Button color="danger" onMouseUp={this.clearPokemon}>Clear</Button>
+                        <Button color="danger" onMouseUp={() => this.clearPokemon()}>Clear</Button>
                     </Col>
                 </Row>
                 {pokemonInfo}
                 <Button
                     color="primary"
                     style={{ marginBottom: '1rem' }}
-                    onClick={this.toggleShowEfficacy}>
+                    onClick={() => this.toggleShowEfficacy()}>
                     {showEfficacy ? "Hide" : "Show"} efficacy
                 </Button>
                 <Collapse isOpen={showEfficacy}>
@@ -185,7 +179,7 @@ export class PokemonSelector extends Component<{
             validityTooltip = (
                 <Tooltip
                     isOpen={this.state.validityTooltipOpen}
-                    toggle={this.toggleValidityTooltip}
+                    toggle={() => this.toggleValidityTooltip()}
                     placement="bottom"
                     target={"speciesInput" + this.props.index}>
                     {message}
@@ -200,7 +194,7 @@ export class PokemonSelector extends Component<{
                     id={"speciesInput" + this.props.index}
                     placeholder="Search for a Pokemon!"
                     invalid={shouldMarkInvalidSpecies}
-                    onKeyDown={this.handleSearch} />
+                    onKeyDown={e => this.handleSearch(e)} />
                 {validityTooltip}
             </Col>
         )
@@ -331,7 +325,7 @@ export class PokemonSelector extends Component<{
     }
 
     // handler for clearing the Pokemon
-    clearPokemon(_: any) {
+    clearPokemon() {
         this.setState({
             species: "",
             speciesValidity: SpeciesValidity.Nonexistent,

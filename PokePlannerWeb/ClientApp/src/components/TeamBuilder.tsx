@@ -56,10 +56,6 @@ export class TeamBuilder extends Component<{}, {
             ignoreValidity: false,
             hideTooltips: false
         }
-
-        this.handleVersionGroupChange = this.handleVersionGroupChange.bind(this)
-        this.handleIgnoreValidityChange = this.handleIgnoreValidityChange.bind(this)
-        this.handleHideTooltipsChange = this.handleHideTooltipsChange.bind(this)
     }
 
     componentDidMount() {
@@ -208,7 +204,7 @@ export class TeamBuilder extends Component<{}, {
                     type="select"
                     id="versionGroupSelect"
                     value={this.state.versionGroupIndex}
-                    onChange={this.handleVersionGroupChange}>
+                    onChange={e => this.handleVersionGroupChange(e)}>
                     {this.state.versionGroups.map((vg, index) => {
                         return <option key={index} value={index}>{vg}</option>
                     })}
