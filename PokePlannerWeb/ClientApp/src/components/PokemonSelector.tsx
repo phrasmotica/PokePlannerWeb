@@ -93,6 +93,16 @@ export class PokemonSelector extends Component<{
     loadingPokemonTypes: boolean,
 
     /**
+     * The Pokemon's base stat values.
+     */
+    baseStatValues: number[],
+
+    /**
+     * Whether we're loading the Pokemon's base stat values.
+     */
+    loadingBaseStatValues: boolean,
+
+    /**
      * Whether to show the efficacy list.
      */
     showEfficacy: boolean
@@ -110,6 +120,8 @@ export class PokemonSelector extends Component<{
             loadingPokemonSpriteUrl: true,
             pokemonTypes: [],
             loadingPokemonTypes: true,
+            baseStatValues: [],
+            loadingBaseStatValues: true,
             showEfficacy: false
         }
     }
@@ -121,6 +133,7 @@ export class PokemonSelector extends Component<{
             loadingPokemonName: false,
             loadingPokemonSpriteUrl: false,
             loadingPokemonTypes: false,
+            loadingBaseStatValues: false
         })
     }
 
@@ -134,7 +147,10 @@ export class PokemonSelector extends Component<{
             let species = this.state.species
             if (species && species !== "") {
                 this.fetchSpeciesIsValid(species)
-                    .then(() => this.fetchTypes(species))
+                    .then(() => {
+                        this.fetchTypes(species)
+                        this.fetchBaseStatValues(species)
+                    })
             }
         }
     }
@@ -302,6 +318,7 @@ export class PokemonSelector extends Component<{
         return this.state.loadingPokemonName
             || this.state.loadingPokemonSpriteUrl
             || this.state.loadingPokemonTypes
+            || this.state.loadingBaseStatValues
     }
 
     // returns true if we have a species
@@ -345,6 +362,7 @@ export class PokemonSelector extends Component<{
                         this.fetchPokemonName(newSpeciesName)
                         this.fetchSpriteUrl(newSpeciesName)
                         this.fetchTypes(newSpeciesName)
+                        this.fetchBaseStatValues(newSpeciesName)
                     }
                 })
         }
@@ -456,5 +474,26 @@ export class PokemonSelector extends Component<{
             .then(types => this.setState({ pokemonTypes: types }))
             .catch(error => console.log(error))
             .then(() => this.setState({ loadingPokemonTypes: false }))
+    }
+
+    // fetches the base stat values for the species from PokemonController
+    fetchBaseStatValues(species: string) {
+        console.log(`Selector ${this.props.index}: fetching base stat values for '${species}'...`)
+
+        this.setState({ loadingBaseStatValues: true })
+
+        // fetch base stat values
+        fetch(`pokemon/${species}/baseStats/${this.props.versionGroupIndex}`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch base stat values for '${species}' but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(baseStatValues => this.setState({ baseStatValues: baseStatValues }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingBaseStatValues: false }))
     }
 }
