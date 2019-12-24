@@ -261,15 +261,48 @@ export class PokemonSelector extends Component<{
                             }
 
                             return (
-                                <div className="flex-center fill-parent">
+                                <div
+                                    key={i}
+                                    className="flex-center fill-parent">
                                     {element}
                                 </div>
                             )
                         })}
                     </div>
                 </div>
-                <div>
+                {isLoading ? this.makeSpinner() : this.renderStatBars()}
+            </div>
+        )
+    }
 
+    // returns a set of bars indicating each stat
+    renderStatBars() {
+        let shouldShowSpecies = this.shouldShowSpecies()
+        let className = shouldShowSpecies ? "" : "hidden";
+
+        return (
+            <div className="flex">
+                <div className="stat-names">
+                    {this.props.baseStatNames.map((name, i) => {
+                        return (
+                            <div
+                                key={i}
+                                className={className}>
+                                {name}
+                            </div>
+                        )
+                    })}
+                </div>
+
+                <div className="stat-bars">
+                    {this.state.baseStatValues.map((value, i) => {
+                        return (
+                            <div
+                                key={i}
+                                className={"stat-bar" + (shouldShowSpecies ? "" : " hidden")}
+                                style={{ width: value }} />
+                        )
+                    })}
                 </div>
             </div>
         )
