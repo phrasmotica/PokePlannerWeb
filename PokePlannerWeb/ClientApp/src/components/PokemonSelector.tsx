@@ -231,52 +231,84 @@ export class PokemonSelector extends Component<{
 
     // returns the Pokemon info
     renderPokemonInfo() {
-        // don't show loading spinners if we shouldn't show the species
-        let shouldShowSpecies = this.shouldShowSpecies()
-        let isLoading = shouldShowSpecies && this.isLoading()
-
         return (
             <div className="flex margin-bottom">
-                <div className="sprite">
-                    {isLoading
-                        ? this.makeSpinner()
-                        : <img
-                            className={shouldShowSpecies ? "" : "hidden"}
-                            src={this.state.pokemonSpriteUrl} />
-                    }
-                </div>
+                {this.renderPokemonSprite()}
 
                 <div style={{ padding: 10 }}>
-                    <div className={"center-text" + (shouldShowSpecies ? "" : " hidden")}>
-                        {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
-                    </div>
-                    <div className={"flex-center type-pair"}>
-                        {this.state.pokemonTypes.map((type, i) => {
-                            let element = null
-                            if (isLoading) {
-                                element = this.makeSmallSpinner()
-                            }
-                            else {
-                                element = (
-                                    <img
-                                        key={i}
-                                        className={"type-icon padded" + (shouldShowSpecies ? "" : " hidden")}
-                                        src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
-                                )
-                            }
+                    {this.renderPokemonName()}
 
-                            return (
-                                <div
-                                    key={i}
-                                    className="flex-center fill-parent">
-                                    {element}
-                                </div>
-                            )
-                        })}
-                    </div>
+                    {this.renderPokemonTypes()}
                 </div>
 
                 {this.renderStatsGraph()}
+            </div>
+        )
+    }
+
+    // returns the Pokemon's sprite
+    renderPokemonSprite() {
+        let shouldShowSpecies = this.shouldShowSpecies()
+        if (shouldShowSpecies && this.isLoading()) {
+            return (
+                <div className="sprite loading">
+                    {this.makeSpinner()}
+                </div>
+            )
+        }
+
+        return (
+            <div className="sprite">
+                <img
+                    className={shouldShowSpecies ? "" : "hidden"}
+                    src={this.state.pokemonSpriteUrl} />
+            </div>
+        )
+    }
+
+    // returns the Pokemon's name
+    renderPokemonName() {
+        let shouldShowSpecies = this.shouldShowSpecies()
+        if (shouldShowSpecies && this.isLoading()) {
+            return (
+                <div className="center-text loading">
+                    {this.makeSpinner()}
+                </div>
+            )
+        }
+
+        return (
+            <div className={"center-text" + (shouldShowSpecies ? "" : " hidden")}>
+                {this.state.pokemonName}
+            </div>
+        )
+    }
+
+    // returns the Pokemon's types
+    renderPokemonTypes() {
+        let shouldShowSpecies = this.shouldShowSpecies()
+        if (shouldShowSpecies && this.isLoading()) {
+            return (
+                <div className="flex-center type-pair loading">
+                    {this.makeSpinner()}
+                </div>
+            )
+        }
+
+        return (
+            <div className={"flex-center type-pair"}>
+                {this.state.pokemonTypes.map((type, i) => {
+                    return (
+                        <div
+                            key={i}
+                            className="flex-center fill-parent">
+                            <img
+                                key={i}
+                                className={"type-icon padded" + (shouldShowSpecies ? "" : " hidden")}
+                                src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+                        </div>
+                    )
+                })}
             </div>
         )
     }
