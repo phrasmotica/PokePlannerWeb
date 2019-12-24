@@ -109,8 +109,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static int[] GetBaseStats(this Pokemon pokemon, int versionGroupId)
         {
-            // reverse because PokeAPI spits them out as speed -> spdef -> spatk -> def -> atk -> hp
-            return pokemon.Stats.Select(bs => bs.BaseStat).Reverse().ToArray();
+            return pokemon.Stats.Select(bs => bs.BaseStat).ToArray();
         }
 
         /// <summary>
