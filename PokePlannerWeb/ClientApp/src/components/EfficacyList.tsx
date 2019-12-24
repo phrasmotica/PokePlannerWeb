@@ -110,6 +110,7 @@ export class EfficacyList extends Component<{
         for (let i = 0; i < typeSet.types.length; i++) {
             let type = typeSet.types[i]
             let typeHeader = <img
+                                id={"type" + i}
                                 className="type-icon"
                                 src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
 
@@ -145,7 +146,7 @@ export class EfficacyList extends Component<{
                         className="efficacy">
                         {typeHeader}
                         <br />
-                        <b id={"type" + i}>N/A</b>
+                        <b>N/A</b>
                         {tooltip}
                     </Col>
                 )
