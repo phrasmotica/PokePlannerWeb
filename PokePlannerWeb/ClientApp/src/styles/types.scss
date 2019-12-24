@@ -21,7 +21,19 @@ $dark: #705848;
 $fairy: #ee99ac;
 $shadow: #978cae;
 
+$typeIconWidth: 100px;
+$typeIconHeight: 36px;
 .type-icon {
-    width: 100px;
-    padding: 2px;
+    width: $typeIconWidth;
+    height: $typeIconHeight;
+}
+
+.type-pair {
+    width: 2 * $typeIconWidth;
+    height: $typeIconHeight;
+}
+
+$padding: 2px;
+.padded {
+    padding: $padding;
 }

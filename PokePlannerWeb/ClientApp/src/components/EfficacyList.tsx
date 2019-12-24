@@ -122,7 +122,7 @@ export class EfficacyList extends Component<{
                 let type = typeSet.types[index]
                 let typeHeader = <img
                                     id={"type" + index}
-                                    className="type-icon"
+                                    className="type-icon padded"
                                     src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
 
                 if (typeSet.typesArePresent[index]) {

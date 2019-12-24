@@ -226,17 +226,25 @@ export class PokemonSelector extends Component<{
                     <div className={className}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
                     </div>
-                    <div style={{ display: "flex" }}>
+                    <div className={"flex-center type-pair"}>
                         {this.state.pokemonTypes.map((type, i) => {
+                            let element = null
                             if (isLoading) {
-                                return this.makeSmallSpinner()
+                                element = this.makeSmallSpinner()
+                            }
+                            else {
+                                element = (
+                                    <img
+                                        key={i}
+                                        className="type-icon padded"
+                                        src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+                                )
                             }
 
                             return (
-                                <img
-                                    key={i}
-                                    className={"type-icon" + (shouldShowSpecies ? "" : " hidden")}
-                                    src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+                                <div className={"flex-center fill-parent" + (shouldShowSpecies ? "" : " hidden")}>
+                                    {element}
+                                </div>
                             )
                         })}
                     </div>

@@ -92,6 +92,11 @@
     @include flex-center;
 }
 
+.fill-parent {
+    height: 100%;
+    width: 100%;
+}
+
 $dim: 96px;
 .sprite {
     @include flex-center;
