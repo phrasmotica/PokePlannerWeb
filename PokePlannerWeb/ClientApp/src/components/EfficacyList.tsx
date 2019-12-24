@@ -5,6 +5,11 @@ import { TypeSet } from "../models/TypeSet"
 import "./EfficacyList.scss"
 
 /**
+ * The number of rows to split the types across.
+ */
+const NUMBER_OF_ROWS: number = 2
+
+/**
  * Component for displaying defensive type efficacy.
  */
 export class EfficacyList extends Component<{
@@ -104,58 +109,70 @@ export class EfficacyList extends Component<{
     }
 
     renderTypeEfficacy() {
+        let rows = []
         let typeSet = this.props.typeSet
-        let efficacy = this.state.efficacy
-        let items = []
-        for (let i = 0; i < typeSet.types.length; i++) {
-            let type = typeSet.types[i]
-            let typeHeader = <img
-                                id={"type" + i}
-                                className="type-icon"
-                                src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+        let itemsPerRow = typeSet.types.length / NUMBER_OF_ROWS
 
-            if (typeSet.typesArePresent[i]) {
-                let multiplierElement = this.getElementFromMultiplier(efficacy[i])
-                items.push(
-                    <Col
-                        key={i}
-                        className="efficacy">
-                        {typeHeader}
-                        <br />
-                        {multiplierElement}
-                    </Col>
-                )
-            }
-            else {
-                let tooltip = null
-                if (!this.props.hideTooltips) {
-                    tooltip = (
-                        <Tooltip
-                            isOpen={this.state.typeTooltipOpen[i]}
-                            toggle={() => this.toggleTypeTooltip(i)}
-                            placement="top"
-                            target={"type" + i}>
-                            {type} is absent from this game version
-                        </Tooltip>
+        let efficacy = this.state.efficacy
+        for (let row = 0; row < NUMBER_OF_ROWS; row++) {
+            let items = []
+            for (let col = 0; col < itemsPerRow; col++) {
+                let index = row * itemsPerRow + col
+                let type = typeSet.types[index]
+                let typeHeader = <img
+                                    id={"type" + index}
+                                    className="type-icon"
+                                    src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+
+                if (typeSet.typesArePresent[index]) {
+                    let multiplierElement = this.getElementFromMultiplier(efficacy[index])
+                    items.push(
+                        <Col
+                            key={index}
+                            className="efficacy">
+                            {typeHeader}
+                            <br />
+                            {multiplierElement}
+                        </Col>
                     )
                 }
+                else {
+                    let tooltip = null
+                    if (!this.props.hideTooltips) {
+                        tooltip = (
+                            <Tooltip
+                                isOpen={this.state.typeTooltipOpen[index]}
+                                toggle={() => this.toggleTypeTooltip(index)}
+                                placement="top"
+                                target={"type" + index}>
+                                {type} is absent from this game version
+                            </Tooltip>
+                        )
+                    }
 
-                items.push(
-                    <Col
-                        key={i}
-                        className="efficacy">
-                        {typeHeader}
-                        <br />
-                        <b>N/A</b>
-                        {tooltip}
-                    </Col>
-                )
+                    items.push(
+                        <Col
+                            key={index}
+                            className="efficacy">
+                            {typeHeader}
+                            <br />
+                            <b>N/A</b>
+                            {tooltip}
+                        </Col>
+                    )
+                }
             }
+
+            rows.push(
+                <div style={{ display: "flex", paddingBottom: 10 }}>
+                    {items}
+                </div>
+            )
         }
 
         return (
-            <div style={{ display: "flex", paddingBottom: 20 }}>
-                {items}
+            <div>
+                {rows}
             </div>
         )
     }
