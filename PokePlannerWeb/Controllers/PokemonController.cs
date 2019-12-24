@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
@@ -50,14 +51,15 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the given Pokemon's types description in the version group with the given ID.
+        /// Returns the given Pokemon's types in the version group with the given ID.
         /// </summary>
         [HttpGet("{species}/types/{versionGroupId:int}")]
-        public async Task<string> GetPokemonTypesDescriptionInVersionGroup(string species, int versionGroupId)
+        public async Task<string[]> GetPokemonTypesInVersionGroup(string species, int versionGroupId)
         {
             Logger.LogInformation($"Getting types for Pokemon \"{species}\" in version group {versionGroupId}...");
             var pokemon = await PokeAPI.Get<Pokemon>(species);
-            return await pokemon.GetTypesDescription(versionGroupId);
+            var types = await pokemon.GetTypes(versionGroupId);
+            return types.Select(t => t.ToString()).ToArray();
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ import { EfficacyList } from "./EfficacyList"
 import { SpeciesValidity } from "../models/SpeciesValidity"
 import { TypeSet } from "../models/TypeSet"
 
+import "../styles/types.scss"
 import "./PokemonSelector.scss"
 
 /**
@@ -76,14 +77,14 @@ export class PokemonSelector extends Component<{
     loadingPokemonSpriteUrl: boolean,
 
     /**
-     * The Pokemon's types description.
+     * The Pokemon's types.
      */
-    pokemonTypesDescription: string,
+    pokemonTypes: string[],
 
     /**
-     * Whether we're loading the Pokemon's types description.
+     * Whether we're loading the Pokemon's types.
      */
-    loadingPokemonTypesDescription: boolean,
+    loadingPokemonTypes: boolean,
 
     /**
      * Whether to show the efficacy list.
@@ -101,8 +102,8 @@ export class PokemonSelector extends Component<{
             loadingPokemonName: true,
             pokemonSpriteUrl: "",
             loadingPokemonSpriteUrl: true,
-            pokemonTypesDescription: '',
-            loadingPokemonTypesDescription: true,
+            pokemonTypes: [],
+            loadingPokemonTypes: true,
             showEfficacy: false
         }
     }
@@ -113,7 +114,7 @@ export class PokemonSelector extends Component<{
             loadingSpeciesValidity: false,
             loadingPokemonName: false,
             loadingPokemonSpriteUrl: false,
-            loadingPokemonTypesDescription: false
+            loadingPokemonTypes: false,
         })
     }
 
@@ -127,7 +128,7 @@ export class PokemonSelector extends Component<{
             let species = this.state.species
             if (species && species !== "") {
                 this.fetchSpeciesIsValid(species)
-                    .then(() => this.fetchTypesDescription(species))
+                    .then(() => this.fetchTypes(species))
             }
         }
     }
@@ -225,8 +226,19 @@ export class PokemonSelector extends Component<{
                     <div className={className}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
                     </div>
-                    <div className={className}>
-                        {isLoading ? this.makeSmallSpinner() : this.state.pokemonTypesDescription}
+                    <div style={{ display: "flex" }}>
+                        {this.state.pokemonTypes.map((type, i) => {
+                            if (isLoading) {
+                                return this.makeSmallSpinner()
+                            }
+
+                            return (
+                                <img
+                                    key={i}
+                                    className={"type-icon" + (shouldShowSpecies ? "" : " hidden")}
+                                    src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+                            )
+                        })}
                     </div>
                 </Col>
                 <Col>
@@ -278,7 +290,7 @@ export class PokemonSelector extends Component<{
     isLoading() {
         return this.state.loadingPokemonName
             || this.state.loadingPokemonSpriteUrl
-            || this.state.loadingPokemonTypesDescription
+            || this.state.loadingPokemonTypes
     }
 
     // returns true if we have a species
@@ -321,7 +333,7 @@ export class PokemonSelector extends Component<{
                     if (this.state.speciesValidity !== SpeciesValidity.Nonexistent) {
                         this.fetchPokemonName(newSpeciesName)
                         this.fetchSpriteUrl(newSpeciesName)
-                        this.fetchTypesDescription(newSpeciesName)
+                        this.fetchTypes(newSpeciesName)
                     }
                 })
         }
@@ -334,7 +346,7 @@ export class PokemonSelector extends Component<{
             speciesValidity: SpeciesValidity.Nonexistent,
             pokemonName: "",
             pokemonSpriteUrl: "",
-            pokemonTypesDescription: ""
+            pokemonTypes: []
         })
     }
 
@@ -414,11 +426,11 @@ export class PokemonSelector extends Component<{
             .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
     }
 
-    // fetches the types description for the species from PokemonController
-    fetchTypesDescription(species: string) {
-        console.log(`Selector ${this.props.index}: fetching types description for '${species}'...`)
+    // fetches the types for the species from PokemonController
+    fetchTypes(species: string) {
+        console.log(`Selector ${this.props.index}: fetching types for '${species}'...`)
 
-        this.setState({ loadingPokemonTypesDescription: true })
+        this.setState({ loadingPokemonTypes: true })
 
         // fetch types description
         fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
@@ -427,11 +439,11 @@ export class PokemonSelector extends Component<{
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch types description for '${species}' but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch types for '${species}' but failed with status ${response.status}!`)
             })
-            .then(response => response.text())
-            .then(typesDescription => this.setState({ pokemonTypesDescription: typesDescription }))
+            .then(response => response.json())
+            .then(types => this.setState({ pokemonTypes: types }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonTypesDescription: false }))
+            .then(() => this.setState({ loadingPokemonTypes: false }))
     }
 }

@@ -23,24 +23,6 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Returns a description of the Pokemon's types in the version group with the given ID.
-        /// </summary>
-        public static async Task<string> GetTypesDescription(this Pokemon pokemon, int versionGroupId)
-        {
-            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
-            return await pokemon.GetTypesDescription(versionGroup);
-        }
-
-        /// <summary>
-        /// Returns a description of the Pokemon's types in the given version group.
-        /// </summary>
-        private static async Task<string> GetTypesDescription(this Pokemon pokemon, VersionGroup versionGroup)
-        {
-            var types = await pokemon.GetTypes(versionGroup);
-            return string.Join(" / ", types.Select(t => t.ToString()));
-        }
-
-        /// <summary>
         /// Returns this Pokemon's types in the version group with the given ID.
         /// </summary>
         public static async Task<IEnumerable<Type>> GetTypes(this Pokemon pokemon, int? versionGroupId = null)

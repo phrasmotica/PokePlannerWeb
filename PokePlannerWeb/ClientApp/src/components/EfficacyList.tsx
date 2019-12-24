@@ -2,6 +2,7 @@
 import { Spinner, Col, Tooltip } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
+import "../styles/types.scss"
 import "./EfficacyList.scss"
 
 /**
