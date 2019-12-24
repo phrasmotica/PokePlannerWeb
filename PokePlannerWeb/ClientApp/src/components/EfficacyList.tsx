@@ -167,8 +167,7 @@ export class EfficacyList extends Component<{
             rows.push(
                 <div
                     key={row}
-                    className="flex"
-                    style={{ paddingBottom: 10 }}>
+                    className="flex margin-bottom">
                     {items}
                 </div>
             )

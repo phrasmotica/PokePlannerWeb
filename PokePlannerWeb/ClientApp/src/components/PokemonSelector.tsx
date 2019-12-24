@@ -171,17 +171,21 @@ export class PokemonSelector extends Component<{
 
         return (
             <div>
-                <div className="flex">
+                <div className="flex margin-bottom">
                     {searchBox}
                     <Button color="danger" onMouseUp={() => this.clearPokemon()}>Clear</Button>
                 </div>
+
                 {pokemonInfo}
-                <Button
-                    color="primary"
-                    style={{ marginBottom: '1rem' }}
-                    onClick={() => this.toggleShowEfficacy()}>
-                    {showEfficacy ? "Hide" : "Show"} efficacy
-                </Button>
+
+                <div className="flex margin-bottom">
+                    <Button
+                        color="primary"
+                        onClick={() => this.toggleShowEfficacy()}>
+                        {showEfficacy ? "Hide" : "Show"} efficacy
+                    </Button>
+                </div>
+
                 <Collapse isOpen={showEfficacy}>
                     {efficacyList}
                 </Collapse>
@@ -232,7 +236,7 @@ export class PokemonSelector extends Component<{
         let isLoading = shouldShowSpecies && this.isLoading()
 
         return (
-            <div className="flex">
+            <div className="flex margin-bottom">
                 <div className="sprite">
                     {isLoading
                         ? this.makeSpinner()
