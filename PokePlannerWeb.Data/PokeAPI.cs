@@ -130,6 +130,32 @@ namespace PokePlannerWeb.Data
         }
 
         /// <summary>
+        /// Returns a page with all Pokemon.
+        /// </summary>
+        public static async Task<NamedApiResourceList<T>> GetFullPage<T>() where T : NamedApiResource
+        {
+            var call = $"GetFullPage<{typeof(T)}>()";
+            NamedApiResourceList<T> res;
+            try
+            {
+                Console.WriteLine($"{call} started...");
+
+                var page = await GetPage<T>(1, 1);
+                res = await GetPage<T>(page.Count, 0);
+
+                Console.WriteLine($"{call} finished.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine($"{call} failed.");
+                throw;
+            }
+
+            return res;
+        }
+
+        /// <summary>
         /// Wrapper for <see cref="PokeApiClient.GetNamedResourcePageAsync{T}()"/> with exception logging.
         /// </summary>
         public static async Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource
