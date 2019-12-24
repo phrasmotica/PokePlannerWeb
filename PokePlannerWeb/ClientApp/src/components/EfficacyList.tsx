@@ -108,9 +108,10 @@ export class EfficacyList extends Component<{
         let efficacy = this.state.efficacy
         let items = []
         for (let i = 0; i < typeSet.types.length; i++) {
-            // TODO: create icons for each type
             let type = typeSet.types[i]
-            let typeHeader = <em>{type}</em>
+            let typeHeader = <img
+                                className="type-icon"
+                                src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
 
             if (typeSet.typesArePresent[i]) {
                 let multiplierElement = this.getElementFromMultiplier(efficacy[i])
