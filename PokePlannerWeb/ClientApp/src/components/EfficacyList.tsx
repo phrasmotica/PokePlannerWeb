@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Col, Tooltip } from "reactstrap"
+import { Spinner, Tooltip } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
@@ -128,13 +128,13 @@ export class EfficacyList extends Component<{
                 if (typeSet.typesArePresent[index]) {
                     let multiplierElement = this.getElementFromMultiplier(efficacy[index])
                     items.push(
-                        <Col
+                        <div
                             key={index}
                             className="efficacy">
                             {typeHeader}
                             <br />
                             {multiplierElement}
-                        </Col>
+                        </div>
                     )
                 }
                 else {
@@ -152,14 +152,14 @@ export class EfficacyList extends Component<{
                     }
 
                     items.push(
-                        <Col
+                        <div
                             key={index}
                             className="efficacy">
                             {typeHeader}
                             <br />
                             <b>N/A</b>
                             {tooltip}
-                        </Col>
+                        </div>
                     )
                 }
             }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Input, FormGroup, Label, Row, Col } from 'reactstrap'
+import { Input, FormGroup, Label } from 'reactstrap'
 import { PokemonSelector } from './PokemonSelector'
 import { TypeSet } from '../models/TypeSet'
 
@@ -228,17 +228,17 @@ export class TeamBuilder extends Component<{}, {
 
         return (
             <div>
-                <Row>
-                    <Col>
+                <div className="flex">
+                    <div className="margin-right">
                         {versionGroupMenu}
-                    </Col>
-                    <Col>
+                    </div>
+                    <div className="margin-right">
                         {toggleSet}
-                    </Col>
-                    <Col>
+                    </div>
+                    <div>
                         
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             </div>
         )
     }

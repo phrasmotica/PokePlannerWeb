@@ -1,0 +1,22 @@
+﻿@mixin flex {
+    display: flex;
+}
+
+@mixin flex-center {
+    @include flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flex {
+    @include flex;
+
+    &-center {
+        @include flex-center;
+    }
+}
+
+$margin: 15px;
+.margin-right {
+    margin-right: $margin;
+}

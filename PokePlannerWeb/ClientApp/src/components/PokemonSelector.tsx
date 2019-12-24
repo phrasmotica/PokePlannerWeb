@@ -1,11 +1,12 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Button, Row, Col, Input, Media, Collapse, Tooltip } from "reactstrap"
+import { Spinner, Button, Input, Collapse, Tooltip } from "reactstrap"
 import { EfficacyList } from "./EfficacyList"
 import { SpeciesValidity } from "../models/SpeciesValidity"
 import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
 import "./PokemonSelector.scss"
+import "./TeamBuilder.scss"
 
 /**
  * Component for selecting a Pokemon and displaying information about it.
@@ -149,12 +150,10 @@ export class PokemonSelector extends Component<{
 
         return (
             <div>
-                <Row>
+                <div className="flex">
                     {searchBox}
-                    <Col xs="auto">
-                        <Button color="danger" onMouseUp={() => this.clearPokemon()}>Clear</Button>
-                    </Col>
-                </Row>
+                    <Button color="danger" onMouseUp={() => this.clearPokemon()}>Clear</Button>
+                </div>
                 {pokemonInfo}
                 <Button
                     color="primary"
@@ -192,15 +191,16 @@ export class PokemonSelector extends Component<{
         }
 
         return (
-            <Col xs="auto">
+            <div className="margin-right">
                 <Input
                     type="text"
                     id={"speciesInput" + this.props.index}
+                    className="margin-right"
                     placeholder="Search for a Pokemon!"
                     invalid={shouldMarkInvalidSpecies}
                     onKeyDown={e => this.handleSearch(e)} />
                 {validityTooltip}
-            </Col>
+            </div>
         )
     }
 
@@ -210,19 +210,17 @@ export class PokemonSelector extends Component<{
         let shouldShowSpecies = this.shouldShowSpecies()
         let isLoading = shouldShowSpecies && this.isLoading()
 
-        let className = shouldShowSpecies ? "" : "hidden"
         return (
-            <Row>
-                <Col xs="auto" className="sprite">
+            <div className="flex">
+                <div className="sprite">
                     {isLoading
                         ? this.makeSpinner()
-                        : <Media
-                            object
-                            className={className}
+                        : <img
+                            className={shouldShowSpecies ? "" : "hidden"}
                             src={this.state.pokemonSpriteUrl} />
                     }
-                </Col>
-                <Col xs="auto" style={{ padding: 10 }}>
+                </div>
+                <div style={{ padding: 10 }}>
                     <div className={"center-text" + (shouldShowSpecies ? "" : " hidden")}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
                     </div>
@@ -248,11 +246,11 @@ export class PokemonSelector extends Component<{
                             )
                         })}
                     </div>
-                </Col>
-                <Col>
+                </div>
+                <div>
 
-                </Col>
-            </Row>
+                </div>
+            </div>
         )
     }
 

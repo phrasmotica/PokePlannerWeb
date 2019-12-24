@@ -1,4 +1,5 @@
 ﻿@use "../styles/types";
+@use "./TeamBuilder";
 
 .type {
     &-unknown {
@@ -82,16 +83,6 @@
     }
 }
 
-@mixin flex-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.flex-center {
-    @include flex-center;
-}
-
 .fill-parent {
     height: 100%;
     width: 100%;
@@ -103,7 +94,7 @@
 
 $dim: 96px;
 .sprite {
-    @include flex-center;
+    @include TeamBuilder.flex-center;
     height: $dim;
     width: $dim;
 }
