@@ -234,13 +234,13 @@ export class PokemonSelector extends Component<{
                                 element = (
                                     <img
                                         key={i}
-                                        className="type-icon padded"
+                                        className={"type-icon padded" + (shouldShowSpecies ? "" : " hidden")}
                                         src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
                                 )
                             }
 
                             return (
-                                <div className={"flex-center fill-parent" + (shouldShowSpecies ? "" : " hidden")}>
+                                <div className="flex-center fill-parent">
                                     {element}
                                 </div>
                             )
