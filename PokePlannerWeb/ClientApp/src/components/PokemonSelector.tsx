@@ -33,6 +33,11 @@ export class PokemonSelector extends Component<{
     typeSet: TypeSet,
 
     /**
+     * The base stat names.
+     */
+    baseStatNames: string[],
+
+    /**
      * Whether tooltips should be hidden.
      */
     hideTooltips: boolean

@@ -299,7 +299,8 @@ export class TeamBuilder extends Component<{}, {
                     versionGroupIndex={this.state.versionGroupIndex}
                     ignoreValidity={this.state.ignoreValidity}
                     hideTooltips={this.state.hideTooltips}
-                    typeSet={this.state.typeSet} />
+                    typeSet={this.state.typeSet}
+                    baseStatNames={this.state.baseStatNames} />
             )
         }
 
