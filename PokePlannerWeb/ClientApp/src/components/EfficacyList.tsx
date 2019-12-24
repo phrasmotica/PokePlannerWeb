@@ -35,9 +35,9 @@ export class EfficacyList extends Component<{
     typeSet: TypeSet,
 
     /**
-     * Whether we're loading the species validity.
+     * Whether the parent component is loading.
      */
-    loadingSpeciesValidity: boolean,
+    parentIsLoading: boolean,
 
     /**
      * Whether to show the multipliers.
@@ -188,7 +188,7 @@ export class EfficacyList extends Component<{
             return <b>-</b>
         }
 
-        if (!this.props.loadingSpeciesValidity && this.state.loadingEfficacy) {
+        if (this.props.parentIsLoading || this.state.loadingEfficacy) {
             return this.makeSpinner()
         }
 
