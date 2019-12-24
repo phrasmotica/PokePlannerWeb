@@ -393,7 +393,8 @@ export class PokemonSelector extends Component<{
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingPokemonName
+        return this.state.loadingSpeciesValidity
+            || this.state.loadingPokemonName
             || this.state.loadingPokemonSpriteUrl
             || this.state.loadingPokemonTypes
             || this.state.loadingBaseStatValues
