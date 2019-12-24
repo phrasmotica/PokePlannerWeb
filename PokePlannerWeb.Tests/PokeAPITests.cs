@@ -41,6 +41,20 @@ namespace PokePlannerWeb.Tests
         }
 
         /// <summary>
+        /// Verifies that loading the names of all Pokemon works correctly.
+        /// </summary>
+        [Test]
+        [Category("Integration")]
+        public async Task PokemonNamesLoadingTest()
+        {
+            // load all Pokemon names
+            var allNames = await PokemonData.Instance.GetAllPokemonNames();
+
+            // verify they're all there
+            Assert.AreEqual(964, allNames.Length);
+        }
+
+        /// <summary>
         /// Verifies that a Pokemon payload is created correctly.
         /// </summary>
         [Test]
