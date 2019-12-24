@@ -118,10 +118,13 @@ export class EfficacyList extends Component<{
         for (let row = 0; row < NUMBER_OF_ROWS; row++) {
             let items = []
             for (let col = 0; col < itemsPerRow; col++) {
+                // ensure each headers have unique IDs between all instances
                 let index = row * itemsPerRow + col
+                let headerId = `list${this.props.index}type${index}`
+
                 let type = typeSet.types[index]
                 let typeHeader = <img
-                                    id={"type" + index}
+                                    id={headerId}
                                     className="type-icon padded"
                                     src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
 
@@ -145,7 +148,7 @@ export class EfficacyList extends Component<{
                                 isOpen={this.state.typeTooltipOpen[index]}
                                 toggle={() => this.toggleTypeTooltip(index)}
                                 placement="top"
-                                target={"type" + index}>
+                                target={headerId}>
                                 {type} is absent from this game version
                             </Tooltip>
                         )
