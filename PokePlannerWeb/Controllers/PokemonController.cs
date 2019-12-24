@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -26,6 +27,16 @@ namespace PokePlannerWeb.Controllers
         public PokemonController(ILogger<PokemonController> logger)
         {
             Logger = logger;
+        }
+
+        /// <summary>
+        /// Returns the names of all Pokemon.
+        /// </summary>
+        [HttpGet("allNames")]
+        public async Task<string[]> GetAllPokemonNames()
+        {
+            Logger.LogInformation($"Getting names of all Pokemon...");
+            return await PokemonData.Instance.GetAllPokemonNames();
         }
 
         /// <summary>
