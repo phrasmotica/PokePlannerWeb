@@ -245,6 +245,7 @@ export class PokemonSelector extends Component<{
                             src={this.state.pokemonSpriteUrl} />
                     }
                 </div>
+
                 <div style={{ padding: 10 }}>
                     <div className={"center-text" + (shouldShowSpecies ? "" : " hidden")}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
@@ -274,18 +275,26 @@ export class PokemonSelector extends Component<{
                         })}
                     </div>
                 </div>
-                {isLoading ? this.makeSpinner() : this.renderStatBars()}
+
+                {this.renderStatsGraph()}
             </div>
         )
     }
 
-    // returns a set of bars indicating each stat
-    renderStatBars() {
+    // returns a graph of the Pokemon's base stats
+    renderStatsGraph() {
         let shouldShowSpecies = this.shouldShowSpecies()
-        let className = shouldShowSpecies ? "" : "hidden";
+        if (shouldShowSpecies && this.isLoading()) {
+            return (
+                <div className="stat-graph loading">
+                    {this.makeSpinner()}
+                </div>
+            )
+        }
 
+        let className = shouldShowSpecies ? "" : "hidden";
         return (
-            <div className="flex">
+            <div className="stat-graph">
                 <div className="stat-names">
                     {this.props.baseStatNames.map((name, i) => {
                         return (
