@@ -10,6 +10,11 @@ const TEAM_SIZE: number = 6
  */
 export class TeamBuilder extends Component<{}, {
     /**
+     * List of Pokemon species names.
+     */
+    speciesNames: string[],
+
+    /**
      * List of version groups.
      */
     versionGroups: string[],
@@ -57,6 +62,7 @@ export class TeamBuilder extends Component<{}, {
     constructor(props: any) {
         super(props)
         this.state = {
+            speciesNames: [],
             versionGroups: [],
             versionGroupIndex: -1,
             loading: true,
@@ -74,6 +80,7 @@ export class TeamBuilder extends Component<{}, {
     }
 
     componentDidMount() {
+        this.loadSpeciesNames()
         this.loadVersionGroups()
             .then(() => {
                 this.loadStats()
@@ -81,6 +88,15 @@ export class TeamBuilder extends Component<{}, {
                 this.getTypeSet(this.state.versionGroupIndex)
                 this.loadTypeEfficacy(this.state.versionGroupIndex)
             })
+    }
+
+    // load all species names
+    loadSpeciesNames() {
+        fetch("pokemon/allNames")
+            .then((response) => response.json())
+            .then(speciesNames => this.setState({ speciesNames: speciesNames }))
+            .then(() => console.log(this.state.speciesNames))
+            .catch(error => console.log(error))
     }
 
     // load all version groups
