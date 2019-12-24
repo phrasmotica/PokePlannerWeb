@@ -223,7 +223,7 @@ export class PokemonSelector extends Component<{
                     }
                 </Col>
                 <Col xs="auto" style={{ padding: 10 }}>
-                    <div className={className}>
+                    <div className={"center-text" + (shouldShowSpecies ? "" : " hidden")}>
                         {isLoading ? this.makeSmallSpinner() : this.state.pokemonName}
                     </div>
                     <div className={"flex-center type-pair"}>

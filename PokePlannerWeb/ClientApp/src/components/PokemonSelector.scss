@@ -97,6 +97,10 @@
     width: 100%;
 }
 
+.center-text {
+    text-align: center;
+}
+
 $dim: 96px;
 .sprite {
     @include flex-center;
