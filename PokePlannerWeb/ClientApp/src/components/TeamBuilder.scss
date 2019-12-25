@@ -25,3 +25,8 @@ $margin: 10px;
 .margin-bottom {
     margin-bottom: $margin;
 }
+
+$minWidth: 250px;
+.version-group-select {
+    min-width: $minWidth;
+}

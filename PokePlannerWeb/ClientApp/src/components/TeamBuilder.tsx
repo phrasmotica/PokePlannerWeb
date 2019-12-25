@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
+import Select from 'react-select'
 import { PokemonSelector } from './PokemonSelector'
 import { TypeSet } from '../models/TypeSet'
 
@@ -187,7 +188,7 @@ export class TeamBuilder extends Component<{}, {
 
     // set selected version group
     async handleVersionGroupChange(e: any) {
-        const idx = Number(e.target.value)
+        const idx = Number(e.value)
         this.setState({ versionGroupIndex: idx })
 
         // reload type set and efficacy
@@ -260,18 +261,23 @@ export class TeamBuilder extends Component<{}, {
     }
 
     renderVersionGroupMenu() {
+        let options = this.state.versionGroups.map((vg, index) => {
+            return {
+                value: index,
+                label: vg
+            }
+        })
+
         return (
             <FormGroup>
                 <Label for="versionGroupSelect">Game Version</Label>
-                <Input
-                    type="select"
+
+                <Select
                     id="versionGroupSelect"
-                    value={this.state.versionGroupIndex}
-                    onChange={e => this.handleVersionGroupChange(e)}>
-                    {this.state.versionGroups.map((vg, index) => {
-                        return <option key={index} value={index}>{vg}</option>
-                    })}
-                </Input>
+                    className="version-group-select"
+                    defaultValue={options[this.state.versionGroupIndex]}
+                    onChange={e => this.handleVersionGroupChange(e)}
+                    options={options} />
             </FormGroup>
         )
     }
