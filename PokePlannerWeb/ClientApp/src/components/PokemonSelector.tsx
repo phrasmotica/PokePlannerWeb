@@ -156,7 +156,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         if (versionGroupChanged) {
             let species = this.state.species
             if (species && species !== "") {
-                this.fetchSpeciesIsValid(species)
+                this.fetchSpeciesValidity(species)
                     .then(() => {
                         this.fetchTypes(species)
                         this.fetchBaseStatValues(species)
@@ -458,7 +458,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         // only fetch if we need to
         const species = e.value.toLowerCase()
         if (species !== this.state.species) {
-            this.fetchSpeciesIsValid(species)
+            this.fetchSpeciesValidity(species)
                 .then(() => {
                     if (this.state.speciesValidity !== SpeciesValidity.Nonexistent) {
                         // fetch info if Pokemon exists
@@ -483,7 +483,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // fetches the validity of the species from PokemonController
-    async fetchSpeciesIsValid(species: string) {
+    async fetchSpeciesValidity(species: string) {
         if (species == null || species == "") {
             return
         }
