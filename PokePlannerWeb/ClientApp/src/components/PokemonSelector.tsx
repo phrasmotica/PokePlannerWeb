@@ -275,7 +275,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 isLoading={this.state.loadingSpeciesValidity}
                 id={"speciesInput" + this.props.index}
                 styles={customStyles}
-                placeholder="Select a Pokemon!"
+                placeholder="Search for a Pokemon!"
                 onChange={(e: any) => this.setSpecies(e.value)}
                 options={options} />
         )
