@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Button, Input, Collapse, Tooltip } from "reactstrap"
+import { Spinner, Button, Collapse, Tooltip } from "reactstrap"
+import Select from "react-select"
 import { EfficacyList } from "./EfficacyList"
 import { SpeciesValidity } from "../models/SpeciesValidity"
 import { TypeSet } from "../models/TypeSet"
@@ -220,15 +221,29 @@ export class PokemonSelector extends Component<{
             )
         }
 
+        let options = this.props.speciesNames.map(name => ({ value: name, label: name }))
+        let customStyles = {
+            control: (provided: any) => ({
+                ...provided,
+                minWidth: 250,
+                border: shouldMarkInvalidSpecies ? "1px solid #dc3545" : ""
+            })
+        }
+
+        let searchBox = (
+            <Select
+                isSearchable
+                isLoading={this.state.loadingSpeciesValidity}
+                id={"speciesInput" + this.props.index}
+                styles={customStyles}
+                placeholder="Search for a Pokemon!"
+                onChange={e => this.handleSpeciesChange(e)}
+                options={options} />
+        )
+
         return (
             <div className="margin-right">
-                <Input
-                    type="text"
-                    id={"speciesInput" + this.props.index}
-                    className="margin-right"
-                    placeholder="Search for a Pokemon!"
-                    invalid={shouldMarkInvalidSpecies}
-                    onKeyDown={e => this.handleSearch(e)} />
+                {searchBox}
                 {validityTooltip}
             </div>
         )
@@ -435,18 +450,18 @@ export class PokemonSelector extends Component<{
     }
 
     // handler for searching for a Pokemon
-    handleSearch(e: any) {
+    handleSpeciesChange(e: any) {
         // only fetch if we need to
-        const newSpeciesName = e.target.value.toLowerCase()
-        if (e.key === 'Enter' && newSpeciesName !== this.state.species) {
-            // fetch name, sprite and types description
-            this.fetchSpeciesIsValid(newSpeciesName)
+        const species = e.value.toLowerCase()
+        if (species !== this.state.species) {
+            this.fetchSpeciesIsValid(species)
                 .then(() => {
                     if (this.state.speciesValidity !== SpeciesValidity.Nonexistent) {
-                        this.fetchPokemonName(newSpeciesName)
-                        this.fetchSpriteUrl(newSpeciesName)
-                        this.fetchTypes(newSpeciesName)
-                        this.fetchBaseStatValues(newSpeciesName)
+                        // fetch info if Pokemon exists
+                        this.fetchPokemonName(species)
+                        this.fetchSpriteUrl(species)
+                        this.fetchTypes(species)
+                        this.fetchBaseStatValues(species)
                     }
                 })
         }
