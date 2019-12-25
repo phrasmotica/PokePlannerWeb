@@ -264,7 +264,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let customStyles = {
             control: (provided: any) => ({
                 ...provided,
-                minWidth: 250,
+                minWidth: 270,
                 border: shouldMarkInvalidSpecies ? "1px solid #dc3545" : ""
             })
         }
