@@ -183,6 +183,23 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             <div>
                 <div className="flex margin-bottom">
                     {searchBox}
+
+                    <Button
+                        className="margin-right"
+                        color="primary"
+                        disabled={this.state.speciesId <= 1}
+                        onMouseUp={() => this.setPreviousSpecies()}>
+                        Previous
+                    </Button>
+
+                    <Button
+                        className="margin-right"
+                        color="primary"
+                        disabled={!this.hasSpecies() || this.hasLastSpecies()}
+                        onMouseUp={() => this.setNextSpecies()}>
+                        Next
+                    </Button>
+
                     <Button
                         className="margin-right"
                         color="danger"
@@ -442,6 +459,11 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return this.state.speciesId > 0
     }
 
+    // returns true if we are set to the last species
+    hasLastSpecies() {
+        return this.state.speciesId >= this.props.speciesNames.length
+    }
+
     // returns true if the species is valid
     speciesIsValid() {
         return this.state.speciesValidity === SpeciesValidity.Valid
@@ -483,6 +505,16 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     }
                 })
         }
+    }
+
+    // set to the previous species
+    setPreviousSpecies() {
+        this.setSpecies(Math.max(1, this.state.speciesId - 1))
+    }
+
+    // set to the next species
+    setNextSpecies() {
+        this.setSpecies(Math.min(this.state.speciesId + 1, this.props.speciesNames.length))
     }
 
     // empty this selector
