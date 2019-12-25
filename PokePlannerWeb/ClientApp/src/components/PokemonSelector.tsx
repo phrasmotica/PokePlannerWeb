@@ -183,13 +183,19 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             <div>
                 <div className="flex margin-bottom">
                     {searchBox}
-                    <Button color="danger" onMouseUp={() => this.clearPokemon()}>Clear</Button>
+                    <Button
+                        className="margin-right"
+                        color="danger"
+                        onMouseUp={() => this.clearPokemon()}>
+                        Clear
+                    </Button>
                 </div>
 
                 {pokemonInfo}
 
                 <div className="flex margin-bottom">
                     <Button
+                        className="margin-right"
                         color="primary"
                         onClick={() => this.toggleShowEfficacy()}>
                         {showEfficacy ? "Hide" : "Show"} efficacy
@@ -259,7 +265,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             <div className="flex margin-bottom">
                 {this.renderPokemonSprite()}
 
-                <div style={{ padding: 10 }}>
+                <div className="margin-right">
                     {this.renderPokemonName()}
 
                     {this.renderPokemonTypes()}
@@ -275,14 +281,14 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldShowSpecies = this.shouldShowSpecies()
         if (shouldShowSpecies && this.isLoading()) {
             return (
-                <div className="sprite flex-center loading">
+                <div className="sprite flex-center margin-right loading">
                     {this.makeSpinner()}
                 </div>
             )
         }
 
         return (
-            <div className="sprite">
+            <div className="sprite margin-right">
                 <img
                     className={"inherit-size" + (shouldShowSpecies ? "" : " hidden")}
                     src={this.state.pokemonSpriteUrl} />
@@ -342,7 +348,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldShowSpecies = this.shouldShowSpecies()
         if (shouldShowSpecies && this.isLoading()) {
             return (
-                <div className="stat-graph loading">
+                <div className="stat-graph margin-right loading">
                     {this.makeSpinner()}
                 </div>
             )
@@ -350,7 +356,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
         let className = shouldShowSpecies ? "" : "hidden";
         return (
-            <div className="stat-graph">
+            <div className="stat-graph margin-right">
                 <div className="stat-names">
                     {this.props.baseStatNames.map((name, i) => {
                         return (

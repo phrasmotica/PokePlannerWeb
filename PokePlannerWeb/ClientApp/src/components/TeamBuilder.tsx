@@ -247,17 +247,15 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
         let toggleSet = this.renderToggleSet()
 
         return (
-            <div>
-                <div className="flex">
-                    <div className="margin-right">
-                        {versionGroupMenu}
-                    </div>
-                    <div className="margin-right">
-                        {toggleSet}
-                    </div>
-                    <div>
-                        
-                    </div>
+            <div className="flex">
+                <div className="margin-right">
+                    {versionGroupMenu}
+                </div>
+                <div className="margin-right">
+                    {toggleSet}
+                </div>
+                <div>
+
                 </div>
             </div>
         )
