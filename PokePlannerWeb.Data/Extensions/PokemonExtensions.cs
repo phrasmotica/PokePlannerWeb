@@ -99,6 +99,12 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         private static bool IsValid(this PokemonSpecies pokemonSpecies, VersionGroup versionGroup)
         {
+            if (!versionGroup.Pokedexes.Any() || !pokemonSpecies.PokedexNumbers.Any())
+            {
+                // PokeAPI data is incomplete
+                return true;
+            }
+
             var versionGroupPokedexes = versionGroup.Pokedexes.Select(p => p.Name);
             var pokemonPokedexes = pokemonSpecies.PokedexNumbers.Select(pn => pn.Pokedex.Name);
             return versionGroupPokedexes.Intersect(pokemonPokedexes).Any();
