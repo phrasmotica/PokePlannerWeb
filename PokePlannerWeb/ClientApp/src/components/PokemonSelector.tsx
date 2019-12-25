@@ -48,9 +48,9 @@ type PokemonSelectorProps = {
 
 type PokemonSelectorState = {
     /**
-     * The Pokemon species.
+     * The species ID.
      */
-    species: string,
+    speciesId: number,
 
     /**
      * Value describing the species validity.
@@ -120,7 +120,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     constructor(props: any) {
         super(props)
         this.state = {
-            species: "",
+            speciesId: 0,
             speciesValidity: SpeciesValidity.Nonexistent,
             loadingSpeciesValidity: true,
             validityTooltipOpen: false,
@@ -154,12 +154,12 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
         if (versionGroupChanged) {
-            let species = this.state.species
-            if (species && species !== "") {
-                this.fetchSpeciesValidity(species)
+            let speciesId = this.state.speciesId
+            if (speciesId > 0) {
+                this.fetchSpeciesValidity(speciesId)
                     .then(() => {
-                        this.fetchTypes(species)
-                        this.fetchBaseStatValues(species)
+                        this.fetchTypes(speciesId)
+                        this.fetchBaseStatValues(speciesId)
                     })
             }
         }
@@ -209,9 +209,9 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldMarkInvalidSpecies = this.shouldMarkSpeciesInvalid()
         if (!this.props.hideTooltips && shouldMarkInvalidSpecies) {
             // determine message from validity status
-            let message = `${this.state.species} cannot be obtained in this game version!`
+            let message = `The Pokemon cannot be obtained in this game version!`
             if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
-                message = `${this.state.species} does not exist!`
+                message = `The Pokemon does not exist!`
             }
 
             validityTooltip = (
@@ -225,7 +225,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             )
         }
 
-        let options = this.props.speciesNames.map(name => ({ value: name, label: name }))
+        let options = this.props.speciesNames.map((name, index) => ({ value: index + 1, label: name }))
         let customStyles = {
             control: (provided: any) => ({
                 ...provided,
@@ -389,7 +389,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return (
             <EfficacyList
                 index={this.props.index}
-                species={this.state.species}
+                speciesId={this.state.speciesId}
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex}
                 parentIsLoading={this.isLoading()}
@@ -433,7 +433,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // returns true if we have a species
     hasSpecies() {
-        return this.state.species != null && this.state.species !== ""
+        return this.state.speciesId > 0
     }
 
     // returns true if the species is valid
@@ -463,16 +463,18 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // handler for searching for a Pokemon
     handleSpeciesChange(e: any) {
         // only fetch if we need to
-        const species = e.value.toLowerCase()
-        if (species !== this.state.species) {
-            this.fetchSpeciesValidity(species)
+        const speciesId = e.value
+        if (speciesId !== this.state.speciesId) {
+            this.setState({ speciesId: speciesId })
+
+            this.fetchSpeciesValidity(speciesId)
                 .then(() => {
                     if (this.state.speciesValidity !== SpeciesValidity.Nonexistent) {
                         // fetch info if Pokemon exists
-                        this.fetchPokemonName(species)
-                        this.fetchSpriteUrl(species)
-                        this.fetchTypes(species)
-                        this.fetchBaseStatValues(species)
+                        this.fetchPokemonName(speciesId)
+                        this.fetchSpriteUrl(speciesId)
+                        this.fetchTypes(speciesId)
+                        this.fetchBaseStatValues(speciesId)
                     }
                 })
         }
@@ -481,7 +483,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // handler for clearing the Pokemon
     clearPokemon() {
         this.setState({
-            species: "",
+            speciesId: 0,
             speciesValidity: SpeciesValidity.Nonexistent,
             pokemonName: "",
             pokemonSpriteUrl: "",
@@ -490,26 +492,23 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // fetches the validity of the species from PokemonController
-    async fetchSpeciesValidity(species: string) {
-        if (species == null || species == "") {
+    async fetchSpeciesValidity(speciesId: number) {
+        if (speciesId <= 0) {
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching validity for '${species}'...`)
+        console.log(`Selector ${this.props.index}: fetching validity for species ${speciesId}...`)
 
-        this.setState({
-            species: species,
-            loadingSpeciesValidity: true
-        })
+        this.setState({ loadingSpeciesValidity: true })
 
         // fetch validity
-        await fetch(`pokemon/${species}/validity/${this.props.versionGroupIndex}`)
+        await fetch(`pokemon/${speciesId}/validity/${this.props.versionGroupIndex}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch validity for '${species}' but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch validity for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(validity => {
@@ -524,19 +523,19 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // fetches the name of the species from PokemonController
-    fetchPokemonName(species: string) {
-        console.log(`Selector ${this.props.index}: fetching name for '${species}'...`)
+    fetchPokemonName(speciesId: number) {
+        console.log(`Selector ${this.props.index}: fetching name for species ${speciesId}...`)
 
         this.setState({ loadingPokemonName: true })
 
         // fetch name
-        fetch(`pokemon/${species}/name`)
+        fetch(`pokemon/${speciesId}/name`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch name for '${species}' but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch name for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(pokemonName => this.setState({ pokemonName: pokemonName }))
@@ -545,19 +544,19 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // fetches the sprite of the species from PokemonController
-    fetchSpriteUrl(species: string) {
-        console.log(`Selector ${this.props.index}: fetching sprite for '${species}'...`)
+    fetchSpriteUrl(speciesId: number) {
+        console.log(`Selector ${this.props.index}: fetching sprite for species ${speciesId}...`)
 
         this.setState({ loadingPokemonSpriteUrl: true })
 
         // fetch sprite URL
-        fetch(`pokemon/${species}/sprite`)
+        fetch(`pokemon/${speciesId}/sprite`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch sprite URL for '${species}' but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch sprite URL for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
@@ -566,19 +565,19 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // fetches the types for the species from PokemonController
-    fetchTypes(species: string) {
-        console.log(`Selector ${this.props.index}: fetching types for '${species}'...`)
+    fetchTypes(speciesId: number) {
+        console.log(`Selector ${this.props.index}: fetching types for species ${speciesId}...`)
 
         this.setState({ loadingPokemonTypes: true })
 
         // fetch types description
-        fetch(`pokemon/${species}/types/${this.props.versionGroupIndex}`)
+        fetch(`pokemon/${speciesId}/types/${this.props.versionGroupIndex}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch types for '${species}' but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch types for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(types => this.setState({ pokemonTypes: types }))
@@ -587,19 +586,19 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // fetches the base stat values for the species from PokemonController
-    fetchBaseStatValues(species: string) {
-        console.log(`Selector ${this.props.index}: fetching base stat values for '${species}'...`)
+    fetchBaseStatValues(speciesId: number) {
+        console.log(`Selector ${this.props.index}: fetching base stat values for species ${speciesId}...`)
 
         this.setState({ loadingBaseStatValues: true })
 
         // fetch base stat values
-        fetch(`pokemon/${species}/baseStats/${this.props.versionGroupIndex}`)
+        fetch(`pokemon/${speciesId}/baseStats/${this.props.versionGroupIndex}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch base stat values for '${species}' but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch base stat values for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(baseStatValues => this.setState({ baseStatValues: baseStatValues }))
