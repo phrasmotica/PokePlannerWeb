@@ -43,7 +43,12 @@ type PokemonSelectorProps = {
     /**
      * The base stat names.
      */
-    baseStatNames: string[]
+    baseStatNames: string[],
+
+    /**
+     * Optional handler for toggling the ignore validity setting.
+     */
+    toggleIgnoreValidity: () => void | null
 }
 
 type PokemonSelectorState = {
@@ -198,6 +203,13 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                         disabled={!this.hasSpecies() || this.hasLastSpecies()}
                         onMouseUp={() => this.setNextSpecies()}>
                         Next
+                    </Button>
+
+                    <Button
+                        className="margin-right"
+                        color="warning"
+                        onMouseUp={() => this.setRandomSpecies()}>
+                        Random
                     </Button>
 
                     <Button
@@ -515,6 +527,23 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // set to the next species
     setNextSpecies() {
         this.setSpecies(Math.min(this.state.speciesId + 1, this.props.speciesNames.length))
+    }
+
+    // set to a random species
+    setRandomSpecies() {
+        // ignore validity since we can't guarantee a valid species
+        if (!this.props.ignoreValidity) {
+            this.props.toggleIgnoreValidity()
+        }
+
+        let max = this.props.speciesNames.length
+        let randomId = this.randomInt(0, max) + 1
+        this.setSpecies(randomId)
+    }
+
+    // returns a random integer between the min (inclusive) and the max (exclusive)
+    randomInt(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min) + min)
     }
 
     // empty this selector

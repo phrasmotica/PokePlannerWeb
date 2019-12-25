@@ -208,7 +208,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
     }
 
     // toggle validity check on species
-    handleIgnoreValidityChange() {
+    toggleIgnoreValidity() {
         this.setState((previousState) => ({
             ignoreValidity: !previousState.ignoreValidity
         }))
@@ -292,7 +292,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
                         type="checkbox"
                         id="ignoreValidityCheckbox"
                         checked={this.state.ignoreValidity}
-                        onChange={() => this.handleIgnoreValidityChange()} />
+                        onChange={() => this.toggleIgnoreValidity()} />
                     <Label for="ignoreValidityCheckbox" check>
                         Ignore Pokemon validity in game version
                     </Label>
@@ -321,6 +321,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
                     index={i}
                     versionGroupIndex={this.state.versionGroupIndex}
                     ignoreValidity={this.state.ignoreValidity}
+                    toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                     hideTooltips={this.state.hideTooltips}
                     speciesNames={this.state.speciesNames}
                     typeSet={this.state.typeSet}
