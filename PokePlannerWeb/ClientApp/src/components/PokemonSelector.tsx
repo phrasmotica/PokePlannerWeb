@@ -9,10 +9,7 @@ import "../styles/types.scss"
 import "./PokemonSelector.scss"
 import "./TeamBuilder.scss"
 
-/**
- * Component for selecting a Pokemon and displaying information about it.
- */
-export class PokemonSelector extends Component<{
+type PokemonSelectorProps = {
     /**
      * The index of this Pokemon selector.
      */
@@ -29,6 +26,11 @@ export class PokemonSelector extends Component<{
     ignoreValidity: boolean,
 
     /**
+     * Whether tooltips should be hidden.
+     */
+    hideTooltips: boolean,
+
+    /**
      * List of Pokemon species names.
      */
     speciesNames: string[],
@@ -41,13 +43,10 @@ export class PokemonSelector extends Component<{
     /**
      * The base stat names.
      */
-    baseStatNames: string[],
+    baseStatNames: string[]
+}
 
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
-}, {
+type PokemonSelectorState = {
     /**
      * The Pokemon species.
      */
@@ -112,7 +111,12 @@ export class PokemonSelector extends Component<{
      * Whether to show the efficacy list.
      */
     showEfficacy: boolean
-}> {
+}
+
+/**
+ * Component for selecting a Pokemon and displaying information about it.
+ */
+export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSelectorState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -143,7 +147,7 @@ export class PokemonSelector extends Component<{
         })
     }
 
-    componentDidUpdate(previousProps: any) {
+    componentDidUpdate(previousProps: PokemonSelectorProps) {
         // refresh if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex

@@ -10,10 +10,7 @@ import "./EfficacyList.scss"
  */
 const NUMBER_OF_ROWS: number = 2
 
-/**
- * Component for displaying defensive type efficacy.
- */
-export class EfficacyList extends Component<{
+type EfficacyListProps = {
     /**
      * The index of this efficacy list.
      */
@@ -48,7 +45,9 @@ export class EfficacyList extends Component<{
      * Whether tooltips should be hidden.
      */
     hideTooltips: boolean
-}, {
+}
+
+type EfficacyListState = {
     /**
      * The efficacy to show.
      */
@@ -63,7 +62,12 @@ export class EfficacyList extends Component<{
      * Whether the type tooltips are open.
      */
     typeTooltipOpen: boolean[]
-}> {
+}
+
+/**
+ * Component for displaying defensive type efficacy.
+ */
+export class EfficacyList extends Component<EfficacyListProps, EfficacyListState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -78,7 +82,7 @@ export class EfficacyList extends Component<{
         this.getEfficacy()
     }
 
-    componentDidUpdate(previousProps: any) {
+    componentDidUpdate(previousProps: EfficacyListProps) {
         // refresh efficacy if the version group changed...
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex

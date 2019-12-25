@@ -6,10 +6,7 @@ import { TypeSet } from '../models/TypeSet'
 
 const TEAM_SIZE: number = 6
 
-/**
- * Component for building a Pokemon team.
- */
-export class TeamBuilder extends Component<{}, {
+type TeamBuilderState = {
     /**
      * List of Pokemon species names.
      */
@@ -59,7 +56,12 @@ export class TeamBuilder extends Component<{}, {
      * Whether tooltips should be hidden.
      */
     hideTooltips: boolean
-}> {
+}
+
+/**
+ * Component for building a Pokemon team.
+ */
+export class TeamBuilder extends Component<any, TeamBuilderState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -188,6 +190,8 @@ export class TeamBuilder extends Component<{}, {
     // set selected version group
     async handleVersionGroupChange(e: any) {
         const idx = Number(e.value)
+
+        // TODO: this makes efficacy lists reload while new efficacy data is being loaded...
         this.setState({ versionGroupIndex: idx })
 
         // reload type set and efficacy
