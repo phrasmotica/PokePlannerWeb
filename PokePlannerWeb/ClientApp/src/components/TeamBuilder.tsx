@@ -188,9 +188,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
     }
 
     // set selected version group
-    async handleVersionGroupChange(e: any) {
-        const idx = Number(e.value)
-
+    async setVersionGroup(idx: number) {
         // TODO: this makes efficacy lists reload while new efficacy data is being loaded...
         this.setState({ versionGroupIndex: idx })
 
@@ -215,7 +213,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
     }
 
     // toggle tooltip hiding
-    handleHideTooltipsChange() {
+    toggleHideTooltips() {
         this.setState((previousState) => ({
             hideTooltips: !previousState.hideTooltips
         }))
@@ -277,7 +275,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
                     id="versionGroupSelect"
                     className="version-group-select"
                     defaultValue={options[this.state.versionGroupIndex]}
-                    onChange={e => this.handleVersionGroupChange(e)}
+                    onChange={(e: any) => this.setVersionGroup(e.value)}
                     options={options} />
             </FormGroup>
         )
@@ -303,7 +301,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
                         type="checkbox"
                         id="hideTooltipsCheckbox"
                         checked={this.state.hideTooltips}
-                        onChange={() => this.handleHideTooltipsChange()} />
+                        onChange={() => this.toggleHideTooltips()} />
                     <Label for="hideTooltipsCheckbox" check>
                         Hide tooltips
                 </Label>
