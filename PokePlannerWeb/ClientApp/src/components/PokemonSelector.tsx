@@ -28,6 +28,11 @@ export class PokemonSelector extends Component<{
     ignoreValidity: boolean,
 
     /**
+     * List of Pokemon species names.
+     */
+    speciesNames: string[],
+
+    /**
      * The type set.
      */
     typeSet: TypeSet,

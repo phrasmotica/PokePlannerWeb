@@ -96,7 +96,6 @@ export class TeamBuilder extends Component<{}, {
         fetch("pokemon/allNames")
             .then((response) => response.json())
             .then(speciesNames => this.setState({ speciesNames: speciesNames }))
-            .then(() => console.log(this.state.speciesNames))
             .catch(error => console.log(error))
     }
 
@@ -321,6 +320,7 @@ export class TeamBuilder extends Component<{}, {
                     versionGroupIndex={this.state.versionGroupIndex}
                     ignoreValidity={this.state.ignoreValidity}
                     hideTooltips={this.state.hideTooltips}
+                    speciesNames={this.state.speciesNames}
                     typeSet={this.state.typeSet}
                     baseStatNames={this.state.baseStatNames} />
             )
