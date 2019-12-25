@@ -114,13 +114,16 @@ $width: 400px;
 }
 
 .stat-bars {
-    display: grid;
-    grid-row-gap: 1px;
     max-width: 255px;
 }
 
 .stat-bar {
     background-color: dodgerblue;
+    margin-right: 3px;
+}
+
+.stat-value {
+    font-size: 8pt;
 }
 
 .was-validated .form-control:invalid, .form-control.is-invalid {

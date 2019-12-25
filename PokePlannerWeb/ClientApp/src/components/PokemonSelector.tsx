@@ -366,10 +366,17 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 <div className="stat-bars">
                     {this.state.baseStatValues.map((value, i) => {
                         return (
-                            <div
-                                key={i}
-                                className={"stat-bar" + (shouldShowSpecies ? "" : " hidden")}
-                                style={{ width: value }} />
+                            <div className="flex">
+                                <div
+                                    key={i}
+                                    className={"stat-bar" + (shouldShowSpecies ? "" : " hidden")}
+                                    style={{ width: value }} />
+
+                                <div
+                                    className={"stat-value" + (shouldShowSpecies ? "" : " hidden")}>
+                                    {value}
+                                </div>
+                            </div>
                         )
                     })}
                 </div>
