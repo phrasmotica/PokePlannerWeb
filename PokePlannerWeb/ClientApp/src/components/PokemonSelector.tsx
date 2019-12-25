@@ -186,7 +186,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     <Button
                         className="margin-right"
                         color="danger"
-                        onMouseUp={() => this.clearPokemon()}>
+                        onMouseUp={() => this.clearSpecies()}>
                         Clear
                     </Button>
                 </div>
@@ -247,7 +247,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 id={"speciesInput" + this.props.index}
                 styles={customStyles}
                 placeholder="Search for a Pokemon!"
-                onChange={e => this.handleSpeciesChange(e)}
+                onChange={(e: any) => this.setSpecies(e.value)}
                 options={options} />
         )
 
@@ -466,10 +466,9 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return shouldMarkInvalid
     }
 
-    // handler for searching for a Pokemon
-    handleSpeciesChange(e: any) {
+    // set to the species with the given ID
+    setSpecies(speciesId: number) {
         // only fetch if we need to
-        const speciesId = e.value
         if (speciesId !== this.state.speciesId) {
             this.setState({ speciesId: speciesId })
 
@@ -486,8 +485,8 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         }
     }
 
-    // handler for clearing the Pokemon
-    clearPokemon() {
+    // empty this selector
+    clearSpecies() {
         this.setState({
             speciesId: 0,
             speciesValidity: SpeciesValidity.Nonexistent,
