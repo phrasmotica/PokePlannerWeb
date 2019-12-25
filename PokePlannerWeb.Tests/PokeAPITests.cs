@@ -51,7 +51,7 @@ namespace PokePlannerWeb.Tests
             var allNames = await PokemonData.Instance.GetAllPokemonNames();
 
             // verify they're all there
-            Assert.AreEqual(964, allNames.Length);
+            Assert.AreEqual(807, allNames.Length);
         }
 
         /// <summary>

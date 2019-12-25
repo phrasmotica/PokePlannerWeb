@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.Mechanics
         /// </summary>
         public async Task<string[]> GetAllPokemonNames()
         {
-            var allPokemon = await PokeAPI.GetFullPage<Pokemon>();
+            var allPokemon = await PokeAPI.GetFullPage<PokemonSpecies>();
             return allPokemon.Results.Select(p => p.Name).ToArray();
         }
     }
