@@ -1,5 +1,4 @@
 ﻿@use "../styles/types";
-@use "./TeamBuilder";
 
 .type {
     &-unknown {
@@ -94,9 +93,13 @@
 
 $dim: 96px;
 .sprite {
-    @include TeamBuilder.flex-center;
     height: $dim;
     width: $dim;
+}
+
+.inherit-size {
+    height: inherit;
+    width: inherit;
 }
 
 $height: 96px;

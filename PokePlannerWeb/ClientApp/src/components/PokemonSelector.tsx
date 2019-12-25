@@ -275,7 +275,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldShowSpecies = this.shouldShowSpecies()
         if (shouldShowSpecies && this.isLoading()) {
             return (
-                <div className="sprite loading">
+                <div className="sprite flex-center loading">
                     {this.makeSpinner()}
                 </div>
             )
@@ -284,7 +284,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return (
             <div className="sprite">
                 <img
-                    className={shouldShowSpecies ? "" : "hidden"}
+                    className={"inherit-size" + (shouldShowSpecies ? "" : " hidden")}
                     src={this.state.pokemonSpriteUrl} />
             </div>
         )
