@@ -107,14 +107,29 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the sprite of the Pokemon with the given ID.
+        /// Returns the URL of the sprite of the Pokemon with the given ID.
         /// </summary>
         [HttpGet("{id:int}/sprite")]
         public async Task<string> GetPokemonSpriteUrlById(int id)
         {
             Logger.LogInformation($"Getting sprite URL of Pokemon {id}...");
             var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return pokemon.Sprites.FrontDefault;
+            var frontDefaultUrl = pokemon.Sprites.FrontDefault;
+            if (frontDefaultUrl == null)
+            {
+                Logger.LogInformation($"Sprite URL for Pokemon {id} missing from PokeAPI, creating URL manually");
+                return MakeSpriteUrl(id);
+            }
+
+            return frontDefaultUrl;
+        }
+
+        /// <summary>
+        /// Creates and returns the URL of the sprite of the Pokemon with the given ID.
+        /// </summary>
+        private string MakeSpriteUrl(int id)
+        {
+            return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png";
         }
 
         /// <summary>
