@@ -94,5 +94,61 @@ namespace PokePlannerWeb.Controllers
             var pokemon = await PokeAPI.Get<Pokemon>(species);
             return await pokemon.IsValid(versionGroupId);
         }
+
+        /// <summary>
+        /// Returns the name of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/name")]
+        public async Task<string> GetPokemonNameById(int id)
+        {
+            Logger.LogInformation($"Getting name of Pokemon {id}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            return await pokemon.GetEnglishName();
+        }
+
+        /// <summary>
+        /// Returns the sprite of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/sprite")]
+        public async Task<string> GetPokemonSpriteUrlById(int id)
+        {
+            Logger.LogInformation($"Getting sprite URL of Pokemon {id}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            return pokemon.Sprites.FrontDefault;
+        }
+
+        /// <summary>
+        /// Returns the types of the Pokemon with the given ID in the version group with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/types/{versionGroupId:int}")]
+        public async Task<string[]> GetPokemonTypesInVersionGroupById(int id, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting types for Pokemon {id} in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            var types = await pokemon.GetTypes(versionGroupId);
+            return types.Select(t => t.ToString()).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the base stats of the Pokemon with the given ID in the version group with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/baseStats/{versionGroupId:int}")]
+        public async Task<int[]> GetPokemonBaseStatsInVersionGroupById(int id, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting base stats for Pokemon {id} in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            return pokemon.GetBaseStats(versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the validity of the Pokemon with the given ID in the version group with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/validity/{versionGroupId:int}")]
+        public async Task<bool> GetPokemonValidityInVersionGroupById(int id, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting validity for Pokemon {id} in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            return await pokemon.IsValid(versionGroupId);
+        }
     }
 }
