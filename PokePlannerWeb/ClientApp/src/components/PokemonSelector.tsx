@@ -60,6 +60,26 @@ interface PokemonSelectorState {
     loadingSpeciesValidity: boolean,
 
     /**
+     * List of species forms IDs.
+     */
+    formsIds: number[],
+
+    /**
+     * Whether we're loading the species forms IDs.
+     */
+    loadingFormsIds: boolean,
+
+    /**
+     * List of species forms names.
+     */
+    formsNames: string[],
+
+    /**
+     * Whether we're loading the species forms names.
+     */
+    loadingFormsNames: boolean,
+
+    /**
      * Whether the validity tooltip is open.
      */
     validityTooltipOpen: boolean
@@ -75,6 +95,10 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             speciesId: 0,
             speciesValidity: SpeciesValidity.Invalid,
             loadingSpeciesValidity: false,
+            formsIds: [],
+            loadingFormsIds: false,
+            formsNames: [],
+            loadingFormsNames: false,
             validityTooltipOpen: false
         }
     }
@@ -89,6 +113,10 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             let speciesId = this.state.speciesId
             if (speciesId > 0) {
                 this.fetchSpeciesValidity(speciesId)
+                    .then(() => {
+                        this.fetchSpeciesFormsIds(speciesId)
+                        this.fetchSpeciesFormsNames(speciesId)
+                    })
                     .then(() => this.props.setSpecies(speciesId, this.state.speciesValidity))
             }
         }
@@ -179,6 +207,8 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // returns whether this component is loading
     isLoading() {
         return this.state.loadingSpeciesValidity
+            || this.state.loadingFormsIds
+            || this.state.loadingFormsNames
     }
 
     // returns true if we have a species
@@ -203,6 +233,10 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             this.setState({ speciesId: speciesId })
 
             this.fetchSpeciesValidity(speciesId)
+                .then(() => {
+                    this.fetchSpeciesFormsIds(speciesId)
+                    this.fetchSpeciesFormsNames(speciesId)
+                })
                 .then(() => this.props.setSpecies(speciesId, this.state.speciesValidity))
         }
     }
@@ -263,5 +297,55 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 this.setState({ speciesValidity: SpeciesValidity.Invalid })
             })
             .then(() => this.setState({ loadingSpeciesValidity: false }))
+    }
+
+    // fetches the IDs of the forms of the species from PokemonController
+    async fetchSpeciesFormsIds(speciesId: number) {
+        if (speciesId <= 0) {
+            return
+        }
+
+        console.log(`Selector ${this.props.index}: fetching forms for species ${speciesId}...`)
+
+        this.setState({ loadingFormsIds: true })
+
+        // fetch forms
+        await fetch(`pokemon/${speciesId}/forms/${this.props.versionGroupIndex}/ids`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch forms for species ${speciesId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(ids => this.setState({ formsIds: ids }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingFormsIds: false }))
+    }
+
+    // fetches the names of the forms of the species from PokemonController
+    async fetchSpeciesFormsNames(speciesId: number) {
+        if (speciesId <= 0) {
+            return
+        }
+
+        console.log(`Selector ${this.props.index}: fetching forms names for species ${speciesId}...`)
+
+        this.setState({ loadingFormsNames: true })
+
+        // fetch forms
+        await fetch(`pokemon/${speciesId}/forms/${this.props.versionGroupIndex}/names`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch forms names for species ${speciesId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(names => this.setState({ formsNames: names }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingFormsNames: false }))
     }
 }
