@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Button, Collapse, Tooltip } from "reactstrap"
+import { Spinner, Button, Collapse, Tooltip, FormGroup, Label, CustomInput } from "reactstrap"
 import Select from "react-select"
 import { EfficacyList } from "./EfficacyList"
 import { SpeciesValidity } from "../models/SpeciesValidity"
@@ -123,6 +123,11 @@ type PokemonSelectorState = {
     loadingBaseStatValues: boolean,
 
     /**
+     * Whether to show the shiny sprite.
+     */
+    showShinySprite: boolean,
+
+    /**
      * Whether to show the efficacy list.
      */
     showEfficacy: boolean
@@ -149,6 +154,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             loadingPokemonTypes: true,
             baseStatValues: [],
             loadingBaseStatValues: true,
+            showShinySprite: false,
             showEfficacy: false
         }
     }
@@ -305,7 +311,11 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     renderPokemonInfo() {
         return (
             <div className="flex margin-bottom">
-                {this.renderPokemonSprite()}
+                <div className="margin-right">
+                    {this.renderPokemonSprite()}
+
+                    {this.renderShinySpriteSwitch()}
+                </div>
 
                 <div className="margin-right">
                     {this.renderPokemonName()}
@@ -323,18 +333,35 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldShowSpecies = this.shouldShowSpecies()
         if (shouldShowSpecies && this.isLoading()) {
             return (
-                <div className="sprite flex-center margin-right loading">
+                <div className="sprite flex-center loading">
                     {this.makeSpinner()}
                 </div>
             )
         }
 
+        let spriteUrl = this.state.showShinySprite
+                      ? this.state.pokemonShinySpriteUrl
+                      : this.state.pokemonSpriteUrl
         return (
-            <div className="sprite margin-right">
+            <div className="sprite">
                 <img
                     className={"inherit-size" + (shouldShowSpecies ? "" : " hidden")}
-                    src={this.state.pokemonSpriteUrl} />
+                    src={spriteUrl} />
             </div>
+        )
+    }
+
+    // returns a switch that toggles between default and shiny sprites
+    renderShinySpriteSwitch() {
+        return (
+            <FormGroup style={{ marginBottom: 0 }}>
+                <CustomInput
+                    type="switch"
+                    id="toggleShinySpriteSwitch"
+                    checked={this.state.showShinySprite}
+                    label={this.state.showShinySprite ? "Shiny" : "Default"}
+                    onChange={() => this.toggleShowShinySprite()} />
+            </FormGroup>
         )
     }
 
@@ -458,14 +485,21 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // toggle the validity tooltip
     toggleValidityTooltip() {
-        this.setState((previousState) => ({
+        this.setState(previousState => ({
             validityTooltipOpen: !previousState.validityTooltipOpen
+        }))
+    }
+
+    // toggle the shiny sprite
+    toggleShowShinySprite() {
+        this.setState(previousState => ({
+            showShinySprite: !previousState.showShinySprite
         }))
     }
 
     // toggle the efficacy panel
     toggleShowEfficacy() {
-        this.setState((previousState) => ({
+        this.setState(previousState => ({
             showEfficacy: !previousState.showEfficacy
         }))
     }
