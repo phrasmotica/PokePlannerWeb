@@ -135,6 +135,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let searchBox = (
             <Select
                 isSearchable
+                blurInputOnSelect
                 isLoading={this.isLoading()}
                 id={"speciesInput" + this.props.index}
                 styles={customStyles}
