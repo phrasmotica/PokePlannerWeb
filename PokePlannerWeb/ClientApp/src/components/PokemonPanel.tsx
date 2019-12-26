@@ -264,7 +264,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             <FormGroup style={{ marginBottom: 0 }}>
                 <CustomInput
                     type="switch"
-                    id="toggleShinySpriteSwitch"
+                    id={"toggleShinySpriteSwitch" + this.props.index}
                     checked={this.state.showShinySprite}
                     label={this.state.showShinySprite ? "Shiny" : "Default"}
                     onChange={() => this.toggleShowShinySprite()} />
