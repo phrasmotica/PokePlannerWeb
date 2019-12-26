@@ -333,7 +333,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldShowSpecies = this.shouldShowSpecies()
         if (shouldShowSpecies && this.isLoading()) {
             return (
-                <div className="sprite flex-center loading">
+                <div className="sprite margin-bottom flex-center loading">
                     {this.makeSpinner()}
                 </div>
             )
@@ -343,7 +343,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                       ? this.state.pokemonShinySpriteUrl
                       : this.state.pokemonSpriteUrl
         return (
-            <div className="sprite">
+            <div className="sprite margin-bottom">
                 <img
                     className={"inherit-size" + (shouldShowSpecies ? "" : " hidden")}
                     src={spriteUrl} />
@@ -370,14 +370,14 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let shouldShowSpecies = this.shouldShowSpecies()
         if (shouldShowSpecies && this.isLoading()) {
             return (
-                <div className="center-text loading">
+                <div className="center-text margin-bottom loading">
                     {this.makeSpinner()}
                 </div>
             )
         }
 
         return (
-            <div className={"center-text" + (shouldShowSpecies ? "" : " hidden")}>
+            <div className={"center-text margin-bottom" + (shouldShowSpecies ? "" : " hidden")}>
                 {this.state.pokemonName}
             </div>
         )
