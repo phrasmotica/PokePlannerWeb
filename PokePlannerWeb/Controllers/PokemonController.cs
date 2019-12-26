@@ -69,11 +69,35 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
+        /// Returns the URL of the shiny sprite of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/sprite/shiny")]
+        public async Task<string> GetPokemonShinySpriteUrlById(int id)
+        {
+            Logger.LogInformation($"Getting shiny sprite URL of Pokemon {id}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            var frontShinyUrl = pokemon.Sprites.FrontShiny;
+            if (frontShinyUrl == null)
+            {
+                Logger.LogInformation($"Shiny sprite URL for Pokemon {id} missing from PokeAPI, creating URL manually");
+                return MakeSpriteUrl(id, true);
+            }
+
+            return frontShinyUrl;
+        }
+
+        /// <summary>
         /// Creates and returns the URL of the sprite of the Pokemon with the given ID.
         /// </summary>
-        private string MakeSpriteUrl(int id)
+        private string MakeSpriteUrl(int id, bool shiny = false)
         {
-            return $"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{id}.png";
+            const string baseUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
+            if (shiny)
+            {
+                return $"{baseUrl}/shiny/{id}.png";
+            }
+
+            return $"{baseUrl}/{id}.png";
         }
 
         /// <summary>
