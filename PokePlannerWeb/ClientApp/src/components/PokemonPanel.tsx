@@ -1,6 +1,5 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Button, Collapse, Tooltip, FormGroup, Label, CustomInput } from "reactstrap"
-import Select from "react-select"
+import { Spinner, Button, Collapse, FormGroup, CustomInput } from "reactstrap"
 import { EfficacyList } from "./EfficacyList"
 import { SpeciesValidity } from "../models/SpeciesValidity"
 import { TypeSet } from "../models/TypeSet"
@@ -8,6 +7,7 @@ import { TypeSet } from "../models/TypeSet"
 import "../styles/types.scss"
 import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
+import { PokemonSelector } from "./PokemonSelector"
 
 type PokemonPanelProps = {
     /**
@@ -61,16 +61,6 @@ type PokemonPanelState = {
      * Value describing the species validity.
      */
     speciesValidity: SpeciesValidity,
-
-    /**
-     * Whether we're loading the species validity.
-     */
-    loadingSpeciesValidity: boolean,
-
-    /**
-     * Whether the validity tooltip is open.
-     */
-    validityTooltipOpen: boolean,
 
     /**
      * The Pokemon's name.
@@ -142,8 +132,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         this.state = {
             speciesId: 0,
             speciesValidity: SpeciesValidity.Nonexistent,
-            loadingSpeciesValidity: true,
-            validityTooltipOpen: false,
             pokemonName: "",
             loadingPokemonName: true,
             pokemonSpriteUrl: "",
@@ -162,7 +150,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     componentDidMount() {
         // finished loading
         this.setState({
-            loadingSpeciesValidity: false,
             loadingPokemonName: false,
             loadingPokemonSpriteUrl: false,
             loadingPokemonShinySpriteUrl: false,
@@ -180,64 +167,34 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         if (versionGroupChanged) {
             let speciesId = this.state.speciesId
             if (speciesId > 0) {
-                this.fetchSpeciesValidity(speciesId)
-                    .then(() => {
-                        this.fetchTypes(speciesId)
-                        this.fetchBaseStatValues(speciesId)
-                    })
+                this.fetchTypes(speciesId)
+                this.fetchBaseStatValues(speciesId)
             }
         }
     }
 
     render() {
-        return this.renderPokemon()
-    }
-
-    // returns the whole component
-    renderPokemon() {
         // flags
         let showEfficacy = this.state.showEfficacy
 
         // sub-components
-        let searchBox = this.renderSearchBox()
         let pokemonInfo = this.renderPokemonInfo()
         let efficacyList = this.renderEfficacyList()
 
+        // handlers
+        const setSpecies = (id: number, validity: SpeciesValidity) => this.setSpecies(id, validity)
+        const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
+
         return (
             <div>
-                <div className="flex margin-bottom">
-                    {searchBox}
-
-                    <Button
-                        className="margin-right"
-                        color="primary"
-                        disabled={this.state.speciesId <= 1}
-                        onMouseUp={() => this.setPreviousSpecies()}>
-                        Previous
-                    </Button>
-
-                    <Button
-                        className="margin-right"
-                        color="primary"
-                        disabled={!this.hasSpecies() || this.hasLastSpecies()}
-                        onMouseUp={() => this.setNextSpecies()}>
-                        Next
-                    </Button>
-
-                    <Button
-                        className="margin-right"
-                        color="warning"
-                        onMouseUp={() => this.setRandomSpecies()}>
-                        Random
-                    </Button>
-
-                    <Button
-                        className="margin-right"
-                        color="danger"
-                        onMouseUp={() => this.clearSpecies()}>
-                        Clear
-                    </Button>
-                </div>
+                <PokemonSelector
+                    index={this.props.index}
+                    versionGroupIndex={this.props.versionGroupIndex}
+                    speciesNames={this.props.speciesNames}
+                    ignoreValidity={this.props.ignoreValidity}
+                    hideTooltips={this.props.ignoreValidity}
+                    setSpecies={setSpecies}
+                    toggleIgnoreValidity={toggleIgnoreValidity} />
 
                 {pokemonInfo}
 
@@ -255,56 +212,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 </Collapse>
             </div>
         );
-    }
-
-    // returns a box for searching for a species
-    renderSearchBox() {
-        let validityTooltip = null
-        let shouldMarkInvalidSpecies = this.shouldMarkSpeciesInvalid()
-        if (!this.props.hideTooltips && shouldMarkInvalidSpecies) {
-            // determine message from validity status
-            let message = `The Pokemon cannot be obtained in this game version!`
-            if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
-                message = `The Pokemon does not exist!`
-            }
-
-            validityTooltip = (
-                <Tooltip
-                    isOpen={this.state.validityTooltipOpen}
-                    toggle={() => this.toggleValidityTooltip()}
-                    placement="bottom"
-                    target={"speciesInput" + this.props.index}>
-                    {message}
-                </Tooltip>
-            )
-        }
-
-        let options = this.props.speciesNames.map((name, index) => ({ value: index + 1, label: name }))
-        let customStyles = {
-            control: (provided: any) => ({
-                ...provided,
-                minWidth: 270,
-                border: shouldMarkInvalidSpecies ? "1px solid #dc3545" : ""
-            })
-        }
-
-        let searchBox = (
-            <Select
-                isSearchable
-                isLoading={this.state.loadingSpeciesValidity}
-                id={"speciesInput" + this.props.index}
-                styles={customStyles}
-                placeholder="Search for a Pokemon!"
-                onChange={(e: any) => this.setSpecies(e.value)}
-                options={options} />
-        )
-
-        return (
-            <div className="margin-right">
-                {searchBox}
-                {validityTooltip}
-            </div>
-        )
     }
 
     // returns the Pokemon info
@@ -478,18 +385,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         return <Spinner animation="border" />
     }
 
-    // returns a small loading spinner
-    makeSmallSpinner() {
-        return <Spinner animation="border" size="sm" />
-    }
-
-    // toggle the validity tooltip
-    toggleValidityTooltip() {
-        this.setState(previousState => ({
-            validityTooltipOpen: !previousState.validityTooltipOpen
-        }))
-    }
-
     // toggle the shiny sprite
     toggleShowShinySprite() {
         this.setState(previousState => ({
@@ -506,8 +401,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingSpeciesValidity
-            || this.state.loadingPokemonName
+        return this.state.loadingPokemonName
             || this.state.loadingPokemonSpriteUrl
             || this.state.loadingPokemonTypes
             || this.state.loadingBaseStatValues
@@ -536,105 +430,18 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         return shouldShowInvalidSpecies || this.speciesIsValid()
     }
 
-    // returns true if the species should be marked as invalid
-    shouldMarkSpeciesInvalid() {
-        let speciesChecked = this.hasSpecies() && !this.state.loadingSpeciesValidity
-        let speciesValidity = this.state.speciesValidity
-        let shouldMarkInvalid = speciesChecked
-                               && (speciesValidity === SpeciesValidity.Nonexistent
-                                    || (!this.props.ignoreValidity && speciesValidity === SpeciesValidity.Invalid))
-
-        return shouldMarkInvalid
-    }
-
-    // set to the species with the given ID
-    setSpecies(speciesId: number) {
-        // only fetch if we need to
-        if (speciesId !== this.state.speciesId) {
-            this.setState({ speciesId: speciesId })
-
-            this.fetchSpeciesValidity(speciesId)
-                .then(() => {
-                    if (this.state.speciesValidity !== SpeciesValidity.Nonexistent) {
-                        // fetch info if Pokemon exists
-                        this.fetchPokemonName(speciesId)
-                        this.fetchSpriteUrl(speciesId)
-                        this.fetchShinySpriteUrl(speciesId)
-                        this.fetchTypes(speciesId)
-                        this.fetchBaseStatValues(speciesId)
-                    }
-                })
-        }
-    }
-
-    // set to the previous species
-    setPreviousSpecies() {
-        this.setSpecies(Math.max(1, this.state.speciesId - 1))
-    }
-
-    // set to the next species
-    setNextSpecies() {
-        this.setSpecies(Math.min(this.state.speciesId + 1, this.props.speciesNames.length))
-    }
-
-    // set to a random species
-    setRandomSpecies() {
-        // ignore validity since we can't guarantee a valid species
-        if (!this.props.ignoreValidity) {
-            this.props.toggleIgnoreValidity()
-        }
-
-        let max = this.props.speciesNames.length
-        let randomId = this.randomInt(0, max) + 1
-        this.setSpecies(randomId)
-    }
-
-    // returns a random integer between the min (inclusive) and the max (exclusive)
-    randomInt(min: number, max: number) {
-        return Math.floor(Math.random() * (max - min) + min)
-    }
-
-    // empty this panel
-    clearSpecies() {
+    // set the species and its validity
+    setSpecies(speciesId: number, validity: SpeciesValidity) {
         this.setState({
-            speciesId: 0,
-            speciesValidity: SpeciesValidity.Nonexistent,
-            pokemonName: "",
-            pokemonSpriteUrl: "",
-            pokemonShinySpriteUrl: "",
-            pokemonTypes: []
+            speciesId: speciesId,
+            speciesValidity: validity
         })
-    }
 
-    // fetches the validity of the species from PokemonController
-    async fetchSpeciesValidity(speciesId: number) {
-        if (speciesId <= 0) {
-            return
-        }
-
-        console.log(`Panel ${this.props.index}: fetching validity for species ${speciesId}...`)
-
-        this.setState({ loadingSpeciesValidity: true })
-
-        // fetch validity
-        await fetch(`pokemon/${speciesId}/validity/${this.props.versionGroupIndex}`)
-            .then((response: Response) => {
-                if (response.status === 200) {
-                    return response
-                }
-
-                throw new Error(`Panel ${this.props.index}: tried to fetch validity for species ${speciesId} but failed with status ${response.status}!`)
-            })
-            .then(response => response.json())
-            .then(validity => {
-                let isValid = Boolean(validity)
-                this.setState({ speciesValidity: isValid ? SpeciesValidity.Valid : SpeciesValidity.Invalid })
-            })
-            .catch(error => {
-                console.log(error)
-                this.setState({ speciesValidity: SpeciesValidity.Nonexistent })
-            })
-            .then(() => this.setState({ loadingSpeciesValidity: false }))
+        this.fetchPokemonName(speciesId)
+        this.fetchSpriteUrl(speciesId)
+        this.fetchShinySpriteUrl(speciesId)
+        this.fetchTypes(speciesId)
+        this.fetchBaseStatValues(speciesId)
     }
 
     // fetches the name of the species from PokemonController
