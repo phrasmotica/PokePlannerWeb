@@ -93,6 +93,16 @@ type PokemonSelectorState = {
     loadingPokemonSpriteUrl: boolean,
 
     /**
+     * The URL of the Pokemon's shiny sprite.
+     */
+    pokemonShinySpriteUrl: string,
+
+    /**
+     * Whether we're loading the URL of the Pokemon's shiny sprite.
+     */
+    loadingPokemonShinySpriteUrl: boolean,
+
+    /**
      * The Pokemon's types.
      */
     pokemonTypes: string[],
@@ -133,6 +143,8 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             loadingPokemonName: true,
             pokemonSpriteUrl: "",
             loadingPokemonSpriteUrl: true,
+            pokemonShinySpriteUrl: "",
+            loadingPokemonShinySpriteUrl: true,
             pokemonTypes: [],
             loadingPokemonTypes: true,
             baseStatValues: [],
@@ -147,6 +159,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             loadingSpeciesValidity: false,
             loadingPokemonName: false,
             loadingPokemonSpriteUrl: false,
+            loadingPokemonShinySpriteUrl: false,
             loadingPokemonTypes: false,
             loadingBaseStatValues: false
         })
@@ -512,6 +525,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                         // fetch info if Pokemon exists
                         this.fetchPokemonName(speciesId)
                         this.fetchSpriteUrl(speciesId)
+                        this.fetchShinySpriteUrl(speciesId)
                         this.fetchTypes(speciesId)
                         this.fetchBaseStatValues(speciesId)
                     }
@@ -553,6 +567,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             speciesValidity: SpeciesValidity.Nonexistent,
             pokemonName: "",
             pokemonSpriteUrl: "",
+            pokemonShinySpriteUrl: "",
             pokemonTypes: []
         })
     }
@@ -628,6 +643,27 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
             .catch(error => console.log(error))
             .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
+    }
+
+    // fetches the shiny sprite of the species from PokemonController
+    fetchShinySpriteUrl(speciesId: number) {
+        console.log(`Selector ${this.props.index}: fetching shiny sprite for species ${speciesId}...`)
+
+        this.setState({ loadingPokemonShinySpriteUrl: true })
+
+        // fetch sprite URL
+        fetch(`pokemon/${speciesId}/sprite/shiny`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch shiny sprite URL for species ${speciesId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.text())
+            .then(spriteUrl => this.setState({ pokemonShinySpriteUrl: spriteUrl }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemonShinySpriteUrl: false }))
     }
 
     // fetches the types for the species from PokemonController
