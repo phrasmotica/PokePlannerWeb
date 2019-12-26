@@ -125,10 +125,12 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     render() {
         // sub-components
         let speciesSelect = this.renderSpeciesSelect()
+        let formsSelect = this.renderFormsSelect()
 
         return (
             <div className="flex margin-bottom">
                 {speciesSelect}
+                {formsSelect}
 
                 <Button
                     className="margin-right"
@@ -149,27 +151,25 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // returns a box for selecting a species
     renderSpeciesSelect() {
-        let validityTooltip = this.renderValidityTooltip()
+        let speciesOptions = this.createSpeciesOptions()
 
-        let options = this.props.speciesNames.map((name, index) => ({ value: index + 1, label: name }))
-        let customStyles = {
-            control: (provided: any) => ({
-                ...provided,
-                minWidth: 230,
-                border: this.shouldMarkSpeciesInvalid() ? "1px solid #dc3545" : ""
-            })
-        }
+        // attach validity tooltip to the forms select if the species has secondary forms
+        let hasForms = this.state.formsIds.length > 0
+        let validityTooltip = this.renderValidityTooltip(hasForms)
+
+        // attach red border to this select if no secondary forms are present
+        let customStyles = this.createCustomSelectStyles(!hasForms)
 
         let searchBox = (
             <Select
                 isSearchable
                 blurInputOnSelect
                 isLoading={this.isLoading()}
-                id={"speciesInput" + this.props.index}
+                id={"speciesSelect" + this.props.index}
                 styles={customStyles}
                 placeholder="Select a Pokemon!"
                 onChange={(e: any) => this.setSpecies(e.value)}
-                options={options} />
+                options={speciesOptions} />
         )
 
         return (
@@ -180,21 +180,79 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
     }
 
+    // returns a box for selecting a form of the selected species
+    renderFormsSelect() {
+        let formOptions = this.createFormsOptions()
+        let hasForms = formOptions.length > 0
+        let placeholder = hasForms ? "Select a form!" : "No forms"
+        let customStyles = this.createCustomSelectStyles(hasForms)
+
+        let searchBox = (
+            <Select
+                blurInputOnSelect
+                isLoading={this.isLoading()}
+                isDisabled={!hasForms}
+                id={"formsSelect" + this.props.index}
+                placeholder={placeholder}
+                styles={customStyles}
+                onChange={(e: any) => this.setSpecies(e.value)}
+                options={formOptions} />
+        )
+
+        return (
+            <div className="margin-right">
+                {searchBox}
+            </div>
+        )
+    }
+
     // returns a tooltip indicating the validity of the species
-    renderValidityTooltip() {
+    renderValidityTooltip(targetFormsSelect: boolean) {
         if (!this.props.hideTooltips && this.shouldMarkSpeciesInvalid()) {
+            let targetPrefix = targetFormsSelect ? "formsSelect" : "speciesSelect"
             return (
                 <Tooltip
                     isOpen={this.state.validityTooltipOpen}
                     toggle={() => this.toggleValidityTooltip()}
                     placement="bottom"
-                    target={"speciesInput" + this.props.index}>
+                    target={targetPrefix + this.props.index}>
                     Cannot be obtained in this game version!
                 </Tooltip>
             )
         }
 
         return null
+    }
+
+    // returns options for the species select
+    createSpeciesOptions() {
+        return this.props.speciesNames.map((name, index) => ({
+            value: index + 1,
+            label: name
+        }))
+    }
+
+    // returns options for the forms select
+    createFormsOptions() {
+        if (this.state.formsIds.length <= 1) {
+            return []
+        }
+
+        return this.state.formsIds.map((id, index) => ({
+            value: id,
+            label: this.state.formsNames[index]
+        }))
+    }
+
+    // returns a custom style for the species and form selects
+    createCustomSelectStyles(markAsInvalid: boolean) {
+        return {
+            control: (provided: any) => ({
+                ...provided,
+                minWidth: 230,
+                border: markAsInvalid && this.shouldMarkSpeciesInvalid() ? "1px solid #dc3545" : ""
+            })
+        }
     }
 
     // toggle the validity tooltip
