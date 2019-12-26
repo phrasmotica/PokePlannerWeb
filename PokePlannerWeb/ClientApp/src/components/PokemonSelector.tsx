@@ -73,7 +73,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         super(props)
         this.state = {
             speciesId: 0,
-            speciesValidity: SpeciesValidity.Nonexistent,
+            speciesValidity: SpeciesValidity.Invalid,
             loadingSpeciesValidity: false,
             validityTooltipOpen: false
         }
@@ -154,19 +154,13 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // returns a tooltip indicating the validity of the species
     renderValidityTooltip() {
         if (!this.props.hideTooltips && this.shouldMarkSpeciesInvalid()) {
-            // determine message from validity status
-            let message = `Cannot be obtained in this game version!`
-            if (this.state.speciesValidity === SpeciesValidity.Nonexistent) {
-                message = `Does not exist!`
-            }
-
             return (
                 <Tooltip
                     isOpen={this.state.validityTooltipOpen}
                     toggle={() => this.toggleValidityTooltip()}
                     placement="bottom"
                     target={"speciesInput" + this.props.index}>
-                    {message}
+                    Cannot be obtained in this game version!
                 </Tooltip>
             )
         }
@@ -194,10 +188,9 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // returns true if the species should be marked as invalid
     shouldMarkSpeciesInvalid() {
         let speciesChecked = this.hasSpecies() && !this.isLoading()
-        let speciesValidity = this.state.speciesValidity
         let shouldMarkInvalid = speciesChecked
-                                && (speciesValidity === SpeciesValidity.Nonexistent
-                                    || (!this.props.ignoreValidity && speciesValidity === SpeciesValidity.Invalid))
+                                && !this.props.ignoreValidity
+                                    && this.state.speciesValidity === SpeciesValidity.Invalid
 
         return shouldMarkInvalid
     }
@@ -234,10 +227,10 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     clearSpecies() {
         this.setState({
             speciesId: 0,
-            speciesValidity: SpeciesValidity.Nonexistent
+            speciesValidity: SpeciesValidity.Invalid
         })
 
-        this.props.setSpecies(0, SpeciesValidity.Nonexistent)
+        this.props.setSpecies(0, SpeciesValidity.Invalid)
     }
 
     // fetches the validity of the species from PokemonController
@@ -266,7 +259,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             })
             .catch(error => {
                 console.log(error)
-                this.setState({ speciesValidity: SpeciesValidity.Nonexistent })
+                this.setState({ speciesValidity: SpeciesValidity.Invalid })
             })
             .then(() => this.setState({ loadingSpeciesValidity: false }))
     }

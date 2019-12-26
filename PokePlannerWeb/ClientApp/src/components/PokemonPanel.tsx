@@ -131,7 +131,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         super(props)
         this.state = {
             speciesId: 0,
-            speciesValidity: SpeciesValidity.Nonexistent,
+            speciesValidity: SpeciesValidity.Invalid,
             pokemonName: "",
             loadingPokemonName: true,
             pokemonSpriteUrl: "",
@@ -424,9 +424,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns true if the species should be displayed
     shouldShowSpecies() {
-        let shouldShowInvalidSpecies = this.props.ignoreValidity
-                                    && this.hasSpecies()
-                                    && this.state.speciesValidity !== SpeciesValidity.Nonexistent
+        let shouldShowInvalidSpecies = this.props.ignoreValidity && this.hasSpecies()
         return shouldShowInvalidSpecies || this.speciesIsValid()
     }
 
