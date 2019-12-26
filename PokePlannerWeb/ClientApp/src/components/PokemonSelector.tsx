@@ -6,7 +6,7 @@ import { SpeciesValidity } from "../models/SpeciesValidity"
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
 
-type PokemonSelectorProps = {
+interface PokemonSelectorProps {
     /**
      * The index of this Pokemon selector.
      */
@@ -43,7 +43,7 @@ type PokemonSelectorProps = {
     toggleIgnoreValidity: () => void | null
 }
 
-type PokemonSelectorState = {
+interface PokemonSelectorState {
     /**
      * The species ID.
      */

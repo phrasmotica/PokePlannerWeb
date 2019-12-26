@@ -6,7 +6,7 @@ import { TypeSet } from '../models/TypeSet'
 
 const TEAM_SIZE: number = 6
 
-type TeamBuilderState = {
+interface TeamBuilderState {
     /**
      * List of Pokemon species names.
      */

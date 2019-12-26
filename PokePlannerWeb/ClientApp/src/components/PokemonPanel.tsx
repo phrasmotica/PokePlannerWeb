@@ -9,7 +9,7 @@ import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
 import { PokemonSelector } from "./PokemonSelector"
 
-type PokemonPanelProps = {
+interface PokemonPanelProps {
     /**
      * The index of this Pokemon panel.
      */
@@ -51,7 +51,7 @@ type PokemonPanelProps = {
     toggleIgnoreValidity: () => void | null
 }
 
-type PokemonPanelState = {
+interface PokemonPanelState {
     /**
      * The species ID.
      */
