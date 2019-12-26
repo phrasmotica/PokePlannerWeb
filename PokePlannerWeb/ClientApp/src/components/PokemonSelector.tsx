@@ -104,22 +104,6 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
                 <Button
                     className="margin-right"
-                    color="primary"
-                    disabled={this.state.speciesId <= 1}
-                    onMouseUp={() => this.setPreviousSpecies()}>
-                    Previous
-                </Button>
-
-                <Button
-                    className="margin-right"
-                    color="primary"
-                    disabled={!this.hasSpecies() || this.hasLastSpecies()}
-                    onMouseUp={() => this.setNextSpecies()}>
-                    Next
-                </Button>
-
-                <Button
-                    className="margin-right"
                     color="warning"
                     onMouseUp={() => this.setRandomSpecies()}>
                     Random
@@ -207,11 +191,6 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return this.state.speciesId > 0
     }
 
-    // returns true if we are set to the last species
-    hasLastSpecies() {
-        return this.state.speciesId >= this.props.speciesNames.length
-    }
-
     // returns true if the species should be marked as invalid
     shouldMarkSpeciesInvalid() {
         let speciesChecked = this.hasSpecies() && !this.isLoading()
@@ -232,16 +211,6 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             this.fetchSpeciesValidity(speciesId)
                 .then(() => this.props.setSpecies(speciesId, this.state.speciesValidity))
         }
-    }
-
-    // set to the previous species
-    setPreviousSpecies() {
-        this.setSpecies(Math.max(1, this.state.speciesId - 1))
-    }
-
-    // set to the next species
-    setNextSpecies() {
-        this.setSpecies(Math.min(this.state.speciesId + 1, this.props.speciesNames.length))
     }
 
     // set to a random species
