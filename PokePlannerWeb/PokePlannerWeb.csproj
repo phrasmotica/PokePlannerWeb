@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\components\EfficacyList.tsx" />
     <None Remove="ClientApp\src\models\SpeciesValidity.ts" />
     <None Remove="ClientApp\src\models\TypeSet.ts" />
   </ItemGroup>
@@ -42,13 +41,8 @@
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\components\TeamBuilder.tsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\PokemonSelector.tsx" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Update="ClientApp\src\components\EfficacyList.tsx">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
+    <TypeScriptCompile Include="ClientApp\src\components\PokemonPanel.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\EfficacyList.tsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

@@ -6,12 +6,12 @@ import { SpeciesValidity } from "../models/SpeciesValidity"
 import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
-import "./PokemonSelector.scss"
+import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
 
-type PokemonSelectorProps = {
+type PokemonPanelProps = {
     /**
-     * The index of this Pokemon selector.
+     * The index of this Pokemon panel.
      */
     index: number,
 
@@ -51,7 +51,7 @@ type PokemonSelectorProps = {
     toggleIgnoreValidity: () => void | null
 }
 
-type PokemonSelectorState = {
+type PokemonPanelState = {
     /**
      * The species ID.
      */
@@ -136,7 +136,7 @@ type PokemonSelectorState = {
 /**
  * Component for selecting a Pokemon and displaying information about it.
  */
-export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSelectorState> {
+export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -171,7 +171,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         })
     }
 
-    componentDidUpdate(previousProps: PokemonSelectorProps) {
+    componentDidUpdate(previousProps: PokemonPanelProps) {
         // refresh if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
@@ -594,7 +594,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return Math.floor(Math.random() * (max - min) + min)
     }
 
-    // empty this selector
+    // empty this panel
     clearSpecies() {
         this.setState({
             speciesId: 0,
@@ -612,7 +612,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching validity for species ${speciesId}...`)
+        console.log(`Panel ${this.props.index}: fetching validity for species ${speciesId}...`)
 
         this.setState({ loadingSpeciesValidity: true })
 
@@ -623,7 +623,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch validity for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch validity for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(validity => {
@@ -639,7 +639,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // fetches the name of the species from PokemonController
     fetchPokemonName(speciesId: number) {
-        console.log(`Selector ${this.props.index}: fetching name for species ${speciesId}...`)
+        console.log(`Panel ${this.props.index}: fetching name for species ${speciesId}...`)
 
         this.setState({ loadingPokemonName: true })
 
@@ -650,7 +650,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch name for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch name for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(pokemonName => this.setState({ pokemonName: pokemonName }))
@@ -660,7 +660,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // fetches the sprite of the species from PokemonController
     fetchSpriteUrl(speciesId: number) {
-        console.log(`Selector ${this.props.index}: fetching sprite for species ${speciesId}...`)
+        console.log(`Panel ${this.props.index}: fetching sprite for species ${speciesId}...`)
 
         this.setState({ loadingPokemonSpriteUrl: true })
 
@@ -671,7 +671,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch sprite URL for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch sprite URL for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
@@ -681,7 +681,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // fetches the shiny sprite of the species from PokemonController
     fetchShinySpriteUrl(speciesId: number) {
-        console.log(`Selector ${this.props.index}: fetching shiny sprite for species ${speciesId}...`)
+        console.log(`Panel ${this.props.index}: fetching shiny sprite for species ${speciesId}...`)
 
         this.setState({ loadingPokemonShinySpriteUrl: true })
 
@@ -692,7 +692,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch shiny sprite URL for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch shiny sprite URL for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(spriteUrl => this.setState({ pokemonShinySpriteUrl: spriteUrl }))
@@ -702,7 +702,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // fetches the types for the species from PokemonController
     fetchTypes(speciesId: number) {
-        console.log(`Selector ${this.props.index}: fetching types for species ${speciesId}...`)
+        console.log(`Panel ${this.props.index}: fetching types for species ${speciesId}...`)
 
         this.setState({ loadingPokemonTypes: true })
 
@@ -713,7 +713,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch types for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch types for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(types => this.setState({ pokemonTypes: types }))
@@ -723,7 +723,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // fetches the base stat values for the species from PokemonController
     fetchBaseStatValues(speciesId: number) {
-        console.log(`Selector ${this.props.index}: fetching base stat values for species ${speciesId}...`)
+        console.log(`Panel ${this.props.index}: fetching base stat values for species ${speciesId}...`)
 
         this.setState({ loadingBaseStatValues: true })
 
@@ -734,7 +734,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch base stat values for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch base stat values for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(baseStatValues => this.setState({ baseStatValues: baseStatValues }))

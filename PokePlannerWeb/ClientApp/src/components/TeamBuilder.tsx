@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
-import { PokemonSelector } from './PokemonSelector'
+import { PokemonPanel } from './PokemonPanel'
 import { TypeSet } from '../models/TypeSet'
 
 const TEAM_SIZE: number = 6
@@ -221,16 +221,16 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
     render() {
         let menu = this.renderMenu()
 
-        let pokemonTable = this.state.loading
+        let pokemonPanels = this.state.loading
             ? <p><em>Loading...</em></p>
-            : this.renderPokemonTable()
+            : this.renderPokemonPanels()
 
         return (
             <div>
                 <h1 id="tableLabel">Pokemon</h1>
                 <p>Build your Pokemon team!</p>
                 {menu}
-                {pokemonTable}
+                {pokemonPanels}
             </div>
         )
     }
@@ -309,11 +309,11 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
         )
     }
 
-    renderPokemonTable() {
-        let pokemonSelectors = []
+    renderPokemonPanels() {
+        let pokemonPanels = []
         for (var i = 0; i < TEAM_SIZE; i++) {
-            pokemonSelectors.push(
-                <PokemonSelector
+            pokemonPanels.push(
+                <PokemonPanel
                     key={i}
                     index={i}
                     versionGroupIndex={this.state.versionGroupIndex}
@@ -328,7 +328,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
 
         return (
             <div>
-                {pokemonSelectors}
+                {pokemonPanels}
             </div>
         )
     }
