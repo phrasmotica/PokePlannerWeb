@@ -189,7 +189,6 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
 
     // set selected version group
     async setVersionGroup(idx: number) {
-        // TODO: this makes efficacy lists reload while new efficacy data is being loaded...
         this.setState({ versionGroupIndex: idx })
 
         // reload type set and efficacy

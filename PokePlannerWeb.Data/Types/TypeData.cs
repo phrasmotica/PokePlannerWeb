@@ -128,7 +128,6 @@ namespace PokePlannerWeb.Data.Types
             var types = ConcreteTypes.ToArray();
             var typesArePresent = Enumerable.Repeat(false, types.Length).ToArray();
 
-            // TODO: make this quicker! Pre-loading all generations doesn't seem to help...
             using (new CodeTimer("Generate type set"))
             {
                 versionGroupId ??= VersionGroupData.Instance.LatestVersionGroupIndex;
