@@ -189,6 +189,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
         // handlers
         const setPokemon = (pokemonId: number, validity: PokemonValidity) => this.setPokemon(pokemonId, validity)
+        const clearPokemon = () => this.clearPokemon()
         const setForm = (formId: number) => this.setForm(formId)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
@@ -201,6 +202,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                     ignoreValidity={this.props.ignoreValidity}
                     hideTooltips={this.props.ignoreValidity}
                     setPokemon={setPokemon}
+                    clearPokemon={clearPokemon}
                     setForm={setForm}
                     toggleIgnoreValidity={toggleIgnoreValidity} />
 
@@ -443,6 +445,19 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         this.fetchShinySpriteUrl(pokemonId)
         this.fetchTypes(pokemonId)
         this.fetchBaseStatValues(pokemonId)
+    }
+
+    // remove all Pokemon data from this panel
+    clearPokemon() {
+        this.setState({
+            pokemonId: 0,
+            pokemonValidity: PokemonValidity.Invalid,
+            displayName: "",
+            spriteUrl: "",
+            shinySpriteUrl: "",
+            typeNames: [],
+            baseStatValues: []
+        })
     }
 
     // set the Pokemon form

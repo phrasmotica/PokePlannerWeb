@@ -38,6 +38,11 @@ interface PokemonSelectorProps {
     setPokemon: (pokemonId: number, validity: PokemonValidity) => void,
 
     /**
+     * Handler for clearing the Pokemon in the parent component.
+     */
+    clearPokemon: () => void,
+
+    /**
      * Handler for setting the Pokemon form in the parent component.
      */
     setForm: (formId: number) => void,
@@ -504,14 +509,15 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // empty this selector
     clearPokemon() {
         this.setState({
-            formId: 0,
+            pokemonId: 0,
             speciesOption: null,
+            formId: 0,
             formOption: null,
             varietyOption: null,
             pokemonValidity: PokemonValidity.Invalid
         })
 
-        this.props.setPokemon(0, PokemonValidity.Invalid)
+        this.props.clearPokemon()
     }
 
     // fetches the validity of the Pokemon from PokemonController
