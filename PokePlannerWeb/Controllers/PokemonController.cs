@@ -51,25 +51,49 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the IDs of the variants of the Pokemon with the given ID.
+        /// Returns the IDs of the forms of the Pokemon with the given ID.
         /// </summary>
-        [HttpGet("{id:int}/variants/{versionGroupId:int}/ids")]
+        [HttpGet("{id:int}/forms/{versionGroupId:int}/ids")]
         public async Task<int[]> GetPokemonVariantIdsById(int id, int versionGroupId)
         {
             Logger.LogInformation($"Getting IDs of forms of Pokemon {id} in version group {versionGroupId}...");
             var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return await pokemon.GetVariantIDs(versionGroupId);
+            return await pokemon.GetFormIDs(versionGroupId);
         }
 
         /// <summary>
-        /// Returns the names of the variants of the Pokemon with the given ID.
+        /// Returns the names of the forms of the Pokemon with the given ID.
         /// </summary>
-        [HttpGet("{id:int}/variants/{versionGroupId:int}/names")]
+        [HttpGet("{id:int}/forms/{versionGroupId:int}/names")]
         public async Task<string[]> GetPokemonVariantNamesById(int id, int versionGroupId)
         {
             Logger.LogInformation($"Getting names of forms of Pokemon {id} in version group {versionGroupId}...");
             var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return await pokemon.GetVariantNames(versionGroupId);
+            return await pokemon.GetFormNames(versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the IDs of the varieties of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/varieties/{versionGroupId:int}/ids")]
+        public async Task<int[]> GetSpeciesVarietyIdsById(int id, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting IDs of varieties of species of Pokemon {id} in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            var species = await PokeAPI.Get(pokemon.Species);
+            return await species.GetVarietyIDs(versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the names of the varieties of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/varieties/{versionGroupId:int}/names")]
+        public async Task<string[]> GetSpeciesVarietyNamesById(int id, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting names of varieties of species of Pokemon {id} in version group {versionGroupId}...");
+            var pokemon = await PokeAPI.Get<Pokemon>(id);
+            var species = await PokeAPI.Get(pokemon.Species);
+            return await species.GetVarietyNames(versionGroupId);
         }
 
         /// <summary>
