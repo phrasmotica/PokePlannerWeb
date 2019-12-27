@@ -227,12 +227,6 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
-        if (this.props.index === 0) {
-            if (hasForms) {
-                console.log(formOptions)
-            }
-        }
-
         let placeholder = hasForms ? "Select a form!" : "No forms"
         let customStyles = this.createCustomSelectStyles(hasForms)
         const onChange = (option: any) => this.setForm(option.value)
@@ -267,12 +261,6 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let validityTooltip = null
         if (hasVarieties) {
             validityTooltip = this.renderValidityTooltip(idPrefix)
-        }
-
-        if (this.props.index === 0) {
-            if (hasVarieties) {
-                console.log(varietyOptions)
-            }
         }
 
         let placeholder = hasVarieties ? "Select a variety!" : "No varieties"
