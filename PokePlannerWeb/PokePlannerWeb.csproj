@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\models\SpeciesValidity.ts" />
+    <None Remove="ClientApp\src\models\PokemonValidity.ts" />
     <None Remove="ClientApp\src\models\TypeSet.ts" />
   </ItemGroup>
 

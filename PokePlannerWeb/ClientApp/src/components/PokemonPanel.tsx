@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react"
 import { Spinner, Button, Collapse, FormGroup, CustomInput } from "reactstrap"
 import { EfficacyList } from "./EfficacyList"
-import { SpeciesValidity } from "../models/SpeciesValidity"
+import { PokemonValidity } from "../models/PokemonValidity"
 import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
@@ -53,14 +53,14 @@ interface PokemonPanelProps {
 
 interface PokemonPanelState {
     /**
-     * The species ID.
+     * The Pokemon ID.
      */
-    speciesId: number,
+    pokemonId: number,
 
     /**
-     * Value describing the species validity.
+     * Value describing the Pokemon validity.
      */
-    speciesValidity: SpeciesValidity,
+    pokemonValidity: PokemonValidity,
 
     /**
      * The Pokemon's name.
@@ -130,8 +130,8 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     constructor(props: any) {
         super(props)
         this.state = {
-            speciesId: 0,
-            speciesValidity: SpeciesValidity.Invalid,
+            pokemonId: 0,
+            pokemonValidity: PokemonValidity.Invalid,
             pokemonName: "",
             loadingPokemonName: true,
             pokemonSpriteUrl: "",
@@ -165,7 +165,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
         if (versionGroupChanged) {
-            let speciesId = this.state.speciesId
+            let speciesId = this.state.pokemonId
             if (speciesId > 0) {
                 this.fetchTypes(speciesId)
                 this.fetchBaseStatValues(speciesId)
@@ -182,7 +182,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let efficacyList = this.renderEfficacyList()
 
         // handlers
-        const setSpecies = (id: number, validity: SpeciesValidity) => this.setSpecies(id, validity)
+        const setPokemon = (id: number, validity: PokemonValidity) => this.setSpecies(id, validity)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
@@ -193,7 +193,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                     speciesNames={this.props.speciesNames}
                     ignoreValidity={this.props.ignoreValidity}
                     hideTooltips={this.props.ignoreValidity}
-                    setSpecies={setSpecies}
+                    setPokemon={setPokemon}
                     toggleIgnoreValidity={toggleIgnoreValidity} />
 
                 {pokemonInfo}
@@ -371,7 +371,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         return (
             <EfficacyList
                 index={this.props.index}
-                speciesId={this.state.speciesId}
+                speciesId={this.state.pokemonId}
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex}
                 parentIsLoading={this.isLoading()}
@@ -409,17 +409,17 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns true if we have a species
     hasSpecies() {
-        return this.state.speciesId > 0
+        return this.state.pokemonId > 0
     }
 
     // returns true if we are set to the last species
     hasLastSpecies() {
-        return this.state.speciesId >= this.props.speciesNames.length
+        return this.state.pokemonId >= this.props.speciesNames.length
     }
 
     // returns true if the species is valid
     speciesIsValid() {
-        return this.state.speciesValidity === SpeciesValidity.Valid
+        return this.state.pokemonValidity === PokemonValidity.Valid
     }
 
     // returns true if the species should be displayed
@@ -429,10 +429,10 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     }
 
     // set the species and its validity
-    setSpecies(speciesId: number, validity: SpeciesValidity) {
+    setSpecies(speciesId: number, validity: PokemonValidity) {
         this.setState({
-            speciesId: speciesId,
-            speciesValidity: validity
+            pokemonId: speciesId,
+            pokemonValidity: validity
         })
 
         this.fetchPokemonName(speciesId)

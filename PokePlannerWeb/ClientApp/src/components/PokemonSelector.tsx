@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
 import Select from "react-select"
-import { SpeciesValidity } from "../models/SpeciesValidity"
+import { PokemonValidity } from "../models/PokemonValidity"
 
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
@@ -33,9 +33,9 @@ interface PokemonSelectorProps {
     hideTooltips: boolean,
 
     /**
-     * Handler for setting the species in the parent component.
+     * Handler for setting the Pokemon in the parent component.
      */
-    setSpecies: (id: number, validity: SpeciesValidity) => void,
+    setPokemon: (id: number, validity: PokemonValidity) => void,
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -45,19 +45,19 @@ interface PokemonSelectorProps {
 
 interface PokemonSelectorState {
     /**
-     * The species ID.
+     * The Pokemon ID.
      */
-    speciesId: number,
+    pokemonId: number,
 
     /**
-     * Value describing the species validity.
+     * Value describing the Pokemon validity.
      */
-    speciesValidity: SpeciesValidity,
+    pokemonValidity: PokemonValidity,
 
     /**
-     * Whether we're loading the species validity.
+     * Whether we're loading the Pokemon validity.
      */
-    loadingSpeciesValidity: boolean,
+    loadingPokemonValidity: boolean,
 
     /**
      * List of species forms IDs.
@@ -86,15 +86,15 @@ interface PokemonSelectorState {
 }
 
 /**
- * Component for selecting a Pokemon species.
+ * Component for selecting a Pokemon.
  */
 export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSelectorState> {
     constructor(props: any) {
         super(props)
         this.state = {
-            speciesId: 0,
-            speciesValidity: SpeciesValidity.Invalid,
-            loadingSpeciesValidity: false,
+            pokemonId: 0,
+            pokemonValidity: PokemonValidity.Invalid,
+            loadingPokemonValidity: false,
             formsIds: [],
             loadingFormsIds: false,
             formsNames: [],
@@ -110,14 +110,14 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
         if (versionGroupChanged) {
-            let speciesId = this.state.speciesId
-            if (speciesId > 0) {
-                this.fetchSpeciesValidity(speciesId)
+            let pokemonId = this.state.pokemonId
+            if (pokemonId > 0) {
+                this.fetchSpeciesValidity(pokemonId)
                     .then(() => {
-                        this.fetchSpeciesFormsIds(speciesId)
-                        this.fetchSpeciesFormsNames(speciesId)
+                        this.fetchSpeciesFormsIds(pokemonId)
+                        this.fetchSpeciesFormsNames(pokemonId)
                     })
-                    .then(() => this.props.setSpecies(speciesId, this.state.speciesValidity))
+                    .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
             }
         }
     }
@@ -142,7 +142,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 <Button
                     className="margin-right"
                     color="danger"
-                    onMouseUp={() => this.clearSpecies()}>
+                    onMouseUp={() => this.clearPokemon()}>
                     Clear
                 </Button>
             </div>
@@ -167,8 +167,8 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 isLoading={this.isLoading()}
                 id={"speciesSelect" + this.props.index}
                 styles={customStyles}
-                placeholder="Select a Pokemon!"
-                onChange={(e: any) => this.setSpecies(e.value)}
+                placeholder="Select a species!"
+                onChange={(e: any) => this.setPokemon(e.value)}
                 options={speciesOptions} />
         )
 
@@ -195,7 +195,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 id={"formsSelect" + this.props.index}
                 placeholder={placeholder}
                 styles={customStyles}
-                onChange={(e: any) => this.setSpecies(e.value)}
+                onChange={(e: any) => this.setPokemon(e.value)}
                 options={formOptions} />
         )
 
@@ -206,9 +206,9 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
     }
 
-    // returns a tooltip indicating the validity of the species
+    // returns a tooltip indicating the validity of the Pokemon
     renderValidityTooltip(targetFormsSelect: boolean) {
-        if (!this.props.hideTooltips && this.shouldMarkSpeciesInvalid()) {
+        if (!this.props.hideTooltips && this.shouldMarkPokemonInvalid()) {
             let targetPrefix = targetFormsSelect ? "formsSelect" : "speciesSelect"
             return (
                 <Tooltip
@@ -250,7 +250,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             control: (provided: any) => ({
                 ...provided,
                 minWidth: 230,
-                border: markAsInvalid && this.shouldMarkSpeciesInvalid() ? "1px solid #dc3545" : ""
+                border: markAsInvalid && this.shouldMarkPokemonInvalid() ? "1px solid #dc3545" : ""
             })
         }
     }
@@ -264,38 +264,38 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingSpeciesValidity
+        return this.state.loadingPokemonValidity
             || this.state.loadingFormsIds
             || this.state.loadingFormsNames
     }
 
-    // returns true if we have a species
-    hasSpecies() {
-        return this.state.speciesId > 0
+    // returns true if we have a Pokemon
+    hasPokemon() {
+        return this.state.pokemonId > 0
     }
 
-    // returns true if the species should be marked as invalid
-    shouldMarkSpeciesInvalid() {
-        let speciesChecked = this.hasSpecies() && !this.isLoading()
-        let shouldMarkInvalid = speciesChecked
+    // returns true if the Pokemon should be marked as invalid
+    shouldMarkPokemonInvalid() {
+        let checked = this.hasPokemon() && !this.isLoading()
+        let shouldMarkInvalid = checked
                                 && !this.props.ignoreValidity
-                                    && this.state.speciesValidity === SpeciesValidity.Invalid
+                                    && this.state.pokemonValidity === PokemonValidity.Invalid
 
         return shouldMarkInvalid
     }
 
     // set to the species with the given ID
-    setSpecies(speciesId: number) {
+    setPokemon(pokemonId: number) {
         // only fetch if we need to
-        if (speciesId !== this.state.speciesId) {
-            this.setState({ speciesId: speciesId })
+        if (pokemonId !== this.state.pokemonId) {
+            this.setState({ pokemonId: pokemonId })
 
-            this.fetchSpeciesValidity(speciesId)
+            this.fetchSpeciesValidity(pokemonId)
                 .then(() => {
-                    this.fetchSpeciesFormsIds(speciesId)
-                    this.fetchSpeciesFormsNames(speciesId)
+                    this.fetchSpeciesFormsIds(pokemonId)
+                    this.fetchSpeciesFormsNames(pokemonId)
                 })
-                .then(() => this.props.setSpecies(speciesId, this.state.speciesValidity))
+                .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
         }
     }
 
@@ -308,7 +308,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
         let max = this.props.speciesNames.length
         let randomId = this.randomInt(0, max) + 1
-        this.setSpecies(randomId)
+        this.setPokemon(randomId)
     }
 
     // returns a random integer between the min (inclusive) and the max (exclusive)
@@ -317,13 +317,13 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // empty this selector
-    clearSpecies() {
+    clearPokemon() {
         this.setState({
-            speciesId: 0,
-            speciesValidity: SpeciesValidity.Invalid
+            pokemonId: 0,
+            pokemonValidity: PokemonValidity.Invalid
         })
 
-        this.props.setSpecies(0, SpeciesValidity.Invalid)
+        this.props.setPokemon(0, PokemonValidity.Invalid)
     }
 
     // fetches the validity of the species from PokemonController
@@ -334,7 +334,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
         console.log(`Selector ${this.props.index}: fetching validity for species ${speciesId}...`)
 
-        this.setState({ loadingSpeciesValidity: true })
+        this.setState({ loadingPokemonValidity: true })
 
         // fetch validity
         await fetch(`pokemon/${speciesId}/validity/${this.props.versionGroupIndex}`)
@@ -348,13 +348,13 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             .then(response => response.json())
             .then(validity => {
                 let isValid = Boolean(validity)
-                this.setState({ speciesValidity: isValid ? SpeciesValidity.Valid : SpeciesValidity.Invalid })
+                this.setState({ pokemonValidity: isValid ? PokemonValidity.Valid : PokemonValidity.Invalid })
             })
             .catch(error => {
                 console.log(error)
-                this.setState({ speciesValidity: SpeciesValidity.Invalid })
+                this.setState({ pokemonValidity: PokemonValidity.Invalid })
             })
-            .then(() => this.setState({ loadingSpeciesValidity: false }))
+            .then(() => this.setState({ loadingPokemonValidity: false }))
     }
 
     // fetches the IDs of the forms of the species from PokemonController
