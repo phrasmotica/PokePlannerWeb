@@ -438,7 +438,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             pokemonValidity: validity
         })
 
-        this.fetchPokemonName(pokemonId)
+        this.fetchName(pokemonId)
         this.fetchSpriteUrl(pokemonId)
         this.fetchShinySpriteUrl(pokemonId)
         this.fetchTypes(pokemonId)
@@ -456,7 +456,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     }
 
     // fetches the name of the Pokemon from PokemonController
-    fetchPokemonName(pokemonId: number) {
+    fetchName(pokemonId: number) {
         console.log(`Panel ${this.props.index}: fetching name for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingDisplayName: true })
