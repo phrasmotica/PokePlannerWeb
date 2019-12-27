@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using PokeApiNet.Models;
@@ -52,6 +55,140 @@ namespace PokePlannerWeb.Tests
 
             // verify they're all there
             Assert.AreEqual(807, allNames.Length);
+        }
+
+        /// <summary>
+        /// Investigated the differences between Pokemon forms and Pokemon varieties.
+        /// </summary>
+        [Test]
+        [Category("Integration")]
+        public async Task PokemonFormsVarietiesDifferencesTest()
+        {
+            // list of Pokemon IDs
+            var ids = new[] { 3, 6, 9, 386, 479, 493, 649 };
+
+            foreach (var id in ids)
+            {
+                // check forms
+                var pokemon = await PokeAPI.Get<Pokemon>(id);
+                Console.WriteLine($"{pokemon.Name} has {pokemon.Forms.Count} forms");
+
+                var pokemonName = pokemon.Name;
+                var pokemonStats = pokemon.Stats.Select(s => s.BaseStat).ToArray();
+                var forms = (await PokeAPI.Get(pokemon.Forms)).ToList();
+
+                var formsDifferentStats = new List<bool>();
+                foreach (var form in forms)
+                {
+                    // check Pokemon linked from form
+                    var formName = form.Name;
+                    var formPokemonName = form.Pokemon.Name;
+                    Console.WriteLine($"{formName} links back to Pokemon {formPokemonName}");
+
+                    if (pokemonName != formPokemonName)
+                    {
+                        // check form has different stats to the primary form
+                        var formPokemon = await PokeAPI.Get(form.Pokemon);
+                        formsDifferentStats.Add(!CompareBaseStats(formPokemon, pokemon));
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{formPokemonName} share base stats with {pokemonName}");
+                    }
+                }
+
+                if (forms.Count > 1)
+                {
+                    if (formsDifferentStats.All(b => b))
+                    {
+                        Console.WriteLine($"All secondary forms of {pokemonName} share base stats with the primary form");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Some secondary forms of {pokemonName} have different base stats to the primary form");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{pokemonName} only has one form");
+                }
+
+                Console.WriteLine(Environment.NewLine);
+
+                // check varieties
+                var species = await PokeAPI.Get(pokemon.Species);
+                var varieties = species.Varieties;
+                Console.WriteLine($"{species.Name} has {varieties.Count} varieties");
+
+                var varietiesDifferentStats = new List<bool>();
+                for (var i = 0; i < varieties.Count; i++)
+                {
+                    // check Pokemon linked from variety
+                    var variety = varieties[i];
+                    var varietyName = variety.Pokemon.Name;
+                    Console.WriteLine($"Variety {i} links back to Pokemon {varietyName}");
+
+                    if (pokemonName != varietyName)
+                    {
+                        // check variety has different stats to the default variety
+                        var varietyPokemon = await PokeAPI.Get(variety.Pokemon);
+                        varietiesDifferentStats.Add(CompareBaseStats(varietyPokemon, pokemon));
+                    }
+                }
+
+                if (varieties.Count > 1)
+                {
+                    if (varietiesDifferentStats.All(b => b))
+                    {
+                        Console.WriteLine($"All secondary varieties of {pokemonName} have different base stats to the default variety");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Some secondary varieties of {pokemonName} share base stats with the default variety");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"{pokemonName} only has one variety");
+                }
+
+                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine(Environment.NewLine);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the two Pokemon have different sets of base stats.
+        /// </summary>
+        private bool CompareBaseStats(Pokemon p1, Pokemon p2)
+        {
+            // check variety has different stats to the primary variety
+            var p1Name = p1.Name;
+            var p1Stats = p1.Stats.Select(s => s.BaseStat).ToArray();
+
+            var p2Name = p2.Name;
+            var p2Stats = p2.Stats.Select(s => s.BaseStat).ToArray();
+
+            Console.WriteLine($"{p1Name} has stats [{string.Join(", ", p1Stats)}]");
+            Console.WriteLine($"{p2Name} has stats [{string.Join(", ", p2Stats)}]");
+
+            if (ArraysAreEqual(p1Stats, p2Stats))
+            {
+                Console.WriteLine($"{p1Name} and {p2Name} have THE SAME base stats");
+                return false;
+            }
+            
+            Console.WriteLine($"{p1Name} and {p2Name} have DIFFERENT base stats");
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if all corresponding elements in the arrays are equal.
+        /// </summary>
+        private bool ArraysAreEqual<T>(T[] arr1, T[] arr2)
+        {
+            return arr1.Zip(arr2).All(p => p.First.Equals(p.Second));
         }
 
         /// <summary>
