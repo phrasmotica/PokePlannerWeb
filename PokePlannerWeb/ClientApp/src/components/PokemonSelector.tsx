@@ -23,7 +23,7 @@ interface PokemonSelectorProps {
     speciesNames: string[],
 
     /**
-     * Whether species validity in the selected version group should be ignored.
+     * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean,
 
@@ -147,7 +147,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         if (versionGroupChanged) {
             let pokemonId = this.state.formId
             if (pokemonId > 0) {
-                this.fetchSpeciesValidity(pokemonId)
+                this.fetchPokemonValidity(pokemonId)
                     .then(() => {
                         this.fetchFormIds(pokemonId)
                         this.fetchFormNames(pokemonId)
@@ -174,7 +174,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 <Button
                     className="margin-right"
                     color="warning"
-                    onMouseUp={() => this.setRandomSpecies()}>
+                    onMouseUp={() => this.setRandomPokemon()}>
                     Random
                 </Button>
 
@@ -215,7 +215,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
     }
 
-    // returns a box for selecting a form of the selected species
+    // returns a box for selecting a form of the selected Pokemon
     renderFormSelect() {
         let formOptions = this.createFormOptions()
         let hasForms = formOptions.length > 0
@@ -350,7 +350,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         }))
     }
 
-    // returns a custom style for the species and variant selects
+    // returns a custom style for the select boxes
     createCustomSelectStyles(markAsInvalid: boolean) {
         return {
             control: (provided: any) => ({
@@ -398,7 +398,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         if (pokemonId !== this.state.pokemonId) {
             this.setState({ pokemonId: pokemonId })
 
-            this.fetchSpeciesValidity(pokemonId)
+            this.fetchPokemonValidity(pokemonId)
                 .then(() => {
                     this.fetchFormIds(pokemonId)
                     this.fetchFormNames(pokemonId)
@@ -417,9 +417,9 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         }
     }
 
-    // set to a random species
-    setRandomSpecies() {
-        // ignore validity since we can't guarantee a valid species
+    // set this selector to a random Pokemon
+    setRandomPokemon() {
+        // ignore validity since we can't guarantee a valid Pokemon
         if (!this.props.ignoreValidity) {
             this.props.toggleIgnoreValidity()
         }
@@ -444,24 +444,24 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         this.props.setPokemon(0, PokemonValidity.Invalid)
     }
 
-    // fetches the validity of the species from PokemonController
-    async fetchSpeciesValidity(speciesId: number) {
-        if (speciesId <= 0) {
+    // fetches the validity of the Pokemon from PokemonController
+    async fetchPokemonValidity(pokemonId: number) {
+        if (pokemonId <= 0) {
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching validity for species ${speciesId}...`)
+        console.log(`Selector ${this.props.index}: fetching validity for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingPokemonValidity: true })
 
         // fetch validity
-        await fetch(`pokemon/${speciesId}/validity/${this.props.versionGroupIndex}`)
+        await fetch(`pokemon/${pokemonId}/validity/${this.props.versionGroupIndex}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch validity for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch validity for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(validity => {
@@ -481,7 +481,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching form IDs for species ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching form IDs for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingFormIds: true })
 
@@ -492,7 +492,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch form IDs for species ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch form IDs for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(ids => this.setState({ formIds: ids }))
@@ -506,7 +506,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching form names for species ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching form names for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingFormNames: true })
 
@@ -517,7 +517,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch form names for species ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch form names for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(names => this.setState({ formNames: names }))
@@ -531,7 +531,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching variety IDs for species ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching variety IDs for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingVarietyIds: true })
 
@@ -542,7 +542,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch variety IDs for species ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch variety IDs for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(ids => this.setState({ varietyIds: ids }))
@@ -556,7 +556,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching variety names for species ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching variety names for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingVarietyNames: true })
 
@@ -567,7 +567,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch variety names for species ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch variety names for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(names => this.setState({ varietyNames: names }))

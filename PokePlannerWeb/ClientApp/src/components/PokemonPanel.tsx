@@ -21,7 +21,7 @@ interface PokemonPanelProps {
     versionGroupIndex: number,
 
     /**
-     * Whether species validity in the selected version group should be ignored.
+     * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean,
 
@@ -70,42 +70,42 @@ interface PokemonPanelState {
     /**
      * The Pokemon's name.
      */
-    pokemonName: string,
+    displayName: string,
 
     /**
      * Whether we're loading the Pokemon's name.
      */
-    loadingPokemonName: boolean,
+    loadingDisplayName: boolean,
 
     /**
      * The URL of the Pokemon's sprite.
      */
-    pokemonSpriteUrl: string,
+    spriteUrl: string,
 
     /**
      * Whether we're loading the URL of the Pokemon's sprite.
      */
-    loadingPokemonSpriteUrl: boolean,
+    loadingSpriteUrl: boolean,
 
     /**
      * The URL of the Pokemon's shiny sprite.
      */
-    pokemonShinySpriteUrl: string,
+    shinySpriteUrl: string,
 
     /**
      * Whether we're loading the URL of the Pokemon's shiny sprite.
      */
-    loadingPokemonShinySpriteUrl: boolean,
+    loadingShinySpriteUrl: boolean,
 
     /**
      * The Pokemon's types.
      */
-    pokemonTypes: string[],
+    typeNames: string[],
 
     /**
      * Whether we're loading the Pokemon's types.
      */
-    loadingPokemonTypes: boolean,
+    loadingTypeNames: boolean,
 
     /**
      * The Pokemon's base stat values.
@@ -138,14 +138,14 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             pokemonId: 0,
             formId: 0,
             pokemonValidity: PokemonValidity.Invalid,
-            pokemonName: "",
-            loadingPokemonName: true,
-            pokemonSpriteUrl: "",
-            loadingPokemonSpriteUrl: true,
-            pokemonShinySpriteUrl: "",
-            loadingPokemonShinySpriteUrl: true,
-            pokemonTypes: [],
-            loadingPokemonTypes: true,
+            displayName: "",
+            loadingDisplayName: true,
+            spriteUrl: "",
+            loadingSpriteUrl: true,
+            shinySpriteUrl: "",
+            loadingShinySpriteUrl: true,
+            typeNames: [],
+            loadingTypeNames: true,
             baseStatValues: [],
             loadingBaseStatValues: true,
             showShinySprite: false,
@@ -156,10 +156,10 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     componentDidMount() {
         // finished loading
         this.setState({
-            loadingPokemonName: false,
-            loadingPokemonSpriteUrl: false,
-            loadingPokemonShinySpriteUrl: false,
-            loadingPokemonTypes: false,
+            loadingDisplayName: false,
+            loadingSpriteUrl: false,
+            loadingShinySpriteUrl: false,
+            loadingTypeNames: false,
             loadingBaseStatValues: false
         })
     }
@@ -171,10 +171,10 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
         if (versionGroupChanged) {
-            let speciesId = this.state.pokemonId
-            if (speciesId > 0) {
-                this.fetchTypes(speciesId)
-                this.fetchBaseStatValues(speciesId)
+            let pokemonId = this.state.pokemonId
+            if (pokemonId > 0) {
+                this.fetchTypes(pokemonId)
+                this.fetchBaseStatValues(pokemonId)
             }
         }
     }
@@ -245,8 +245,8 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns the Pokemon's sprite
     renderPokemonSprite() {
-        let shouldShowSpecies = this.shouldShowSpecies()
-        if (shouldShowSpecies && this.isLoading()) {
+        let shouldShowPokemon = this.shouldShowPokemon()
+        if (shouldShowPokemon && this.isLoading()) {
             return (
                 <div className="sprite margin-bottom flex-center loading">
                     {this.makeSpinner()}
@@ -255,12 +255,12 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         }
 
         let spriteUrl = this.state.showShinySprite
-                      ? this.state.pokemonShinySpriteUrl
-                      : this.state.pokemonSpriteUrl
+                      ? this.state.shinySpriteUrl
+                      : this.state.spriteUrl
         return (
             <div className="sprite margin-bottom">
                 <img
-                    className={"inherit-size" + (shouldShowSpecies ? "" : " hidden")}
+                    className={"inherit-size" + (shouldShowPokemon ? "" : " hidden")}
                     src={spriteUrl} />
             </div>
         )
@@ -282,8 +282,8 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns the Pokemon's name
     renderPokemonName() {
-        let shouldShowSpecies = this.shouldShowSpecies()
-        if (shouldShowSpecies && this.isLoading()) {
+        let shouldShowPokemon = this.shouldShowPokemon()
+        if (shouldShowPokemon && this.isLoading()) {
             return (
                 <div className="center-text margin-bottom loading">
                     {this.makeSpinner()}
@@ -292,16 +292,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         }
 
         return (
-            <div className={"center-text margin-bottom" + (shouldShowSpecies ? "" : " hidden")}>
-                {this.state.pokemonName}
+            <div className={"center-text margin-bottom" + (shouldShowPokemon ? "" : " hidden")}>
+                {this.state.displayName}
             </div>
         )
     }
 
     // returns the Pokemon's types
     renderPokemonTypes() {
-        let shouldShowSpecies = this.shouldShowSpecies()
-        if (shouldShowSpecies && this.isLoading()) {
+        let shouldShowPokemon = this.shouldShowPokemon()
+        if (shouldShowPokemon && this.isLoading()) {
             return (
                 <div className="flex-center type-pair loading">
                     {this.makeSpinner()}
@@ -311,14 +311,14 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
         return (
             <div className={"flex-center type-pair"}>
-                {this.state.pokemonTypes.map((type, i) => {
+                {this.state.typeNames.map((type, i) => {
                     return (
                         <div
                             key={i}
                             className="flex-center fill-parent">
                             <img
                                 key={i}
-                                className={"type-icon padded" + (shouldShowSpecies ? "" : " hidden")}
+                                className={"type-icon padded" + (shouldShowPokemon ? "" : " hidden")}
                                 src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
                         </div>
                     )
@@ -329,8 +329,8 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns a graph of the Pokemon's base stats
     renderStatsGraph() {
-        let shouldShowSpecies = this.shouldShowSpecies()
-        if (shouldShowSpecies && this.isLoading()) {
+        let shouldShowPokemon = this.shouldShowPokemon()
+        if (shouldShowPokemon && this.isLoading()) {
             return (
                 <div className="stat-graph margin-right loading">
                     {this.makeSpinner()}
@@ -338,7 +338,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             )
         }
 
-        let className = shouldShowSpecies ? "" : "hidden";
+        let className = shouldShowPokemon ? "" : "hidden";
         return (
             <div className="stat-graph margin-right">
                 <div className="stat-names">
@@ -359,11 +359,11 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                             <div className="flex">
                                 <div
                                     key={i}
-                                    className={"stat-bar" + (shouldShowSpecies ? "" : " hidden")}
+                                    className={"stat-bar" + (shouldShowPokemon ? "" : " hidden")}
                                     style={{ width: value }} />
 
                                 <div
-                                    className={"stat-value" + (shouldShowSpecies ? "" : " hidden")}>
+                                    className={"stat-value" + (shouldShowPokemon ? "" : " hidden")}>
                                     {value}
                                 </div>
                             </div>
@@ -379,11 +379,11 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         return (
             <EfficacyList
                 index={this.props.index}
-                speciesId={this.state.pokemonId}
+                pokemonId={this.state.pokemonId}
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex}
                 parentIsLoading={this.isLoading()}
-                showMultipliers={this.shouldShowSpecies()}
+                showMultipliers={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
         )
     }
@@ -409,31 +409,26 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns whether this component is loading
     isLoading() {
-        return this.state.loadingPokemonName
-            || this.state.loadingPokemonSpriteUrl
-            || this.state.loadingPokemonTypes
+        return this.state.loadingDisplayName
+            || this.state.loadingSpriteUrl
+            || this.state.loadingTypeNames
             || this.state.loadingBaseStatValues
     }
 
-    // returns true if we have a species
-    hasSpecies() {
+    // returns true if we have a Pokemon
+    hasPokemon() {
         return this.state.pokemonId > 0
     }
 
-    // returns true if we are set to the last species
-    hasLastSpecies() {
-        return this.state.pokemonId >= this.props.speciesNames.length
-    }
-
-    // returns true if the species is valid
-    speciesIsValid() {
+    // returns true if the Pokemon is valid
+    pokemonIsValid() {
         return this.state.pokemonValidity === PokemonValidity.Valid
     }
 
-    // returns true if the species should be displayed
-    shouldShowSpecies() {
-        let shouldShowInvalidSpecies = this.props.ignoreValidity && this.hasSpecies()
-        return shouldShowInvalidSpecies || this.speciesIsValid()
+    // returns true if the Pokemon should be displayed
+    shouldShowPokemon() {
+        let shouldShowInvalidPokemon = this.props.ignoreValidity && this.hasPokemon()
+        return shouldShowInvalidPokemon || this.pokemonIsValid()
     }
 
     // set the Pokemon and its validity
@@ -464,7 +459,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     fetchPokemonName(pokemonId: number) {
         console.log(`Panel ${this.props.index}: fetching name for Pokemon ${pokemonId}...`)
 
-        this.setState({ loadingPokemonName: true })
+        this.setState({ loadingDisplayName: true })
 
         // fetch name
         fetch(`pokemon/${pokemonId}/name`)
@@ -476,16 +471,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch name for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
-            .then(pokemonName => this.setState({ pokemonName: pokemonName }))
+            .then(pokemonName => this.setState({ displayName: pokemonName }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonName: false }))
+            .then(() => this.setState({ loadingDisplayName: false }))
     }
 
     // fetches the name of the Pokemon form from FormController
     fetchFormName(formId: number) {
         console.log(`Panel ${this.props.index}: fetching name for Pokemon form ${formId}...`)
 
-        this.setState({ loadingPokemonName: true })
+        this.setState({ loadingDisplayName: true })
 
         // fetch name
         fetch(`form/${formId}/name`)
@@ -497,16 +492,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch name for Pokemon form ${formId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
-            .then(formName => this.setState({ pokemonName: formName }))
+            .then(formName => this.setState({ displayName: formName }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonName: false }))
+            .then(() => this.setState({ loadingDisplayName: false }))
     }
 
     // fetches the sprite of the Pokemon from PokemonController
     fetchSpriteUrl(pokemonId: number) {
         console.log(`Panel ${this.props.index}: fetching sprite for Pokemon ${pokemonId}...`)
 
-        this.setState({ loadingPokemonSpriteUrl: true })
+        this.setState({ loadingSpriteUrl: true })
 
         // fetch sprite URL
         fetch(`pokemon/${pokemonId}/sprite`)
@@ -518,16 +513,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch sprite URL for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
-            .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
+            .then(spriteUrl => this.setState({ spriteUrl: spriteUrl }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
+            .then(() => this.setState({ loadingSpriteUrl: false }))
     }
 
     // fetches the sprite of the Pokemon form from FormController
     fetchFormSpriteUrl(formId: number) {
         console.log(`Panel ${this.props.index}: fetching sprite for Pokemon form ${formId}...`)
 
-        this.setState({ loadingPokemonSpriteUrl: true })
+        this.setState({ loadingSpriteUrl: true })
 
         // fetch sprite URL
         fetch(`form/${formId}/sprite`)
@@ -539,16 +534,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch sprite URL for Pokemon form ${formId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
-            .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
+            .then(spriteUrl => this.setState({ spriteUrl: spriteUrl }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
+            .then(() => this.setState({ loadingSpriteUrl: false }))
     }
 
     // fetches the shiny sprite of the Pokemon from PokemonController
     fetchShinySpriteUrl(pokemonId: number) {
         console.log(`Panel ${this.props.index}: fetching shiny sprite for Pokemon ${pokemonId}...`)
 
-        this.setState({ loadingPokemonShinySpriteUrl: true })
+        this.setState({ loadingShinySpriteUrl: true })
 
         // fetch sprite URL
         fetch(`pokemon/${pokemonId}/sprite/shiny`)
@@ -560,16 +555,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch shiny sprite URL for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
-            .then(spriteUrl => this.setState({ pokemonShinySpriteUrl: spriteUrl }))
+            .then(spriteUrl => this.setState({ shinySpriteUrl: spriteUrl }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonShinySpriteUrl: false }))
+            .then(() => this.setState({ loadingShinySpriteUrl: false }))
     }
 
     // fetches the shiny sprite of the Pokemon form from PokemonController
     fetchFormShinySpriteUrl(formId: number) {
         console.log(`Panel ${this.props.index}: fetching shiny sprite for Pokemon form ${formId}...`)
 
-        this.setState({ loadingPokemonShinySpriteUrl: true })
+        this.setState({ loadingShinySpriteUrl: true })
 
         // fetch sprite URL
         fetch(`form/${formId}/sprite/shiny`)
@@ -581,16 +576,16 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch shiny sprite URL for Pokemon form ${formId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
-            .then(spriteUrl => this.setState({ pokemonShinySpriteUrl: spriteUrl }))
+            .then(spriteUrl => this.setState({ shinySpriteUrl: spriteUrl }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonShinySpriteUrl: false }))
+            .then(() => this.setState({ loadingShinySpriteUrl: false }))
     }
 
     // fetches the types for the Pokemon from PokemonController
     fetchTypes(pokemonId: number) {
         console.log(`Panel ${this.props.index}: fetching types for Pokemon ${pokemonId}...`)
 
-        this.setState({ loadingPokemonTypes: true })
+        this.setState({ loadingTypeNames: true })
 
         // fetch types description
         fetch(`pokemon/${pokemonId}/types/${this.props.versionGroupIndex}`)
@@ -602,9 +597,9 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 throw new Error(`Panel ${this.props.index}: tried to fetch types for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(types => this.setState({ pokemonTypes: types }))
+            .then(types => this.setState({ typeNames: types }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingPokemonTypes: false }))
+            .then(() => this.setState({ loadingTypeNames: false }))
     }
 
     // fetches the base stat values for the Pokemon from PokemonController

@@ -48,7 +48,7 @@ interface TeamBuilderState {
     loadingBaseStatNames: boolean,
 
     /**
-     * Whether species validity in the selected version group should be ignored.
+     * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean,
 
@@ -204,7 +204,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
             .catch(error => console.log(error))
     }
 
-    // toggle validity check on species
+    // toggle validity check on Pokemon
     toggleIgnoreValidity() {
         this.setState((previousState) => ({
             ignoreValidity: !previousState.ignoreValidity

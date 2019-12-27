@@ -19,7 +19,7 @@ type EfficacyListProps = {
     /**
      * The Pokemon to show efficacy for.
      */
-    speciesId: number,
+    pokemonId: number,
 
     /**
      * The index of the selected version group.
@@ -89,8 +89,8 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
         // ...or if the species changed
-        let previousSpeciesId = previousProps.speciesId
-        let species = this.props.speciesId
+        let previousSpeciesId = previousProps.pokemonId
+        let species = this.props.pokemonId
         let speciesChanged = species !== previousSpeciesId
 
         if (versionGroupChanged || speciesChanged) {
@@ -253,13 +253,13 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
 
     // returns true if we have a species
     hasSpecies() {
-        return this.props.speciesId > 0
+        return this.props.pokemonId > 0
     }
 
     // retrieves the Pokemon's efficacy from EfficacyController
     getEfficacy() {
         if (this.hasSpecies()) {
-            let species = this.props.speciesId
+            let species = this.props.pokemonId
             console.log(`Efficacy list ${this.props.index}: getting efficacy for '${species}'...`)
 
             // loading begins
