@@ -453,6 +453,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         this.fetchFormName(formId)
         this.fetchFormSpriteUrl(formId)
         this.fetchFormShinySpriteUrl(formId)
+        this.fetchFormTypes(formId)
     }
 
     // fetches the name of the Pokemon from PokemonController
@@ -595,6 +596,27 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 }
 
                 throw new Error(`Panel ${this.props.index}: tried to fetch types for Pokemon ${pokemonId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(types => this.setState({ typeNames: types }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingTypeNames: false }))
+    }
+
+    // fetches the types for the Pokemon form from FormController
+    fetchFormTypes(formId: number) {
+        console.log(`Panel ${this.props.index}: fetching types for Pokemon form ${formId}...`)
+
+        this.setState({ loadingTypeNames: true })
+
+        // fetch types description
+        fetch(`form/${formId}/types/${this.props.versionGroupIndex}`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Panel ${this.props.index}: tried to fetch types for Pokemon form ${formId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(types => this.setState({ typeNames: types }))
