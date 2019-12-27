@@ -487,7 +487,9 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 formOption: null
             })
 
-            this.props.setPokemon(pokemonId, this.state.pokemonValidity)
+            // varieties introduced in later games will not be valid
+            this.fetchPokemonValidity(pokemonId)
+                .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
         }
     }
 
