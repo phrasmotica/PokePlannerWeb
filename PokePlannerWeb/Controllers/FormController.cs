@@ -1,8 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -85,6 +88,18 @@ namespace PokePlannerWeb.Controllers
             }
 
             return $"{baseUrl}/{id}.png";
+        }
+
+        /// <summary>
+        /// Returns the types of the Pokemon form with the given ID in the version group with the given ID.
+        /// </summary>
+        [HttpGet("{id:int}/types/{versionGroupId:int}")]
+        public async Task<string[]> GetFormTypesInVersionGroupById(int id, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting types for Pokemon form {id} in version group {versionGroupId}...");
+            var form = await PokeAPI.Get<PokemonForm>(id);
+            var types = await form.GetTypes(versionGroupId);
+            return types.Select(t => t.ToString()).ToArray();
         }
     }
 }
