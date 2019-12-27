@@ -54,7 +54,7 @@ namespace PokePlannerWeb.Controllers
         /// Returns the IDs of the forms of the Pokemon with the given ID.
         /// </summary>
         [HttpGet("{id:int}/forms/{versionGroupId:int}/ids")]
-        public async Task<int[]> GetPokemonVariantIdsById(int id, int versionGroupId)
+        public async Task<int[]> GetPokemonFormIdsById(int id, int versionGroupId)
         {
             Logger.LogInformation($"Getting IDs of forms of Pokemon {id} in version group {versionGroupId}...");
             var pokemon = await PokeAPI.Get<Pokemon>(id);
@@ -65,7 +65,7 @@ namespace PokePlannerWeb.Controllers
         /// Returns the names of the forms of the Pokemon with the given ID.
         /// </summary>
         [HttpGet("{id:int}/forms/{versionGroupId:int}/names")]
-        public async Task<string[]> GetPokemonVariantNamesById(int id, int versionGroupId)
+        public async Task<string[]> GetPokemonFormNamesById(int id, int versionGroupId)
         {
             Logger.LogInformation($"Getting names of forms of Pokemon {id} in version group {versionGroupId}...");
             var pokemon = await PokeAPI.Get<Pokemon>(id);
