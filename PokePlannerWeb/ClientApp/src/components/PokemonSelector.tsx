@@ -35,7 +35,12 @@ interface PokemonSelectorProps {
     /**
      * Handler for setting the Pokemon in the parent component.
      */
-    setPokemon: (id: number, validity: PokemonValidity) => void,
+    setPokemon: (pokemonId: number, validity: PokemonValidity) => void,
+
+    /**
+     * Handler for setting the Pokemon form in the parent component.
+     */
+    setForm: (formId: number) => void,
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -50,6 +55,11 @@ interface PokemonSelectorState {
     pokemonId: number,
 
     /**
+     * The ID of the Pokemon form.
+     */
+    formId: number,
+
+    /**
      * Value describing the Pokemon validity.
      */
     pokemonValidity: PokemonValidity,
@@ -60,24 +70,44 @@ interface PokemonSelectorState {
     loadingPokemonValidity: boolean,
 
     /**
-     * List of variants' IDs (variants are the Pokemon forms + species varieties).
+     * List of forms' IDs.
      */
-    variantIds: number[],
+    formIds: number[],
 
     /**
-     * Whether we're loading the variants' IDs.
+     * Whether we're loading the forms' IDs.
      */
-    loadingVariantIds: boolean,
+    loadingFormIds: boolean,
 
     /**
-     * List of variants' names.
+     * List of forms' names.
      */
-    variantNames: string[],
+    formNames: string[],
 
     /**
-     * Whether we're loading the variants' names.
+     * Whether we're loading the forms' names.
      */
-    loadingVariantNames: boolean,
+    loadingFormNames: boolean,
+
+    /**
+     * List of varieties' IDs.
+     */
+    varietyIds: number[],
+
+    /**
+     * Whether we're loading the varieties' IDs.
+     */
+    loadingVarietyIds: boolean,
+
+    /**
+     * List of varieties' names.
+     */
+    varietyNames: string[],
+
+    /**
+     * Whether we're loading the varieties' names.
+     */
+    loadingVarietyNames: boolean,
 
     /**
      * Whether the validity tooltip is open.
@@ -93,12 +123,17 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         super(props)
         this.state = {
             pokemonId: 0,
+            formId: 0,
             pokemonValidity: PokemonValidity.Invalid,
             loadingPokemonValidity: false,
-            variantIds: [],
-            loadingVariantIds: false,
-            variantNames: [],
-            loadingVariantNames: false,
+            formIds: [],
+            loadingFormIds: false,
+            formNames: [],
+            loadingFormNames: false,
+            varietyIds: [],
+            loadingVarietyIds: false,
+            varietyNames: [],
+            loadingVarietyNames: false,
             validityTooltipOpen: false
         }
     }
@@ -110,12 +145,14 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
         if (versionGroupChanged) {
-            let pokemonId = this.state.pokemonId
+            let pokemonId = this.state.formId
             if (pokemonId > 0) {
                 this.fetchSpeciesValidity(pokemonId)
                     .then(() => {
-                        this.fetchVariantIds(pokemonId)
-                        this.fetchVariantNames(pokemonId)
+                        this.fetchFormIds(pokemonId)
+                        this.fetchFormNames(pokemonId)
+                        this.fetchVarietyIds(pokemonId)
+                        this.fetchVarietyNames(pokemonId)
                     })
                     .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
             }
@@ -125,12 +162,14 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     render() {
         // sub-components
         let speciesSelect = this.renderSpeciesSelect()
-        let variantSelect = this.renderVariantSelect()
+        let formSelect = this.renderFormSelect()
+        let varietySelect = this.renderVarietySelect()
 
         return (
             <div className="flex margin-bottom">
                 {speciesSelect}
-                {variantSelect}
+                {formSelect}
+                {varietySelect}
 
                 <Button
                     className="margin-right"
@@ -153,23 +192,61 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     renderSpeciesSelect() {
         let speciesOptions = this.createSpeciesOptions()
 
-        // attach validity tooltip to variant select if the species has secondary forms
-        let hasVariants = this.state.variantIds.length > 0
-        let validityTooltip = this.renderValidityTooltip(hasVariants)
-
-        // attach red border to species select if no variants are present
-        let customStyles = this.createCustomSelectStyles(!hasVariants)
+        let idPrefix = "speciesSelect"
+        let customStyles = this.createCustomSelectStyles(false)
+        const onChange = (option: any) => this.setPokemon(option.value)
 
         let searchBox = (
             <Select
                 isSearchable
                 blurInputOnSelect
                 isLoading={this.isLoading()}
-                id={"speciesSelect" + this.props.index}
+                id={idPrefix + this.props.index}
                 styles={customStyles}
                 placeholder="Select a species!"
-                onChange={(e: any) => this.setPokemon(e.value)}
+                onChange={onChange}
                 options={speciesOptions} />
+        )
+
+        return (
+            <div className="margin-right">
+                {searchBox}
+            </div>
+        )
+    }
+
+    // returns a box for selecting a form of the selected species
+    renderFormSelect() {
+        let formOptions = this.createFormOptions()
+        let hasForms = formOptions.length > 0
+
+        // attach validity tooltip and red border if necessary
+        let idPrefix = "formSelect"
+        let validityTooltip = null
+        if (hasForms) {
+            validityTooltip = this.renderValidityTooltip(idPrefix)
+        }
+
+        if (this.props.index === 0) {
+            if (hasForms) {
+                console.log(formOptions)
+            }
+        }
+
+        let placeholder = hasForms ? "Select a form!" : "No forms"
+        let customStyles = this.createCustomSelectStyles(hasForms)
+        const onChange = (option: any) => this.setForm(option.value)
+
+        let searchBox = (
+            <Select
+                blurInputOnSelect
+                isLoading={this.isLoading()}
+                isDisabled={!hasForms}
+                id={idPrefix + this.props.index}
+                placeholder={placeholder}
+                styles={customStyles}
+                onChange={onChange}
+                options={formOptions} />
         )
 
         return (
@@ -180,42 +257,57 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
     }
 
-    // returns a box for selecting a form of the selected species
-    renderVariantSelect() {
-        let variantOptions = this.createVariantOptions()
-        let hasVariants = variantOptions.length > 0
-        let placeholder = hasVariants ? "Select a variant!" : "No variants"
-        let customStyles = this.createCustomSelectStyles(hasVariants)
+    // returns a box for selecting a variety of the selected species
+    renderVarietySelect() {
+        let varietyOptions = this.createVarietyOptions()
+        let hasVarieties = varietyOptions.length > 0
+
+        // attach validity tooltip and red border if necessary
+        let idPrefix = "varietySelect"
+        let validityTooltip = null
+        if (hasVarieties) {
+            validityTooltip = this.renderValidityTooltip(idPrefix)
+        }
+
+        if (this.props.index === 0) {
+            if (hasVarieties) {
+                console.log(varietyOptions)
+            }
+        }
+
+        let placeholder = hasVarieties ? "Select a variety!" : "No varieties"
+        let customStyles = this.createCustomSelectStyles(hasVarieties)
+        const onChange = (option: any) => this.setPokemon(option.value)
 
         let searchBox = (
             <Select
                 blurInputOnSelect
                 isLoading={this.isLoading()}
-                isDisabled={!hasVariants}
-                id={"variantSelect" + this.props.index}
+                isDisabled={!hasVarieties}
+                id={idPrefix + this.props.index}
                 placeholder={placeholder}
                 styles={customStyles}
-                onChange={(e: any) => this.setPokemon(e.value)}
-                options={variantOptions} />
+                onChange={onChange}
+                options={varietyOptions} />
         )
 
         return (
             <div className="margin-right">
                 {searchBox}
+                {validityTooltip}
             </div>
         )
     }
 
     // returns a tooltip indicating the validity of the Pokemon
-    renderValidityTooltip(targetVariantsSelect: boolean) {
+    renderValidityTooltip(idPrefix: string) {
         if (!this.props.hideTooltips && this.shouldMarkPokemonInvalid()) {
-            let targetPrefix = targetVariantsSelect ? "variantSelect" : "speciesSelect"
             return (
                 <Tooltip
                     isOpen={this.state.validityTooltipOpen}
                     toggle={() => this.toggleValidityTooltip()}
                     placement="bottom"
-                    target={targetPrefix + this.props.index}>
+                    target={idPrefix + this.props.index}>
                     Cannot be obtained in this game version!
                 </Tooltip>
             )
@@ -232,16 +324,29 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         }))
     }
 
-    // returns options for the variant select
-    createVariantOptions() {
-        // Pokemon with one form and one variety have no variants
-        if (this.state.variantIds.length <= 2) {
+    // returns options for the form select
+    createFormOptions() {
+        let ids = this.state.formIds
+        if (ids.length <= 1) {
             return []
         }
 
-        return this.state.variantIds.map((id, index) => ({
+        return ids.map((id, index) => ({
             value: id,
-            label: this.state.variantNames[index]
+            label: this.state.formNames[index]
+        }))
+    }
+
+    // returns options for the variety select
+    createVarietyOptions() {
+        let ids = this.state.varietyIds
+        if (ids.length <= 1) {
+            return []
+        }
+
+        return ids.map((id, index) => ({
+            value: id,
+            label: this.state.varietyNames[index]
         }))
     }
 
@@ -266,8 +371,10 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // returns whether this component is loading
     isLoading() {
         return this.state.loadingPokemonValidity
-            || this.state.loadingVariantIds
-            || this.state.loadingVariantNames
+            || this.state.loadingFormIds
+            || this.state.loadingFormNames
+            || this.state.loadingVarietyIds
+            || this.state.loadingVarietyNames
     }
 
     // returns true if we have a Pokemon
@@ -285,7 +392,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return shouldMarkInvalid
     }
 
-    // set to the species with the given ID
+    // set this selector to the Pokemon with the given ID
     setPokemon(pokemonId: number) {
         // only fetch if we need to
         if (pokemonId !== this.state.pokemonId) {
@@ -293,10 +400,20 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
             this.fetchSpeciesValidity(pokemonId)
                 .then(() => {
-                    this.fetchVariantIds(pokemonId)
-                    this.fetchVariantNames(pokemonId)
+                    this.fetchFormIds(pokemonId)
+                    this.fetchFormNames(pokemonId)
+                    this.fetchVarietyIds(pokemonId)
+                    this.fetchVarietyNames(pokemonId)
                 })
                 .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
+        }
+    }
+
+    // set this selector to the Pokemon form with the given ID
+    setForm(formId: number) {
+        if (formId !== this.state.formId) {
+            this.setState({ formId: formId })
+            this.props.setForm(formId)
         }
     }
 
@@ -320,7 +437,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // empty this selector
     clearPokemon() {
         this.setState({
-            pokemonId: 0,
+            formId: 0,
             pokemonValidity: PokemonValidity.Invalid
         })
 
@@ -358,53 +475,103 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             .then(() => this.setState({ loadingPokemonValidity: false }))
     }
 
-    // fetches the variety IDs of the species from PokemonController
-    async fetchVariantIds(pokemonId: number) {
+    // fetches the forms' IDs from PokemonController
+    async fetchFormIds(pokemonId: number) {
         if (pokemonId <= 0) {
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching variant IDs for species ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching form IDs for species ${pokemonId}...`)
 
-        this.setState({ loadingVariantIds: true })
+        this.setState({ loadingFormIds: true })
 
-        // fetch forms
-        await fetch(`pokemon/${pokemonId}/variants/${this.props.versionGroupIndex}/ids`)
+        // fetch IDs
+        await fetch(`pokemon/${pokemonId}/forms/${this.props.versionGroupIndex}/ids`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch variant IDs for species ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch form IDs for species ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(ids => this.setState({ variantIds: ids }))
+            .then(ids => this.setState({ formIds: ids }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingVariantIds: false }))
+            .then(() => this.setState({ loadingFormIds: false }))
     }
 
-    // fetches the names of the variants of the species from PokemonController
-    async fetchVariantNames(pokemonId: number) {
+    // fetches the forms' names from PokemonController
+    async fetchFormNames(pokemonId: number) {
         if (pokemonId <= 0) {
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching variant names for species ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching form names for species ${pokemonId}...`)
 
-        this.setState({ loadingVariantNames: true })
+        this.setState({ loadingFormNames: true })
 
-        // fetch variants
-        await fetch(`pokemon/${pokemonId}/variants/${this.props.versionGroupIndex}/names`)
+        // fetch names
+        await fetch(`pokemon/${pokemonId}/forms/${this.props.versionGroupIndex}/names`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch variant names for species ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch form names for species ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(names => this.setState({ variantNames: names }))
+            .then(names => this.setState({ formNames: names }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingVariantNames: false }))
+            .then(() => this.setState({ loadingFormNames: false }))
+    }
+
+    // fetches the varieties' IDs from PokemonController
+    async fetchVarietyIds(pokemonId: number) {
+        if (pokemonId <= 0) {
+            return
+        }
+
+        console.log(`Selector ${this.props.index}: fetching variety IDs for species ${pokemonId}...`)
+
+        this.setState({ loadingVarietyIds: true })
+
+        // fetch IDs
+        await fetch(`pokemon/${pokemonId}/varieties/${this.props.versionGroupIndex}/ids`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch variety IDs for species ${pokemonId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(ids => this.setState({ varietyIds: ids }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingVarietyIds: false }))
+    }
+
+    // fetches the varieties' names from PokemonController
+    async fetchVarietyNames(pokemonId: number) {
+        if (pokemonId <= 0) {
+            return
+        }
+
+        console.log(`Selector ${this.props.index}: fetching variety names for species ${pokemonId}...`)
+
+        this.setState({ loadingVarietyNames: true })
+
+        // fetch names
+        await fetch(`pokemon/${pokemonId}/varieties/${this.props.versionGroupIndex}/names`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Selector ${this.props.index}: tried to fetch variety names for species ${pokemonId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(names => this.setState({ varietyNames: names }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingVarietyNames: false }))
     }
 }

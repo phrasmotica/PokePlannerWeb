@@ -58,6 +58,11 @@ interface PokemonPanelState {
     pokemonId: number,
 
     /**
+     * The ID of the Pokemon form.
+     */
+    formId: number,
+
+    /**
      * Value describing the Pokemon validity.
      */
     pokemonValidity: PokemonValidity,
@@ -131,6 +136,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         super(props)
         this.state = {
             pokemonId: 0,
+            formId: 0,
             pokemonValidity: PokemonValidity.Invalid,
             pokemonName: "",
             loadingPokemonName: true,
@@ -182,7 +188,8 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let efficacyList = this.renderEfficacyList()
 
         // handlers
-        const setPokemon = (id: number, validity: PokemonValidity) => this.setSpecies(id, validity)
+        const setPokemon = (pokemonId: number, validity: PokemonValidity) => this.setPokemon(pokemonId, validity)
+        const setForm = (formId: number) => this.setForm(formId)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
@@ -194,6 +201,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                     ignoreValidity={this.props.ignoreValidity}
                     hideTooltips={this.props.ignoreValidity}
                     setPokemon={setPokemon}
+                    setForm={setForm}
                     toggleIgnoreValidity={toggleIgnoreValidity} />
 
                 {pokemonInfo}
@@ -428,34 +436,44 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         return shouldShowInvalidSpecies || this.speciesIsValid()
     }
 
-    // set the species and its validity
-    setSpecies(speciesId: number, validity: PokemonValidity) {
+    // set the Pokemon and its validity
+    setPokemon(pokemonId: number, validity: PokemonValidity) {
         this.setState({
-            pokemonId: speciesId,
+            pokemonId: pokemonId,
             pokemonValidity: validity
         })
 
-        this.fetchPokemonName(speciesId)
-        this.fetchSpriteUrl(speciesId)
-        this.fetchShinySpriteUrl(speciesId)
-        this.fetchTypes(speciesId)
-        this.fetchBaseStatValues(speciesId)
+        this.fetchPokemonName(pokemonId)
+        this.fetchSpriteUrl(pokemonId)
+        this.fetchShinySpriteUrl(pokemonId)
+        this.fetchTypes(pokemonId)
+        this.fetchBaseStatValues(pokemonId)
     }
 
-    // fetches the name of the species from PokemonController
-    fetchPokemonName(speciesId: number) {
-        console.log(`Panel ${this.props.index}: fetching name for species ${speciesId}...`)
+    // set the Pokemon form
+    setForm(formId: number) {
+        this.setState({ formId: formId })
+
+        // fetch form-specific information
+        this.fetchFormName(formId)
+        this.fetchFormSpriteUrl(formId)
+        this.fetchFormShinySpriteUrl(formId)
+    }
+
+    // fetches the name of the Pokemon from PokemonController
+    fetchPokemonName(pokemonId: number) {
+        console.log(`Panel ${this.props.index}: fetching name for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingPokemonName: true })
 
         // fetch name
-        fetch(`pokemon/${speciesId}/name`)
+        fetch(`pokemon/${pokemonId}/name`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Panel ${this.props.index}: tried to fetch name for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch name for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(pokemonName => this.setState({ pokemonName: pokemonName }))
@@ -463,20 +481,41 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             .then(() => this.setState({ loadingPokemonName: false }))
     }
 
-    // fetches the sprite of the species from PokemonController
-    fetchSpriteUrl(speciesId: number) {
-        console.log(`Panel ${this.props.index}: fetching sprite for species ${speciesId}...`)
+    // fetches the name of the Pokemon form from FormController
+    fetchFormName(formId: number) {
+        console.log(`Panel ${this.props.index}: fetching name for Pokemon form ${formId}...`)
 
-        this.setState({ loadingPokemonSpriteUrl: true })
+        this.setState({ loadingPokemonName: true })
 
-        // fetch sprite URL
-        fetch(`pokemon/${speciesId}/sprite`)
+        // fetch name
+        fetch(`form/${formId}/name`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Panel ${this.props.index}: tried to fetch sprite URL for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch name for Pokemon form ${formId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.text())
+            .then(formName => this.setState({ pokemonName: formName }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemonName: false }))
+    }
+
+    // fetches the sprite of the Pokemon from PokemonController
+    fetchSpriteUrl(pokemonId: number) {
+        console.log(`Panel ${this.props.index}: fetching sprite for Pokemon ${pokemonId}...`)
+
+        this.setState({ loadingPokemonSpriteUrl: true })
+
+        // fetch sprite URL
+        fetch(`pokemon/${pokemonId}/sprite`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Panel ${this.props.index}: tried to fetch sprite URL for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
@@ -484,20 +523,41 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
     }
 
-    // fetches the shiny sprite of the species from PokemonController
-    fetchShinySpriteUrl(speciesId: number) {
-        console.log(`Panel ${this.props.index}: fetching shiny sprite for species ${speciesId}...`)
+    // fetches the sprite of the Pokemon form from FormController
+    fetchFormSpriteUrl(formId: number) {
+        console.log(`Panel ${this.props.index}: fetching sprite for Pokemon form ${formId}...`)
 
-        this.setState({ loadingPokemonShinySpriteUrl: true })
+        this.setState({ loadingPokemonSpriteUrl: true })
 
         // fetch sprite URL
-        fetch(`pokemon/${speciesId}/sprite/shiny`)
+        fetch(`form/${formId}/sprite`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Panel ${this.props.index}: tried to fetch shiny sprite URL for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch sprite URL for Pokemon form ${formId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.text())
+            .then(spriteUrl => this.setState({ pokemonSpriteUrl: spriteUrl }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemonSpriteUrl: false }))
+    }
+
+    // fetches the shiny sprite of the Pokemon from PokemonController
+    fetchShinySpriteUrl(pokemonId: number) {
+        console.log(`Panel ${this.props.index}: fetching shiny sprite for Pokemon ${pokemonId}...`)
+
+        this.setState({ loadingPokemonShinySpriteUrl: true })
+
+        // fetch sprite URL
+        fetch(`pokemon/${pokemonId}/sprite/shiny`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Panel ${this.props.index}: tried to fetch shiny sprite URL for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.text())
             .then(spriteUrl => this.setState({ pokemonShinySpriteUrl: spriteUrl }))
@@ -505,20 +565,41 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             .then(() => this.setState({ loadingPokemonShinySpriteUrl: false }))
     }
 
-    // fetches the types for the species from PokemonController
-    fetchTypes(speciesId: number) {
-        console.log(`Panel ${this.props.index}: fetching types for species ${speciesId}...`)
+    // fetches the shiny sprite of the Pokemon form from PokemonController
+    fetchFormShinySpriteUrl(formId: number) {
+        console.log(`Panel ${this.props.index}: fetching shiny sprite for Pokemon form ${formId}...`)
 
-        this.setState({ loadingPokemonTypes: true })
+        this.setState({ loadingPokemonShinySpriteUrl: true })
 
-        // fetch types description
-        fetch(`pokemon/${speciesId}/types/${this.props.versionGroupIndex}`)
+        // fetch sprite URL
+        fetch(`form/${formId}/sprite/shiny`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Panel ${this.props.index}: tried to fetch types for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch shiny sprite URL for Pokemon form ${formId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.text())
+            .then(spriteUrl => this.setState({ pokemonShinySpriteUrl: spriteUrl }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingPokemonShinySpriteUrl: false }))
+    }
+
+    // fetches the types for the Pokemon from PokemonController
+    fetchTypes(pokemonId: number) {
+        console.log(`Panel ${this.props.index}: fetching types for Pokemon ${pokemonId}...`)
+
+        this.setState({ loadingPokemonTypes: true })
+
+        // fetch types description
+        fetch(`pokemon/${pokemonId}/types/${this.props.versionGroupIndex}`)
+            .then((response: Response) => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Panel ${this.props.index}: tried to fetch types for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(types => this.setState({ pokemonTypes: types }))
@@ -526,20 +607,20 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             .then(() => this.setState({ loadingPokemonTypes: false }))
     }
 
-    // fetches the base stat values for the species from PokemonController
-    fetchBaseStatValues(speciesId: number) {
-        console.log(`Panel ${this.props.index}: fetching base stat values for species ${speciesId}...`)
+    // fetches the base stat values for the Pokemon from PokemonController
+    fetchBaseStatValues(pokemonId: number) {
+        console.log(`Panel ${this.props.index}: fetching base stat values for Pokemon ${pokemonId}...`)
 
         this.setState({ loadingBaseStatValues: true })
 
         // fetch base stat values
-        fetch(`pokemon/${speciesId}/baseStats/${this.props.versionGroupIndex}`)
+        fetch(`pokemon/${pokemonId}/baseStats/${this.props.versionGroupIndex}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Panel ${this.props.index}: tried to fetch base stat values for species ${speciesId} but failed with status ${response.status}!`)
+                throw new Error(`Panel ${this.props.index}: tried to fetch base stat values for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(baseStatValues => this.setState({ baseStatValues: baseStatValues }))
