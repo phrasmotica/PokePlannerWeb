@@ -214,9 +214,16 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // returns a box for selecting a species
     renderSpeciesSelect() {
         let speciesOptions = this.createSpeciesOptions()
+        let hasNoVariants = !this.hasSecondaryForms() && !this.hasSecondaryVarieties()
 
+        // attach validity tooltip and red border if necessary
         let idPrefix = "speciesSelect"
-        let customStyles = this.createCustomSelectStyles(false)
+        let validityTooltip = null
+        if (hasNoVariants) {
+            validityTooltip = this.renderValidityTooltip(idPrefix)
+        }
+
+        let customStyles = this.createCustomSelectStyles(hasNoVariants)
         const onChange = (option: any) => {
             this.setState({ speciesOption: option })
             this.setPokemon(option.value)
@@ -238,6 +245,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return (
             <div className="margin-right">
                 {searchBox}
+                {validityTooltip}
             </div>
         )
     }
