@@ -14,30 +14,44 @@ namespace PokePlannerWeb.Data.Extensions
     /// </summary>
     public static class PokemonExtensions
     {
+        #region Variants
+
         /// <summary>
-        /// Returns the IDs of the forms of the given Pokemon in the version group with the
-        /// given ID.
+        /// Returns the IDs of the variants of the given Pokemon in the version group with the given ID.
         /// </summary>
-        public static async Task<int[]> GetFormsIDs(this Pokemon pokemon, int? versionGroupId = null)
+        public static async Task<int[]> GetVariantIDs(this Pokemon pokemon, int? versionGroupId = null)
         {
             versionGroupId ??= VersionGroupData.Instance.VersionGroupIndex;
             var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId.Value];
-            return await pokemon.GetFormsIDs(versionGroup);
+            return await pokemon.GetVariantIDs(versionGroup);
+        }
+
+        /// <summary>
+        /// Returns the IDs of the variants of the given Pokemon in the given version group.
+        /// </summary>
+        private static async Task<int[]> GetVariantIDs(this Pokemon pokemon, VersionGroup versionGroup)
+        {
+            var formIDs = pokemon.GetFormIDs(versionGroup);
+
+            var species = await PokeAPI.Get(pokemon.Species);
+            var varietyIDs = await species.GetVarietyIDs(versionGroup);
+
+            return formIDs.Concat(varietyIDs).ToArray();
         }
 
         /// <summary>
         /// Returns the IDs of the forms of the given Pokemon in the given version group.
         /// </summary>
-        private static async Task<int[]> GetFormsIDs(this Pokemon pokemon, VersionGroup versionGroup)
+        private static int[] GetFormIDs(this Pokemon pokemon, VersionGroup versionGroup)
         {
-            var species = await PokeAPI.Get(pokemon.Species);
-            return await species.GetFormsIDs(versionGroup);
+            // forms point to the primary Pokemon
+            return pokemon.Forms.Select(_ => pokemon.Id).ToArray();
         }
 
         /// <summary>
-        /// Returns the IDs of the forms of the given species in the given version group.
+        /// Returns the IDs of the varieties of the given species in the given version group.
         /// </summary>
-        private static async Task<int[]> GetFormsIDs(this PokemonSpecies species, VersionGroup versionGroup)
+        private static async Task<int[]> GetVarietyIDs(this PokemonSpecies species, VersionGroup versionGroup)
         {
             var varieties = species.Varieties;
             var varietiesCount = varieties.Count;
@@ -53,32 +67,48 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Returns the names of the forms of the given Pokemon in the version group with the
+        /// Returns the names of the variants of the given Pokemon in the version group with the
         /// given ID.
         /// </summary>
-        public static async Task<string[]> GetFormsNames(this Pokemon pokemon, int? versionGroupId = null)
+        public static async Task<string[]> GetVariantNames(this Pokemon pokemon, int? versionGroupId = null)
         {
             versionGroupId ??= VersionGroupData.Instance.VersionGroupIndex;
             var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId.Value];
-            return await pokemon.GetFormsNames(versionGroup);
+            return await pokemon.GetVariantNames(versionGroup);
+        }
+
+        /// <summary>
+        /// Returns the names of the variants of the given Pokemon in the given version group.
+        /// </summary>
+        private static async Task<string[]> GetVariantNames(this Pokemon pokemon, VersionGroup versionGroup)
+        {
+            var formNames = pokemon.GetFormNames(versionGroup);
+
+            var species = await PokeAPI.Get(pokemon.Species);
+            var varietyNames = species.GetVarietyNames(versionGroup);
+
+            return formNames.Concat(varietyNames).ToArray();
         }
 
         /// <summary>
         /// Returns the names of the forms of the given Pokemon in the given version group.
         /// </summary>
-        private static async Task<string[]> GetFormsNames(this Pokemon pokemon, VersionGroup versionGroup)
+        private static string[] GetFormNames(this Pokemon pokemon, VersionGroup versionGroup)
         {
-            var species = await PokeAPI.Get(pokemon.Species);
-            return species.GetFormsNames(versionGroup);
+            return pokemon.Forms.Select(f => f.Name).ToArray();
         }
 
         /// <summary>
-        /// Returns the names of the forms of the given species in the given version group.
+        /// Returns the names of the varieties of the given species in the given version group.
         /// </summary>
-        private static string[] GetFormsNames(this PokemonSpecies species, VersionGroup versionGroup)
+        private static string[] GetVarietyNames(this PokemonSpecies species, VersionGroup versionGroup)
         {
             return species.Varieties.Select(v => v.Pokemon.Name).ToArray();
         }
+
+        #endregion
+
+        #region Types
 
         /// <summary>
         /// Returns this Pokemon's latest type data.
@@ -131,6 +161,8 @@ namespace PokePlannerWeb.Data.Extensions
 
             return Enumerable.Empty<Type>();
         }
+
+        #endregion
 
         /// <summary>
         /// Returns this Pokemon's type efficacy in the version group with the given ID as an array.
