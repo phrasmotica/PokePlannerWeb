@@ -188,6 +188,14 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         private static async Task<bool> IsValid(this Pokemon pokemon, VersionGroup versionGroup)
         {
+            var form = await PokeAPI.Get(pokemon.Forms[0]);
+            if (form.IsMega)
+            {
+                // decide based on version group in which it was introduced
+                var formVersionGroup = await PokeAPI.Get(form.VersionGroup);
+                return formVersionGroup.Order <= versionGroup.Order;
+            }
+
             var pokemonSpecies = await PokeAPI.Get(pokemon.Species);
             return pokemonSpecies.IsValid(versionGroup);
         }
