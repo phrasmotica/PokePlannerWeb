@@ -95,7 +95,7 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
 
     // load all species names
     loadSpeciesNames() {
-        fetch("pokemon/allNames")
+        fetch("species/allNames")
             .then((response) => response.json())
             .then(speciesNames => this.setState({ speciesNames: speciesNames }))
             .catch(error => console.log(error))

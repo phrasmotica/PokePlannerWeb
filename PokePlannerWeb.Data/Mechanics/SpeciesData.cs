@@ -6,21 +6,21 @@ using PokePlannerWeb.Data.Extensions;
 namespace PokePlannerWeb.Data.Mechanics
 {
     /// <summary>
-    /// For Pokemon information and calculations.
+    /// For Species information and calculations.
     /// </summary>
-    public class PokemonData
+    public class SpeciesData
     {
         #region Singleton members
 
         /// <summary>
         /// Gets the singleton instance.
         /// </summary>
-        public static PokemonData Instance { get; } = new PokemonData();
+        public static SpeciesData Instance { get; } = new SpeciesData();
 
         /// <summary>
         /// Singleton constructor.
         /// </summary>
-        private PokemonData() { }
+        private SpeciesData() { }
 
         #endregion
 
