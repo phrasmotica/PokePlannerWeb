@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Payloads;
+using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb.Tests
 {
@@ -189,6 +191,28 @@ namespace PokePlannerWeb.Tests
         private bool ArraysAreEqual<T>(T[] arr1, T[] arr2)
         {
             return arr1.Zip(arr2).All(p => p.First.Equals(p.Second));
+        }
+
+        /// <summary>
+        /// Investigates the names of secondary Pokemon forms.
+        /// </summary>
+        [Test]
+        public async Task PokemonFormsNamesTest()
+        {
+            // get secondary forms
+            var forms = await PokeAPI.GetPage<PokemonForm>(316, 807);
+
+            // filter to those with type names in their name
+            var typeNames = TypeData.AllTypes.Select(n => n.ToString().ToLower());
+            var regex = $"({string.Join("|", typeNames)})$";
+            var typeForms = forms.Results.Where(f => Regex.IsMatch(f.Name, regex)).ToList();
+
+            foreach (var form in typeForms)
+            {
+                Console.WriteLine(form.Name);
+            }
+
+            Console.WriteLine($"{typeForms.Count} have their type in their name");
         }
 
         /// <summary>
