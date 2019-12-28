@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace PokePlannerWeb.Data.Extensions
@@ -9,6 +10,14 @@ namespace PokePlannerWeb.Data.Extensions
     /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Returns this string in title case.
+        /// </summary>
+        public static string ToTitle(this string st)
+        {
+            return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(st);
+        }
+
         /// <summary>
         /// Returns the string as an enum value.
         /// </summary>

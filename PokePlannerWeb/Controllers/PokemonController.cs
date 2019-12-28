@@ -30,13 +30,13 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the names of all Pokemon.
+        /// Returns the names of all species.
         /// </summary>
         [HttpGet("allNames")]
-        public async Task<string[]> GetAllPokemonNames()
+        public async Task<string[]> GetAllSpeciesNames()
         {
-            Logger.LogInformation($"Getting names of all Pokemon...");
-            return await PokemonData.Instance.GetAllPokemonNames();
+            Logger.LogInformation($"Getting names of all species...");
+            return await PokemonData.Instance.GetAllSpeciesNames();
         }
 
         /// <summary>

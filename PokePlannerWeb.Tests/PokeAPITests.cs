@@ -53,10 +53,25 @@ namespace PokePlannerWeb.Tests
         public async Task PokemonNamesLoadingTest()
         {
             // load all Pokemon names
-            var allNames = await PokemonData.Instance.GetAllPokemonNames();
+            var speciesPage = await PokeAPI.GetFullPage<PokemonSpecies>();
 
             // verify they're all there
-            Assert.AreEqual(807, allNames.Length);
+            Assert.AreEqual(807, speciesPage.Count);
+
+            // returns true if the name is a single block of alphanumerics
+            static bool isSimpleName(string name) => Regex.IsMatch(name, "^[a-z0-9]+$");
+
+            var remainingCount = 0;
+            foreach (var species in speciesPage.Results)
+            {
+                if (!isSimpleName(species.Name))
+                {
+                    remainingCount++;
+                    Console.WriteLine(species.Name);
+                }
+            }
+
+            Console.WriteLine(remainingCount);
         }
 
         /// <summary>
