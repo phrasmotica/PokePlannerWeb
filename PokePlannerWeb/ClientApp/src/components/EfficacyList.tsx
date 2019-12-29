@@ -130,7 +130,7 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
                 let typeHeader = <img
                                     id={headerId}
                                     className="type-icon padded"
-                                    src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+                                    src={require(`../images/typeIcons/${type.toLowerCase()}-small.png`)} />
 
                 if (typeSet.typesArePresent[index]) {
                     let multiplierElement = this.getElementFromMultiplier(efficacy[index])

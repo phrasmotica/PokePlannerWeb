@@ -321,7 +321,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                             <img
                                 key={i}
                                 className={"type-icon padded" + (shouldShowPokemon ? "" : " hidden")}
-                                src={require(`../images/typeIcons/${type.toLowerCase()}.png`)} />
+                                src={require(`../images/typeIcons/${type.toLowerCase()}-small.png`)} />
                         </div>
                     )
                 })}
