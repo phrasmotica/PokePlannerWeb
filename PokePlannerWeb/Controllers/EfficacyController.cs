@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Types;
+using Type = PokePlannerWeb.Data.Types.Type;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -46,6 +48,19 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Loading efficacy for version group {versionGroupId}...");
             await TypeData.Instance.LoadTypeEfficacy(versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the efficacy of the given types in the version group with the given ID.
+        /// </summary>
+        [HttpGet]
+        public double[] GetEfficacyInVersionGroupByTypeNames(int versionGroupId, string type1, string type2)
+        {
+            Logger.LogInformation($"Getting efficacy for {type1}-{type2} in version group {versionGroupId}...");
+            var types = new[] { type1, type2 }.Where(s => !string.IsNullOrEmpty(s))
+                                              .Select(s => s.ToEnum<Type>())
+                                              .Where(t => TypeData.ConcreteTypes.Contains(t));
+            return TypeData.Instance.GetEfficacyArr(types);
         }
 
         /// <summary>

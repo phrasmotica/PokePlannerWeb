@@ -17,9 +17,9 @@ type EfficacyListProps = {
     index: number,
 
     /**
-     * The Pokemon to show efficacy for.
+     * The types to show efficacy for.
      */
-    pokemonId: number,
+    typeNames: string[],
 
     /**
      * The index of the selected version group.
@@ -88,12 +88,12 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
         let versionGroupIndex = this.props.versionGroupIndex
         let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
 
-        // ...or if the species changed
-        let previousSpeciesId = previousProps.pokemonId
-        let species = this.props.pokemonId
-        let speciesChanged = species !== previousSpeciesId
+        // ...or if the types changed
+        let previousTypeNames = previousProps.typeNames
+        let typeNames = this.props.typeNames
+        let typesChanged = !this.arraysEqual(typeNames, previousTypeNames)
 
-        if (versionGroupChanged || speciesChanged) {
+        if (versionGroupChanged || typesChanged) {
             this.getEfficacy()
         }
 
@@ -191,7 +191,7 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
     getElementFromMultiplier(multiplier: number) {
         let multiplierClass = this.getClassFromMultiplier(multiplier)
 
-        if (!this.hasSpecies() || !this.props.showMultipliers) {
+        if (!this.hasTypes() || !this.props.showMultipliers) {
             return <b>-</b>
         }
 
@@ -251,33 +251,70 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
         })
     }
 
-    // returns true if we have a species
-    hasSpecies() {
-        return this.props.pokemonId > 0
+    // returns true if we have types
+    hasTypes() {
+        return this.props.typeNames.length > 0
     }
 
-    // retrieves the Pokemon's efficacy from EfficacyController
+    // retrieves the types' efficacy from EfficacyController
     getEfficacy() {
-        if (this.hasSpecies()) {
-            let species = this.props.pokemonId
-            console.log(`Efficacy list ${this.props.index}: getting efficacy for '${species}'...`)
+        if (this.hasTypes()) {
+            let typeNames = this.props.typeNames
+            let typeNamesStr = typeNames.join("-")
+            console.log(`Efficacy list ${this.props.index}: getting efficacy for ${typeNamesStr}...`)
 
             // loading begins
             this.setState({ loadingEfficacy: true })
 
+            // construct endpoint URL
+            let endpointUrl = this.constructEndpointUrl(typeNames)
+
             // get efficacy data
-            fetch(`efficacy/${species}/${this.props.versionGroupIndex}`)
+            fetch(endpointUrl)
                 .then(response => {
                     if (response.status === 200) {
                         return response
                     }
 
-                    throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${species}' but failed with status ${response.status}!`)
+                    throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${typeNamesStr} but failed with status ${response.status}!`)
                 })
                 .then(response => response.json())
                 .then(efficacy => this.setState({ efficacy: efficacy }))
                 .catch(error => console.log(error))
                 .then(() => this.setState({ loadingEfficacy: false }))
         }
+    }
+
+    // returns the endpoint to use when fetching efficacy of the given types
+    constructEndpointUrl(typeNames: string[]): string {
+        let endpointUrl = `efficacy?versionGroupId=${this.props.versionGroupIndex}`
+        for (var i = 0; i < typeNames.length; i++) {
+            endpointUrl += `&type${i+1}=${typeNames[i]}`
+        }
+
+        return endpointUrl
+    }
+
+    // returns true if the two arrays are componentwise equal
+    arraysEqual(arr1: any[], arr2: any[]) {
+        if (arr1 == arr2) {
+            return true
+        }
+
+        if (arr1 == null || arr2 == null) {
+            return false
+        }
+
+        if (arr1.length != arr2.length) {
+            return false
+        }
+
+        for (var i = 0; i < arr1.length; i++) {
+            if (arr1[i] !== arr2[i]) {
+                return false
+            }
+        }
+
+        return true
     }
 }

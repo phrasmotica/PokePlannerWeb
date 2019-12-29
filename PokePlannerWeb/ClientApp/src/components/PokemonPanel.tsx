@@ -381,7 +381,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         return (
             <EfficacyList
                 index={this.props.index}
-                pokemonId={this.state.pokemonId}
+                typeNames={this.state.typeNames}
                 typeSet={this.props.typeSet}
                 versionGroupIndex={this.props.versionGroupIndex}
                 parentIsLoading={this.isLoading()}
