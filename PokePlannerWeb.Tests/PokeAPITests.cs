@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Cache;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Payloads;
 using PokePlannerWeb.Data.Types;
@@ -72,6 +73,17 @@ namespace PokePlannerWeb.Tests
             }
 
             Console.WriteLine(remainingCount);
+        }
+
+        /// <summary>
+        /// Verifies that loading the names of all secondary Pokemon forms works correctly.
+        /// </summary>
+        [Test]
+        [Category("Integration")]
+        public async Task PokemonFormDisplayNamesLoadingTest()
+        {
+            // cache secondary forms display names in JSON file
+            await PokemonFormDisplayNamesCacheManager.Instance.UpdateCache();
         }
 
         /// <summary>
