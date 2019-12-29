@@ -233,7 +233,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             <Select
                 isSearchable
                 blurInputOnSelect
-                isLoading={this.isLoading()}
+                isLoading={this.isLoadingPokemonValidity()}
                 id={idPrefix + this.props.index}
                 styles={customStyles}
                 placeholder="Select a species!"
@@ -272,7 +272,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let searchBox = (
             <Select
                 blurInputOnSelect
-                isLoading={this.isLoading()}
+                isLoading={this.isLoadingPokemonForms()}
                 isDisabled={!hasForms}
                 id={idPrefix + this.props.index}
                 placeholder={placeholder}
@@ -312,7 +312,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let searchBox = (
             <Select
                 blurInputOnSelect
-                isLoading={this.isLoading()}
+                isLoading={this.isLoadingSpeciesVarieties()}
                 isDisabled={!hasVarieties}
                 id={idPrefix + this.props.index}
                 placeholder={placeholder}
@@ -397,12 +397,20 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         }))
     }
 
-    // returns whether this component is loading
-    isLoading() {
+    // returns whether the Pokemon validity is loading
+    isLoadingPokemonValidity() {
         return this.state.loadingPokemonValidity
-            || this.state.loadingFormIds
+    }
+
+    // returns whether the Pokemon forms are loading
+    isLoadingPokemonForms() {
+        return this.state.loadingFormIds
             || this.state.loadingFormNames
-            || this.state.loadingVarietyIds
+    }
+
+    // returns whether the species varieties are loading
+    isLoadingSpeciesVarieties() {
+        return this.state.loadingVarietyIds
             || this.state.loadingVarietyNames
     }
 
@@ -423,7 +431,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // returns true if the Pokemon should be marked as invalid
     shouldMarkPokemonInvalid() {
-        let checked = this.hasPokemon() && !this.isLoading()
+        let checked = this.hasPokemon() && !this.isLoadingPokemonValidity()
         let shouldMarkInvalid = checked
                                 && !this.props.ignoreValidity
                                     && this.state.pokemonValidity === PokemonValidity.Invalid
