@@ -529,7 +529,11 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             pokemonId: 0,
             speciesOption: null,
             formId: 0,
+            formIds: [],
+            formNames: [],
             formOption: null,
+            varietyIds: [],
+            varietyNames: [],
             varietyOption: null,
             pokemonValidity: PokemonValidity.Invalid
         })
