@@ -14,4 +14,11 @@
     </Reference>
   </ItemGroup>
 
+    <!-- copy Pokemon form display names cache to bin -->
+  <ItemGroup>
+    <Content Include="Cache\PokemonFormDisplayNames.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
