@@ -172,12 +172,12 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             if (pokemonId > 0) {
                 this.fetchPokemonValidity(pokemonId)
                     .then(() => {
+                        this.props.setPokemon(pokemonId, this.state.pokemonValidity)
                         this.fetchFormIds(pokemonId)
                         this.fetchFormNames(pokemonId)
                         this.fetchVarietyIds(pokemonId)
                         this.fetchVarietyNames(pokemonId)
                     })
-                    .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
             }
         }
     }
@@ -451,6 +451,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             })
 
             this.fetchPokemonValidity(pokemonId)
+                .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
 
             await this.fetchFormIds(pokemonId)
             await this.fetchFormNames(pokemonId)
@@ -473,8 +474,6 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 console.log(firstOption)
                 this.setState({ varietyOption: firstOption })
             }
-
-            this.props.setPokemon(pokemonId, this.state.pokemonValidity)
         }
     }
 
