@@ -421,12 +421,16 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
 
     // returns true if the Pokemon has secondary forms
     hasSecondaryForms() {
-        return this.state.formIds.length >= 2
+        let numIds = this.state.formIds.length
+        let numNames = this.state.formNames.length
+        return numIds === numNames && numIds >= 2 && numNames >= 2
     }
 
     // returns true if the species has secondary varieties
     hasSecondaryVarieties() {
-        return this.state.varietyIds.length >= 2
+        let numIds = this.state.varietyIds.length
+        let numNames = this.state.varietyNames.length
+        return numIds === numNames && numIds >= 2 && numNames >= 2
     }
 
     // returns true if the Pokemon should be marked as invalid
