@@ -611,24 +611,24 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             .then(() => this.setState({ loadingFormNames: false }))
     }
 
-    // fetches the varieties' IDs from PokemonController
-    async fetchVarietyIds(pokemonId: number) {
-        if (pokemonId <= 0) {
+    // fetches the species varieties' IDs from PokemonController
+    async fetchVarietyIds(speciesId: number) {
+        if (speciesId <= 0) {
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching variety IDs for Pokemon ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching variety IDs for species ${speciesId}...`)
 
         this.setState({ loadingVarietyIds: true })
 
         // fetch IDs
-        await fetch(`pokemon/${pokemonId}/varieties/${this.props.versionGroupIndex}/ids`)
+        await fetch(`species/${speciesId}/varieties/${this.props.versionGroupIndex}/ids`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch variety IDs for Pokemon ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch variety IDs for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(ids => this.setState({ varietyIds: ids }))
@@ -636,24 +636,24 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             .then(() => this.setState({ loadingVarietyIds: false }))
     }
 
-    // fetches the varieties' names from PokemonController
-    async fetchVarietyNames(pokemonId: number) {
-        if (pokemonId <= 0) {
+    // fetches the species varieties' names from PokemonController
+    async fetchVarietyNames(speciesId: number) {
+        if (speciesId <= 0) {
             return
         }
 
-        console.log(`Selector ${this.props.index}: fetching variety names for Pokemon ${pokemonId}...`)
+        console.log(`Selector ${this.props.index}: fetching variety names for species ${speciesId}...`)
 
         this.setState({ loadingVarietyNames: true })
 
         // fetch names
-        await fetch(`pokemon/${pokemonId}/varieties/${this.props.versionGroupIndex}/names`)
+        await fetch(`species/${speciesId}/varieties/${this.props.versionGroupIndex}/names`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${this.props.index}: tried to fetch variety names for Pokemon ${pokemonId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${this.props.index}: tried to fetch variety names for species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then(names => this.setState({ varietyNames: names }))
