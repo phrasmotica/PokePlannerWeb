@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 namespace PokePlannerWeb.Cache
 {
     /// <summary>
-    /// Interface for managing a cache.
+    /// Class for managing a cache.
     /// </summary>
-    public interface ICacheManager<T> where T : CacheEntry
+    public class CacheManager<T> where T : CacheEntry
     {
         /// <summary>
         /// The JSON cache file.
         /// </summary>
-        string CachePath { get; }
+        protected virtual string CachePath { get; }
 
         /// <summary>
         /// Deserialises the cache file into an object.
@@ -29,6 +29,14 @@ namespace PokePlannerWeb.Cache
 
             var contents = File.ReadAllText(CachePath);
             return JsonConvert.DeserializeObject<Cache<T>>(contents);
+        }
+
+        /// <summary>
+        /// Returns the entry with the given key.
+        /// </summary>
+        protected T GetEntry(int key)
+        {
+            return ReadCache().Get(key);
         }
     }
 }

@@ -38,16 +38,15 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting name of Pokemon {id}...");
 
             // read name from cache
-            var cache = PokemonCacheManager.Instance.ReadCache();
-            var entry = cache.Get(id);
-            if (entry == null)
+            var cachedName = PokemonCacheManager.Instance.GetPokemonDisplayName(id);
+            if (string.IsNullOrEmpty(cachedName))
             {
                 // get from PokeAPI
                 var pokemon = await PokeAPI.Get<Pokemon>(id);
                 return await pokemon.GetEnglishName();
             }
 
-            return entry.DisplayNames.Single(dn => dn.Language == "en").Name;
+            return cachedName;
         }
 
         /// <summary>
@@ -59,17 +58,15 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting IDs of forms of Pokemon {id} in version group {versionGroupId}...");
 
             // read form IDs from cache
-            var cache = PokemonCacheManager.Instance.ReadCache();
-            var entry = cache.Get(id);
-            if (entry == null)
+            var cachedIds = PokemonCacheManager.Instance.GetPokemonFormIds(id);
+            if (cachedIds == null)
             {
                 // get from PokeAPI
                 var pokemon = await PokeAPI.Get<Pokemon>(id);
                 return await pokemon.GetFormIDs(versionGroupId);
             }
 
-            var cachedIds = entry.Forms.Select(v => v.Key);
-            return cachedIds.ToArray();
+            return cachedIds;
         }
 
         /// <summary>
@@ -81,18 +78,15 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting names of forms of Pokemon {id} in version group {versionGroupId}...");
 
             // read form display names from cache
-            var cache = PokemonCacheManager.Instance.ReadCache();
-            var entry = cache.Get(id);
-            if (entry == null)
+            var cachedNames = PokemonCacheManager.Instance.GetPokemonFormNames(id);
+            if (cachedNames == null)
             {
                 // get from PokeAPI
                 var pokemon = await PokeAPI.Get<Pokemon>(id);
                 return await pokemon.GetFormNames(versionGroupId);
             }
 
-            var cachedNames = entry.Forms.Select(v => v.DisplayNames.Single(dn => dn.Language == "en"))
-                                         .Select(dn => dn.Name);
-            return cachedNames.ToArray();
+            return cachedNames;
         }
 
         /// <summary>

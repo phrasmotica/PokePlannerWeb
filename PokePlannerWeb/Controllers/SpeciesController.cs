@@ -38,10 +38,7 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting names of all species...");
 
             // read species names from cache
-            var cache = PokemonSpeciesCacheManager.Instance.ReadCache();
-            var cachedNames = cache.Entries.Select(e => e.DisplayNames.Single(dn => dn.Language == "en"))
-                                           .Select(dn => dn.Name);
-            return cachedNames.ToArray();
+            return PokemonSpeciesCacheManager.Instance.GetAllSpeciesNames();
         }
 
         /// <summary>
@@ -53,17 +50,15 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting IDs of varieties of species of Pokemon {id} in version group {versionGroupId}...");
 
             // read variety IDs from cache
-            var cache = PokemonSpeciesCacheManager.Instance.ReadCache();
-            var entry = cache.Get(id);
-            if (entry == null)
+            var cachedIds = PokemonSpeciesCacheManager.Instance.GetSpeciesVarietyIds(id);
+            if (cachedIds == null)
             {
                 // get from PokeAPI
                 var species = await PokeAPI.Get<PokemonSpecies>(id);
                 return await species.GetVarietyIDs(versionGroupId);
             }
 
-            var cachedIds = entry.Varieties.Select(v => v.Key);
-            return cachedIds.ToArray();
+            return cachedIds;
         }
 
         /// <summary>
@@ -75,18 +70,15 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting names of varieties of species of Pokemon {id} in version group {versionGroupId}...");
 
             // read variety display names from cache
-            var cache = PokemonSpeciesCacheManager.Instance.ReadCache();
-            var entry = cache.Get(id);
-            if (entry == null)
+            var cachedNames = PokemonSpeciesCacheManager.Instance.GetSpeciesVarietyNames(id);
+            if (cachedNames == null)
             {
                 // get from PokeAPI
                 var species = await PokeAPI.Get<PokemonSpecies>(id);
                 return await species.GetVarietyNames(versionGroupId);
             }
 
-            var cachedNames = entry.Varieties.Select(v => v.DisplayNames.Single(dn => dn.Language == "en"))
-                                             .Select(dn => dn.Name);
-            return cachedNames.ToArray();
+            return cachedNames;
         }
     }
 }
