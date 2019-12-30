@@ -65,6 +65,12 @@ if (Test-Path $CacheFile)
 
 if ($ForceUpdate -or $needsUpdate)
 {
+    $response = Read-Host "Are you sure you want to cache $Count Pokemon? This could take up to 30 minutes"
+    if ($response -ne "y")
+    {
+        return
+    }
+
     # cache object to be written
     $newCache = @{
         Timestamp = Get-Date $date -Format o
