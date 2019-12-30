@@ -5,8 +5,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using PokeApiNet.Models;
+using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
-using PokePlannerWeb.Data.Cache;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Payloads;
 using PokePlannerWeb.Data.Types;
@@ -76,14 +76,37 @@ namespace PokePlannerWeb.Tests
         }
 
         /// <summary>
-        /// Verifies that loading the names of all secondary Pokemon forms works correctly.
+        /// Verifies that Pokemon cache works correctly.
         /// </summary>
         [Test]
-        [Category("Integration")]
-        public async Task PokemonFormDisplayNamesLoadingTest()
+        [Category("Unit")]
+        public void PokemonCacheTest()
         {
-            // cache secondary forms display names in JSON file
-            await PokemonFormDisplayNamesCacheManager.Instance.UpdateCache();
+            var cache = PokemonCacheManager.Instance.ReadCache();
+            Assert.AreEqual(807, cache.Count);
+
+            var entry = cache.Get(493);
+            Assert.AreEqual(entry.DisplayNames.Single(dn => dn.Language == "en").Name, "Arceus");
+
+            var form = entry.Forms.Last();
+            Assert.AreEqual(form.DisplayNames.Single(dn => dn.Language == "en").Name, "Fairy Arceus");
+        }
+
+        /// <summary>
+        /// Verifies that the Pokemon species cache works correctly.
+        /// </summary>
+        [Test]
+        [Category("Unit")]
+        public void PokemonSpeciesCacheTest()
+        {
+            var cache = PokemonSpeciesCacheManager.Instance.ReadCache();
+            Assert.AreEqual(807, cache.Count);
+
+            var entry = cache.Get(3);
+            Assert.AreEqual(entry.DisplayNames.Single(dn => dn.Language == "en").Name, "Venusaur");
+
+            var variety = entry.Varieties.Last();
+            Assert.AreEqual(variety.DisplayNames.Single(dn => dn.Language == "en").Name, "Mega Venusaur");
         }
 
         /// <summary>

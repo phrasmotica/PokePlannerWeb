@@ -5,20 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="PokeApiNet">
       <HintPath>..\..\PokeApiNet\PokeApiNet\bin\Debug\netstandard2.0\PokeApiNet.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-    <!-- copy Pokemon form display names cache to bin -->
-  <ItemGroup>
-    <Content Include="Cache\PokemonFormDisplayNames.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>
