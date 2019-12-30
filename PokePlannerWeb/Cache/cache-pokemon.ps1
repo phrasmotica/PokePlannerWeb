@@ -2,7 +2,7 @@ param(
     [string] $CacheFile = "Pokemon.json",
     [string] $PokeApi = "http://localhost:8000/api/v2",
     [switch] $ForceUpdate = $false,
-    [int] $Count = 807 # only need to cache the default Pokemon for the species
+    [int] $Count = 964
 )
 
 # sends a vanilla GET request to the endpoint and returns the response content

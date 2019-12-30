@@ -1,5 +1,5 @@
 ﻿{
-  "Timestamp": "2019-12-30T16:21:17.5870723Z",
+  "Timestamp": "2019-12-30T17:32:33.3214892Z",
   "Entries": [
     {
       "Key": 1,
@@ -80901,6 +80901,9622 @@
         {
           "Name": "捷拉拉",
           "Language": "zh-Hans"
+        }
+      ]
+    },
+    {
+      "Key": 10001,
+      "DisplayNames": [
+        {
+          "Name": "デオキシス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "테오키스",
+          "Language": "ko"
+        },
+        {
+          "Name": "代歐奇希斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "fr"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "de"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "es"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "it"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "en"
+        },
+        {
+          "Name": "デオキシス",
+          "Language": "ja"
+        },
+        {
+          "Name": "代欧奇希斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10031,
+          "DisplayNames": [
+            {
+              "Name": "Deoxys Attaque",
+              "Language": "fr"
+            },
+            {
+              "Name": "Attack Deoxys",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10002,
+      "DisplayNames": [
+        {
+          "Name": "デオキシス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "테오키스",
+          "Language": "ko"
+        },
+        {
+          "Name": "代歐奇希斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "fr"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "de"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "es"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "it"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "en"
+        },
+        {
+          "Name": "デオキシス",
+          "Language": "ja"
+        },
+        {
+          "Name": "代欧奇希斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10032,
+          "DisplayNames": [
+            {
+              "Name": "Deoxys Défense",
+              "Language": "fr"
+            },
+            {
+              "Name": "Defense Deoxys",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10003,
+      "DisplayNames": [
+        {
+          "Name": "デオキシス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "테오키스",
+          "Language": "ko"
+        },
+        {
+          "Name": "代歐奇希斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "fr"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "de"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "es"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "it"
+        },
+        {
+          "Name": "Deoxys",
+          "Language": "en"
+        },
+        {
+          "Name": "デオキシス",
+          "Language": "ja"
+        },
+        {
+          "Name": "代欧奇希斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10033,
+          "DisplayNames": [
+            {
+              "Name": "Deoxys Vitesse",
+              "Language": "fr"
+            },
+            {
+              "Name": "Speed Deoxys",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10004,
+      "DisplayNames": [
+        {
+          "Name": "ミノマダム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Minomadam",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "도롱마담",
+          "Language": "ko"
+        },
+        {
+          "Name": "結草貴婦",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Cheniselle",
+          "Language": "fr"
+        },
+        {
+          "Name": "Burmadame",
+          "Language": "de"
+        },
+        {
+          "Name": "Wormadam",
+          "Language": "es"
+        },
+        {
+          "Name": "Wormadam",
+          "Language": "it"
+        },
+        {
+          "Name": "Wormadam",
+          "Language": "en"
+        },
+        {
+          "Name": "ミノマダム",
+          "Language": "ja"
+        },
+        {
+          "Name": "结草贵妇",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10036,
+          "DisplayNames": [
+            {
+              "Name": "Cheniselle Sable",
+              "Language": "fr"
+            },
+            {
+              "Name": "Sandy Wormadam",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10005,
+      "DisplayNames": [
+        {
+          "Name": "ミノマダム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Minomadam",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "도롱마담",
+          "Language": "ko"
+        },
+        {
+          "Name": "結草貴婦",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Cheniselle",
+          "Language": "fr"
+        },
+        {
+          "Name": "Burmadame",
+          "Language": "de"
+        },
+        {
+          "Name": "Wormadam",
+          "Language": "es"
+        },
+        {
+          "Name": "Wormadam",
+          "Language": "it"
+        },
+        {
+          "Name": "Wormadam",
+          "Language": "en"
+        },
+        {
+          "Name": "ミノマダム",
+          "Language": "ja"
+        },
+        {
+          "Name": "结草贵妇",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10037,
+          "DisplayNames": [
+            {
+              "Name": "Cheniselle Déchet",
+              "Language": "fr"
+            },
+            {
+              "Name": "Trash Wormadam",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10006,
+      "DisplayNames": [
+        {
+          "Name": "シェイミ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Shaymin",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "쉐이미",
+          "Language": "ko"
+        },
+        {
+          "Name": "謝米",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Shaymin",
+          "Language": "fr"
+        },
+        {
+          "Name": "Shaymin",
+          "Language": "de"
+        },
+        {
+          "Name": "Shaymin",
+          "Language": "es"
+        },
+        {
+          "Name": "Shaymin",
+          "Language": "it"
+        },
+        {
+          "Name": "Shaymin",
+          "Language": "en"
+        },
+        {
+          "Name": "シェイミ",
+          "Language": "ja"
+        },
+        {
+          "Name": "谢米",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10064,
+          "DisplayNames": [
+            {
+              "Name": "Shaymin Céleste",
+              "Language": "fr"
+            },
+            {
+              "Name": "Sky Shaymin",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10007,
+      "DisplayNames": [
+        {
+          "Name": "ギラティナ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Giratina",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "기라티나",
+          "Language": "ko"
+        },
+        {
+          "Name": "騎拉帝納",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Giratina",
+          "Language": "fr"
+        },
+        {
+          "Name": "Giratina",
+          "Language": "de"
+        },
+        {
+          "Name": "Giratina",
+          "Language": "es"
+        },
+        {
+          "Name": "Giratina",
+          "Language": "it"
+        },
+        {
+          "Name": "Giratina",
+          "Language": "en"
+        },
+        {
+          "Name": "ギラティナ",
+          "Language": "ja"
+        },
+        {
+          "Name": "骑拉帝纳",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10063,
+          "DisplayNames": [
+            {
+              "Name": "Giratina Originel",
+              "Language": "fr"
+            },
+            {
+              "Name": "Origin Giratina",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10008,
+      "DisplayNames": [
+        {
+          "Name": "ロトム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "로토무",
+          "Language": "ko"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Motisma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "de"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "es"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "it"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "en"
+        },
+        {
+          "Name": "ロトム",
+          "Language": "ja"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10058,
+          "DisplayNames": [
+            {
+              "Name": "Motisma Chaleur",
+              "Language": "fr"
+            },
+            {
+              "Name": "Heat Rotom",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10009,
+      "DisplayNames": [
+        {
+          "Name": "ロトム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "로토무",
+          "Language": "ko"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Motisma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "de"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "es"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "it"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "en"
+        },
+        {
+          "Name": "ロトム",
+          "Language": "ja"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10059,
+          "DisplayNames": [
+            {
+              "Name": "Motisma Lavage",
+              "Language": "fr"
+            },
+            {
+              "Name": "Wash Rotom",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10010,
+      "DisplayNames": [
+        {
+          "Name": "ロトム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "로토무",
+          "Language": "ko"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Motisma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "de"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "es"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "it"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "en"
+        },
+        {
+          "Name": "ロトム",
+          "Language": "ja"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10060,
+          "DisplayNames": [
+            {
+              "Name": "Motisma Froid",
+              "Language": "fr"
+            },
+            {
+              "Name": "Frost Rotom",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10011,
+      "DisplayNames": [
+        {
+          "Name": "ロトム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "로토무",
+          "Language": "ko"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Motisma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "de"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "es"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "it"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "en"
+        },
+        {
+          "Name": "ロトム",
+          "Language": "ja"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10061,
+          "DisplayNames": [
+            {
+              "Name": "Motisma Hélice",
+              "Language": "fr"
+            },
+            {
+              "Name": "Fan Rotom",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10012,
+      "DisplayNames": [
+        {
+          "Name": "ロトム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "로토무",
+          "Language": "ko"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Motisma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "de"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "es"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "it"
+        },
+        {
+          "Name": "Rotom",
+          "Language": "en"
+        },
+        {
+          "Name": "ロトム",
+          "Language": "ja"
+        },
+        {
+          "Name": "洛托姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10062,
+          "DisplayNames": [
+            {
+              "Name": "Motisma Tonte",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mow Rotom",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10013,
+      "DisplayNames": [
+        {
+          "Name": "ポワルン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Powalen",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "캐스퐁",
+          "Language": "ko"
+        },
+        {
+          "Name": "飄浮泡泡",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Morphéo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Formeo",
+          "Language": "de"
+        },
+        {
+          "Name": "Castform",
+          "Language": "es"
+        },
+        {
+          "Name": "Castform",
+          "Language": "it"
+        },
+        {
+          "Name": "Castform",
+          "Language": "en"
+        },
+        {
+          "Name": "ポワルン",
+          "Language": "ja"
+        },
+        {
+          "Name": "飘浮泡泡",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10028,
+          "DisplayNames": [
+            {
+              "Name": "Morphéo Solaire",
+              "Language": "fr"
+            },
+            {
+              "Name": "Sunny Castform",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10014,
+      "DisplayNames": [
+        {
+          "Name": "ポワルン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Powalen",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "캐스퐁",
+          "Language": "ko"
+        },
+        {
+          "Name": "飄浮泡泡",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Morphéo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Formeo",
+          "Language": "de"
+        },
+        {
+          "Name": "Castform",
+          "Language": "es"
+        },
+        {
+          "Name": "Castform",
+          "Language": "it"
+        },
+        {
+          "Name": "Castform",
+          "Language": "en"
+        },
+        {
+          "Name": "ポワルン",
+          "Language": "ja"
+        },
+        {
+          "Name": "飘浮泡泡",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10029,
+          "DisplayNames": [
+            {
+              "Name": "Morphéo Eau de Pluie",
+              "Language": "fr"
+            },
+            {
+              "Name": "Rainy Castform",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10015,
+      "DisplayNames": [
+        {
+          "Name": "ポワルン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Powalen",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "캐스퐁",
+          "Language": "ko"
+        },
+        {
+          "Name": "飄浮泡泡",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Morphéo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Formeo",
+          "Language": "de"
+        },
+        {
+          "Name": "Castform",
+          "Language": "es"
+        },
+        {
+          "Name": "Castform",
+          "Language": "it"
+        },
+        {
+          "Name": "Castform",
+          "Language": "en"
+        },
+        {
+          "Name": "ポワルン",
+          "Language": "ja"
+        },
+        {
+          "Name": "飘浮泡泡",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10030,
+          "DisplayNames": [
+            {
+              "Name": "Morphéo Blizzard",
+              "Language": "fr"
+            },
+            {
+              "Name": "Snowy Castform",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10016,
+      "DisplayNames": [
+        {
+          "Name": "バスラオ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "배쓰나이",
+          "Language": "ko"
+        },
+        {
+          "Name": "野蠻鱸魚",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Bargantua",
+          "Language": "fr"
+        },
+        {
+          "Name": "Barschuft",
+          "Language": "de"
+        },
+        {
+          "Name": "Basculin",
+          "Language": "es"
+        },
+        {
+          "Name": "Basculin",
+          "Language": "it"
+        },
+        {
+          "Name": "Basculin",
+          "Language": "en"
+        },
+        {
+          "Name": "バスラオ",
+          "Language": "ja"
+        },
+        {
+          "Name": "野蛮鲈鱼",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10066,
+          "DisplayNames": [
+            {
+              "Name": "Bargantua Bleu",
+              "Language": "fr"
+            },
+            {
+              "Name": "Blue-Striped Basculin",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10017,
+      "DisplayNames": [
+        {
+          "Name": "ヒヒダルマ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "불비달마",
+          "Language": "ko"
+        },
+        {
+          "Name": "達摩狒狒",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Darumacho",
+          "Language": "fr"
+        },
+        {
+          "Name": "Flampivian",
+          "Language": "de"
+        },
+        {
+          "Name": "Darmanitan",
+          "Language": "es"
+        },
+        {
+          "Name": "Darmanitan",
+          "Language": "it"
+        },
+        {
+          "Name": "Darmanitan",
+          "Language": "en"
+        },
+        {
+          "Name": "ヒヒダルマ",
+          "Language": "ja"
+        },
+        {
+          "Name": "达摩狒狒",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10067,
+          "DisplayNames": [
+            {
+              "Name": "Darumacho Transe",
+              "Language": "fr"
+            },
+            {
+              "Name": "Zen Darmanitan",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10018,
+      "DisplayNames": [
+        {
+          "Name": "メロエッタ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메로엣타",
+          "Language": "ko"
+        },
+        {
+          "Name": "美洛耶塔",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Meloetta",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meloetta",
+          "Language": "de"
+        },
+        {
+          "Name": "Meloetta",
+          "Language": "es"
+        },
+        {
+          "Name": "Meloetta",
+          "Language": "it"
+        },
+        {
+          "Name": "Meloetta",
+          "Language": "en"
+        },
+        {
+          "Name": "メロエッタ",
+          "Language": "ja"
+        },
+        {
+          "Name": "美洛耶塔",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10074,
+          "DisplayNames": [
+            {
+              "Name": "Meloetta Danse",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pirouette Meloetta",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10019,
+      "DisplayNames": [
+        {
+          "Name": "トルネロス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "토네로스",
+          "Language": "ko"
+        },
+        {
+          "Name": "龍捲雲",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Boréas",
+          "Language": "fr"
+        },
+        {
+          "Name": "Boreos",
+          "Language": "de"
+        },
+        {
+          "Name": "Tornadus",
+          "Language": "es"
+        },
+        {
+          "Name": "Tornadus",
+          "Language": "it"
+        },
+        {
+          "Name": "Tornadus",
+          "Language": "en"
+        },
+        {
+          "Name": "トルネロス",
+          "Language": "ja"
+        },
+        {
+          "Name": "龙卷云",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10079,
+          "DisplayNames": [
+            {
+              "Name": "Boréas Totémique",
+              "Language": "fr"
+            },
+            {
+              "Name": "Therian Tornadus",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10020,
+      "DisplayNames": [
+        {
+          "Name": "ボルトロス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "볼트로스",
+          "Language": "ko"
+        },
+        {
+          "Name": "雷電雲",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Fulguris",
+          "Language": "fr"
+        },
+        {
+          "Name": "Voltolos",
+          "Language": "de"
+        },
+        {
+          "Name": "Thundurus",
+          "Language": "es"
+        },
+        {
+          "Name": "Thundurus",
+          "Language": "it"
+        },
+        {
+          "Name": "Thundurus",
+          "Language": "en"
+        },
+        {
+          "Name": "ボルトロス",
+          "Language": "ja"
+        },
+        {
+          "Name": "雷电云",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10080,
+          "DisplayNames": [
+            {
+              "Name": "Fulguris Totémique",
+              "Language": "fr"
+            },
+            {
+              "Name": "Therian Thundurus",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10021,
+      "DisplayNames": [
+        {
+          "Name": "ランドロス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "랜드로스",
+          "Language": "ko"
+        },
+        {
+          "Name": "土地雲",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Démétéros",
+          "Language": "fr"
+        },
+        {
+          "Name": "Demeteros",
+          "Language": "de"
+        },
+        {
+          "Name": "Landorus",
+          "Language": "es"
+        },
+        {
+          "Name": "Landorus",
+          "Language": "it"
+        },
+        {
+          "Name": "Landorus",
+          "Language": "en"
+        },
+        {
+          "Name": "ランドロス",
+          "Language": "ja"
+        },
+        {
+          "Name": "土地云",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10081,
+          "DisplayNames": [
+            {
+              "Name": "Démétéros Totémique",
+              "Language": "fr"
+            },
+            {
+              "Name": "Therian Landorus",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10022,
+      "DisplayNames": [
+        {
+          "Name": "キュレム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "큐레무",
+          "Language": "ko"
+        },
+        {
+          "Name": "酋雷姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "fr"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "de"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "es"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "it"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "en"
+        },
+        {
+          "Name": "キュレム",
+          "Language": "ja"
+        },
+        {
+          "Name": "酋雷姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10082,
+          "DisplayNames": [
+            {
+              "Name": "Kyurem Noir",
+              "Language": "fr"
+            },
+            {
+              "Name": "Black Kyurem",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10023,
+      "DisplayNames": [
+        {
+          "Name": "キュレム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "큐레무",
+          "Language": "ko"
+        },
+        {
+          "Name": "酋雷姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "fr"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "de"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "es"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "it"
+        },
+        {
+          "Name": "Kyurem",
+          "Language": "en"
+        },
+        {
+          "Name": "キュレム",
+          "Language": "ja"
+        },
+        {
+          "Name": "酋雷姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10083,
+          "DisplayNames": [
+            {
+              "Name": "Kyurem Blanc",
+              "Language": "fr"
+            },
+            {
+              "Name": "White Kyurem",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10024,
+      "DisplayNames": [
+        {
+          "Name": "ケルディオ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "케르디오",
+          "Language": "ko"
+        },
+        {
+          "Name": "凱路迪歐",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Keldeo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Keldeo",
+          "Language": "de"
+        },
+        {
+          "Name": "Keldeo",
+          "Language": "es"
+        },
+        {
+          "Name": "Keldeo",
+          "Language": "it"
+        },
+        {
+          "Name": "Keldeo",
+          "Language": "en"
+        },
+        {
+          "Name": "ケルディオ",
+          "Language": "ja"
+        },
+        {
+          "Name": "凯路迪欧",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10084,
+          "DisplayNames": [
+            {
+              "Name": "Keldeo Décidé",
+              "Language": "fr"
+            },
+            {
+              "Name": "Resolute Keldeo",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10025,
+      "DisplayNames": [
+        {
+          "Name": "ニャオニクス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "냐오닉스",
+          "Language": "ko"
+        },
+        {
+          "Name": "超能妙喵",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mistigrix",
+          "Language": "fr"
+        },
+        {
+          "Name": "Psiaugon",
+          "Language": "de"
+        },
+        {
+          "Name": "Meowstic",
+          "Language": "es"
+        },
+        {
+          "Name": "Meowstic",
+          "Language": "it"
+        },
+        {
+          "Name": "Meowstic",
+          "Language": "en"
+        },
+        {
+          "Name": "ニャオニクス",
+          "Language": "ja"
+        },
+        {
+          "Name": "超能妙喵",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10124,
+          "DisplayNames": [
+            {
+              "Name": "Mistigrix Femelle",
+              "Language": "fr"
+            },
+            {
+              "Name": "Female Meowstic",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10026,
+      "DisplayNames": [
+        {
+          "Name": "ギルガルド",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "킬가르도",
+          "Language": "ko"
+        },
+        {
+          "Name": "堅盾劍怪",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Exagide",
+          "Language": "fr"
+        },
+        {
+          "Name": "Durengard",
+          "Language": "de"
+        },
+        {
+          "Name": "Aegislash",
+          "Language": "es"
+        },
+        {
+          "Name": "Aegislash",
+          "Language": "it"
+        },
+        {
+          "Name": "Aegislash",
+          "Language": "en"
+        },
+        {
+          "Name": "ギルガルド",
+          "Language": "ja"
+        },
+        {
+          "Name": "坚盾剑怪",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10125,
+          "DisplayNames": [
+            {
+              "Name": "Exagide Assaut",
+              "Language": "fr"
+            },
+            {
+              "Name": "Blade Aegislash",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10027,
+      "DisplayNames": [
+        {
+          "Name": "バケッチャ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "호바귀",
+          "Language": "ko"
+        },
+        {
+          "Name": "南瓜精",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pitrouille",
+          "Language": "fr"
+        },
+        {
+          "Name": "Irrbis",
+          "Language": "de"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "es"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "it"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "en"
+        },
+        {
+          "Name": "バケッチャ",
+          "Language": "ja"
+        },
+        {
+          "Name": "南瓜精",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10126,
+          "DisplayNames": [
+            {
+              "Name": "Pitrouille Mini",
+              "Language": "fr"
+            },
+            {
+              "Name": "Small Pumpkaboo",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10028,
+      "DisplayNames": [
+        {
+          "Name": "バケッチャ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "호바귀",
+          "Language": "ko"
+        },
+        {
+          "Name": "南瓜精",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pitrouille",
+          "Language": "fr"
+        },
+        {
+          "Name": "Irrbis",
+          "Language": "de"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "es"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "it"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "en"
+        },
+        {
+          "Name": "バケッチャ",
+          "Language": "ja"
+        },
+        {
+          "Name": "南瓜精",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10127,
+          "DisplayNames": [
+            {
+              "Name": "Pitrouille Maxi",
+              "Language": "fr"
+            },
+            {
+              "Name": "Large Pumpkaboo",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10029,
+      "DisplayNames": [
+        {
+          "Name": "バケッチャ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "호바귀",
+          "Language": "ko"
+        },
+        {
+          "Name": "南瓜精",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pitrouille",
+          "Language": "fr"
+        },
+        {
+          "Name": "Irrbis",
+          "Language": "de"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "es"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "it"
+        },
+        {
+          "Name": "Pumpkaboo",
+          "Language": "en"
+        },
+        {
+          "Name": "バケッチャ",
+          "Language": "ja"
+        },
+        {
+          "Name": "南瓜精",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10128,
+          "DisplayNames": [
+            {
+              "Name": "Pitrouille Ultra",
+              "Language": "fr"
+            },
+            {
+              "Name": "Super Pumpkaboo",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10030,
+      "DisplayNames": [
+        {
+          "Name": "パンプジン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "펌킨인",
+          "Language": "ko"
+        },
+        {
+          "Name": "南瓜怪人",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Banshitrouye",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pumpdjinn",
+          "Language": "de"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "es"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "it"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "en"
+        },
+        {
+          "Name": "パンプジン",
+          "Language": "ja"
+        },
+        {
+          "Name": "南瓜怪人",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10129,
+          "DisplayNames": [
+            {
+              "Name": "Banshitrouye Mini",
+              "Language": "fr"
+            },
+            {
+              "Name": "Small Gourgeist",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10031,
+      "DisplayNames": [
+        {
+          "Name": "パンプジン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "펌킨인",
+          "Language": "ko"
+        },
+        {
+          "Name": "南瓜怪人",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Banshitrouye",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pumpdjinn",
+          "Language": "de"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "es"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "it"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "en"
+        },
+        {
+          "Name": "パンプジン",
+          "Language": "ja"
+        },
+        {
+          "Name": "南瓜怪人",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10130,
+          "DisplayNames": [
+            {
+              "Name": "Banshitrouye Maxi",
+              "Language": "fr"
+            },
+            {
+              "Name": "Large Gourgeist",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10032,
+      "DisplayNames": [
+        {
+          "Name": "パンプジン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "펌킨인",
+          "Language": "ko"
+        },
+        {
+          "Name": "南瓜怪人",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Banshitrouye",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pumpdjinn",
+          "Language": "de"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "es"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "it"
+        },
+        {
+          "Name": "Gourgeist",
+          "Language": "en"
+        },
+        {
+          "Name": "パンプジン",
+          "Language": "ja"
+        },
+        {
+          "Name": "南瓜怪人",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10131,
+          "DisplayNames": [
+            {
+              "Name": "Banshitrouye Ultra",
+              "Language": "fr"
+            },
+            {
+              "Name": "Super Gourgeist",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10033,
+      "DisplayNames": [
+        {
+          "Name": "フシギバナ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Fushigibana",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "이상해꽃",
+          "Language": "ko"
+        },
+        {
+          "Name": "妙蛙花",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Florizarre",
+          "Language": "fr"
+        },
+        {
+          "Name": "Bisaflor",
+          "Language": "de"
+        },
+        {
+          "Name": "Venusaur",
+          "Language": "es"
+        },
+        {
+          "Name": "Venusaur",
+          "Language": "it"
+        },
+        {
+          "Name": "Venusaur",
+          "Language": "en"
+        },
+        {
+          "Name": "フシギバナ",
+          "Language": "ja"
+        },
+        {
+          "Name": "妙蛙花",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10133,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Florizarre",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Venusaur",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10034,
+      "DisplayNames": [
+        {
+          "Name": "リザードン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Lizardon",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "리자몽",
+          "Language": "ko"
+        },
+        {
+          "Name": "噴火龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Dracaufeu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Glurak",
+          "Language": "de"
+        },
+        {
+          "Name": "Charizard",
+          "Language": "es"
+        },
+        {
+          "Name": "Charizard",
+          "Language": "it"
+        },
+        {
+          "Name": "Charizard",
+          "Language": "en"
+        },
+        {
+          "Name": "リザードン",
+          "Language": "ja"
+        },
+        {
+          "Name": "喷火龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10134,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Dracaufeu X",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Charizard X",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10035,
+      "DisplayNames": [
+        {
+          "Name": "リザードン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Lizardon",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "리자몽",
+          "Language": "ko"
+        },
+        {
+          "Name": "噴火龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Dracaufeu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Glurak",
+          "Language": "de"
+        },
+        {
+          "Name": "Charizard",
+          "Language": "es"
+        },
+        {
+          "Name": "Charizard",
+          "Language": "it"
+        },
+        {
+          "Name": "Charizard",
+          "Language": "en"
+        },
+        {
+          "Name": "リザードン",
+          "Language": "ja"
+        },
+        {
+          "Name": "喷火龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10135,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Dracaufeu Y",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Charizard Y",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10036,
+      "DisplayNames": [
+        {
+          "Name": "カメックス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Kamex",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "거북왕",
+          "Language": "ko"
+        },
+        {
+          "Name": "水箭龜",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Tortank",
+          "Language": "fr"
+        },
+        {
+          "Name": "Turtok",
+          "Language": "de"
+        },
+        {
+          "Name": "Blastoise",
+          "Language": "es"
+        },
+        {
+          "Name": "Blastoise",
+          "Language": "it"
+        },
+        {
+          "Name": "Blastoise",
+          "Language": "en"
+        },
+        {
+          "Name": "カメックス",
+          "Language": "ja"
+        },
+        {
+          "Name": "水箭龟",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10136,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Tortank",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Blastoise",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10037,
+      "DisplayNames": [
+        {
+          "Name": "フーディン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Foodin",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "후딘",
+          "Language": "ko"
+        },
+        {
+          "Name": "胡地",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Alakazam",
+          "Language": "fr"
+        },
+        {
+          "Name": "Simsala",
+          "Language": "de"
+        },
+        {
+          "Name": "Alakazam",
+          "Language": "es"
+        },
+        {
+          "Name": "Alakazam",
+          "Language": "it"
+        },
+        {
+          "Name": "Alakazam",
+          "Language": "en"
+        },
+        {
+          "Name": "フーディン",
+          "Language": "ja"
+        },
+        {
+          "Name": "胡地",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10137,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Alakazam",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Alakazam",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10038,
+      "DisplayNames": [
+        {
+          "Name": "ゲンガー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Gangar",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "팬텀",
+          "Language": "ko"
+        },
+        {
+          "Name": "耿鬼",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Ectoplasma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Gengar",
+          "Language": "de"
+        },
+        {
+          "Name": "Gengar",
+          "Language": "es"
+        },
+        {
+          "Name": "Gengar",
+          "Language": "it"
+        },
+        {
+          "Name": "Gengar",
+          "Language": "en"
+        },
+        {
+          "Name": "ゲンガー",
+          "Language": "ja"
+        },
+        {
+          "Name": "耿鬼",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10138,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Ectoplasma",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Gengar",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10039,
+      "DisplayNames": [
+        {
+          "Name": "ガルーラ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Garura",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "캥카",
+          "Language": "ko"
+        },
+        {
+          "Name": "袋獸",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Kangourex",
+          "Language": "fr"
+        },
+        {
+          "Name": "Kangama",
+          "Language": "de"
+        },
+        {
+          "Name": "Kangaskhan",
+          "Language": "es"
+        },
+        {
+          "Name": "Kangaskhan",
+          "Language": "it"
+        },
+        {
+          "Name": "Kangaskhan",
+          "Language": "en"
+        },
+        {
+          "Name": "ガルーラ",
+          "Language": "ja"
+        },
+        {
+          "Name": "袋兽",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10139,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Kangourex",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Kangaskhan",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10040,
+      "DisplayNames": [
+        {
+          "Name": "カイロス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Kailios",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "쁘사이저",
+          "Language": "ko"
+        },
+        {
+          "Name": "凱羅斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Scarabrute",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pinsir",
+          "Language": "de"
+        },
+        {
+          "Name": "Pinsir",
+          "Language": "es"
+        },
+        {
+          "Name": "Pinsir",
+          "Language": "it"
+        },
+        {
+          "Name": "Pinsir",
+          "Language": "en"
+        },
+        {
+          "Name": "カイロス",
+          "Language": "ja"
+        },
+        {
+          "Name": "凯罗斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10140,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Scarabrute",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Pinsir",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10041,
+      "DisplayNames": [
+        {
+          "Name": "ギャラドス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Gyarados",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "갸라도스",
+          "Language": "ko"
+        },
+        {
+          "Name": "暴鯉龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Léviator",
+          "Language": "fr"
+        },
+        {
+          "Name": "Garados",
+          "Language": "de"
+        },
+        {
+          "Name": "Gyarados",
+          "Language": "es"
+        },
+        {
+          "Name": "Gyarados",
+          "Language": "it"
+        },
+        {
+          "Name": "Gyarados",
+          "Language": "en"
+        },
+        {
+          "Name": "ギャラドス",
+          "Language": "ja"
+        },
+        {
+          "Name": "暴鲤龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10141,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Léviator",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Gyarados",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10042,
+      "DisplayNames": [
+        {
+          "Name": "プテラ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Ptera",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "프테라",
+          "Language": "ko"
+        },
+        {
+          "Name": "化石翼龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Ptéra",
+          "Language": "fr"
+        },
+        {
+          "Name": "Aerodactyl",
+          "Language": "de"
+        },
+        {
+          "Name": "Aerodactyl",
+          "Language": "es"
+        },
+        {
+          "Name": "Aerodactyl",
+          "Language": "it"
+        },
+        {
+          "Name": "Aerodactyl",
+          "Language": "en"
+        },
+        {
+          "Name": "プテラ",
+          "Language": "ja"
+        },
+        {
+          "Name": "化石翼龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10142,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Ptéra",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Aerodactyl",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10043,
+      "DisplayNames": [
+        {
+          "Name": "ミュウツー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "뮤츠",
+          "Language": "ko"
+        },
+        {
+          "Name": "超夢",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mewtu",
+          "Language": "de"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "es"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "it"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "en"
+        },
+        {
+          "Name": "ミュウツー",
+          "Language": "ja"
+        },
+        {
+          "Name": "超梦",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10143,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Mewtwo X",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Mewtwo X",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10044,
+      "DisplayNames": [
+        {
+          "Name": "ミュウツー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "뮤츠",
+          "Language": "ko"
+        },
+        {
+          "Name": "超夢",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mewtu",
+          "Language": "de"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "es"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "it"
+        },
+        {
+          "Name": "Mewtwo",
+          "Language": "en"
+        },
+        {
+          "Name": "ミュウツー",
+          "Language": "ja"
+        },
+        {
+          "Name": "超梦",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10144,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Mewtwo Y",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Mewtwo Y",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10045,
+      "DisplayNames": [
+        {
+          "Name": "デンリュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Denryu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "전룡",
+          "Language": "ko"
+        },
+        {
+          "Name": "電龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pharamp",
+          "Language": "fr"
+        },
+        {
+          "Name": "Ampharos",
+          "Language": "de"
+        },
+        {
+          "Name": "Ampharos",
+          "Language": "es"
+        },
+        {
+          "Name": "Ampharos",
+          "Language": "it"
+        },
+        {
+          "Name": "Ampharos",
+          "Language": "en"
+        },
+        {
+          "Name": "デンリュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "电龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10145,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Pharamp",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Ampharos",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10046,
+      "DisplayNames": [
+        {
+          "Name": "ハッサム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Hassam",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "핫삼",
+          "Language": "ko"
+        },
+        {
+          "Name": "巨鉗螳螂",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Cizayox",
+          "Language": "fr"
+        },
+        {
+          "Name": "Scherox",
+          "Language": "de"
+        },
+        {
+          "Name": "Scizor",
+          "Language": "es"
+        },
+        {
+          "Name": "Scizor",
+          "Language": "it"
+        },
+        {
+          "Name": "Scizor",
+          "Language": "en"
+        },
+        {
+          "Name": "ハッサム",
+          "Language": "ja"
+        },
+        {
+          "Name": "巨钳螳螂",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10146,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Cizayox",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Scizor",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10047,
+      "DisplayNames": [
+        {
+          "Name": "Scarhino",
+          "Language": "fr"
+        },
+        {
+          "Name": "ヘラクロス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Heracros",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "헤라크로스",
+          "Language": "ko"
+        },
+        {
+          "Name": "赫拉克羅斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Skaraborn",
+          "Language": "de"
+        },
+        {
+          "Name": "Heracross",
+          "Language": "es"
+        },
+        {
+          "Name": "Heracross",
+          "Language": "it"
+        },
+        {
+          "Name": "Heracross",
+          "Language": "en"
+        },
+        {
+          "Name": "ヘラクロス",
+          "Language": "ja"
+        },
+        {
+          "Name": "赫拉克罗斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10147,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Scarhino",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Heracross",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10048,
+      "DisplayNames": [
+        {
+          "Name": "ヘルガー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Hellgar",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "헬가",
+          "Language": "ko"
+        },
+        {
+          "Name": "黑魯加",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Démolosse",
+          "Language": "fr"
+        },
+        {
+          "Name": "Hundemon",
+          "Language": "de"
+        },
+        {
+          "Name": "Houndoom",
+          "Language": "es"
+        },
+        {
+          "Name": "Houndoom",
+          "Language": "it"
+        },
+        {
+          "Name": "Houndoom",
+          "Language": "en"
+        },
+        {
+          "Name": "ヘルガー",
+          "Language": "ja"
+        },
+        {
+          "Name": "黑鲁加",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10148,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Démolosse",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Houndoom",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10049,
+      "DisplayNames": [
+        {
+          "Name": "バンギラス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Bangiras",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "마기라스",
+          "Language": "ko"
+        },
+        {
+          "Name": "班基拉斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Tyranocif",
+          "Language": "fr"
+        },
+        {
+          "Name": "Despotar",
+          "Language": "de"
+        },
+        {
+          "Name": "Tyranitar",
+          "Language": "es"
+        },
+        {
+          "Name": "Tyranitar",
+          "Language": "it"
+        },
+        {
+          "Name": "Tyranitar",
+          "Language": "en"
+        },
+        {
+          "Name": "バンギラス",
+          "Language": "ja"
+        },
+        {
+          "Name": "班基拉斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10149,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Tyranocif",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Tyranitar",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10050,
+      "DisplayNames": [
+        {
+          "Name": "バシャーモ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Bursyamo",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "번치코",
+          "Language": "ko"
+        },
+        {
+          "Name": "火焰雞",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Braségali",
+          "Language": "fr"
+        },
+        {
+          "Name": "Lohgock",
+          "Language": "de"
+        },
+        {
+          "Name": "Blaziken",
+          "Language": "es"
+        },
+        {
+          "Name": "Blaziken",
+          "Language": "it"
+        },
+        {
+          "Name": "Blaziken",
+          "Language": "en"
+        },
+        {
+          "Name": "バシャーモ",
+          "Language": "ja"
+        },
+        {
+          "Name": "火焰鸡",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10150,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Braségali",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Blaziken",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10051,
+      "DisplayNames": [
+        {
+          "Name": "サーナイト",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Sirnight",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "가디안",
+          "Language": "ko"
+        },
+        {
+          "Name": "沙奈朵",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Gardevoir",
+          "Language": "fr"
+        },
+        {
+          "Name": "Guardevoir",
+          "Language": "de"
+        },
+        {
+          "Name": "Gardevoir",
+          "Language": "es"
+        },
+        {
+          "Name": "Gardevoir",
+          "Language": "it"
+        },
+        {
+          "Name": "Gardevoir",
+          "Language": "en"
+        },
+        {
+          "Name": "サーナイト",
+          "Language": "ja"
+        },
+        {
+          "Name": "沙奈朵",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10151,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Gardevoir",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Gardevoir",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10052,
+      "DisplayNames": [
+        {
+          "Name": "クチート",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Kucheat",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "입치트",
+          "Language": "ko"
+        },
+        {
+          "Name": "大嘴娃",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mysdibule",
+          "Language": "fr"
+        },
+        {
+          "Name": "Flunkifer",
+          "Language": "de"
+        },
+        {
+          "Name": "Mawile",
+          "Language": "es"
+        },
+        {
+          "Name": "Mawile",
+          "Language": "it"
+        },
+        {
+          "Name": "Mawile",
+          "Language": "en"
+        },
+        {
+          "Name": "クチート",
+          "Language": "ja"
+        },
+        {
+          "Name": "大嘴娃",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10152,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Mysdibule",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Mawile",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10053,
+      "DisplayNames": [
+        {
+          "Name": "ボスゴドラ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Bossgodora",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "보스로라",
+          "Language": "ko"
+        },
+        {
+          "Name": "波士可多拉",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Galeking",
+          "Language": "fr"
+        },
+        {
+          "Name": "Stolloss",
+          "Language": "de"
+        },
+        {
+          "Name": "Aggron",
+          "Language": "es"
+        },
+        {
+          "Name": "Aggron",
+          "Language": "it"
+        },
+        {
+          "Name": "Aggron",
+          "Language": "en"
+        },
+        {
+          "Name": "ボスゴドラ",
+          "Language": "ja"
+        },
+        {
+          "Name": "波士可多拉",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10153,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Galeking",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Aggron",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10054,
+      "DisplayNames": [
+        {
+          "Name": "チャーレム",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Charem",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "요가램",
+          "Language": "ko"
+        },
+        {
+          "Name": "恰雷姆",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Charmina",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meditalis",
+          "Language": "de"
+        },
+        {
+          "Name": "Medicham",
+          "Language": "es"
+        },
+        {
+          "Name": "Medicham",
+          "Language": "it"
+        },
+        {
+          "Name": "Medicham",
+          "Language": "en"
+        },
+        {
+          "Name": "チャーレム",
+          "Language": "ja"
+        },
+        {
+          "Name": "恰雷姆",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10154,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Charmina",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Medicham",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10055,
+      "DisplayNames": [
+        {
+          "Name": "ライボルト",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Livolt",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "썬더볼트",
+          "Language": "ko"
+        },
+        {
+          "Name": "雷電獸",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Élecsprint",
+          "Language": "fr"
+        },
+        {
+          "Name": "Voltenso",
+          "Language": "de"
+        },
+        {
+          "Name": "Manectric",
+          "Language": "es"
+        },
+        {
+          "Name": "Manectric",
+          "Language": "it"
+        },
+        {
+          "Name": "Manectric",
+          "Language": "en"
+        },
+        {
+          "Name": "ライボルト",
+          "Language": "ja"
+        },
+        {
+          "Name": "雷电兽",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10155,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Élecsprint",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Manectric",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10056,
+      "DisplayNames": [
+        {
+          "Name": "ジュペッタ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Juppeta",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "다크펫",
+          "Language": "ko"
+        },
+        {
+          "Name": "詛咒娃娃",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Branette",
+          "Language": "fr"
+        },
+        {
+          "Name": "Banette",
+          "Language": "de"
+        },
+        {
+          "Name": "Banette",
+          "Language": "es"
+        },
+        {
+          "Name": "Banette",
+          "Language": "it"
+        },
+        {
+          "Name": "Banette",
+          "Language": "en"
+        },
+        {
+          "Name": "ジュペッタ",
+          "Language": "ja"
+        },
+        {
+          "Name": "诅咒娃娃",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10156,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Branette",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Banette",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10057,
+      "DisplayNames": [
+        {
+          "Name": "アブソル",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Absol",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "앱솔",
+          "Language": "ko"
+        },
+        {
+          "Name": "阿勃梭魯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Absol",
+          "Language": "fr"
+        },
+        {
+          "Name": "Absol",
+          "Language": "de"
+        },
+        {
+          "Name": "Absol",
+          "Language": "es"
+        },
+        {
+          "Name": "Absol",
+          "Language": "it"
+        },
+        {
+          "Name": "Absol",
+          "Language": "en"
+        },
+        {
+          "Name": "アブソル",
+          "Language": "ja"
+        },
+        {
+          "Name": "阿勃梭鲁",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10157,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Absol",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Absol",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10058,
+      "DisplayNames": [
+        {
+          "Name": "ガブリアス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Gablias",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "한카리아스",
+          "Language": "ko"
+        },
+        {
+          "Name": "烈咬陸鯊",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Carchacrok",
+          "Language": "fr"
+        },
+        {
+          "Name": "Knakrack",
+          "Language": "de"
+        },
+        {
+          "Name": "Garchomp",
+          "Language": "es"
+        },
+        {
+          "Name": "Garchomp",
+          "Language": "it"
+        },
+        {
+          "Name": "Garchomp",
+          "Language": "en"
+        },
+        {
+          "Name": "ガブリアス",
+          "Language": "ja"
+        },
+        {
+          "Name": "烈咬陆鲨",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10158,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Carchacrok",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Garchomp",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10059,
+      "DisplayNames": [
+        {
+          "Name": "ルカリオ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Lucario",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "루카리오",
+          "Language": "ko"
+        },
+        {
+          "Name": "路卡利歐",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Lucario",
+          "Language": "fr"
+        },
+        {
+          "Name": "Lucario",
+          "Language": "de"
+        },
+        {
+          "Name": "Lucario",
+          "Language": "es"
+        },
+        {
+          "Name": "Lucario",
+          "Language": "it"
+        },
+        {
+          "Name": "Lucario",
+          "Language": "en"
+        },
+        {
+          "Name": "ルカリオ",
+          "Language": "ja"
+        },
+        {
+          "Name": "路卡利欧",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10159,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Lucario",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Lucario",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10060,
+      "DisplayNames": [
+        {
+          "Name": "ユキノオー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Yukinooh",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "눈설왕",
+          "Language": "ko"
+        },
+        {
+          "Name": "暴雪王",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Blizzaroi",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rexblisar",
+          "Language": "de"
+        },
+        {
+          "Name": "Abomasnow",
+          "Language": "es"
+        },
+        {
+          "Name": "Abomasnow",
+          "Language": "it"
+        },
+        {
+          "Name": "Abomasnow",
+          "Language": "en"
+        },
+        {
+          "Name": "ユキノオー",
+          "Language": "ja"
+        },
+        {
+          "Name": "暴雪王",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10160,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Blizzaroi",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Abomasnow",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10061,
+      "DisplayNames": [
+        {
+          "Name": "フラエッテ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "플라엣테",
+          "Language": "ko"
+        },
+        {
+          "Name": "花葉蒂",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Floette",
+          "Language": "fr"
+        },
+        {
+          "Name": "Floette",
+          "Language": "de"
+        },
+        {
+          "Name": "Floette",
+          "Language": "es"
+        },
+        {
+          "Name": "Floette",
+          "Language": "it"
+        },
+        {
+          "Name": "Floette",
+          "Language": "en"
+        },
+        {
+          "Name": "フラエッテ",
+          "Language": "ja"
+        },
+        {
+          "Name": "花叶蒂",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10163,
+          "DisplayNames": [
+            {
+              "Name": "Floette Éternel",
+              "Language": "fr"
+            },
+            {
+              "Name": "Eternal Floette",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10062,
+      "DisplayNames": [
+        {
+          "Name": "ラティアス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Latias",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "라티아스",
+          "Language": "ko"
+        },
+        {
+          "Name": "拉帝亞斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Latias",
+          "Language": "fr"
+        },
+        {
+          "Name": "Latias",
+          "Language": "de"
+        },
+        {
+          "Name": "Latias",
+          "Language": "es"
+        },
+        {
+          "Name": "Latias",
+          "Language": "it"
+        },
+        {
+          "Name": "Latias",
+          "Language": "en"
+        },
+        {
+          "Name": "ラティアス",
+          "Language": "ja"
+        },
+        {
+          "Name": "拉帝亚斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10164,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Latias",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Latias",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10063,
+      "DisplayNames": [
+        {
+          "Name": "ラティオス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Latios",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "라티오스",
+          "Language": "ko"
+        },
+        {
+          "Name": "拉帝歐斯",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Latios",
+          "Language": "fr"
+        },
+        {
+          "Name": "Latios",
+          "Language": "de"
+        },
+        {
+          "Name": "Latios",
+          "Language": "es"
+        },
+        {
+          "Name": "Latios",
+          "Language": "it"
+        },
+        {
+          "Name": "Latios",
+          "Language": "en"
+        },
+        {
+          "Name": "ラティオス",
+          "Language": "ja"
+        },
+        {
+          "Name": "拉帝欧斯",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10165,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Latios",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Latios",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10064,
+      "DisplayNames": [
+        {
+          "Name": "ラグラージ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Laglarge",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "대짱이",
+          "Language": "ko"
+        },
+        {
+          "Name": "巨沼怪",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Laggron",
+          "Language": "fr"
+        },
+        {
+          "Name": "Sumpex",
+          "Language": "de"
+        },
+        {
+          "Name": "Swampert",
+          "Language": "es"
+        },
+        {
+          "Name": "Swampert",
+          "Language": "it"
+        },
+        {
+          "Name": "Swampert",
+          "Language": "en"
+        },
+        {
+          "Name": "ラグラージ",
+          "Language": "ja"
+        },
+        {
+          "Name": "巨沼怪",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10166,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Laggron",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Swampert",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10065,
+      "DisplayNames": [
+        {
+          "Name": "ジュカイン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Jukain",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "나무킹",
+          "Language": "ko"
+        },
+        {
+          "Name": "蜥蜴王",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Jungko",
+          "Language": "fr"
+        },
+        {
+          "Name": "Gewaldro",
+          "Language": "de"
+        },
+        {
+          "Name": "Sceptile",
+          "Language": "es"
+        },
+        {
+          "Name": "Sceptile",
+          "Language": "it"
+        },
+        {
+          "Name": "Sceptile",
+          "Language": "en"
+        },
+        {
+          "Name": "ジュカイン",
+          "Language": "ja"
+        },
+        {
+          "Name": "蜥蜴王",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10167,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Jungko",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Sceptile",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10066,
+      "DisplayNames": [
+        {
+          "Name": "ヤミラミ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Yamirami",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "깜까미",
+          "Language": "ko"
+        },
+        {
+          "Name": "勾魂眼",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Ténéfix",
+          "Language": "fr"
+        },
+        {
+          "Name": "Zobiris",
+          "Language": "de"
+        },
+        {
+          "Name": "Sableye",
+          "Language": "es"
+        },
+        {
+          "Name": "Sableye",
+          "Language": "it"
+        },
+        {
+          "Name": "Sableye",
+          "Language": "en"
+        },
+        {
+          "Name": "ヤミラミ",
+          "Language": "ja"
+        },
+        {
+          "Name": "勾魂眼",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10168,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Ténéfix",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Sableye",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10067,
+      "DisplayNames": [
+        {
+          "Name": "チルタリス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Tyltalis",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "파비코리",
+          "Language": "ko"
+        },
+        {
+          "Name": "七夕青鳥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Altaria",
+          "Language": "fr"
+        },
+        {
+          "Name": "Altaria",
+          "Language": "de"
+        },
+        {
+          "Name": "Altaria",
+          "Language": "es"
+        },
+        {
+          "Name": "Altaria",
+          "Language": "it"
+        },
+        {
+          "Name": "Altaria",
+          "Language": "en"
+        },
+        {
+          "Name": "チルタリス",
+          "Language": "ja"
+        },
+        {
+          "Name": "七夕青鸟",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10169,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Altaria",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Altaria",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10068,
+      "DisplayNames": [
+        {
+          "Name": "エルレイド",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Erlade",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "엘레이드",
+          "Language": "ko"
+        },
+        {
+          "Name": "艾路雷朵",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Gallame",
+          "Language": "fr"
+        },
+        {
+          "Name": "Galagladi",
+          "Language": "de"
+        },
+        {
+          "Name": "Gallade",
+          "Language": "es"
+        },
+        {
+          "Name": "Gallade",
+          "Language": "it"
+        },
+        {
+          "Name": "Gallade",
+          "Language": "en"
+        },
+        {
+          "Name": "エルレイド",
+          "Language": "ja"
+        },
+        {
+          "Name": "艾路雷朵",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10170,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Gallame",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Gallade",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10069,
+      "DisplayNames": [
+        {
+          "Name": "タブンネ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "다부니",
+          "Language": "ko"
+        },
+        {
+          "Name": "差不多娃娃",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Nanméouïe",
+          "Language": "fr"
+        },
+        {
+          "Name": "Ohrdoch",
+          "Language": "de"
+        },
+        {
+          "Name": "Audino",
+          "Language": "es"
+        },
+        {
+          "Name": "Audino",
+          "Language": "it"
+        },
+        {
+          "Name": "Audino",
+          "Language": "en"
+        },
+        {
+          "Name": "タブンネ",
+          "Language": "ja"
+        },
+        {
+          "Name": "差不多娃娃",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10171,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Nanméouïe",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Audino",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10070,
+      "DisplayNames": [
+        {
+          "Name": "サメハダー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Samehader",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "샤크니아",
+          "Language": "ko"
+        },
+        {
+          "Name": "巨牙鯊",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Sharpedo",
+          "Language": "fr"
+        },
+        {
+          "Name": "Tohaido",
+          "Language": "de"
+        },
+        {
+          "Name": "Sharpedo",
+          "Language": "es"
+        },
+        {
+          "Name": "Sharpedo",
+          "Language": "it"
+        },
+        {
+          "Name": "Sharpedo",
+          "Language": "en"
+        },
+        {
+          "Name": "サメハダー",
+          "Language": "ja"
+        },
+        {
+          "Name": "巨牙鲨",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10172,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Sharpedo",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Sharpedo",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10071,
+      "DisplayNames": [
+        {
+          "Name": "ヤドラン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Yadoran",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "야도란",
+          "Language": "ko"
+        },
+        {
+          "Name": "呆殼獸",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Flagadoss",
+          "Language": "fr"
+        },
+        {
+          "Name": "Lahmus",
+          "Language": "de"
+        },
+        {
+          "Name": "Slowbro",
+          "Language": "es"
+        },
+        {
+          "Name": "Slowbro",
+          "Language": "it"
+        },
+        {
+          "Name": "Slowbro",
+          "Language": "en"
+        },
+        {
+          "Name": "ヤドラン",
+          "Language": "ja"
+        },
+        {
+          "Name": "呆壳兽",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10173,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Flagadoss",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Slowbro",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10072,
+      "DisplayNames": [
+        {
+          "Name": "ハガネール",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Haganeil",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "강철톤",
+          "Language": "ko"
+        },
+        {
+          "Name": "大鋼蛇",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Steelix",
+          "Language": "fr"
+        },
+        {
+          "Name": "Stahlos",
+          "Language": "de"
+        },
+        {
+          "Name": "Steelix",
+          "Language": "es"
+        },
+        {
+          "Name": "Steelix",
+          "Language": "it"
+        },
+        {
+          "Name": "Steelix",
+          "Language": "en"
+        },
+        {
+          "Name": "ハガネール",
+          "Language": "ja"
+        },
+        {
+          "Name": "大钢蛇",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10174,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Steelix",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Steelix",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10073,
+      "DisplayNames": [
+        {
+          "Name": "ピジョット",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pigeot",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피죤투",
+          "Language": "ko"
+        },
+        {
+          "Name": "大比鳥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Roucarnage",
+          "Language": "fr"
+        },
+        {
+          "Name": "Tauboss",
+          "Language": "de"
+        },
+        {
+          "Name": "Pidgeot",
+          "Language": "es"
+        },
+        {
+          "Name": "Pidgeot",
+          "Language": "it"
+        },
+        {
+          "Name": "Pidgeot",
+          "Language": "en"
+        },
+        {
+          "Name": "ピジョット",
+          "Language": "ja"
+        },
+        {
+          "Name": "大比鸟",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10175,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Roucarnage",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Pidgeot",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10074,
+      "DisplayNames": [
+        {
+          "Name": "オニゴーリ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Onigohri",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "얼음귀신",
+          "Language": "ko"
+        },
+        {
+          "Name": "冰鬼護",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Oniglali",
+          "Language": "fr"
+        },
+        {
+          "Name": "Firnontor",
+          "Language": "de"
+        },
+        {
+          "Name": "Glalie",
+          "Language": "es"
+        },
+        {
+          "Name": "Glalie",
+          "Language": "it"
+        },
+        {
+          "Name": "Glalie",
+          "Language": "en"
+        },
+        {
+          "Name": "オニゴーリ",
+          "Language": "ja"
+        },
+        {
+          "Name": "冰鬼护",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10176,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Oniglali",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Glalie",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10075,
+      "DisplayNames": [
+        {
+          "Name": "ディアンシー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "디안시",
+          "Language": "ko"
+        },
+        {
+          "Name": "蒂安希",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Diancie",
+          "Language": "fr"
+        },
+        {
+          "Name": "Diancie",
+          "Language": "de"
+        },
+        {
+          "Name": "Diancie",
+          "Language": "es"
+        },
+        {
+          "Name": "Diancie",
+          "Language": "it"
+        },
+        {
+          "Name": "Diancie",
+          "Language": "en"
+        },
+        {
+          "Name": "ディアンシー",
+          "Language": "ja"
+        },
+        {
+          "Name": "蒂安希",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10177,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Diancie",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Diancie",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10076,
+      "DisplayNames": [
+        {
+          "Name": "メタグロス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Metagross",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "메타그로스",
+          "Language": "ko"
+        },
+        {
+          "Name": "巨金怪",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Métalosse",
+          "Language": "fr"
+        },
+        {
+          "Name": "Metagross",
+          "Language": "de"
+        },
+        {
+          "Name": "Metagross",
+          "Language": "es"
+        },
+        {
+          "Name": "Metagross",
+          "Language": "it"
+        },
+        {
+          "Name": "Metagross",
+          "Language": "en"
+        },
+        {
+          "Name": "メタグロス",
+          "Language": "ja"
+        },
+        {
+          "Name": "巨金怪",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10178,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Métalosse",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Metagross",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10077,
+      "DisplayNames": [
+        {
+          "Name": "カイオーガ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Kyogre",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "가이오가",
+          "Language": "ko"
+        },
+        {
+          "Name": "蓋歐卡",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Kyogre",
+          "Language": "fr"
+        },
+        {
+          "Name": "Kyogre",
+          "Language": "de"
+        },
+        {
+          "Name": "Kyogre",
+          "Language": "es"
+        },
+        {
+          "Name": "Kyogre",
+          "Language": "it"
+        },
+        {
+          "Name": "Kyogre",
+          "Language": "en"
+        },
+        {
+          "Name": "カイオーガ",
+          "Language": "ja"
+        },
+        {
+          "Name": "盖欧卡",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10179,
+          "DisplayNames": [
+            {
+              "Name": "Primo-Kyogre",
+              "Language": "fr"
+            },
+            {
+              "Name": "Primal Kyogre",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10078,
+      "DisplayNames": [
+        {
+          "Name": "グラードン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Groudon",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "그란돈",
+          "Language": "ko"
+        },
+        {
+          "Name": "固拉多",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Groudon",
+          "Language": "fr"
+        },
+        {
+          "Name": "Groudon",
+          "Language": "de"
+        },
+        {
+          "Name": "Groudon",
+          "Language": "es"
+        },
+        {
+          "Name": "Groudon",
+          "Language": "it"
+        },
+        {
+          "Name": "Groudon",
+          "Language": "en"
+        },
+        {
+          "Name": "グラードン",
+          "Language": "ja"
+        },
+        {
+          "Name": "固拉多",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10180,
+          "DisplayNames": [
+            {
+              "Name": "Primo-Groudon",
+              "Language": "fr"
+            },
+            {
+              "Name": "Primal Groudon",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10079,
+      "DisplayNames": [
+        {
+          "Name": "レックウザ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rayquaza",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "레쿠쟈",
+          "Language": "ko"
+        },
+        {
+          "Name": "烈空坐",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Rayquaza",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rayquaza",
+          "Language": "de"
+        },
+        {
+          "Name": "Rayquaza",
+          "Language": "es"
+        },
+        {
+          "Name": "Rayquaza",
+          "Language": "it"
+        },
+        {
+          "Name": "Rayquaza",
+          "Language": "en"
+        },
+        {
+          "Name": "レックウザ",
+          "Language": "ja"
+        },
+        {
+          "Name": "烈空坐",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10181,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Rayquaza",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Rayquaza",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10080,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10182,
+          "DisplayNames": [
+            {
+              "Name": "Pikachu Rockeur",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pikachu Rock Star",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10081,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10183,
+          "DisplayNames": [
+            {
+              "Name": "Pikachu Lady",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pikachu Belle",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10082,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10184,
+          "DisplayNames": [
+            {
+              "Name": "Pikachu Star",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pikachu Pop Star",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10083,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10185,
+          "DisplayNames": [
+            {
+              "Name": "Pikachu Docteur",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pikachu Ph.D.",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10084,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10186,
+          "DisplayNames": [
+            {
+              "Name": "Pikachu Catcheur",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pikachu Libre",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10085,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10187,
+          "DisplayNames": [
+            {
+              "Name": "Pikachu Cosplayeur",
+              "Language": "fr"
+            },
+            {
+              "Name": "Cosplay Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10086,
+      "DisplayNames": [
+        {
+          "Name": "フーパ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "후파",
+          "Language": "ko"
+        },
+        {
+          "Name": "胡帕",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Hoopa",
+          "Language": "fr"
+        },
+        {
+          "Name": "Hoopa",
+          "Language": "de"
+        },
+        {
+          "Name": "Hoopa",
+          "Language": "es"
+        },
+        {
+          "Name": "Hoopa",
+          "Language": "it"
+        },
+        {
+          "Name": "Hoopa",
+          "Language": "en"
+        },
+        {
+          "Name": "フーパ",
+          "Language": "ja"
+        },
+        {
+          "Name": "胡帕",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10188,
+          "DisplayNames": [
+            {
+              "Name": "Hoopa Déchaîné",
+              "Language": "fr"
+            },
+            {
+              "Name": "Hoopa Unbound",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10087,
+      "DisplayNames": [
+        {
+          "Name": "バクーダ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Bakuuda",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "폭타",
+          "Language": "ko"
+        },
+        {
+          "Name": "噴火駝",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Camérupt",
+          "Language": "fr"
+        },
+        {
+          "Name": "Camerupt",
+          "Language": "de"
+        },
+        {
+          "Name": "Camerupt",
+          "Language": "es"
+        },
+        {
+          "Name": "Camerupt",
+          "Language": "it"
+        },
+        {
+          "Name": "Camerupt",
+          "Language": "en"
+        },
+        {
+          "Name": "バクーダ",
+          "Language": "ja"
+        },
+        {
+          "Name": "喷火驼",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10189,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Camérupt",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Camerupt",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10088,
+      "DisplayNames": [
+        {
+          "Name": "ミミロップ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Mimilop",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "이어롭",
+          "Language": "ko"
+        },
+        {
+          "Name": "長耳兔",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Lockpin",
+          "Language": "fr"
+        },
+        {
+          "Name": "Schlapor",
+          "Language": "de"
+        },
+        {
+          "Name": "Lopunny",
+          "Language": "es"
+        },
+        {
+          "Name": "Lopunny",
+          "Language": "it"
+        },
+        {
+          "Name": "Lopunny",
+          "Language": "en"
+        },
+        {
+          "Name": "ミミロップ",
+          "Language": "ja"
+        },
+        {
+          "Name": "长耳兔",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10190,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Lockpin",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Lopunny",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10089,
+      "DisplayNames": [
+        {
+          "Name": "ボーマンダ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Bohmander",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "보만다",
+          "Language": "ko"
+        },
+        {
+          "Name": "暴飛龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Drattak",
+          "Language": "fr"
+        },
+        {
+          "Name": "Brutalanda",
+          "Language": "de"
+        },
+        {
+          "Name": "Salamence",
+          "Language": "es"
+        },
+        {
+          "Name": "Salamence",
+          "Language": "it"
+        },
+        {
+          "Name": "Salamence",
+          "Language": "en"
+        },
+        {
+          "Name": "ボーマンダ",
+          "Language": "ja"
+        },
+        {
+          "Name": "暴飞龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10191,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Drattak",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Salamence",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10090,
+      "DisplayNames": [
+        {
+          "Name": "スピアー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Spear",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "독침붕",
+          "Language": "ko"
+        },
+        {
+          "Name": "大針蜂",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Dardargnan",
+          "Language": "fr"
+        },
+        {
+          "Name": "Bibor",
+          "Language": "de"
+        },
+        {
+          "Name": "Beedrill",
+          "Language": "es"
+        },
+        {
+          "Name": "Beedrill",
+          "Language": "it"
+        },
+        {
+          "Name": "Beedrill",
+          "Language": "en"
+        },
+        {
+          "Name": "スピアー",
+          "Language": "ja"
+        },
+        {
+          "Name": "大针蜂",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10192,
+          "DisplayNames": [
+            {
+              "Name": "Méga-Dardargnan",
+              "Language": "fr"
+            },
+            {
+              "Name": "Mega Beedrill",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10091,
+      "DisplayNames": [
+        {
+          "Name": "コラッタ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Koratta",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "꼬렛",
+          "Language": "ko"
+        },
+        {
+          "Name": "小拉達",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Rattata",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rattfratz",
+          "Language": "de"
+        },
+        {
+          "Name": "Rattata",
+          "Language": "es"
+        },
+        {
+          "Name": "Rattata",
+          "Language": "it"
+        },
+        {
+          "Name": "Rattata",
+          "Language": "en"
+        },
+        {
+          "Name": "コラッタ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小拉达",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10193,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Rattata",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10092,
+      "DisplayNames": [
+        {
+          "Name": "ラッタ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Ratta",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "레트라",
+          "Language": "ko"
+        },
+        {
+          "Name": "拉達",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Rattatac",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rattikarl",
+          "Language": "de"
+        },
+        {
+          "Name": "Raticate",
+          "Language": "es"
+        },
+        {
+          "Name": "Raticate",
+          "Language": "it"
+        },
+        {
+          "Name": "Raticate",
+          "Language": "en"
+        },
+        {
+          "Name": "ラッタ",
+          "Language": "ja"
+        },
+        {
+          "Name": "拉达",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10194,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Raticate",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10093,
+      "DisplayNames": [
+        {
+          "Name": "ラッタ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Ratta",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "레트라",
+          "Language": "ko"
+        },
+        {
+          "Name": "拉達",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Rattatac",
+          "Language": "fr"
+        },
+        {
+          "Name": "Rattikarl",
+          "Language": "de"
+        },
+        {
+          "Name": "Raticate",
+          "Language": "es"
+        },
+        {
+          "Name": "Raticate",
+          "Language": "it"
+        },
+        {
+          "Name": "Raticate",
+          "Language": "en"
+        },
+        {
+          "Name": "ラッタ",
+          "Language": "ja"
+        },
+        {
+          "Name": "拉达",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10195,
+          "DisplayNames": [
+            {
+              "Name": "Totem Alolan Raticate",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10094,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10196,
+          "DisplayNames": [
+            {
+              "Name": "Original Cap Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10095,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10197,
+          "DisplayNames": [
+            {
+              "Name": "Hoenn Cap Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10096,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10198,
+          "DisplayNames": [
+            {
+              "Name": "Sinnoh Cap Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10097,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10199,
+          "DisplayNames": [
+            {
+              "Name": "Unova Cap Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10098,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10200,
+          "DisplayNames": [
+            {
+              "Name": "Kalos Cap Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10099,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10201,
+          "DisplayNames": [
+            {
+              "Name": "Alola Cap Pikachu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10100,
+      "DisplayNames": [
+        {
+          "Name": "ライチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Raichu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "라이츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "雷丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Raichu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Raichu",
+          "Language": "de"
+        },
+        {
+          "Name": "Raichu",
+          "Language": "es"
+        },
+        {
+          "Name": "Raichu",
+          "Language": "it"
+        },
+        {
+          "Name": "Raichu",
+          "Language": "en"
+        },
+        {
+          "Name": "ライチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "雷丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10202,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Raichu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10101,
+      "DisplayNames": [
+        {
+          "Name": "サンド",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Sand",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "모래두지",
+          "Language": "ko"
+        },
+        {
+          "Name": "穿山鼠",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Sabelette",
+          "Language": "fr"
+        },
+        {
+          "Name": "Sandan",
+          "Language": "de"
+        },
+        {
+          "Name": "Sandshrew",
+          "Language": "es"
+        },
+        {
+          "Name": "Sandshrew",
+          "Language": "it"
+        },
+        {
+          "Name": "Sandshrew",
+          "Language": "en"
+        },
+        {
+          "Name": "サンド",
+          "Language": "ja"
+        },
+        {
+          "Name": "穿山鼠",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10203,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Sandshrew",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10102,
+      "DisplayNames": [
+        {
+          "Name": "サンドパン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Sandpan",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "고지",
+          "Language": "ko"
+        },
+        {
+          "Name": "穿山王",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Sablaireau",
+          "Language": "fr"
+        },
+        {
+          "Name": "Sandamer",
+          "Language": "de"
+        },
+        {
+          "Name": "Sandslash",
+          "Language": "es"
+        },
+        {
+          "Name": "Sandslash",
+          "Language": "it"
+        },
+        {
+          "Name": "Sandslash",
+          "Language": "en"
+        },
+        {
+          "Name": "サンドパン",
+          "Language": "ja"
+        },
+        {
+          "Name": "穿山王",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10204,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Sandslash",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10103,
+      "DisplayNames": [
+        {
+          "Name": "ロコン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Rokon",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "식스테일",
+          "Language": "ko"
+        },
+        {
+          "Name": "六尾",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Goupix",
+          "Language": "fr"
+        },
+        {
+          "Name": "Vulpix",
+          "Language": "de"
+        },
+        {
+          "Name": "Vulpix",
+          "Language": "es"
+        },
+        {
+          "Name": "Vulpix",
+          "Language": "it"
+        },
+        {
+          "Name": "Vulpix",
+          "Language": "en"
+        },
+        {
+          "Name": "ロコン",
+          "Language": "ja"
+        },
+        {
+          "Name": "六尾",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10205,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Vulpix",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10104,
+      "DisplayNames": [
+        {
+          "Name": "キュウコン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Kyukon",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "나인테일",
+          "Language": "ko"
+        },
+        {
+          "Name": "九尾",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Feunard",
+          "Language": "fr"
+        },
+        {
+          "Name": "Vulnona",
+          "Language": "de"
+        },
+        {
+          "Name": "Ninetales",
+          "Language": "es"
+        },
+        {
+          "Name": "Ninetales",
+          "Language": "it"
+        },
+        {
+          "Name": "Ninetales",
+          "Language": "en"
+        },
+        {
+          "Name": "キュウコン",
+          "Language": "ja"
+        },
+        {
+          "Name": "九尾",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10206,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Ninetales",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10105,
+      "DisplayNames": [
+        {
+          "Name": "ディグダ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Digda",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "디그다",
+          "Language": "ko"
+        },
+        {
+          "Name": "地鼠",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Taupiqueur",
+          "Language": "fr"
+        },
+        {
+          "Name": "Digda",
+          "Language": "de"
+        },
+        {
+          "Name": "Diglett",
+          "Language": "es"
+        },
+        {
+          "Name": "Diglett",
+          "Language": "it"
+        },
+        {
+          "Name": "Diglett",
+          "Language": "en"
+        },
+        {
+          "Name": "ディグダ",
+          "Language": "ja"
+        },
+        {
+          "Name": "地鼠",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10207,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Diglett",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10106,
+      "DisplayNames": [
+        {
+          "Name": "ダグトリオ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Dugtrio",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "닥트리오",
+          "Language": "ko"
+        },
+        {
+          "Name": "三地鼠",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Triopikeur",
+          "Language": "fr"
+        },
+        {
+          "Name": "Digdri",
+          "Language": "de"
+        },
+        {
+          "Name": "Dugtrio",
+          "Language": "es"
+        },
+        {
+          "Name": "Dugtrio",
+          "Language": "it"
+        },
+        {
+          "Name": "Dugtrio",
+          "Language": "en"
+        },
+        {
+          "Name": "ダグトリオ",
+          "Language": "ja"
+        },
+        {
+          "Name": "三地鼠",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10208,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Dugtrio",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10107,
+      "DisplayNames": [
+        {
+          "Name": "ニャース",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Nyarth",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "나옹",
+          "Language": "ko"
+        },
+        {
+          "Name": "喵喵",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Miaouss",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mauzi",
+          "Language": "de"
+        },
+        {
+          "Name": "Meowth",
+          "Language": "es"
+        },
+        {
+          "Name": "Meowth",
+          "Language": "it"
+        },
+        {
+          "Name": "Meowth",
+          "Language": "en"
+        },
+        {
+          "Name": "ニャース",
+          "Language": "ja"
+        },
+        {
+          "Name": "喵喵",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10209,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Meowth",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10108,
+      "DisplayNames": [
+        {
+          "Name": "ペルシアン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Persian",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "페르시온",
+          "Language": "ko"
+        },
+        {
+          "Name": "貓老大",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Persian",
+          "Language": "fr"
+        },
+        {
+          "Name": "Snobilikat",
+          "Language": "de"
+        },
+        {
+          "Name": "Persian",
+          "Language": "es"
+        },
+        {
+          "Name": "Persian",
+          "Language": "it"
+        },
+        {
+          "Name": "Persian",
+          "Language": "en"
+        },
+        {
+          "Name": "ペルシアン",
+          "Language": "ja"
+        },
+        {
+          "Name": "猫老大",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10210,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Persian",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10109,
+      "DisplayNames": [
+        {
+          "Name": "イシツブテ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Isitsubute",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "꼬마돌",
+          "Language": "ko"
+        },
+        {
+          "Name": "小拳石",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Racaillou",
+          "Language": "fr"
+        },
+        {
+          "Name": "Kleinstein",
+          "Language": "de"
+        },
+        {
+          "Name": "Geodude",
+          "Language": "es"
+        },
+        {
+          "Name": "Geodude",
+          "Language": "it"
+        },
+        {
+          "Name": "Geodude",
+          "Language": "en"
+        },
+        {
+          "Name": "イシツブテ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小拳石",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10211,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Geodude",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10110,
+      "DisplayNames": [
+        {
+          "Name": "ゴローン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Golone",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "데구리",
+          "Language": "ko"
+        },
+        {
+          "Name": "隆隆石",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Gravalanch",
+          "Language": "fr"
+        },
+        {
+          "Name": "Georok",
+          "Language": "de"
+        },
+        {
+          "Name": "Graveler",
+          "Language": "es"
+        },
+        {
+          "Name": "Graveler",
+          "Language": "it"
+        },
+        {
+          "Name": "Graveler",
+          "Language": "en"
+        },
+        {
+          "Name": "ゴローン",
+          "Language": "ja"
+        },
+        {
+          "Name": "隆隆石",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10212,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Graveler",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10111,
+      "DisplayNames": [
+        {
+          "Name": "ゴローニャ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Golonya",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "딱구리",
+          "Language": "ko"
+        },
+        {
+          "Name": "隆隆岩",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Grolem",
+          "Language": "fr"
+        },
+        {
+          "Name": "Geowaz",
+          "Language": "de"
+        },
+        {
+          "Name": "Golem",
+          "Language": "es"
+        },
+        {
+          "Name": "Golem",
+          "Language": "it"
+        },
+        {
+          "Name": "Golem",
+          "Language": "en"
+        },
+        {
+          "Name": "ゴローニャ",
+          "Language": "ja"
+        },
+        {
+          "Name": "隆隆岩",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10213,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Golem",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10112,
+      "DisplayNames": [
+        {
+          "Name": "ベトベター",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Betbeter",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "질퍽이",
+          "Language": "ko"
+        },
+        {
+          "Name": "臭泥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Tadmorv",
+          "Language": "fr"
+        },
+        {
+          "Name": "Sleima",
+          "Language": "de"
+        },
+        {
+          "Name": "Grimer",
+          "Language": "es"
+        },
+        {
+          "Name": "Grimer",
+          "Language": "it"
+        },
+        {
+          "Name": "Grimer",
+          "Language": "en"
+        },
+        {
+          "Name": "ベトベター",
+          "Language": "ja"
+        },
+        {
+          "Name": "臭泥",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10214,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Grimer",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10113,
+      "DisplayNames": [
+        {
+          "Name": "ベトベトン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Betbeton",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "질뻐기",
+          "Language": "ko"
+        },
+        {
+          "Name": "臭臭泥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Grotadmorv",
+          "Language": "fr"
+        },
+        {
+          "Name": "Sleimok",
+          "Language": "de"
+        },
+        {
+          "Name": "Muk",
+          "Language": "es"
+        },
+        {
+          "Name": "Muk",
+          "Language": "it"
+        },
+        {
+          "Name": "Muk",
+          "Language": "en"
+        },
+        {
+          "Name": "ベトベトン",
+          "Language": "ja"
+        },
+        {
+          "Name": "臭臭泥",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10215,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Muk",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10114,
+      "DisplayNames": [
+        {
+          "Name": "ナッシー",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Nassy",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "나시",
+          "Language": "ko"
+        },
+        {
+          "Name": "椰蛋樹",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Noadkoko",
+          "Language": "fr"
+        },
+        {
+          "Name": "Kokowei",
+          "Language": "de"
+        },
+        {
+          "Name": "Exeggutor",
+          "Language": "es"
+        },
+        {
+          "Name": "Exeggutor",
+          "Language": "it"
+        },
+        {
+          "Name": "Exeggutor",
+          "Language": "en"
+        },
+        {
+          "Name": "ナッシー",
+          "Language": "ja"
+        },
+        {
+          "Name": "椰蛋树",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10216,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Exeggutor",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10115,
+      "DisplayNames": [
+        {
+          "Name": "ガラガラ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Garagara",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "텅구리",
+          "Language": "ko"
+        },
+        {
+          "Name": "嘎啦嘎啦",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Ossatueur",
+          "Language": "fr"
+        },
+        {
+          "Name": "Knogga",
+          "Language": "de"
+        },
+        {
+          "Name": "Marowak",
+          "Language": "es"
+        },
+        {
+          "Name": "Marowak",
+          "Language": "it"
+        },
+        {
+          "Name": "Marowak",
+          "Language": "en"
+        },
+        {
+          "Name": "ガラガラ",
+          "Language": "ja"
+        },
+        {
+          "Name": "嘎啦嘎啦",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10217,
+          "DisplayNames": [
+            {
+              "Name": "Alolan Marowak",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10116,
+      "DisplayNames": [
+        {
+          "Name": "ゲッコウガ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "개굴닌자",
+          "Language": "ko"
+        },
+        {
+          "Name": "甲賀忍蛙",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Amphinobi",
+          "Language": "fr"
+        },
+        {
+          "Name": "Quajutsu",
+          "Language": "de"
+        },
+        {
+          "Name": "Greninja",
+          "Language": "es"
+        },
+        {
+          "Name": "Greninja",
+          "Language": "it"
+        },
+        {
+          "Name": "Greninja",
+          "Language": "en"
+        },
+        {
+          "Name": "ゲッコウガ",
+          "Language": "ja"
+        },
+        {
+          "Name": "甲贺忍蛙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10218,
+          "DisplayNames": [
+            {
+              "Name": "Battle Bond Greninja",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10117,
+      "DisplayNames": [
+        {
+          "Name": "ゲッコウガ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "개굴닌자",
+          "Language": "ko"
+        },
+        {
+          "Name": "甲賀忍蛙",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Amphinobi",
+          "Language": "fr"
+        },
+        {
+          "Name": "Quajutsu",
+          "Language": "de"
+        },
+        {
+          "Name": "Greninja",
+          "Language": "es"
+        },
+        {
+          "Name": "Greninja",
+          "Language": "it"
+        },
+        {
+          "Name": "Greninja",
+          "Language": "en"
+        },
+        {
+          "Name": "ゲッコウガ",
+          "Language": "ja"
+        },
+        {
+          "Name": "甲贺忍蛙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10219,
+          "DisplayNames": [
+            {
+              "Name": "Ash\u0027s Greninja",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10118,
+      "DisplayNames": [
+        {
+          "Name": "ジガルデ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "지가르데",
+          "Language": "ko"
+        },
+        {
+          "Name": "基格爾德",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "fr"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "de"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "es"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "it"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "en"
+        },
+        {
+          "Name": "ジガルデ",
+          "Language": "ja"
+        },
+        {
+          "Name": "基格尔德",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10220,
+          "DisplayNames": [
+            {
+              "Name": "10% Zygarde",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10119,
+      "DisplayNames": [
+        {
+          "Name": "ジガルデ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "지가르데",
+          "Language": "ko"
+        },
+        {
+          "Name": "基格爾德",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "fr"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "de"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "es"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "it"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "en"
+        },
+        {
+          "Name": "ジガルデ",
+          "Language": "ja"
+        },
+        {
+          "Name": "基格尔德",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10221,
+          "DisplayNames": [
+            {
+              "Name": "50% Zygarde",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10120,
+      "DisplayNames": [
+        {
+          "Name": "ジガルデ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "지가르데",
+          "Language": "ko"
+        },
+        {
+          "Name": "基格爾德",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "fr"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "de"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "es"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "it"
+        },
+        {
+          "Name": "Zygarde",
+          "Language": "en"
+        },
+        {
+          "Name": "ジガルデ",
+          "Language": "ja"
+        },
+        {
+          "Name": "基格尔德",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10222,
+          "DisplayNames": [
+            {
+              "Name": "Complete Zygarde",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10121,
+      "DisplayNames": [
+        {
+          "Name": "デカグース",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "형사구스",
+          "Language": "ko"
+        },
+        {
+          "Name": "貓鼬探長",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Argouste",
+          "Language": "fr"
+        },
+        {
+          "Name": "Manguspektor",
+          "Language": "de"
+        },
+        {
+          "Name": "Gumshoos",
+          "Language": "es"
+        },
+        {
+          "Name": "Gumshoos",
+          "Language": "it"
+        },
+        {
+          "Name": "Gumshoos",
+          "Language": "en"
+        },
+        {
+          "Name": "デカグース",
+          "Language": "ja"
+        },
+        {
+          "Name": "猫鼬探长",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10223,
+          "DisplayNames": [
+            {
+              "Name": "Totem Gumshoos",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10122,
+      "DisplayNames": [
+        {
+          "Name": "クワガノン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "투구뿌논",
+          "Language": "ko"
+        },
+        {
+          "Name": "鍬農砲蟲",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Lucanon",
+          "Language": "fr"
+        },
+        {
+          "Name": "Donarion",
+          "Language": "de"
+        },
+        {
+          "Name": "Vikavolt",
+          "Language": "es"
+        },
+        {
+          "Name": "Vikavolt",
+          "Language": "it"
+        },
+        {
+          "Name": "Vikavolt",
+          "Language": "en"
+        },
+        {
+          "Name": "クワガノン",
+          "Language": "ja"
+        },
+        {
+          "Name": "锹农炮虫",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10224,
+          "DisplayNames": [
+            {
+              "Name": "Totem Vikavolt",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10123,
+      "DisplayNames": [
+        {
+          "Name": "オドリドリ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "춤추새",
+          "Language": "ko"
+        },
+        {
+          "Name": "花舞鳥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Plumeline",
+          "Language": "fr"
+        },
+        {
+          "Name": "Choreogel",
+          "Language": "de"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "es"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "it"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "en"
+        },
+        {
+          "Name": "オドリドリ",
+          "Language": "ja"
+        },
+        {
+          "Name": "花舞鸟",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10225,
+          "DisplayNames": [
+            {
+              "Name": "Pom-pom Oricorio",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10124,
+      "DisplayNames": [
+        {
+          "Name": "オドリドリ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "춤추새",
+          "Language": "ko"
+        },
+        {
+          "Name": "花舞鳥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Plumeline",
+          "Language": "fr"
+        },
+        {
+          "Name": "Choreogel",
+          "Language": "de"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "es"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "it"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "en"
+        },
+        {
+          "Name": "オドリドリ",
+          "Language": "ja"
+        },
+        {
+          "Name": "花舞鸟",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10226,
+          "DisplayNames": [
+            {
+              "Name": "Pa’u Oricorio",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10125,
+      "DisplayNames": [
+        {
+          "Name": "オドリドリ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "춤추새",
+          "Language": "ko"
+        },
+        {
+          "Name": "花舞鳥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Plumeline",
+          "Language": "fr"
+        },
+        {
+          "Name": "Choreogel",
+          "Language": "de"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "es"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "it"
+        },
+        {
+          "Name": "Oricorio",
+          "Language": "en"
+        },
+        {
+          "Name": "オドリドリ",
+          "Language": "ja"
+        },
+        {
+          "Name": "花舞鸟",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10227,
+          "DisplayNames": [
+            {
+              "Name": "Sensu Oricorio",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10126,
+      "DisplayNames": [
+        {
+          "Name": "ルガルガン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "루가루암",
+          "Language": "ko"
+        },
+        {
+          "Name": "鬃岩狼人",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Lougaroc",
+          "Language": "fr"
+        },
+        {
+          "Name": "Wolwerock",
+          "Language": "de"
+        },
+        {
+          "Name": "Lycanroc",
+          "Language": "es"
+        },
+        {
+          "Name": "Lycanroc",
+          "Language": "it"
+        },
+        {
+          "Name": "Lycanroc",
+          "Language": "en"
+        },
+        {
+          "Name": "ルガルガン",
+          "Language": "ja"
+        },
+        {
+          "Name": "鬃岩狼人",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10228,
+          "DisplayNames": [
+            {
+              "Name": "Midnight Lycanroc",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10127,
+      "DisplayNames": [
+        {
+          "Name": "ヨワシ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "약어리",
+          "Language": "ko"
+        },
+        {
+          "Name": "弱丁魚",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Froussardine",
+          "Language": "fr"
+        },
+        {
+          "Name": "Lusardin",
+          "Language": "de"
+        },
+        {
+          "Name": "Wishiwashi",
+          "Language": "es"
+        },
+        {
+          "Name": "Wishiwashi",
+          "Language": "it"
+        },
+        {
+          "Name": "Wishiwashi",
+          "Language": "en"
+        },
+        {
+          "Name": "ヨワシ",
+          "Language": "ja"
+        },
+        {
+          "Name": "弱丁鱼",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10229,
+          "DisplayNames": [
+            {
+              "Name": "School Wishiwashi",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10128,
+      "DisplayNames": [
+        {
+          "Name": "ラランテス",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "라란티스",
+          "Language": "ko"
+        },
+        {
+          "Name": "蘭螳花",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Floramantis",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mantidea",
+          "Language": "de"
+        },
+        {
+          "Name": "Lurantis",
+          "Language": "es"
+        },
+        {
+          "Name": "Lurantis",
+          "Language": "it"
+        },
+        {
+          "Name": "Lurantis",
+          "Language": "en"
+        },
+        {
+          "Name": "ラランテス",
+          "Language": "ja"
+        },
+        {
+          "Name": "兰螳花",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10230,
+          "DisplayNames": [
+            {
+              "Name": "Totem Lurantis",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10129,
+      "DisplayNames": [
+        {
+          "Name": "エンニュート",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "염뉴트",
+          "Language": "ko"
+        },
+        {
+          "Name": "焰后蜥",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Malamandre",
+          "Language": "fr"
+        },
+        {
+          "Name": "Amfira",
+          "Language": "de"
+        },
+        {
+          "Name": "Salazzle",
+          "Language": "es"
+        },
+        {
+          "Name": "Salazzle",
+          "Language": "it"
+        },
+        {
+          "Name": "Salazzle",
+          "Language": "en"
+        },
+        {
+          "Name": "エンニュート",
+          "Language": "ja"
+        },
+        {
+          "Name": "焰后蜥",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10231,
+          "DisplayNames": [
+            {
+              "Name": "Totem Salazzle",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10130,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10249,
+          "DisplayNames": [
+            {
+              "Name": "Orange Meteor Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10131,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10250,
+          "DisplayNames": [
+            {
+              "Name": "Yellow Meteor Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10132,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10251,
+          "DisplayNames": [
+            {
+              "Name": "Green Meteor Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10133,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10252,
+          "DisplayNames": [
+            {
+              "Name": "Blue Meteor Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10134,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10253,
+          "DisplayNames": [
+            {
+              "Name": "Indigo Meteor Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10135,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10254,
+          "DisplayNames": [
+            {
+              "Name": "Violent Meteor Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10136,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10255,
+          "DisplayNames": [
+            {
+              "Name": "Red Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10137,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10256,
+          "DisplayNames": [
+            {
+              "Name": "Orange Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10138,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10257,
+          "DisplayNames": [
+            {
+              "Name": "Yellow Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10139,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10258,
+          "DisplayNames": [
+            {
+              "Name": "Green Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10140,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10259,
+          "DisplayNames": [
+            {
+              "Name": "Blue Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10141,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10260,
+          "DisplayNames": [
+            {
+              "Name": "Indigo Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10142,
+      "DisplayNames": [
+        {
+          "Name": "メテノ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "메테노",
+          "Language": "ko"
+        },
+        {
+          "Name": "小隕星",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Météno",
+          "Language": "fr"
+        },
+        {
+          "Name": "Meteno",
+          "Language": "de"
+        },
+        {
+          "Name": "Minior",
+          "Language": "es"
+        },
+        {
+          "Name": "Minior",
+          "Language": "it"
+        },
+        {
+          "Name": "Minior",
+          "Language": "en"
+        },
+        {
+          "Name": "メテノ",
+          "Language": "ja"
+        },
+        {
+          "Name": "小陨星",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10261,
+          "DisplayNames": [
+            {
+              "Name": "Violet Core Minior",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10143,
+      "DisplayNames": [
+        {
+          "Name": "ミミッキュ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "따라큐",
+          "Language": "ko"
+        },
+        {
+          "Name": "謎擬Ｑ",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mimiqui",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mimigma",
+          "Language": "de"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "es"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "it"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "en"
+        },
+        {
+          "Name": "ミミッキュ",
+          "Language": "ja"
+        },
+        {
+          "Name": "谜拟Ｑ",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10262,
+          "DisplayNames": [
+            {
+              "Name": "Busted Mimikyu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10144,
+      "DisplayNames": [
+        {
+          "Name": "ミミッキュ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "따라큐",
+          "Language": "ko"
+        },
+        {
+          "Name": "謎擬Ｑ",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mimiqui",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mimigma",
+          "Language": "de"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "es"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "it"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "en"
+        },
+        {
+          "Name": "ミミッキュ",
+          "Language": "ja"
+        },
+        {
+          "Name": "谜拟Ｑ",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10263,
+          "DisplayNames": [
+            {
+              "Name": "Totem Disguised Mimikyu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10145,
+      "DisplayNames": [
+        {
+          "Name": "ミミッキュ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "따라큐",
+          "Language": "ko"
+        },
+        {
+          "Name": "謎擬Ｑ",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Mimiqui",
+          "Language": "fr"
+        },
+        {
+          "Name": "Mimigma",
+          "Language": "de"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "es"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "it"
+        },
+        {
+          "Name": "Mimikyu",
+          "Language": "en"
+        },
+        {
+          "Name": "ミミッキュ",
+          "Language": "ja"
+        },
+        {
+          "Name": "谜拟Ｑ",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10264,
+          "DisplayNames": [
+            {
+              "Name": "Totem Busted Mimikyu",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10146,
+      "DisplayNames": [
+        {
+          "Name": "ジャラランガ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "짜랑고우거",
+          "Language": "ko"
+        },
+        {
+          "Name": "杖尾鱗甲龍",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Ékaïser",
+          "Language": "fr"
+        },
+        {
+          "Name": "Grandiras",
+          "Language": "de"
+        },
+        {
+          "Name": "Kommo-o",
+          "Language": "es"
+        },
+        {
+          "Name": "Kommo-o",
+          "Language": "it"
+        },
+        {
+          "Name": "Kommo-o",
+          "Language": "en"
+        },
+        {
+          "Name": "ジャラランガ",
+          "Language": "ja"
+        },
+        {
+          "Name": "杖尾鳞甲龙",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10265,
+          "DisplayNames": [
+            {
+              "Name": "Totem Kommo’o",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10147,
+      "DisplayNames": [
+        {
+          "Name": "マギアナ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "마기아나",
+          "Language": "ko"
+        },
+        {
+          "Name": "瑪機雅娜",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Magearna",
+          "Language": "fr"
+        },
+        {
+          "Name": "Magearna",
+          "Language": "de"
+        },
+        {
+          "Name": "Magearna",
+          "Language": "es"
+        },
+        {
+          "Name": "Magearna",
+          "Language": "it"
+        },
+        {
+          "Name": "Magearna",
+          "Language": "en"
+        },
+        {
+          "Name": "マギアナ",
+          "Language": "ja"
+        },
+        {
+          "Name": "玛机雅娜",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10266,
+          "DisplayNames": [
+            {
+              "Name": "Original Magearna",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10148,
+      "DisplayNames": [
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "피카츄",
+          "Language": "ko"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "fr"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "de"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "es"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "it"
+        },
+        {
+          "Name": "Pikachu",
+          "Language": "en"
+        },
+        {
+          "Name": "ピカチュウ",
+          "Language": "ja"
+        },
+        {
+          "Name": "皮卡丘",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10267,
+          "DisplayNames": [
+            {
+              "Name": "ピカチュウ",
+              "Language": "ja-Hrkt"
+            },
+            {
+              "Name": "Pikachu",
+              "Language": "roomaji"
+            },
+            {
+              "Name": "피카츄",
+              "Language": "ko"
+            },
+            {
+              "Name": "皮卡丘",
+              "Language": "zh-Hant"
+            },
+            {
+              "Name": "Pikachu",
+              "Language": "fr"
+            },
+            {
+              "Name": "Pikachu",
+              "Language": "de"
+            },
+            {
+              "Name": "Pikachu",
+              "Language": "es"
+            },
+            {
+              "Name": "Pikachu",
+              "Language": "it"
+            },
+            {
+              "Name": "Pikachu",
+              "Language": "en"
+            },
+            {
+              "Name": "ピカチュウ",
+              "Language": "ja"
+            },
+            {
+              "Name": "皮卡丘",
+              "Language": "zh-Hans"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10149,
+      "DisplayNames": [
+        {
+          "Name": "ガラガラ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "Garagara",
+          "Language": "roomaji"
+        },
+        {
+          "Name": "텅구리",
+          "Language": "ko"
+        },
+        {
+          "Name": "嘎啦嘎啦",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Ossatueur",
+          "Language": "fr"
+        },
+        {
+          "Name": "Knogga",
+          "Language": "de"
+        },
+        {
+          "Name": "Marowak",
+          "Language": "es"
+        },
+        {
+          "Name": "Marowak",
+          "Language": "it"
+        },
+        {
+          "Name": "Marowak",
+          "Language": "en"
+        },
+        {
+          "Name": "ガラガラ",
+          "Language": "ja"
+        },
+        {
+          "Name": "嘎啦嘎啦",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10268,
+          "DisplayNames": [
+            {
+              "Name": "ガラガラ",
+              "Language": "ja-Hrkt"
+            },
+            {
+              "Name": "Garagara",
+              "Language": "roomaji"
+            },
+            {
+              "Name": "텅구리",
+              "Language": "ko"
+            },
+            {
+              "Name": "嘎啦嘎啦",
+              "Language": "zh-Hant"
+            },
+            {
+              "Name": "Ossatueur",
+              "Language": "fr"
+            },
+            {
+              "Name": "Knogga",
+              "Language": "de"
+            },
+            {
+              "Name": "Marowak",
+              "Language": "es"
+            },
+            {
+              "Name": "Marowak",
+              "Language": "it"
+            },
+            {
+              "Name": "Marowak",
+              "Language": "en"
+            },
+            {
+              "Name": "ガラガラ",
+              "Language": "ja"
+            },
+            {
+              "Name": "嘎啦嘎啦",
+              "Language": "zh-Hans"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10150,
+      "DisplayNames": [
+        {
+          "Name": "アブリボン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "에리본",
+          "Language": "ko"
+        },
+        {
+          "Name": "蝶結萌虻",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Rubombelle",
+          "Language": "fr"
+        },
+        {
+          "Name": "Bandelby",
+          "Language": "de"
+        },
+        {
+          "Name": "Ribombee",
+          "Language": "es"
+        },
+        {
+          "Name": "Ribombee",
+          "Language": "it"
+        },
+        {
+          "Name": "Ribombee",
+          "Language": "en"
+        },
+        {
+          "Name": "アブリボン",
+          "Language": "ja"
+        },
+        {
+          "Name": "蝶结萌虻",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10309,
+          "DisplayNames": [
+            {
+              "Name": "Totem Ribombee",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10151,
+      "DisplayNames": [
+        {
+          "Name": "イワンコ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "암멍이",
+          "Language": "ko"
+        },
+        {
+          "Name": "岩狗狗",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Rocabot",
+          "Language": "fr"
+        },
+        {
+          "Name": "Wuffels",
+          "Language": "de"
+        },
+        {
+          "Name": "Rockruff",
+          "Language": "es"
+        },
+        {
+          "Name": "Rockruff",
+          "Language": "it"
+        },
+        {
+          "Name": "Rockruff",
+          "Language": "en"
+        },
+        {
+          "Name": "イワンコ",
+          "Language": "ja"
+        },
+        {
+          "Name": "岩狗狗",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10310,
+          "DisplayNames": [
+            {
+              "Name": "Own Tempo Rockruff",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10152,
+      "DisplayNames": [
+        {
+          "Name": "ルガルガン",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "루가루암",
+          "Language": "ko"
+        },
+        {
+          "Name": "鬃岩狼人",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Lougaroc",
+          "Language": "fr"
+        },
+        {
+          "Name": "Wolwerock",
+          "Language": "de"
+        },
+        {
+          "Name": "Lycanroc",
+          "Language": "es"
+        },
+        {
+          "Name": "Lycanroc",
+          "Language": "it"
+        },
+        {
+          "Name": "Lycanroc",
+          "Language": "en"
+        },
+        {
+          "Name": "ルガルガン",
+          "Language": "ja"
+        },
+        {
+          "Name": "鬃岩狼人",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10311,
+          "DisplayNames": [
+            {
+              "Name": "Dusk Lycanroc",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10153,
+      "DisplayNames": [
+        {
+          "Name": "オニシズクモ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "깨비물거미",
+          "Language": "ko"
+        },
+        {
+          "Name": "滴蛛霸",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Tarenbulle",
+          "Language": "fr"
+        },
+        {
+          "Name": "Aranestro",
+          "Language": "de"
+        },
+        {
+          "Name": "Araquanid",
+          "Language": "es"
+        },
+        {
+          "Name": "Araquanid",
+          "Language": "it"
+        },
+        {
+          "Name": "Araquanid",
+          "Language": "en"
+        },
+        {
+          "Name": "オニシズクモ",
+          "Language": "ja"
+        },
+        {
+          "Name": "滴蛛霸",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10312,
+          "DisplayNames": [
+            {
+              "Name": "Totem Araquanid",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10154,
+      "DisplayNames": [
+        {
+          "Name": "トゲデマル",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "토게데마루",
+          "Language": "ko"
+        },
+        {
+          "Name": "托戈德瑪爾",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Togedemaru",
+          "Language": "fr"
+        },
+        {
+          "Name": "Togedemaru",
+          "Language": "de"
+        },
+        {
+          "Name": "Togedemaru",
+          "Language": "es"
+        },
+        {
+          "Name": "Togedemaru",
+          "Language": "it"
+        },
+        {
+          "Name": "Togedemaru",
+          "Language": "en"
+        },
+        {
+          "Name": "トゲデマル",
+          "Language": "ja"
+        },
+        {
+          "Name": "托戈德玛尔",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10313,
+          "DisplayNames": [
+            {
+              "Name": "Totem Togedemaru",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10155,
+      "DisplayNames": [
+        {
+          "Name": "ネクロズマ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "네크로즈마",
+          "Language": "ko"
+        },
+        {
+          "Name": "奈克洛茲瑪",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "de"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "es"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "it"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "en"
+        },
+        {
+          "Name": "ネクロズマ",
+          "Language": "ja"
+        },
+        {
+          "Name": "奈克洛兹玛",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10314,
+          "DisplayNames": [
+            {
+              "Name": "Dusk Necrozma",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10156,
+      "DisplayNames": [
+        {
+          "Name": "ネクロズマ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "네크로즈마",
+          "Language": "ko"
+        },
+        {
+          "Name": "奈克洛茲瑪",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "de"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "es"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "it"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "en"
+        },
+        {
+          "Name": "ネクロズマ",
+          "Language": "ja"
+        },
+        {
+          "Name": "奈克洛兹玛",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10315,
+          "DisplayNames": [
+            {
+              "Name": "Dawn Necrozma",
+              "Language": "en"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Key": 10157,
+      "DisplayNames": [
+        {
+          "Name": "ネクロズマ",
+          "Language": "ja-Hrkt"
+        },
+        {
+          "Name": "네크로즈마",
+          "Language": "ko"
+        },
+        {
+          "Name": "奈克洛茲瑪",
+          "Language": "zh-Hant"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "fr"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "de"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "es"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "it"
+        },
+        {
+          "Name": "Necrozma",
+          "Language": "en"
+        },
+        {
+          "Name": "ネクロズマ",
+          "Language": "ja"
+        },
+        {
+          "Name": "奈克洛兹玛",
+          "Language": "zh-Hans"
+        }
+      ],
+      "Forms": [
+        {
+          "Key": 10316,
+          "DisplayNames": [
+            {
+              "Name": "Ultra Necrozma",
+              "Language": "en"
+            }
+          ]
         }
       ]
     }
