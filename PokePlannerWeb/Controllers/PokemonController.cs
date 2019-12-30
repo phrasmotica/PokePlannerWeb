@@ -36,8 +36,18 @@ namespace PokePlannerWeb.Controllers
         public async Task<string> GetPokemonNameById(int id)
         {
             Logger.LogInformation($"Getting name of Pokemon {id}...");
-            var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return await pokemon.GetEnglishName();
+
+            // read name from cache
+            var cache = PokemonCacheManager.Instance.ReadCache();
+            var entry = cache.Get(id);
+            if (entry == null)
+            {
+                // get from PokeAPI
+                var pokemon = await PokeAPI.Get<Pokemon>(id);
+                return await pokemon.GetEnglishName();
+            }
+
+            return entry.DisplayNames.Single(dn => dn.Language == "en").Name;
         }
 
         /// <summary>
