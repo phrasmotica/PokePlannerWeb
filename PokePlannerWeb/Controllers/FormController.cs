@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb.Controllers
 {
