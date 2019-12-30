@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
+using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
 
@@ -46,8 +47,19 @@ namespace PokePlannerWeb.Controllers
         public async Task<int[]> GetPokemonFormIdsById(int id, int versionGroupId)
         {
             Logger.LogInformation($"Getting IDs of forms of Pokemon {id} in version group {versionGroupId}...");
-            var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return await pokemon.GetFormIDs(versionGroupId);
+
+            // read form IDs from cache
+            var cache = PokemonCacheManager.Instance.ReadCache();
+            var entry = cache.Get(id);
+            if (entry == null)
+            {
+                // get from PokeAPI
+                var pokemon = await PokeAPI.Get<Pokemon>(id);
+                return await pokemon.GetFormIDs(versionGroupId);
+            }
+
+            var cachedIds = entry.Forms.Select(v => v.Key);
+            return cachedIds.ToArray();
         }
 
         /// <summary>
@@ -57,8 +69,20 @@ namespace PokePlannerWeb.Controllers
         public async Task<string[]> GetPokemonFormNamesById(int id, int versionGroupId)
         {
             Logger.LogInformation($"Getting names of forms of Pokemon {id} in version group {versionGroupId}...");
-            var pokemon = await PokeAPI.Get<Pokemon>(id);
-            return await pokemon.GetFormNames(versionGroupId);
+
+            // read form display names from cache
+            var cache = PokemonCacheManager.Instance.ReadCache();
+            var entry = cache.Get(id);
+            if (entry == null)
+            {
+                // get from PokeAPI
+                var pokemon = await PokeAPI.Get<Pokemon>(id);
+                return await pokemon.GetFormNames(versionGroupId);
+            }
+
+            var cachedNames = entry.Forms.Select(v => v.DisplayNames.Single(dn => dn.Language == "en"))
+                                         .Select(dn => dn.Name);
+            return cachedNames.ToArray();
         }
 
         /// <summary>
