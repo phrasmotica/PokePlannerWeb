@@ -14,6 +14,11 @@
     &-center {
         @include flex-center;
     }
+
+    &-end {
+        @include flex;
+        justify-content: flex-end;
+    }
 }
 
 $margin: 10px;
@@ -23,6 +28,10 @@ $margin: 10px;
 
 .margin-bottom {
     margin-bottom: $margin;
+
+    &-small {
+        margin-bottom: $margin / 2;
+    }
 }
 
 $minWidth: 270px;

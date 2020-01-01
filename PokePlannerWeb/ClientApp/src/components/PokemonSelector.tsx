@@ -189,24 +189,26 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let varietySelect = this.renderVarietySelect()
 
         return (
-            <div className="flex margin-bottom">
+            <div className="margin-right">
                 {speciesSelect}
                 {formSelect}
                 {varietySelect}
 
-                <Button
-                    className="margin-right"
-                    color="warning"
-                    onMouseUp={() => this.setRandomPokemon()}>
-                    Random
-                </Button>
+                <div className="flex-end margin-bottom-small">
+                    <Button
+                        color="warning"
+                        onMouseUp={() => this.setRandomPokemon()}>
+                        Random
+                    </Button>
+                </div>
 
-                <Button
-                    className="margin-right"
-                    color="danger"
-                    onMouseUp={() => this.clearPokemon()}>
-                    Clear
-                </Button>
+                <div className="flex-end margin-bottom-small">
+                    <Button
+                        color="danger"
+                        onMouseUp={() => this.clearPokemon()}>
+                        Clear
+                    </Button>
+                </div>
             </div>
         );
     }
@@ -233,6 +235,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             <Select
                 isSearchable
                 blurInputOnSelect
+                width="230px"
                 isLoading={this.isLoadingPokemonValidity()}
                 id={idPrefix + this.props.index}
                 styles={customStyles}
@@ -243,7 +246,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
 
         return (
-            <div className="margin-right">
+            <div className="margin-bottom-small">
                 {searchBox}
                 {validityTooltip}
             </div>
@@ -272,6 +275,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let searchBox = (
             <Select
                 blurInputOnSelect
+                width="230px"
                 isLoading={this.isLoadingPokemonForms()}
                 isDisabled={!hasForms}
                 id={idPrefix + this.props.index}
@@ -283,7 +287,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
 
         return (
-            <div className="margin-right">
+            <div className="margin-bottom-small">
                 {searchBox}
                 {validityTooltip}
             </div>
@@ -312,6 +316,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         let searchBox = (
             <Select
                 blurInputOnSelect
+                width="230px"
                 isLoading={this.isLoadingSpeciesVarieties()}
                 isDisabled={!hasVarieties}
                 id={idPrefix + this.props.index}
@@ -323,7 +328,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         )
 
         return (
-            <div className="margin-right">
+            <div className="margin-bottom-small">
                 {searchBox}
                 {validityTooltip}
             </div>
@@ -382,10 +387,21 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     // returns a custom style for the select boxes
     createCustomSelectStyles(markAsInvalid: boolean) {
         return {
-            control: (provided: any) => ({
+            container: (provided: any, state: any) => ({
                 ...provided,
-                minWidth: 230,
+                maxWidth: state.selectProps.width,
+                marginLeft: "auto"
+            }),
+
+            control: (provided: any, state: any) => ({
+                ...provided,
+                maxWidth: state.selectProps.width,
                 border: markAsInvalid && this.shouldMarkPokemonInvalid() ? "1px solid #dc3545" : ""
+            }),
+
+            menu: (provided: any, state: any) => ({
+                ...provided,
+                maxWidth: state.selectProps.width
             })
         }
     }
