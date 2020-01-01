@@ -444,7 +444,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
     }
 
     // set this selector to the Pokemon with the given ID
-    async setPokemon(pokemonId: number) {
+    setPokemon(pokemonId: number) {
         // only fetch if we need to
         if (pokemonId !== this.state.pokemonId) {
             this.setState({
@@ -457,27 +457,31 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
             this.fetchPokemonValidity(pokemonId)
                 .then(() => this.props.setPokemon(pokemonId, this.state.pokemonValidity))
 
-            await this.fetchFormIds(pokemonId)
-            await this.fetchFormNames(pokemonId)
-            if (this.hasSecondaryForms()) {
-                let firstOption = {
-                    value: this.state.formIds[0],
-                    label: this.state.formNames[0]
-                }
-                console.log(firstOption)
-                this.setState({ formOption: firstOption })
-            }
+            this.fetchFormIds(pokemonId)
+                .then(() => this.fetchFormNames(pokemonId))
+                .then(() => {
+                    if (this.hasSecondaryForms()) {
+                        let firstOption = {
+                            value: this.state.formIds[0],
+                            label: this.state.formNames[0]
+                        }
+                        console.log(firstOption)
+                        this.setState({ formOption: firstOption })
+                    }
+                })
 
-            await this.fetchVarietyIds(pokemonId)
-            await this.fetchVarietyNames(pokemonId)
-            if (this.hasSecondaryVarieties()) {
-                let firstOption = {
-                    value: this.state.varietyIds[0],
-                    label: this.state.varietyNames[0]
-                }
-                console.log(firstOption)
-                this.setState({ varietyOption: firstOption })
-            }
+            this.fetchVarietyIds(pokemonId)
+                .then(() => this.fetchVarietyNames(pokemonId))
+                .then(() => {
+                    if (this.hasSecondaryVarieties()) {
+                        let firstOption = {
+                            value: this.state.varietyIds[0],
+                            label: this.state.varietyNames[0]
+                        }
+                        console.log(firstOption)
+                        this.setState({ varietyOption: firstOption })
+                    }
+                })
         }
     }
 
