@@ -8,7 +8,7 @@ import "./EfficacyList.scss"
 /**
  * The number of rows to split the types across.
  */
-const NUMBER_OF_ROWS: number = 2
+const NUMBER_OF_ROWS: number = 3
 
 type EfficacyListProps = {
     /**
