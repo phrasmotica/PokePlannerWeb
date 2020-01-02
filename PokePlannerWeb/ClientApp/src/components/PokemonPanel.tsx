@@ -324,38 +324,42 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     renderStatsGraph() {
         let shouldShowPokemon = this.shouldShowPokemon()
         return (
-            <div className="stat-graph">
-                <div className="stat-names">
-                    {this.props.baseStatNames.map((name, i) => {
-                        return (
-                            <div key={i}>
-                                {name}
-                            </div>
-                        )
-                    })}
-                </div>
-
-                <div className="stat-bars">
-                    {this.props.baseStatNames.map((_, i) => {
-                        let values = this.state.baseStatValues
-                        let value = 0
-                        if (shouldShowPokemon && values.length > i) {
-                            value = values[i]
-                        }
-
-                        return (
-                            <div className="flex">
-                                <div
-                                    key={i}
-                                    className="stat-bar"
-                                    style={{ width: value }} />
-
-                                <div className="stat-value">
-                                    {value > 0 ? value : "?"}
+            <div
+                className="flex-center"
+                style={{ marginTop: 4 }}>
+                <div className="stat-graph">
+                    <div className="stat-names">
+                        {this.props.baseStatNames.map((name, i) => {
+                            return (
+                                <div key={i}>
+                                    {name}
                                 </div>
-                            </div>
-                        )
-                    })}
+                            )
+                        })}
+                    </div>
+
+                    <div className="stat-bars">
+                        {this.props.baseStatNames.map((_, i) => {
+                            let values = this.state.baseStatValues
+                            let value = 0
+                            if (shouldShowPokemon && values.length > i) {
+                                value = values[i]
+                            }
+
+                            return (
+                                <div className="flex">
+                                    <div
+                                        key={i}
+                                        className="stat-bar"
+                                        style={{ width: value }} />
+
+                                    <div className="stat-value">
+                                        {value > 0 ? value : "?"}
+                                    </div>
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
         )
