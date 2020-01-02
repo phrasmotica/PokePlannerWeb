@@ -1,0 +1,22 @@
+﻿$height: 130px;
+$width: 370px;
+.stat-graph {
+    display: inline-flex;
+    height: $height;
+    width: $width;
+}
+
+.stat-names {
+    padding-right: 6px;
+    font-size: 9pt;
+    text-align: right;
+}
+
+.stat-bar {
+    background-color: dodgerblue;
+    margin-right: 3px;
+}
+
+.stat-value {
+    font-size: 9pt;
+}

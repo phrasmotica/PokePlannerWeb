@@ -1,14 +1,15 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Button, Collapse, FormGroup, CustomInput } from "reactstrap"
+import { Spinner, FormGroup, CustomInput } from "reactstrap"
 import { Tabs, Tab } from "react-bootstrap"
 import { EfficacyList } from "./EfficacyList"
+import { PokemonSelector } from "./PokemonSelector"
+import { StatGraph } from "./StatGraph"
 import { PokemonValidity } from "../models/PokemonValidity"
 import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
 import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
-import { PokemonSelector } from "./PokemonSelector"
 
 interface PokemonPanelProps {
     /**
@@ -326,46 +327,12 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns a graph of the Pokemon's base stats
     renderStatsGraph() {
-        let shouldShowPokemon = this.shouldShowPokemon()
         return (
-            <div
-                className="flex-center"
-                style={{ marginTop: 4 }}>
-                <div className="stat-graph">
-                    <div className="stat-names">
-                        {this.props.baseStatNames.map((name, i) => {
-                            return (
-                                <div key={i}>
-                                    {name}
-                                </div>
-                            )
-                        })}
-                    </div>
-
-                    <div className="stat-bars">
-                        {this.props.baseStatNames.map((_, i) => {
-                            let values = this.state.baseStatValues
-                            let value = 0
-                            if (shouldShowPokemon && values.length > i) {
-                                value = values[i]
-                            }
-
-                            return (
-                                <div className="flex">
-                                    <div
-                                        key={i}
-                                        className="stat-bar"
-                                        style={{ width: value }} />
-
-                                    <div className="stat-value">
-                                        {value > 0 ? value : "-"}
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-            </div>
+            <StatGraph
+                index={this.props.index}
+                statNames={this.props.baseStatNames}
+                statValues={this.state.baseStatValues}
+                shouldShowStats={this.shouldShowPokemon()} />
         )
     }
 

@@ -44,6 +44,7 @@
     <TypeScriptCompile Include="ClientApp\src\components\TeamBuilder.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\PokemonPanel.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\PokemonSelector.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\StatGraph.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\EfficacyList.tsx" />
   </ItemGroup>
 
