@@ -194,15 +194,13 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
                 {formSelect}
                 {varietySelect}
 
-                <div className="flex-end margin-bottom-small">
+                <div className="flex-space-between margin-bottom-small">
                     <Button
                         color="warning"
                         onMouseUp={() => this.setRandomPokemon()}>
-                        Random
+                        Random Pokemon
                     </Button>
-                </div>
 
-                <div className="flex-end margin-bottom-small">
                     <Button
                         color="danger"
                         onMouseUp={() => this.clearPokemon()}>
