@@ -200,6 +200,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
                 <div className="margin-bottom">
                     <Tabs
+                        transition={false}
                         defaultActiveKey="stats"
                         id="infoTabs">
                         <Tab eventKey="stats" title="Base Stats">
