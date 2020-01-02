@@ -383,7 +383,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
     // returns a loading spinner
     makeSpinner() {
-        return <Spinner animation="border" />
+        return <Spinner animation="border" size="sm" />
     }
 
     // toggle the shiny sprite
