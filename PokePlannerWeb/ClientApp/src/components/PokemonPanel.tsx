@@ -198,9 +198,12 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                     {this.renderPokemonInfo()}
                 </div>
 
-                <div className="margin-bottom">
+                <div
+                    className="margin-bottom"
+                    style={{ fontSize: "10pt" }}>
                     <Tabs
                         transition={false}
+                        className="tabpane-small"
                         defaultActiveKey="stats"
                         id="infoTabs">
                         <Tab eventKey="stats" title="Base Stats">
