@@ -214,6 +214,10 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                         <Tab eventKey="efficacy" title="Efficacy">
                             {this.renderEfficacyList()}
                         </Tab>
+
+                        <Tab eventKey="locations" title="Capture Locations" disabled>
+                            {this.renderCaptureLocations()}
+                        </Tab>
                     </Tabs>
                 </div>
             </div>
@@ -347,6 +351,13 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 parentIsLoading={this.isLoading()}
                 showMultipliers={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
+        )
+    }
+
+    // returns the capture locations
+    renderCaptureLocations() {
+        return (
+            null
         )
     }
 
