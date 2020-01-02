@@ -358,7 +358,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                                         style={{ width: value }} />
 
                                     <div className="stat-value">
-                                        {value > 0 ? value : "?"}
+                                        {value > 0 ? value : "-"}
                                     </div>
                                 </div>
                             )
