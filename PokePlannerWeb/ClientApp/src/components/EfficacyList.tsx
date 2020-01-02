@@ -189,12 +189,15 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
 
     // returns the style class to use for the given multiplier
     getElementFromMultiplier(multiplier: number) {
-        let multiplierClass = this.getClassFromMultiplier(multiplier)
-
         if (!this.hasTypes() || !this.props.showMultipliers) {
             return <span>-</span>
         }
 
+        if (multiplier === 1) {
+            return <span>1x</span>
+        }
+
+        let multiplierClass = this.getClassFromMultiplier(multiplier)
         return (
             <b className={multiplierClass}>
                 {multiplier}x
