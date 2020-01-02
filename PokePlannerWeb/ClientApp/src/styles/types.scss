@@ -21,11 +21,18 @@ $dark: #705848;
 $fairy: #ee99ac;
 $shadow: #978cae;
 
-$typeIconWidth: 100px;
-$typeIconHeight: 36px;
+$typeIconWidth: 79px;
+$typeIconHeight: 29px;
 .type-icon {
     width: $typeIconWidth;
     height: $typeIconHeight;
+
+    &-small {
+        $typeIconWidth: 64px;
+        $typeIconHeight: 24px;
+        width: $typeIconWidth;
+        height: $typeIconHeight;
+    }
 }
 
 .type-pair {
