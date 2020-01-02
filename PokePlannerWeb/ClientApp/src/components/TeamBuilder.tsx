@@ -235,7 +235,6 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
 
         return (
             <div>
-                <h1 id="tableLabel">Pokemon</h1>
                 <p>Build your Pokemon team!</p>
                 {menu}
                 {pokemonPanels}
