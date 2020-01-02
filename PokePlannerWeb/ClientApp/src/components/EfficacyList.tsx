@@ -174,7 +174,7 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
             rows.push(
                 <div
                     key={row}
-                    className="flex margin-bottom">
+                    className="flex-space-between">
                     {items}
                 </div>
             )
