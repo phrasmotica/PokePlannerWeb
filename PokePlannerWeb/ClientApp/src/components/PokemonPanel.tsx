@@ -195,31 +195,33 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
         return (
             <div>
-                <PokemonSelector
-                    index={this.props.index}
-                    versionGroupIndex={this.props.versionGroupIndex}
-                    speciesNames={this.props.speciesNames}
-                    ignoreValidity={this.props.ignoreValidity}
-                    hideTooltips={this.props.ignoreValidity}
-                    setPokemon={setPokemon}
-                    clearPokemon={clearPokemon}
-                    setForm={setForm}
-                    toggleIgnoreValidity={toggleIgnoreValidity} />
+                <div className="flex">
+                    <PokemonSelector
+                        index={this.props.index}
+                        versionGroupIndex={this.props.versionGroupIndex}
+                        speciesNames={this.props.speciesNames}
+                        ignoreValidity={this.props.ignoreValidity}
+                        hideTooltips={this.props.ignoreValidity}
+                        setPokemon={setPokemon}
+                        clearPokemon={clearPokemon}
+                        setForm={setForm}
+                        toggleIgnoreValidity={toggleIgnoreValidity} />
 
-                {pokemonInfo}
+                    {pokemonInfo}
+                </div>
 
-                <div className="flex margin-bottom">
+                <div>
                     <Button
                         className="margin-right"
                         color="primary"
                         onClick={() => this.toggleShowEfficacy()}>
                         {showEfficacy ? "Hide" : "Show"} efficacy
                     </Button>
-                </div>
 
-                <Collapse isOpen={showEfficacy}>
-                    {efficacyList}
-                </Collapse>
+                    <Collapse isOpen={showEfficacy}>
+                        {efficacyList}
+                    </Collapse>
+                </div>
             </div>
         );
     }
@@ -227,17 +229,17 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     // returns the Pokemon info
     renderPokemonInfo() {
         return (
-            <div className="flex margin-bottom">
-                <div className="margin-right">
-                    {this.renderPokemonSprite()}
-
-                    {this.renderShinySpriteSwitch()}
-                </div>
-
+            <div className="margin-bottom">
                 <div className="margin-right">
                     {this.renderPokemonName()}
 
                     {this.renderPokemonTypes()}
+                </div>
+
+                <div className="margin-right">
+                    {this.renderPokemonSprite()}
+
+                    {this.renderShinySpriteSwitch()}
                 </div>
 
                 {this.renderStatsGraph()}
@@ -250,7 +252,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon && this.isLoading()) {
             return (
-                <div className="sprite margin-bottom flex-center loading">
+                <div className="sprite margin-auto-horiz flex-center loading">
                     {this.makeSpinner()}
                 </div>
             )
@@ -260,7 +262,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                       ? this.state.shinySpriteUrl
                       : this.state.spriteUrl
         return (
-            <div className="sprite margin-bottom">
+            <div className="sprite margin-auto-horiz">
                 <img
                     className={"inherit-size" + (shouldShowPokemon ? "" : " hidden")}
                     src={spriteUrl} />
@@ -271,7 +273,9 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     // returns a switch that toggles between default and shiny sprites
     renderShinySpriteSwitch() {
         return (
-            <FormGroup style={{ marginBottom: 0 }}>
+            <FormGroup
+                className="flex-center"
+                style={{ marginBottom: 0 }}>
                 <CustomInput
                     type="switch"
                     id={"toggleShinySpriteSwitch" + this.props.index}

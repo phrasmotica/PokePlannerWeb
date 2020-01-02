@@ -389,19 +389,19 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         return {
             container: (provided: any, state: any) => ({
                 ...provided,
-                maxWidth: state.selectProps.width,
+                minWidth: state.selectProps.width,
                 marginLeft: "auto"
             }),
 
             control: (provided: any, state: any) => ({
                 ...provided,
-                maxWidth: state.selectProps.width,
+                minWidth: state.selectProps.width,
                 border: markAsInvalid && this.shouldMarkPokemonInvalid() ? "1px solid #dc3545" : ""
             }),
 
             menu: (provided: any, state: any) => ({
                 ...provided,
-                maxWidth: state.selectProps.width
+                minWidth: state.selectProps.width
             })
         }
     }
