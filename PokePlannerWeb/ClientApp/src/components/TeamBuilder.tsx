@@ -4,7 +4,15 @@ import Select from 'react-select'
 import { PokemonPanel } from './PokemonPanel'
 import { TypeSet } from '../models/TypeSet'
 
+/**
+ * The number of Pokemon panels to show.
+ * */
 const TEAM_SIZE: number = 6
+
+/**
+ * The number of rows to split the Pokemon panels across.
+ */
+const NUMBER_OF_ROWS: number = 2
 
 interface TeamBuilderState {
     /**
@@ -310,25 +318,39 @@ export class TeamBuilder extends Component<any, TeamBuilderState> {
     }
 
     renderPokemonPanels() {
-        let pokemonPanels = []
-        for (var i = 0; i < TEAM_SIZE; i++) {
-            pokemonPanels.push(
-                <PokemonPanel
-                    key={i}
-                    index={i}
-                    versionGroupIndex={this.state.versionGroupIndex}
-                    ignoreValidity={this.state.ignoreValidity}
-                    toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
-                    hideTooltips={this.state.hideTooltips}
-                    speciesNames={this.state.speciesNames}
-                    typeSet={this.state.typeSet}
-                    baseStatNames={this.state.baseStatNames} />
+        let rows = []
+        let itemsPerRow = TEAM_SIZE / NUMBER_OF_ROWS
+
+        for (let row = 0; row < NUMBER_OF_ROWS; row++) {
+            let items = []
+            for (let col = 0; col < itemsPerRow; col++) {
+                let index = row * itemsPerRow + col
+                items.push(
+                    <PokemonPanel
+                        key={index}
+                        index={index}
+                        versionGroupIndex={this.state.versionGroupIndex}
+                        ignoreValidity={this.state.ignoreValidity}
+                        toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
+                        hideTooltips={this.state.hideTooltips}
+                        speciesNames={this.state.speciesNames}
+                        typeSet={this.state.typeSet}
+                        baseStatNames={this.state.baseStatNames} />
+                )
+            }
+
+            rows.push(
+                <div
+                    key={row}
+                    className="flex margin-bottom">
+                    {items}
+                </div>
             )
         }
 
         return (
             <div>
-                {pokemonPanels}
+                {rows}
             </div>
         )
     }

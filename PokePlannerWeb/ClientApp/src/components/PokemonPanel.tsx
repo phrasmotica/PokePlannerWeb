@@ -186,7 +186,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
-            <div>
+            <div className="margin-right">
                 <div className="flex">
                     <PokemonSelector
                         index={this.props.index}
@@ -222,14 +222,14 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     // returns the Pokemon info
     renderPokemonInfo() {
         return (
-            <div className="margin-bottom">
-                <div className="margin-right">
+            <div>
+                <div>
                     {this.renderPokemonName()}
 
                     {this.renderPokemonTypes()}
                 </div>
 
-                <div className="margin-right">
+                <div>
                     {this.renderPokemonSprite()}
 
                     {this.renderShinySpriteSwitch()}
@@ -282,14 +282,14 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon && this.isLoading()) {
             return (
-                <div className="center-text margin-bottom loading">
+                <div className="center-text loading">
                     {this.makeSpinner()}
                 </div>
             )
         }
 
         return (
-            <div className={"center-text margin-bottom" + (shouldShowPokemon ? "" : " hidden")}>
+            <div className={"center-text" + (shouldShowPokemon ? "" : " hidden")}>
                 {this.state.displayName}
             </div>
         )
