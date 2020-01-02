@@ -323,23 +323,12 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     // returns a graph of the Pokemon's base stats
     renderStatsGraph() {
         let shouldShowPokemon = this.shouldShowPokemon()
-        if (shouldShowPokemon && this.isLoading()) {
-            return (
-                <div className="stat-graph loading">
-                    {this.makeSpinner()}
-                </div>
-            )
-        }
-
-        let className = shouldShowPokemon ? "" : "hidden";
         return (
             <div className="stat-graph">
                 <div className="stat-names">
                     {this.props.baseStatNames.map((name, i) => {
                         return (
-                            <div
-                                key={i}
-                                className={className}>
+                            <div key={i}>
                                 {name}
                             </div>
                         )
@@ -347,17 +336,22 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                 </div>
 
                 <div className="stat-bars">
-                    {this.state.baseStatValues.map((value, i) => {
+                    {this.props.baseStatNames.map((_, i) => {
+                        let values = this.state.baseStatValues
+                        let value = 0
+                        if (shouldShowPokemon && values.length > i) {
+                            value = values[i]
+                        }
+
                         return (
                             <div className="flex">
                                 <div
                                     key={i}
-                                    className={"stat-bar" + (shouldShowPokemon ? "" : " hidden")}
+                                    className="stat-bar"
                                     style={{ width: value }} />
 
-                                <div
-                                    className={"stat-value" + (shouldShowPokemon ? "" : " hidden")}>
-                                    {value}
+                                <div className="stat-value">
+                                    {value > 0 ? value : "?"}
                                 </div>
                             </div>
                         )
