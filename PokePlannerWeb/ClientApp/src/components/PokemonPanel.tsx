@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
 import { Spinner, Button, Collapse, FormGroup, CustomInput } from "reactstrap"
+import { Tabs, Tab } from "react-bootstrap"
 import { EfficacyList } from "./EfficacyList"
 import { PokemonValidity } from "../models/PokemonValidity"
 import { TypeSet } from "../models/TypeSet"
@@ -120,12 +121,7 @@ interface PokemonPanelState {
     /**
      * Whether to show the shiny sprite.
      */
-    showShinySprite: boolean,
-
-    /**
-     * Whether to show the efficacy list.
-     */
-    showEfficacy: boolean
+    showShinySprite: boolean
 }
 
 /**
@@ -148,8 +144,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
             loadingTypeNames: true,
             baseStatValues: [],
             loadingBaseStatValues: true,
-            showShinySprite: false,
-            showEfficacy: false
+            showShinySprite: false
         }
     }
 
@@ -180,9 +175,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     }
 
     render() {
-        // flags
-        let showEfficacy = this.state.showEfficacy
-
         // sub-components
         let pokemonInfo = this.renderPokemonInfo()
         let efficacyList = this.renderEfficacyList()
@@ -210,17 +202,18 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                     {pokemonInfo}
                 </div>
 
-                <div>
-                    <Button
-                        className="margin-right"
-                        color="primary"
-                        onClick={() => this.toggleShowEfficacy()}>
-                        {showEfficacy ? "Hide" : "Show"} efficacy
-                    </Button>
+                <div className="margin-bottom">
+                    <Tabs
+                        defaultActiveKey="stats"
+                        id="infoTabs">
+                        <Tab eventKey="stats" title="Base Stats">
+                            {this.renderStatsGraph()}
+                        </Tab>
 
-                    <Collapse isOpen={showEfficacy}>
-                        {efficacyList}
-                    </Collapse>
+                        <Tab eventKey="efficacy" title="Efficacy">
+                            {efficacyList}
+                        </Tab>
+                    </Tabs>
                 </div>
             </div>
         );
@@ -241,8 +234,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
                     {this.renderShinySpriteSwitch()}
                 </div>
-
-                {this.renderStatsGraph()}
             </div>
         )
     }
@@ -338,7 +329,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon && this.isLoading()) {
             return (
-                <div className="stat-graph margin-right loading">
+                <div className="stat-graph loading">
                     {this.makeSpinner()}
                 </div>
             )
@@ -346,7 +337,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
 
         let className = shouldShowPokemon ? "" : "hidden";
         return (
-            <div className="stat-graph margin-right">
+            <div className="stat-graph">
                 <div className="stat-names">
                     {this.props.baseStatNames.map((name, i) => {
                         return (
@@ -403,13 +394,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     toggleShowShinySprite() {
         this.setState(previousState => ({
             showShinySprite: !previousState.showShinySprite
-        }))
-    }
-
-    // toggle the efficacy panel
-    toggleShowEfficacy() {
-        this.setState(previousState => ({
-            showEfficacy: !previousState.showEfficacy
         }))
     }
 
