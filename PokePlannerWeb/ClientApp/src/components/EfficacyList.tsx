@@ -192,11 +192,7 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
         let multiplierClass = this.getClassFromMultiplier(multiplier)
 
         if (!this.hasTypes() || !this.props.showMultipliers) {
-            return <b>-</b>
-        }
-
-        if (this.props.parentIsLoading || this.state.loadingEfficacy) {
-            return this.makeSpinner()
+            return <span>-</span>
         }
 
         return (
@@ -229,11 +225,6 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
         }
 
         return multiplierClass
-    }
-
-    // returns a loading spinner
-    makeSpinner() {
-        return <Spinner animation="border" size="sm" />
     }
 
     // toggle the type tooltip with the given index
