@@ -175,10 +175,6 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     }
 
     render() {
-        // sub-components
-        let pokemonInfo = this.renderPokemonInfo()
-        let efficacyList = this.renderEfficacyList()
-
         // handlers
         const setPokemon = (pokemonId: number, validity: PokemonValidity) => this.setPokemon(pokemonId, validity)
         const clearPokemon = () => this.clearPokemon()
@@ -199,7 +195,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                         setForm={setForm}
                         toggleIgnoreValidity={toggleIgnoreValidity} />
 
-                    {pokemonInfo}
+                    {this.renderPokemonInfo()}
                 </div>
 
                 <div className="margin-bottom">
@@ -211,7 +207,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                         </Tab>
 
                         <Tab eventKey="efficacy" title="Efficacy">
-                            {efficacyList}
+                            {this.renderEfficacyList()}
                         </Tab>
                     </Tabs>
                 </div>
@@ -289,8 +285,8 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         }
 
         return (
-            <div className={"center-text" + (shouldShowPokemon ? "" : " hidden")}>
-                {this.state.displayName}
+            <div className="center-text">
+                {shouldShowPokemon ? this.state.displayName : "-"}
             </div>
         )
     }
