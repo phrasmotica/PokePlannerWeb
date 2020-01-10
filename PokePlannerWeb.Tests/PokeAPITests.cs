@@ -266,6 +266,17 @@ namespace PokePlannerWeb.Tests
         }
 
         /// <summary>
+        /// Investigates the names of secondary Pokemon forms.
+        /// </summary>
+        [Test]
+        public async Task PokemonLocationAreaEncountersTest()
+        {
+            // get location area encounters for Abra
+            var encounters = await PokeAPI.Instance.GetLocationAreaEncounters(63);
+            Assert.IsNotNull(encounters);
+        }
+
+        /// <summary>
         /// Verifies that a Pokemon payload is created correctly.
         /// </summary>
         [Test]
