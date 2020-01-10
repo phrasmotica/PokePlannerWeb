@@ -46,6 +46,7 @@
     <TypeScriptCompile Include="ClientApp\src\components\PokemonSelector.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\StatGraph.tsx" />
     <TypeScriptCompile Include="ClientApp\src\components\EfficacyList.tsx" />
+    <TypeScriptCompile Include="ClientApp\src\components\CaptureLocations.tsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
