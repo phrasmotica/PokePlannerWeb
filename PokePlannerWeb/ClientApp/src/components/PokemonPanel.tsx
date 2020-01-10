@@ -4,6 +4,7 @@ import { Tabs, Tab } from "react-bootstrap"
 import { EfficacyList } from "./EfficacyList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
+import { CaptureLocations } from "./CaptureLocations"
 import { PokemonValidity } from "../models/PokemonValidity"
 import { TypeSet } from "../models/TypeSet"
 
@@ -215,7 +216,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
                             {this.renderEfficacyList()}
                         </Tab>
 
-                        <Tab eventKey="locations" title="Capture Locations" disabled>
+                        <Tab eventKey="locations" title="Capture Locations">
                             {this.renderCaptureLocations()}
                         </Tab>
                     </Tabs>
@@ -357,7 +358,13 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
     // returns the capture locations
     renderCaptureLocations() {
         return (
-            null
+            <CaptureLocations
+                index={this.props.index}
+                pokemonId={this.state.pokemonId}
+                versionGroupIndex={this.props.versionGroupIndex}
+                parentIsLoading={this.isLoading()}
+                showLocations={this.shouldShowPokemon()}
+                hideTooltips={this.props.hideTooltips} />
         )
     }
 
