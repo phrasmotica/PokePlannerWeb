@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react"
-import { ICommonProps } from "./CommonProps"
+import { IHasCommon } from "./CommonMembers"
 
-interface ICaptureLocationsProps extends ICommonProps {
+interface ICaptureLocationsProps extends IHasCommon {
     /**
      * The ID of the Pokemon to show capture locations for.
      */

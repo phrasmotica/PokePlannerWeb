@@ -5,9 +5,9 @@ import { PokemonValidity } from "../models/PokemonValidity"
 
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
-import { IIndexProp, IVersionGroupProp, IHideTooltipsProp } from "./CommonProps"
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 
-interface IPokemonSelectorProps extends IIndexProp, IVersionGroupProp, IHideTooltipsProp {
+interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
      * List of Pokemon species names.
      */

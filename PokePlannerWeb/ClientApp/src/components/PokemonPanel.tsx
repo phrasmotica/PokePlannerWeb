@@ -11,9 +11,9 @@ import { TypeSet } from "../models/TypeSet"
 import "../styles/types.scss"
 import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
-import { IIndexProp, IVersionGroupProp, IHideTooltipsProp } from "./CommonProps"
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 
-interface IPokemonPanelProps extends IIndexProp, IVersionGroupProp, IHideTooltipsProp {
+interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */

@@ -4,14 +4,14 @@ import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
 import "./EfficacyList.scss"
-import { ICommonProps } from "./CommonProps"
+import { IHasCommon } from "./CommonMembers"
 
 /**
  * The number of rows to split the types across.
  */
 const NUMBER_OF_ROWS: number = 3
 
-interface IEfficacyListProps extends ICommonProps {
+interface IEfficacyListProps extends IHasCommon {
     /**
      * The types to show efficacy for.
      */

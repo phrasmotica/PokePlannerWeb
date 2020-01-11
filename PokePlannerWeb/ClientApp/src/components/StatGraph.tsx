@@ -1,9 +1,9 @@
 ﻿import React, { Component } from "react"
 
 import "./StatGraph.scss"
-import { IIndexProp } from "./CommonProps"
+import { IHasIndex } from "./CommonMembers"
 
-interface IStatGraphProps extends IIndexProp {
+interface IStatGraphProps extends IHasIndex {
     /**
      * The stat names.
      */
