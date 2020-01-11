@@ -17,7 +17,7 @@ interface ICaptureLocationsState {
     /**
      * The capture locations to show.
      */
-    locations: any[],
+    locations: string[],
 
     /**
      * Whether we're loading the capture locations.
@@ -80,7 +80,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     let location = locations[row]
                     items.push(
                         <div key={id}>
-                            {location.locationArea.name}
+                            {location}
                         </div>
                     )
                 }

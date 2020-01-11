@@ -27,15 +27,36 @@ namespace PokePlannerWeb.Controllers
         {
             Logger = logger;
         }
-        
+
         /// <summary>
-        /// Returns the location area encounters of the Pokemon with the given ID.
+        /// Returns the names of the locations where the Pokemon with the given ID can be found in
+        /// the version group with the given ID.
         /// </summary>
-        [HttpGet("{id:int}/{versionGroupId:int}")]
-        public async Task<LocationAreaEncounter[]> GetLocationAreaEncountersInVersionGroup(int id, int versionGroupId)
+        [HttpGet("{pokemonId:int}/{versionGroupId:int}")]
+        public async Task<string[]> GetCaptureLocationNames(int pokemonId, int versionGroupId)
         {
-            Logger.LogInformation($"Getting encounters for Pokemon {id} in version group {versionGroupId}...");
-            var encounters = await PokeAPI.Instance.GetLocationAreaEncounters(id);
+            var encounters = await GetLocationAreaEncountersInVersionGroup(pokemonId, versionGroupId);
+
+            var locations = new string[encounters.Length];
+            for (var i = 0; i < encounters.Length; i++)
+            {
+                var encounter = encounters[i];
+                var locationArea = await PokeAPI.Get(encounter.LocationArea);
+                var location = await PokeAPI.Get(locationArea.Location);
+                locations[i] = location.GetEnglishName();
+            }
+
+            return locations.ToArray();
+        }
+
+        /// <summary>
+        /// Returns the location area encounters of the Pokemon with the given ID in the version
+        /// group with the given ID.
+        /// </summary>
+        private async Task<LocationAreaEncounter[]> GetLocationAreaEncountersInVersionGroup(int pokemonId, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting encounters for Pokemon {pokemonId} in version group {versionGroupId}...");
+            var encounters = await PokeAPI.Instance.GetLocationAreaEncounters(pokemonId);
             return encounters.Where(e => IsInVersionGroup(e, versionGroupId)).ToArray();
         }
 
