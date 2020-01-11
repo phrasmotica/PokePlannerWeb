@@ -72,9 +72,8 @@ export class StatGraph extends Component<IStatGraphProps, any> {
                     }
 
                     return (
-                        <div className="flex">
+                        <div key={i} className="flex">
                             <div
-                                key={i}
                                 className="stat-bar"
                                 style={{ width: value }} />
 

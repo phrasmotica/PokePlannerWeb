@@ -78,7 +78,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
             let location = locations[row]
             items.push(
-                <div id={id}>
+                <div key={id}>
                     {location.locationArea.name}
                 </div>
             )
