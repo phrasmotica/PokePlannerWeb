@@ -11,27 +11,13 @@ import { TypeSet } from "../models/TypeSet"
 import "../styles/types.scss"
 import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
+import { IIndexProp, IVersionGroupProp, IHideTooltipsProp } from "./CommonProps"
 
-interface PokemonPanelProps {
-    /**
-     * The index of this Pokemon panel.
-     */
-    index: number,
-
-    /**
-     * The index of the selected version group.
-     */
-    versionGroupIndex: number,
-
+interface IPokemonPanelProps extends IIndexProp, IVersionGroupProp, IHideTooltipsProp {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean,
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean,
 
     /**
      * List of Pokemon species names.
@@ -54,7 +40,7 @@ interface PokemonPanelProps {
     toggleIgnoreValidity: () => void | null
 }
 
-interface PokemonPanelState {
+interface IPokemonPanelState {
     /**
      * The Pokemon ID.
      */
@@ -129,7 +115,7 @@ interface PokemonPanelState {
 /**
  * Component for selecting a Pokemon and displaying information about it.
  */
-export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState> {
+export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -161,7 +147,7 @@ export class PokemonPanel extends Component<PokemonPanelProps, PokemonPanelState
         })
     }
 
-    componentDidUpdate(previousProps: PokemonPanelProps) {
+    componentDidUpdate(previousProps: IPokemonPanelProps) {
         // refresh if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex

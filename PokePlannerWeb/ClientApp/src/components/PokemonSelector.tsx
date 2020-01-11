@@ -5,18 +5,9 @@ import { PokemonValidity } from "../models/PokemonValidity"
 
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
+import { IIndexProp, IVersionGroupProp, IHideTooltipsProp } from "./CommonProps"
 
-interface PokemonSelectorProps {
-    /**
-     * The index of this Pokemon selector.
-     */
-    index: number,
-
-    /**
-     * The index of the selected version group.
-     */
-    versionGroupIndex: number,
-
+interface IPokemonSelectorProps extends IIndexProp, IVersionGroupProp, IHideTooltipsProp {
     /**
      * List of Pokemon species names.
      */
@@ -26,11 +17,6 @@ interface PokemonSelectorProps {
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean,
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean,
 
     /**
      * Handler for setting the Pokemon in the parent component.
@@ -53,7 +39,7 @@ interface PokemonSelectorProps {
     toggleIgnoreValidity: () => void | null
 }
 
-interface PokemonSelectorState {
+interface IPokemonSelectorState {
     /**
      * The Pokemon ID.
      */
@@ -138,7 +124,7 @@ interface PokemonSelectorState {
 /**
  * Component for selecting a Pokemon.
  */
-export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSelectorState> {
+export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -161,7 +147,7 @@ export class PokemonSelector extends Component<PokemonSelectorProps, PokemonSele
         }
     }
 
-    componentDidUpdate(previousProps: PokemonSelectorProps) {
+    componentDidUpdate(previousProps: IPokemonSelectorProps) {
         // refresh if the version group index changed
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex

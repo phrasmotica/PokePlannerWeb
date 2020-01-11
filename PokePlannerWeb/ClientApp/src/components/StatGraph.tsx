@@ -1,13 +1,9 @@
 ﻿import React, { Component } from "react"
 
 import "./StatGraph.scss"
+import { IIndexProp } from "./CommonProps"
 
-interface StatGraphProps {
-    /**
-     * The index of this stat graph.
-     */
-    index: number,
-
+interface IStatGraphProps extends IIndexProp {
     /**
      * The stat names.
      */
@@ -27,7 +23,7 @@ interface StatGraphProps {
 /**
  * Component for showing a set of stats as a graph.
  */
-export class StatGraph extends Component<StatGraphProps, any> {
+export class StatGraph extends Component<IStatGraphProps, any> {
     constructor(props: any) {
         super(props)
     }

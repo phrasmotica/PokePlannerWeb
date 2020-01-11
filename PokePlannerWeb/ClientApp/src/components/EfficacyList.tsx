@@ -1,30 +1,21 @@
 ﻿import React, { Component } from "react"
-import { Spinner, Tooltip } from "reactstrap"
+import { Tooltip } from "reactstrap"
 import { TypeSet } from "../models/TypeSet"
 
 import "../styles/types.scss"
 import "./EfficacyList.scss"
+import { ICommonProps } from "./CommonProps"
 
 /**
  * The number of rows to split the types across.
  */
 const NUMBER_OF_ROWS: number = 3
 
-type EfficacyListProps = {
-    /**
-     * The index of this efficacy list.
-     */
-    index: number,
-
+interface IEfficacyListProps extends ICommonProps {
     /**
      * The types to show efficacy for.
      */
     typeNames: string[],
-
-    /**
-     * The index of the selected version group.
-     */
-    versionGroupIndex: number,
 
     /**
      * The type set.
@@ -32,22 +23,12 @@ type EfficacyListProps = {
     typeSet: TypeSet,
 
     /**
-     * Whether the parent component is loading.
-     */
-    parentIsLoading: boolean,
-
-    /**
      * Whether to show the multipliers.
      */
-    showMultipliers: boolean,
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
+    showMultipliers: boolean
 }
 
-type EfficacyListState = {
+interface IEfficacyListState {
     /**
      * The efficacy to show.
      */
@@ -67,7 +48,7 @@ type EfficacyListState = {
 /**
  * Component for displaying defensive type efficacy.
  */
-export class EfficacyList extends Component<EfficacyListProps, EfficacyListState> {
+export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -82,7 +63,7 @@ export class EfficacyList extends Component<EfficacyListProps, EfficacyListState
         this.getEfficacy()
     }
 
-    componentDidUpdate(previousProps: EfficacyListProps) {
+    componentDidUpdate(previousProps: IEfficacyListProps) {
         // refresh efficacy if the version group changed...
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex

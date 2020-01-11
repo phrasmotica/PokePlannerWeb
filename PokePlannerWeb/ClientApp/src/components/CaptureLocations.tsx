@@ -1,38 +1,19 @@
 ﻿import React, { Component } from "react"
+import { ICommonProps } from "./CommonProps"
 
-type CaptureLocationsProps = {
-    /**
-     * The index of this component.
-     */
-    index: number,
-
+interface ICaptureLocationsProps extends ICommonProps {
     /**
      * The ID of the Pokemon to show capture locations for.
      */
     pokemonId: number,
 
     /**
-     * The index of the selected version group.
-     */
-    versionGroupIndex: number,
-
-    /**
-     * Whether the parent component is loading.
-     */
-    parentIsLoading: boolean,
-
-    /**
      * Whether to show the capture locations.
      */
-    showLocations: boolean,
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
+    showLocations: boolean
 }
 
-type CaptureLocationsState = {
+interface ICaptureLocationsState {
     /**
      * The capture locations to show.
      */
@@ -52,7 +33,7 @@ type CaptureLocationsState = {
 /**
  * Component for displaying a Pokemon's capture locations.
  */
-export class CaptureLocations extends Component<CaptureLocationsProps, CaptureLocationsState> {
+export class CaptureLocations extends Component<ICaptureLocationsProps, ICaptureLocationsState> {
     constructor(props: any) {
         super(props)
         this.state = {
@@ -67,7 +48,7 @@ export class CaptureLocations extends Component<CaptureLocationsProps, CaptureLo
         this.getCaptureLocations()
     }
 
-    componentDidUpdate(previousProps: CaptureLocationsProps) {
+    componentDidUpdate(previousProps: ICaptureLocationsProps) {
         // refresh capture locations if the version group changed...
         let previousVersionGroupIndex = previousProps.versionGroupIndex
         let versionGroupIndex = this.props.versionGroupIndex
