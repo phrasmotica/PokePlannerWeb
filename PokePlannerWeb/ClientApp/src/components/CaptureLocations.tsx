@@ -157,6 +157,9 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 .catch(error => console.log(error))
                 .then(() => this.setState({ loadingLocations: false }))
         }
+        else {
+            this.setState({ locations: [] })
+        }
     }
 
     // returns the endpoint to use when fetching encounters of the given Pokemon
