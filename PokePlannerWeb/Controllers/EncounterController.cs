@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -43,7 +44,11 @@ namespace PokePlannerWeb.Controllers
         /// </summary>
         private bool IsInVersionGroup(LocationAreaEncounter encounter, int versionGroupId)
         {
-            return true;
+            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
+            var versions = versionGroup.Versions.Select(v => v.Name);
+            var encounterVersions = encounter.VersionDetails.Select(vd => vd.Version.Name);
+
+            return versions.Intersect(encounterVersions).Any();
         }
     }
 }
