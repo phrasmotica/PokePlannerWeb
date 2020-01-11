@@ -69,31 +69,39 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     renderCaptureLocations() {
-        if (this.hasLocations()) {
-            let locations = this.state.locations
-            let items = []
-            for (let row = 0; row < locations.length; row++) {
-                // ensure each headers have unique IDs between all instances
-                let id = `locations${this.props.index}row${row}`
+        if (this.hasPokemon()) {
+            if (this.hasLocations()) {
+                let locations = this.state.locations
+                let items = []
+                for (let row = 0; row < locations.length; row++) {
+                    // ensure each headers have unique IDs between all instances
+                    let id = `locations${this.props.index}row${row}`
 
-                let location = locations[row]
-                items.push(
-                    <div key={id}>
-                        {location.locationArea.name}
+                    let location = locations[row]
+                    items.push(
+                        <div key={id}>
+                            {location.locationArea.name}
+                        </div>
+                    )
+                }
+
+                return (
+                    <div>
+                        {items}
                     </div>
                 )
             }
 
             return (
                 <div>
-                    {items}
+                    No capture locations
                 </div>
             )
         }
 
         return (
             <div>
-                No capture locations
+                -
             </div>
         )
     }
