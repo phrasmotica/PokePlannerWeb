@@ -3,6 +3,7 @@ import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 import { PokemonPanel } from './PokemonPanel'
 import { TypeSet } from '../models/TypeSet'
+import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
 
 /**
  * The number of Pokemon panels to show.
@@ -14,7 +15,7 @@ const TEAM_SIZE: number = 6
  */
 const NUMBER_OF_ROWS: number = 2
 
-interface TeamBuilderState {
+interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
      * List of Pokemon species names.
      */
@@ -24,11 +25,6 @@ interface TeamBuilderState {
      * List of version groups.
      */
     versionGroups: string[],
-
-    /**
-     * The index of the selected version group.
-     */
-    versionGroupIndex: number,
 
     /**
      * Whether the page is loading.
@@ -58,18 +54,13 @@ interface TeamBuilderState {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
-    ignoreValidity: boolean,
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
+    ignoreValidity: boolean
 }
 
 /**
  * Component for building a Pokemon team.
  */
-export class TeamBuilder extends Component<any, TeamBuilderState> {
+export class TeamBuilder extends Component<any, ITeamBuilderState> {
     constructor(props: any) {
         super(props)
         this.state = {
