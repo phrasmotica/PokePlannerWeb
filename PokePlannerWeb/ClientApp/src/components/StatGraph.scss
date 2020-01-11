@@ -15,6 +15,36 @@ $width: 370px;
 .stat-bar {
     background-color: dodgerblue;
     margin-right: 3px;
+
+    &-hp {
+        @extend .stat-bar;
+        background-color: #FF0000;
+    }
+
+    &-attack {
+        @extend .stat-bar;
+        background-color: #F08030;
+    }
+
+    &-defense {
+        @extend .stat-bar;
+        background-color: #F8D030;
+    }
+
+    &-special-attack {
+        @extend .stat-bar;
+        background-color: #6890F0;
+    }
+
+    &-special-defense {
+        @extend .stat-bar;
+        background-color: #78C850;
+    }
+
+    &-speed {
+        @extend .stat-bar;
+        background-color: #F85888;
+    }
 }
 
 .stat-value {

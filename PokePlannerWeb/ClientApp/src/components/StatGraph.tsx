@@ -64,17 +64,18 @@ export class StatGraph extends Component<IStatGraphProps, any> {
         let shouldShowStats = this.props.shouldShowStats
         return (
             <div className="stat-bars">
-                {this.props.statNames.map((_, i) => {
+                {this.props.statNames.map((name, i) => {
                     let values = this.props.statValues
                     let value = 0
                     if (shouldShowStats && values.length > i) {
                         value = values[i]
                     }
 
+                    let shortName = name.replace(" ", "-").toLowerCase()
                     return (
                         <div key={i} className="flex">
                             <div
-                                className="stat-bar"
+                                className={"stat-bar-" + shortName}
                                 style={{ width: value }} />
 
                             <div className="stat-value">
