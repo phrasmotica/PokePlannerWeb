@@ -69,24 +69,31 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     renderCaptureLocations() {
-        let locations = this.state.locations
-        let items = []
+        if (this.hasLocations()) {
+            let locations = this.state.locations
+            let items = []
+            for (let row = 0; row < locations.length; row++) {
+                // ensure each headers have unique IDs between all instances
+                let id = `locations${this.props.index}row${row}`
 
-        for (let row = 0; row < locations.length; row++) {
-            // ensure each headers have unique IDs between all instances
-            let id = `locations${this.props.index}row${row}`
+                let location = locations[row]
+                items.push(
+                    <div key={id}>
+                        {location.locationArea.name}
+                    </div>
+                )
+            }
 
-            let location = locations[row]
-            items.push(
-                <div key={id}>
-                    {location.locationArea.name}
+            return (
+                <div>
+                    {items}
                 </div>
             )
         }
 
         return (
             <div>
-                {items}
+                No capture locations
             </div>
         )
     }
@@ -109,6 +116,11 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     // returns true if we have a Pokemon
     hasPokemon() {
         return this.props.pokemonId > 0
+    }
+
+    // returns true if we have capture locations
+    hasLocations() {
+        return this.state.locations.length > 0
     }
 
     // retrieves the Pokemon's capture locations from EncounterController
