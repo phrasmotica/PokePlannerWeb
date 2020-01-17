@@ -14,6 +14,11 @@
         /// The name of the database.
         /// </summary>
         public string DatabaseName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of Pokemon.
+        /// </summary>
+        public string PokemonCollectionName { get; set; }
     }
 
     /// <summary>
@@ -30,5 +35,10 @@
         /// The name of the database.
         /// </summary>
         string DatabaseName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of Pokemon.
+        /// </summary>
+        string PokemonCollectionName { get; set; }
     }
 }
