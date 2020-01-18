@@ -44,16 +44,20 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting name of Pokemon {id}...");
 
-            // read name from cache
-            var cachedName = PokemonCacheManager.Instance.GetPokemonDisplayName(id);
-            if (string.IsNullOrEmpty(cachedName))
+            // try get Pokemon document from database
+            var entry = PokemonService.Get(id);
+            if (entry == null)
             {
+                Logger.LogInformation($"Creating entry for Pokemon {id} in database...");
+
                 // get from PokeAPI
                 var pokemon = await PokeAPI.Get<Pokemon>(id);
-                return await pokemon.GetEnglishName();
+
+                // store in database
+                entry = await PokemonService.CreateEntry(pokemon);
             }
 
-            return cachedName;
+            return entry.GetDisplayName();
         }
 
         /// <summary>
