@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.DataStore.Services;
 using PokePlannerWeb.Models;
 
 namespace PokePlannerWeb
@@ -31,6 +32,8 @@ namespace PokePlannerWeb
             services.AddSingleton<IPokePlannerWebDbSettings>(sp =>
                 sp.GetRequiredService<IOptions<PokePlannerWebDbSettings>>().Value
             );
+
+            services.AddSingleton<PokemonService>();
 
             services.AddControllersWithViews();
 

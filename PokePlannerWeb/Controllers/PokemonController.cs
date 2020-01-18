@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
 using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.DataStore.Services;
 using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Controllers
@@ -17,6 +18,11 @@ namespace PokePlannerWeb.Controllers
     public class PokemonController : ControllerBase
     {
         /// <summary>
+        /// The Pokemon service.
+        /// </summary>
+        private readonly PokemonService PokemonService;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         private readonly ILogger<PokemonController> Logger;
@@ -24,8 +30,9 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PokemonController(ILogger<PokemonController> logger)
+        public PokemonController(PokemonService pokemonService, ILogger<PokemonController> logger)
         {
+            PokemonService = pokemonService;
             Logger = logger;
         }
 
@@ -152,7 +159,8 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the base stats of the Pokemon with the given ID in the version group with the given ID.
+        /// Returns the base stats of the Pokemon with the given ID in the version group with the
+        /// given ID.
         /// </summary>
         [HttpGet("{id:int}/baseStats/{versionGroupId:int}")]
         public async Task<int[]> GetPokemonBaseStatsInVersionGroupById(int id, int versionGroupId)
@@ -163,7 +171,8 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the validity of the Pokemon with the given ID in the version group with the given ID.
+        /// Returns the validity of the Pokemon with the given ID in the version group with the
+        /// given ID.
         /// </summary>
         [HttpGet("{id:int}/validity/{versionGroupId:int}")]
         public async Task<bool> GetPokemonValidityInVersionGroupById(int id, int versionGroupId)
