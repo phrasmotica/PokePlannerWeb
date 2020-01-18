@@ -6,6 +6,9 @@ using Pokemon = PokeApiNet.Models.Pokemon;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
+    /// <summary>
+    /// Service for managing the Pokemon entries in the database.
+    /// </summary>
     public class PokemonService
     {
         /// <summary>
