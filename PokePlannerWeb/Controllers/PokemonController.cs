@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet.Models;
-using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Services;
 using PokePlannerWeb.Data.Extensions;
@@ -23,6 +22,11 @@ namespace PokePlannerWeb.Controllers
         private readonly PokemonService PokemonService;
 
         /// <summary>
+        /// The Pokemon forms service.
+        /// </summary>
+        private readonly PokemonFormsService PokemonFormsService;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         private readonly ILogger<PokemonController> Logger;
@@ -30,9 +34,10 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PokemonController(PokemonService pokemonService, ILogger<PokemonController> logger)
+        public PokemonController(PokemonService pokemonService, PokemonFormsService pokemonFormsService, ILogger<PokemonController> logger)
         {
             PokemonService = pokemonService;
+            PokemonFormsService = pokemonFormsService;
             Logger = logger;
         }
 
@@ -68,16 +73,20 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting IDs of forms of Pokemon {id} in version group {versionGroupId}...");
 
-            // read form IDs from cache
-            var cachedIds = PokemonCacheManager.Instance.GetPokemonFormIds(id);
-            if (cachedIds == null)
+            // try get Pokemon forms document from database
+            var entry = PokemonFormsService.Get(id);
+            if (entry == null)
             {
+                Logger.LogInformation($"Creating forms entry for Pokemon {id} in database...");
+
                 // get from PokeAPI
                 var pokemon = await PokeAPI.Get<Pokemon>(id);
-                return await pokemon.GetFormIDs(versionGroupId);
+
+                // store in database
+                entry = await PokemonFormsService.CreateEntry(pokemon);
             }
 
-            return cachedIds;
+            return entry.GetFormIds().ToArray();
         }
 
         /// <summary>
@@ -88,16 +97,20 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting names of forms of Pokemon {id} in version group {versionGroupId}...");
 
-            // read form display names from cache
-            var cachedNames = PokemonCacheManager.Instance.GetPokemonFormNames(id);
-            if (cachedNames == null)
+            // try get Pokemon forms document from database
+            var entry = PokemonFormsService.Get(id);
+            if (entry == null)
             {
+                Logger.LogInformation($"Creating forms entry for Pokemon {id} in database...");
+
                 // get from PokeAPI
                 var pokemon = await PokeAPI.Get<Pokemon>(id);
-                return await pokemon.GetFormNames(versionGroupId);
+
+                // store in database
+                entry = await PokemonFormsService.CreateEntry(pokemon);
             }
 
-            return cachedNames;
+            return entry.GetFormDisplayNames().ToArray();
         }
 
         /// <summary>

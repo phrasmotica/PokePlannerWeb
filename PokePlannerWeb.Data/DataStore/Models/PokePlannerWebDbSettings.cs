@@ -19,6 +19,11 @@
         /// The name of the collection of Pokemon.
         /// </summary>
         public string PokemonCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of Pokemon forms.
+        /// </summary>
+        public string PokemonFormsCollectionName { get; set; }
     }
 
     /// <summary>
@@ -40,5 +45,10 @@
         /// The name of the collection of Pokemon.
         /// </summary>
         string PokemonCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of Pokemon forms.
+        /// </summary>
+        string PokemonFormsCollectionName { get; set; }
     }
 }
