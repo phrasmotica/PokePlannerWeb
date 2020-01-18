@@ -79,7 +79,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public string GetPokemonDisplayName(int pokemonId, string locale = "en")
         {
             var entry = Get(pokemonId);
-            return entry.DisplayNames.SingleOrDefault(n => n.Language == locale).Name;
+            return entry.GetDisplayName(locale);
         }
 
         /// <summary>
