@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.Extensions;
 using Pokemon = PokeApiNet.Models.Pokemon;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -75,16 +76,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var formResources = await PokeAPI.Get(pokemon.Forms);
             var forms = formResources.Select(f =>
             {
-                var displayNames = f.Names.Select(n => new DisplayName
-                {
-                    Language = n.Language.Name,
-                    Name = n.Name
-                }).ToList();
-
                 return new PokemonForm
                 {
                     FormId = f.Id,
-                    DisplayNames = displayNames
+                    DisplayNames = f.Names.ToDisplayNames().ToList()
                 };
             }).ToList();
 

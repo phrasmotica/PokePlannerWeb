@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using PokeApiNet.Models;
+using PokePlannerWeb.Data.DataStore;
 using Type = PokePlannerWeb.Data.Types.Type;
 
 namespace PokePlannerWeb.Data.Extensions
@@ -17,6 +18,14 @@ namespace PokePlannerWeb.Data.Extensions
         {
             return typeMap.OrderBy(t => t.Slot)
                           .Select(t => t.Type.Name.ToEnum<Type>());
+        }
+
+        /// <summary>
+        /// Returns this collection of names as a collection of DisplayNames.
+        /// </summary>
+        public static IEnumerable<DisplayName> ToDisplayNames(this IEnumerable<Names> names)
+        {
+            return names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Name });
         }
     }
 }

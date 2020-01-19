@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.Extensions;
 using Pokemon = PokeApiNet.Models.Pokemon;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -72,25 +72,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonEntry> ConvertToEntry(Pokemon pokemon)
         {
-            var displayNames = new List<DisplayName>();
-
-            var form = await PokeAPI.Get(pokemon.Forms[0]);
-            if (string.IsNullOrEmpty(form.FormName))
-            {
-                // form has empty form_name if it's the standard form
-                var species = await PokeAPI.Get(pokemon.Species);
-                displayNames = species.Names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Name }).ToList();
-            }
-            else
-            {
-                // use name of secondary form
-                displayNames = form.Names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Name }).ToList();
-            }
+            var displayNames = await pokemon.GetDisplayNames();
 
             return new PokemonEntry
             {
                 PokemonId = pokemon.Id,
-                DisplayNames = displayNames
+                DisplayNames = displayNames.ToList()
             };
         }
 

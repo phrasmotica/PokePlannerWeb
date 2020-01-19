@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using PokeApiNet.Models;
+using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Payloads;
 using PokePlannerWeb.Data.Types;
@@ -36,8 +37,7 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Returns the names of the forms of the given Pokemon in the version group with the
-        /// given ID.
+        /// Returns the names of the forms of the given Pokemon in the version group with the given ID.
         /// </summary>
         public static async Task<string[]> GetFormNames(this Pokemon pokemon, int? versionGroupId = null)
         {
@@ -88,7 +88,8 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Returns the names of the varieties of the given species in the version group with the given ID.
+        /// Returns the names of the varieties of the given species in the version group with the
+        /// given ID.
         /// </summary>
         public static async Task<string[]> GetVarietyNames(this PokemonSpecies species, int? versionGroupId = null)
         {
@@ -163,6 +164,23 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns this Pokemon's display names.
+        /// </summary>
+        public static async Task<IEnumerable<DisplayName>> GetDisplayNames(this Pokemon pokemon)
+        {
+            var form = await PokeAPI.Get(pokemon.Forms[0]);
+            if (string.IsNullOrEmpty(form.FormName))
+            {
+                // form has empty form_name if it's the standard form
+                var species = await PokeAPI.Get(pokemon.Species);
+                return species.Names.ToDisplayNames().ToList();
+            }
+
+            // use names of secondary form
+            return form.Names.ToDisplayNames().ToList();
+        }
 
         /// <summary>
         /// Returns this Pokemon's type efficacy in the version group with the given ID as an array.
