@@ -36,34 +36,5 @@ namespace PokePlannerWeb.Cache
                                            .Select(dn => dn.Name);
             return cachedNames.ToArray();
         }
-
-        /// <summary>
-        /// Returns the IDs of the varieties of the species with the given ID.
-        /// </summary>
-        public int[] GetSpeciesVarietyIds(int speciesId)
-        {
-            var entry = GetEntry(speciesId);
-            if (entry == null)
-            {
-                return null;
-            }
-
-            var cachedIds = entry.Varieties.Select(v => v.Key);
-            return cachedIds.ToArray();
-        }
-
-
-        public string[] GetSpeciesVarietyNames(int speciesId, string locale = "en")
-        {
-            var entry = GetEntry(speciesId);
-            if (entry == null)
-            {
-                return null;
-            }
-
-            var cachedNames = entry.Varieties.Select(v => v.DisplayNames.Single(dn => dn.Language == "en"))
-                                             .Select(dn => dn.Name);
-            return cachedNames.ToArray();
-        }
     }
 }
