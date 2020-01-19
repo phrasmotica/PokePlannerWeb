@@ -2,10 +2,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet.Models;
 using PokePlannerWeb.Cache;
-using PokePlannerWeb.Data;
-using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -17,6 +15,11 @@ namespace PokePlannerWeb.Controllers
     public class SpeciesController : ControllerBase
     {
         /// <summary>
+        /// The Pokemon varieties service.
+        /// </summary>
+        private readonly PokemonVarietiesService PokemonVarietiesService;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         private readonly ILogger<SpeciesController> Logger;
@@ -24,8 +27,9 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SpeciesController(ILogger<SpeciesController> logger)
+        public SpeciesController(PokemonVarietiesService pokemonVarietiesService, ILogger<SpeciesController> logger)
         {
+            PokemonVarietiesService = pokemonVarietiesService;
             Logger = logger;
         }
 
@@ -49,16 +53,9 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting IDs of varieties of species of Pokemon {id} in version group {versionGroupId}...");
 
-            // read variety IDs from cache
-            var cachedIds = PokemonSpeciesCacheManager.Instance.GetSpeciesVarietyIds(id);
-            if (cachedIds == null)
-            {
-                // get from PokeAPI
-                var species = await PokeAPI.Get<PokemonSpecies>(id);
-                return await species.GetVarietyIDs(versionGroupId);
-            }
-
-            return cachedIds;
+            // get varieties document from database
+            var entry = await PokemonVarietiesService.GetOrCreate(id);
+            return entry.GetVarietyIds().ToArray();
         }
 
         /// <summary>
@@ -69,16 +66,9 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting names of varieties of species of Pokemon {id} in version group {versionGroupId}...");
 
-            // read variety display names from cache
-            var cachedNames = PokemonSpeciesCacheManager.Instance.GetSpeciesVarietyNames(id);
-            if (cachedNames == null)
-            {
-                // get from PokeAPI
-                var species = await PokeAPI.Get<PokemonSpecies>(id);
-                return await species.GetVarietyNames(versionGroupId);
-            }
-
-            return cachedNames;
+            // get varieties document from database
+            var entry = await PokemonVarietiesService.GetOrCreate(id);
+            return entry.GetVarietyDisplayNames().ToArray();
         }
     }
 }

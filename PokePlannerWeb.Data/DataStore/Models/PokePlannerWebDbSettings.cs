@@ -24,6 +24,11 @@
         /// The name of the collection of Pokemon forms.
         /// </summary>
         public string PokemonFormsCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of Pokemon varieties.
+        /// </summary>
+        public string PokemonVarietiesCollectionName { get; set; }
     }
 
     /// <summary>
@@ -50,5 +55,10 @@
         /// The name of the collection of Pokemon forms.
         /// </summary>
         string PokemonFormsCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of Pokemon varieties.
+        /// </summary>
+        string PokemonVarietiesCollectionName { get; set; }
     }
 }

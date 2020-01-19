@@ -35,6 +35,7 @@ namespace PokePlannerWeb
 
             services.AddSingleton<PokemonService>();
             services.AddSingleton<PokemonFormsService>();
+            services.AddSingleton<PokemonVarietiesService>();
 
             services.AddControllersWithViews();
 
