@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
 using Pokemon = PokeApiNet.Models.Pokemon;
@@ -18,13 +19,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly IMongoCollection<PokemonFormsEntry> PokemonFormsCollection;
 
         /// <summary>
+        /// The logger.
+        /// </summary>
+        private readonly ILogger<PokemonFormsService> Logger;
+
+        /// <summary>
         /// Creates a connection to the Pokemon forms collection in the database.
         /// </summary>
-        public PokemonFormsService(IPokePlannerWebDbSettings settings)
+        public PokemonFormsService(IPokePlannerWebDbSettings settings, ILogger<PokemonFormsService> logger)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             PokemonFormsCollection = database.GetCollection<PokemonFormsEntry>(settings.PokemonFormsCollectionName);
+            Logger = logger;
         }
 
         #region CRUD methods
@@ -63,6 +70,29 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the Pokemon with the given ID from the database, creating an entry for it if it
+        /// doesn't exist.
+        /// </summary>
+        public async Task<PokemonFormsEntry> GetOrCreate(int pokemonId)
+        {
+            var entry = Get(pokemonId);
+            if (entry == null)
+            {
+                Logger.LogInformation($"Creating forms entry for Pokemon {pokemonId} in database...");
+
+                // get from PokeAPI
+                var pokemon = await PokeAPI.Get<Pokemon>(pokemonId);
+
+                // store in database
+                entry = await CreateEntry(pokemon);
+            }
+
+            // TODO: update entry if it's exceeded its TTL
+
+            return entry;
+        }
 
         /// <summary>
         /// Creates a new Pokemon forms entry in the database and returns it.

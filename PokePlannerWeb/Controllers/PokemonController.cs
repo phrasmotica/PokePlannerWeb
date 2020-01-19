@@ -49,19 +49,8 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting name of Pokemon {id}...");
 
-            // try get Pokemon document from database
-            var entry = PokemonService.Get(id);
-            if (entry == null)
-            {
-                Logger.LogInformation($"Creating entry for Pokemon {id} in database...");
-
-                // get from PokeAPI
-                var pokemon = await PokeAPI.Get<Pokemon>(id);
-
-                // store in database
-                entry = await PokemonService.CreateEntry(pokemon);
-            }
-
+            // get Pokemon document from database
+            var entry = await PokemonService.GetOrCreate(id);
             return entry.GetDisplayName();
         }
 
@@ -73,19 +62,8 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting IDs of forms of Pokemon {id} in version group {versionGroupId}...");
 
-            // try get Pokemon forms document from database
-            var entry = PokemonFormsService.Get(id);
-            if (entry == null)
-            {
-                Logger.LogInformation($"Creating forms entry for Pokemon {id} in database...");
-
-                // get from PokeAPI
-                var pokemon = await PokeAPI.Get<Pokemon>(id);
-
-                // store in database
-                entry = await PokemonFormsService.CreateEntry(pokemon);
-            }
-
+            // get Pokemon forms document from database
+            var entry = await PokemonFormsService.GetOrCreate(id);
             return entry.GetFormIds().ToArray();
         }
 
@@ -97,19 +75,8 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting names of forms of Pokemon {id} in version group {versionGroupId}...");
 
-            // try get Pokemon forms document from database
-            var entry = PokemonFormsService.Get(id);
-            if (entry == null)
-            {
-                Logger.LogInformation($"Creating forms entry for Pokemon {id} in database...");
-
-                // get from PokeAPI
-                var pokemon = await PokeAPI.Get<Pokemon>(id);
-
-                // store in database
-                entry = await PokemonFormsService.CreateEntry(pokemon);
-            }
-
+            // get Pokemon forms document from database
+            var entry = await PokemonFormsService.GetOrCreate(id);
             return entry.GetFormDisplayNames().ToArray();
         }
 

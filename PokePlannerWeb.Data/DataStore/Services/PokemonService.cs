@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
 using Pokemon = PokeApiNet.Models.Pokemon;
@@ -17,13 +18,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly IMongoCollection<PokemonEntry> PokemonCollection;
 
         /// <summary>
+        /// The logger.
+        /// </summary>
+        private readonly ILogger<PokemonService> Logger;
+
+        /// <summary>
         /// Creates a connection to the Pokemon collection in the database.
         /// </summary>
-        public PokemonService(IPokePlannerWebDbSettings settings)
+        public PokemonService(IPokePlannerWebDbSettings settings, ILogger<PokemonService> logger)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             PokemonCollection = database.GetCollection<PokemonEntry>(settings.PokemonCollectionName);
+            Logger = logger;
         }
 
         #region CRUD methods
@@ -62,6 +69,29 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the Pokemon with the given ID from the database, creating an entry for it if it
+        /// doesn't exist.
+        /// </summary>
+        public async Task<PokemonEntry> GetOrCreate(int pokemonId)
+        {
+            var entry = Get(pokemonId);
+            if (entry == null)
+            {
+                Logger.LogInformation($"Creating entry for Pokemon {pokemonId} in database...");
+
+                // get from PokeAPI
+                var pokemon = await PokeAPI.Get<Pokemon>(pokemonId);
+
+                // store in database
+                entry = await CreateEntry(pokemon);
+            }
+
+            // TODO: update entry if it's exceeded its TTL
+
+            return entry;
+        }
 
         /// <summary>
         /// Creates a new Pokemon in the database and returns it.
