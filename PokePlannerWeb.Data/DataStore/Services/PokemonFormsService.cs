@@ -50,14 +50,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Replaces the Pokemon forms entry with the given ID with a new entry in the database.
-        /// </summary>
-        public override void Update(int pokemonId, PokemonFormsEntry entry)
-        {
-            Collection.ReplaceOne(p => p.PokemonId == pokemonId, entry);
-        }
-
-        /// <summary>
         /// Removes the Pokemon forms entry with the given ID from the database.
         /// </summary>
         public override void Remove(int pokemonId)

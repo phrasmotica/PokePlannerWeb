@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -34,6 +35,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected abstract void SetCollection(IPokePlannerWebDbSettings settings);
 
+        /// <summary>
+        /// Gets the time to live for documents in the collection.
+        /// </summary>
+        protected virtual TimeSpan TimeToLive { get; } = TimeSpan.FromDays(365);
+
         #region CRUD methods
 
         /// <summary>
@@ -47,9 +53,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public abstract TEntry Create(TEntry entry);
 
         /// <summary>
-        /// Replaces the entry with the given ID with a new entry in the database.
+        /// Removes the entry with the given ID and creates a new one in the database.
         /// </summary>
-        public abstract void Update(int id, TEntry entry);
+        public void Update(int id, TEntry entry)
+        {
+            Remove(id);
+            Create(entry);
+        }
 
         /// <summary>
         /// Removes the entry with the given ID from the database.
@@ -70,14 +80,46 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var entryType = typeof(TEntry).Name;
                 Logger.LogInformation($"Creating {entryType} entry for {sourceType} {id} in database...");
 
-                // fetch source
-                var source = await FetchSource(id);
+                entry = await FetchSourceAndCreateEntry(id);
+            }
+            else if (entry.CreationTime < DateTime.UtcNow - TimeToLive)
+            {
+                // update entry if it's exceeded its TTL
+                var sourceType = typeof(TSource).Name;
+                var entryType = typeof(TEntry).Name;
+                Logger.LogInformation($"{entryType} entry with id {id} exceeded TTL.");
+                Logger.LogInformation($"Creating {entryType} entry for {sourceType} {id} in database...");
 
-                // create entry
-                entry = await CreateEntry(source);
+                entry = await FetchSourceAndUpdateEntry(id);
             }
 
             return entry;
+        }
+
+        /// <summary>
+        /// Fetches the source object with the given ID and creates an entry for it.
+        /// </summary>
+        protected async Task<TEntry> FetchSourceAndCreateEntry(int id)
+        {
+            // fetch source
+            var source = await FetchSource(id);
+
+            // create entry
+            return await CreateEntry(source);
+        }
+
+        /// <summary>
+        /// Fetches the source object with the given ID, updates the entry for it and returns the entry.
+        /// </summary>
+        protected async Task<TEntry> FetchSourceAndUpdateEntry(int id)
+        {
+            // fetch source
+            var source = await FetchSource(id);
+
+            // update entry
+            await UpdateEntry(id, source);
+
+            return Get(id);
         }
 
         /// <summary>
@@ -86,12 +128,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected abstract Task<TSource> FetchSource(int id);
 
         /// <summary>
-        /// Creates a new entry in the database and returns it.
+        /// Creates a new entry in the database for the source object and returns it.
         /// </summary>
         protected async Task<TEntry> CreateEntry(TSource source)
         {
             var entry = await ConvertToEntry(source);
             return Create(entry);
+        }
+
+        /// <summary>
+        /// Updates the entry with the given ID in the database for the source object.
+        /// </summary>
+        protected async Task UpdateEntry(int id, TSource source)
+        {
+            var entry = await ConvertToEntry(source);
+            Update(id, entry);
         }
 
         /// <summary>

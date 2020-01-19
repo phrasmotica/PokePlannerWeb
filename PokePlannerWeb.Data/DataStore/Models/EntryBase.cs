@@ -18,6 +18,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets the time that the entry was created.
         /// </summary>
-        public DateTime Timestamp => Id.CreationTime;
+        public DateTime CreationTime => Id.CreationTime;
     }
 }
