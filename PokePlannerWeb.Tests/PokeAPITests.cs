@@ -76,23 +76,6 @@ namespace PokePlannerWeb.Tests
         }
 
         /// <summary>
-        /// Verifies that Pokemon cache works correctly.
-        /// </summary>
-        [Test]
-        [Category("Unit")]
-        public void PokemonCacheTest()
-        {
-            var cache = PokemonCacheManager.Instance.ReadCache();
-            Assert.AreEqual(807, cache.Count);
-
-            var entry = cache.Get(493);
-            Assert.AreEqual(entry.DisplayNames.Single(dn => dn.Language == "en").Name, "Arceus");
-
-            var form = entry.Forms.Last();
-            Assert.AreEqual(form.DisplayNames.Single(dn => dn.Language == "en").Name, "Fairy Arceus");
-        }
-
-        /// <summary>
         /// Verifies that the Pokemon species cache works correctly.
         /// </summary>
         [Test]
@@ -230,7 +213,7 @@ namespace PokePlannerWeb.Tests
                 Console.WriteLine($"{p1Name} and {p2Name} have THE SAME base stats");
                 return false;
             }
-            
+
             Console.WriteLine($"{p1Name} and {p2Name} have DIFFERENT base stats");
             return true;
         }
