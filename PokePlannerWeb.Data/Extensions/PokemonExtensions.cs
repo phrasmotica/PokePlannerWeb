@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using PokeApiNet;
 using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.Mechanics;
-using PokePlannerWeb.Data.Payloads;
 using PokePlannerWeb.Data.Types;
 using Type = PokePlannerWeb.Data.Types.Type;
 
@@ -240,14 +239,6 @@ namespace PokePlannerWeb.Data.Extensions
         public static int[] GetBaseStats(this Pokemon pokemon, int versionGroupId)
         {
             return pokemon.Stats.Select(bs => bs.BaseStat).ToArray();
-        }
-
-        /// <summary>
-        /// Returns a minimal representation of this Pokemon resource.
-        /// </summary>
-        public static async Task<PokemonPayload> AsPayload(this Pokemon pokemon)
-        {
-            return await PokemonPayload.Create(pokemon);
         }
     }
 }

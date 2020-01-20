@@ -8,7 +8,6 @@ using PokeApiNet;
 using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Mechanics;
-using PokePlannerWeb.Data.Payloads;
 using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb.Tests
@@ -257,23 +256,6 @@ namespace PokePlannerWeb.Tests
             // get location area encounters for Abra
             var encounters = await PokeAPI.Instance.GetLocationAreaEncounters(63);
             Assert.IsNotNull(encounters);
-        }
-
-        /// <summary>
-        /// Verifies that a Pokemon payload is created correctly.
-        /// </summary>
-        [Test]
-        [Category("Integration")]
-        public async Task PokemonPayloadCreationTest()
-        {
-            // get Pokemon resource
-            var pokemon = await PokeAPI.Get<Pokemon>(1);
-
-            // create payload
-            var payload = await PokemonPayload.Create(pokemon);
-
-            // verify name is correct
-            Assert.AreEqual("Bulbasaur", payload.EnglishName);
         }
     }
 }
