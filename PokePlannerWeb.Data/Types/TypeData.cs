@@ -54,13 +54,12 @@ namespace PokePlannerWeb.Data.Types
             {
                 // retrieve type object from PokeAPI
                 var typeName = thisType.ToString().ToLower();
-                var typeObj = await PokeAPI.Get<PokeApiNet.Models.Type>(typeName);
+                var typeObj = await PokeAPI.Get<PokeApiNet.Type>(typeName);
 
                 Console.WriteLine($@"Setting {typeName} efficacy data...");
                 Efficacy[thisType] = ConcreteTypes.ToDictionary(1d);
 
-                // populate damage relations
-                // we can do this with the 'from' relations alone
+                // populate damage relations - we can do this with the 'from' relations alone
                 var damageRelations = await typeObj.GetDamageRelations(versionGroupId);
 
                 foreach (var typeFrom in damageRelations.DoubleDamageFrom.Select(x => x.Name.ToEnum<Type>()))
@@ -85,8 +84,7 @@ namespace PokePlannerWeb.Data.Types
         }
 
         /// <summary>
-        /// Internal storage for type efficacy.
-        /// Keys are defensive types, values are offensive types
+        /// Internal storage for type efficacy. Keys are defensive types, values are offensive types
         /// mapped to their effectivenesses against the key.
         /// </summary>
         private IDictionary<Type, Dictionary<Type, double>> Efficacy { get; set; }
@@ -201,8 +199,7 @@ namespace PokePlannerWeb.Data.Types
         }
 
         /// <summary>
-        /// Returns the effectiveness multiplier for the
-        /// given offensive type against the defensive type.
+        /// Returns the effectiveness multiplier for the given offensive type against the defensive type.
         /// </summary>
         public double GetEfficacy(Type offType, Type defType)
         {
@@ -210,8 +207,7 @@ namespace PokePlannerWeb.Data.Types
         }
 
         /// <summary>
-        /// Returns the effectiveness multiplier for the
-        /// given offensive type against the defensive types.
+        /// Returns the effectiveness multiplier for the given offensive type against the defensive types.
         /// </summary>
         public double GetEfficacy(Type offType, Type defType1, Type defType2)
         {

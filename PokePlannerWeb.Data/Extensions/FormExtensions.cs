@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using PokeApiNet.Models;
+using PokeApiNet;
 using PokePlannerWeb.Data.Types;
 using Type = PokePlannerWeb.Data.Types.Type;
 

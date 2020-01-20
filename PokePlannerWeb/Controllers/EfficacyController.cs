@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet.Models;
+using PokeApiNet;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Types;
@@ -64,7 +64,8 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the efficacy of the Pokemon with the given species name in the version group with the given ID.
+        /// Returns the efficacy of the Pokemon with the given species name in the version group
+        /// with the given ID.
         /// </summary>
         [HttpGet("{name}/{versionGroupId:int}")]
         public async Task<double[]> GetEfficacyInVersionGroupByName(string name, int versionGroupId)
@@ -75,7 +76,8 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the efficacy of the Pokemon with the given ID in the version group with the given ID.
+        /// Returns the efficacy of the Pokemon with the given ID in the version group with the
+        /// given ID.
         /// </summary>
         [HttpGet("{id:int}/{versionGroupId:int}")]
         public async Task<double[]> GetEfficacyInVersionGroupById(int id, int versionGroupId)

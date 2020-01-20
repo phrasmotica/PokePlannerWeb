@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet.Models;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Controllers
 {

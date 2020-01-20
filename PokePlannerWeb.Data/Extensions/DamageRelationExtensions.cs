@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using PokeApiNet.Models;
+using PokeApiNet;
 using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Data.Extensions
@@ -35,7 +35,8 @@ namespace PokePlannerWeb.Data.Extensions
 
             if (pastGenerations.Any())
             {
-                // use the earliest generation after the given one with past damage relation data, if it exists
+                // use the earliest generation after the given one with past damage relation data,
+                // if it exists
                 var laterGens = pastGenerations.Where(g => g.Id >= generation.Id).ToList();
                 if (laterGens.Any())
                 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using PokeApiNet.Models;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Mechanics
 {

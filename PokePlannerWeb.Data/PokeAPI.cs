@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PokeApiNet;
-using PokeApiNet.Models;
 using PokePlannerWeb.Data.Cache;
 
 namespace PokePlannerWeb.Data
@@ -101,7 +100,8 @@ namespace PokePlannerWeb.Data
         }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(UrlNavigation{T})"/> with exception logging.
+        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(UrlNavigation{T})"/> with
+        /// exception logging.
         /// </summary>
         public static async Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase
         {
@@ -124,7 +124,8 @@ namespace PokePlannerWeb.Data
         }
 
         /// <summary>
-        /// Wrapper for <see cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception logging.
+        /// Wrapper for <see
+        /// cref="PokeApiClient.GetResourceAsync{T}(IEnumerable{UrlNavigation{T}})"/> with exception logging.
         /// </summary>
         public static async Task<IEnumerable<T>> Get<T>(IEnumerable<UrlNavigation<T>> nav) where T : ResourceBase
         {

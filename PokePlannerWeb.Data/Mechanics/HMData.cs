@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using PokeApiNet.Models;
+using PokeApiNet;
 using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Mechanics

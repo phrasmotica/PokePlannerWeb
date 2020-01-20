@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using PokeApiNet.Models;
+using PokeApiNet;
 using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Mechanics;

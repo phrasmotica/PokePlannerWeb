@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
-using PokeApiNet.Models;
+using PokeApiNet;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -7,8 +7,7 @@ using System.Collections.Immutable;
 namespace PokePlannerWeb.Data.Cache
 {
     /// <summary>
-    /// Manages caches for various classes.
-    /// Adapted from https://github.com/mtrdp642/PokeApiNet/blob/master/PokeApiNet/Cache/ResourceCacheManager.cs.
+    /// Manages caches for various classes. Adapted from https://github.com/mtrdp642/PokeApiNet/blob/master/PokeApiNet/Cache/ResourceCacheManager.cs.
     /// </summary>
     internal sealed class CacheManager : BaseCacheManager, IDisposable
     {

@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using PokeApiNet.Models;
+using PokeApiNet;
 using Type = PokePlannerWeb.Data.Types.Type;
 
 namespace PokePlannerWeb.Data.Extensions
@@ -14,7 +14,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static async Task<bool> HasType(this Generation generation, Type type)
         {
-            var typeObj = await PokeAPI.Get<PokeApiNet.Models.Type>(type.ToString().ToLower());
+            var typeObj = await PokeAPI.Get<PokeApiNet.Type>(type.ToString().ToLower());
             var generationIntroduced = await PokeAPI.Get(typeObj.Generation);
             return generationIntroduced.Id <= generation.Id;
         }

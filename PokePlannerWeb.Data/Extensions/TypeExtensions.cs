@@ -1,4 +1,4 @@
-﻿using PokeApiNet.Models;
+﻿using PokeApiNet;
 using PokePlannerWeb.Data.Payloads;
 
 namespace PokePlannerWeb.Data.Extensions

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet.Models;
+using PokeApiNet;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Services;
 using PokePlannerWeb.Data.Extensions;
