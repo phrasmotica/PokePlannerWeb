@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Controllers
@@ -43,7 +44,7 @@ namespace PokePlannerWeb.Controllers
                 var encounter = encounters[i];
                 var locationArea = await PokeAPI.Get(encounter.LocationArea);
                 var location = await PokeAPI.Get(locationArea.Location);
-                locations[i] = location.GetEnglishName();
+                locations[i] = location.Names.GetName();
             }
 
             return locations.ToArray();

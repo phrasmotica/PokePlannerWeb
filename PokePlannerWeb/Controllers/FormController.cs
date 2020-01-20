@@ -36,7 +36,7 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting name of Pokemon form {id}...");
             var form = await PokeAPI.Get<PokemonForm>(id);
-            return form.GetEnglishName();
+            return form.Names.GetName();
         }
 
         /// <summary>
@@ -90,7 +90,8 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the types of the Pokemon form with the given ID in the version group with the given ID.
+        /// Returns the types of the Pokemon form with the given ID in the version group with the
+        /// given ID.
         /// </summary>
         [HttpGet("{id:int}/types/{versionGroupId:int}")]
         public async Task<string[]> GetFormTypesInVersionGroupById(int id, int versionGroupId)

@@ -51,7 +51,7 @@ namespace PokePlannerWeb.Data.Extensions
         private static async Task<string[]> GetFormNames(this Pokemon pokemon, VersionGroup versionGroup)
         {
             var forms = await PokeAPI.Get(pokemon.Forms);
-            return forms.Select(f => f.GetEnglishName()).ToArray();
+            return forms.Select(f => f.Names.GetName()).ToArray();
         }
 
         #endregion

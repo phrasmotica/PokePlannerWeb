@@ -12,6 +12,14 @@ namespace PokePlannerWeb.Data.Extensions
     public static class PokeAPIExtensions
     {
         /// <summary>
+        /// Returns the name from the given list of names in the given locale.
+        /// </summary>
+        public static string GetName(this List<Names> names, string locale = "en")
+        {
+            return names?.FirstOrDefault(n => n.Language.Name == locale)?.Name;
+        }
+
+        /// <summary>
         /// Returns this type map as an array of Type enum values.
         /// </summary>
         public static IEnumerable<Type> ToTypes(this IEnumerable<PokemonType> typeMap)

@@ -45,12 +45,11 @@ namespace PokePlannerWeb.Data.Mechanics
                 }
                 else
                 {
-                    // 14 species have complex names:
-                    // nidoran-f, nidoran-m, mr-mime, ho-oh, mime-jr, porygon-z, type-null,
-                    // jangmo-o, hakamo-o, kommo-o, tapu-koko, tapu-lele, tapu-bulu, tapu-fini
-                    // hopefully fetching their real names isn't too slow!
+                    // 14 species have complex names: nidoran-f, nidoran-m, mr-mime, ho-oh, mime-jr,
+                    // porygon-z, type-null, jangmo-o, hakamo-o, kommo-o, tapu-koko, tapu-lele,
+                    // tapu-bulu, tapu-fini hopefully fetching their real names isn't too slow!
                     var species = await PokeAPI.Get<PokemonSpecies>(speciesName);
-                    names[i] = species.GetEnglishName();
+                    names[i] = species.Names.GetName();
                 }
             }
 

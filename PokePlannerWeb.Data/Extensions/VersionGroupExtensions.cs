@@ -17,7 +17,7 @@ namespace PokePlannerWeb.Data.Extensions
         public static async Task<string> GetName(this VersionGroup vg)
         {
             var versions = await PokeAPI.Get(vg.Versions);
-            return string.Join("/", versions.Select(v => v.GetEnglishName()));
+            return string.Join("/", versions.Select(v => v.Names.GetName()));
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace PokePlannerWeb.Data.Extensions
         public static IEnumerable<string> GetBaseStatNames(this VersionGroup versionGroup)
         {
             return StatData.Instance.Stats.Where(s => !s.IsBattleOnly)
-                                          .Select(s => s.GetEnglishName());
+                                          .Select(s => s.Names.GetName());
         }
     }
 }
