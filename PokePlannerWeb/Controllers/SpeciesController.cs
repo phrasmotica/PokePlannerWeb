@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
@@ -14,6 +13,11 @@ namespace PokePlannerWeb.Controllers
     [Route("[controller]")]
     public class SpeciesController : ControllerBase
     {
+        /// <summary>
+        /// The names service.
+        /// </summary>
+        private readonly NamesService NamesService;
+
         /// <summary>
         /// The Pokemon varieties service.
         /// </summary>
@@ -27,8 +31,9 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SpeciesController(PokemonVarietiesService pokemonVarietiesService, ILogger<SpeciesController> logger)
+        public SpeciesController(NamesService namesService, PokemonVarietiesService pokemonVarietiesService, ILogger<SpeciesController> logger)
         {
+            NamesService = namesService;
             PokemonVarietiesService = pokemonVarietiesService;
             Logger = logger;
         }
@@ -37,12 +42,12 @@ namespace PokePlannerWeb.Controllers
         /// Returns the names of all species.
         /// </summary>
         [HttpGet("allNames")]
-        public string[] GetAllSpeciesNames()
+        public async Task<string[]> GetAllSpeciesNames()
         {
             Logger.LogInformation($"Getting names of all species...");
 
-            // read species names from cache
-            return PokemonSpeciesCacheManager.Instance.GetAllSpeciesNames();
+            // get list of names from database
+            return await NamesService.GetPokemonSpeciesNames();
         }
 
         /// <summary>
