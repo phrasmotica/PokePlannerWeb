@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
@@ -74,5 +78,96 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         #endregion
+
+        #region Version groups
+
+        /// <summary>
+        /// Returns the names of all version groups in the given locale.
+        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
+        /// </summary>
+        public async Task<string[]> GetVersionGroupNames(string locale = "en")
+        {
+            var entry = await GetOrCreateVersionGroupNamesEntry(locale);
+            return entry.DisplayNames.ToArray();
+        }
+
+        /// <summary>
+        /// Returns the version groups names entry from the database, creating the entry if it
+        /// doesn't exist.
+        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
+        /// </summary>
+        protected async Task<NamesEntry> GetOrCreateVersionGroupNamesEntry(string locale = "en")
+        {
+            var resourceKey = GetApiEndpointString<VersionGroup>();
+            var entry = Get(resourceKey, locale);
+            if (entry == null)
+            {
+                Logger.LogInformation("Creating version groups names entry in database...");
+
+                entry = await CreateVersionGroupNamesEntry(locale);
+            }
+            else if (entry.CreationTime < DateTime.UtcNow - TimeToLive)
+            {
+                // update entry if it's exceeded its TTL
+                Logger.LogInformation("Version groups names entry exceeded TTL.");
+                Logger.LogInformation("Creating version groups names entry in database...");
+
+                entry = await CreateVersionGroupNamesEntry(locale);
+            }
+
+            return entry;
+        }
+
+        /// <summary>
+        /// Creates a names entry for version group names in the given locale.
+        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
+        /// </summary>
+        protected async Task<NamesEntry> CreateVersionGroupNamesEntry(string locale = "en")
+        {
+            var names = await FetchVersionGroupNames(locale);
+            var entry = new NamesEntry
+            {
+                ResourceKey = GetApiEndpointString<VersionGroup>(),
+                Locale = locale,
+                DisplayNames = names.ToList()
+            };
+
+            return Create(entry);
+        }
+
+        /// <summary>
+        /// Fetches the name of each version group in the given locale and returns them in an array.
+        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
+        /// </summary>
+        protected async Task<string[]> FetchVersionGroupNames(string locale = "en")
+        {
+            // get version group results
+            var allVersionGroups = await PokeAPI.GetFullPage<VersionGroup>();
+
+            // get name for each version group in turn
+            var names = new string[allVersionGroups.Count];
+            for (var i = 0; i < allVersionGroups.Results.Count; i++)
+            {
+                var result = allVersionGroups.Results[i];
+
+                Logger.LogInformation($"Fetching name for version group {result.Name} in {locale} locale...");
+                var versionGroup = await PokeAPI.Get(result);
+
+                names[i] = await versionGroup.GetName(locale);
+            }
+
+            return names;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Returns the PokeAPI endpoint string for the given resource type.
+        /// </summary>
+        protected static string GetApiEndpointString<T>() where T : ResourceBase
+        {
+            var propertyInfo = typeof(T).GetProperty("ApiEndpoint", BindingFlags.Static | BindingFlags.NonPublic);
+            return propertyInfo.GetValue(null).ToString();
+        }
     }
 }

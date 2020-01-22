@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Services;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Models;
 
@@ -16,10 +16,16 @@ namespace PokePlannerWeb.Controllers
     public class VersionGroupController : ResourceController<VersionGroup>
     {
         /// <summary>
+        /// The names service.
+        /// </summary>
+        private readonly NamesService NamesService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupController(ILogger<ResourceController<VersionGroup>> logger) : base(logger)
+        public VersionGroupController(NamesService namesService, ILogger<ResourceController<VersionGroup>> logger) : base(logger)
         {
+            NamesService = namesService;
         }
 
         /// <summary>
@@ -34,12 +40,10 @@ namespace PokePlannerWeb.Controllers
         /// Returns the names of all version groups.
         /// </summary>
         [HttpGet("all")]
-        public async Task<IEnumerable<string>> GetVersionGroups()
+        public async Task<string[]> GetVersionGroups()
         {
-            Logger.LogInformation("VersionGroupController: getting version groups...");
-            var versionGroups = await VersionGroupData.Instance.GetVersionGroupNames();
-            Logger.LogInformation("VersionGroupController: got version groups.");
-            return versionGroups;
+            Logger.LogInformation("VersionGroupController: getting version group names...");
+            return await NamesService.GetVersionGroupNames();
         }
 
         /// <summary>

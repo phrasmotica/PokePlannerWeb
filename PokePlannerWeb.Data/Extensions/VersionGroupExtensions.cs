@@ -14,10 +14,10 @@ namespace PokePlannerWeb.Data.Extensions
         /// <summary>
         /// Returns the name of this version group.
         /// </summary>
-        public static async Task<string> GetName(this VersionGroup vg)
+        public static async Task<string> GetName(this VersionGroup vg, string locale = "en")
         {
             var versions = await PokeAPI.Get(vg.Versions);
-            return string.Join("/", versions.Select(v => v.Names.GetName()));
+            return string.Join("/", versions.Select(v => v.Names.GetName(locale)));
         }
 
         /// <summary>
