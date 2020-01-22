@@ -16,6 +16,11 @@
         public string DatabaseName { get; set; }
 
         /// <summary>
+        /// The name of the collection of localised names.
+        /// </summary>
+        public string NamesCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of Pokemon.
         /// </summary>
         public string PokemonCollectionName { get; set; }
@@ -45,6 +50,11 @@
         /// The name of the database.
         /// </summary>
         string DatabaseName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of localised names.
+        /// </summary>
+        string NamesCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of Pokemon.

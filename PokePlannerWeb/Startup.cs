@@ -33,6 +33,7 @@ namespace PokePlannerWeb
                 sp.GetRequiredService<IOptions<PokePlannerWebDbSettings>>().Value
             );
 
+            services.AddSingleton<NamesService>();
             services.AddSingleton<PokemonService>();
             services.AddSingleton<PokemonFormsService>();
             services.AddSingleton<PokemonVarietiesService>();
