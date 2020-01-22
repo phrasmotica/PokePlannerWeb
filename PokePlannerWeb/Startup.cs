@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
-using PokePlannerWeb.Models;
 
 namespace PokePlannerWeb
 {
@@ -33,7 +32,8 @@ namespace PokePlannerWeb
                 sp.GetRequiredService<IOptions<PokePlannerWebDbSettings>>().Value
             );
 
-            services.AddSingleton<NamesService>();
+            services.AddSingleton<PokemonSpeciesNamesService>();
+            services.AddSingleton<VersionGroupsNamesService>();
             services.AddSingleton<PokemonService>();
             services.AddSingleton<PokemonFormsService>();
             services.AddSingleton<PokemonVarietiesService>();

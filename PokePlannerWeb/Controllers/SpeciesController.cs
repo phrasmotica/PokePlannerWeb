@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// The names service.
         /// </summary>
-        private readonly NamesService NamesService;
+        private readonly PokemonSpeciesNamesService PokemonSpeciesNamesService;
 
         /// <summary>
         /// The Pokemon varieties service.
@@ -31,9 +31,9 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SpeciesController(NamesService namesService, PokemonVarietiesService pokemonVarietiesService, ILogger<SpeciesController> logger)
+        public SpeciesController(PokemonSpeciesNamesService pokemonSpeciesNamesService, PokemonVarietiesService pokemonVarietiesService, ILogger<SpeciesController> logger)
         {
-            NamesService = namesService;
+            PokemonSpeciesNamesService = pokemonSpeciesNamesService;
             PokemonVarietiesService = pokemonVarietiesService;
             Logger = logger;
         }
@@ -47,7 +47,7 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting names of all species...");
 
             // get list of names from database
-            return await NamesService.GetPokemonSpeciesNames();
+            return await PokemonSpeciesNamesService.GetPokemonSpeciesNames();
         }
 
         /// <summary>

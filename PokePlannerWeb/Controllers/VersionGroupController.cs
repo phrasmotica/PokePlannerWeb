@@ -18,14 +18,14 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// The names service.
         /// </summary>
-        private readonly NamesService NamesService;
+        private readonly VersionGroupsNamesService VersionGroupsNamesService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupController(NamesService namesService, ILogger<ResourceController<VersionGroup>> logger) : base(logger)
+        public VersionGroupController(VersionGroupsNamesService versionGroupsNamesService, ILogger<ResourceController<VersionGroup>> logger) : base(logger)
         {
-            NamesService = namesService;
+            VersionGroupsNamesService = versionGroupsNamesService;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<string[]> GetVersionGroups()
         {
             Logger.LogInformation("VersionGroupController: getting version group names...");
-            return await NamesService.GetVersionGroupNames();
+            return await VersionGroupsNamesService.GetVersionGroupNames();
         }
 
         /// <summary>
