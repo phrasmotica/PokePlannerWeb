@@ -12,6 +12,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
     /// Service for managing a list of localised names in the database.
+    /// TODO: make this class generic to some ILocalizable interface in PokeApiNet
     /// </summary>
     public class NamesService
     {
@@ -181,7 +182,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
         /// <summary>
         /// Returns the names of all version groups in the given locale.
-        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
         /// </summary>
         public async Task<string[]> GetVersionGroupNames(string locale = "en")
         {
@@ -192,7 +192,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the version groups names entry from the database, creating the entry if it
         /// doesn't exist.
-        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
         /// </summary>
         protected async Task<NamesEntry> GetOrCreateVersionGroupNamesEntry(string locale = "en")
         {
@@ -210,7 +209,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Logger.LogInformation("Version groups names entry exceeded TTL.");
                 Logger.LogInformation("Creating version groups names entry in database...");
 
-                entry = await CreateVersionGroupNamesEntry(locale);
+                entry = await UpdateVersionGroupNamesEntry(locale);
             }
 
             return entry;
@@ -218,14 +217,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
         /// <summary>
         /// Creates a names entry for version group names in the given locale.
-        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
         /// </summary>
         protected async Task<NamesEntry> CreateVersionGroupNamesEntry(string locale = "en")
         {
             var names = await FetchVersionGroupNames(locale);
+            var resourceKey = GetApiEndpointString<VersionGroup>();
             var entry = new NamesEntry
             {
-                ResourceKey = GetApiEndpointString<VersionGroup>(),
+                ResourceKey = resourceKey,
                 Locale = locale,
                 DisplayNames = names.ToList()
             };
@@ -234,8 +233,26 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Creates a names entry for version group names in the given locale.
+        /// </summary>
+        protected async Task<NamesEntry> UpdateVersionGroupNamesEntry(string locale = "en")
+        {
+            var names = await FetchVersionGroupNames(locale);
+            var resourceKey = GetApiEndpointString<VersionGroup>();
+            var entry = new NamesEntry
+            {
+                ResourceKey = resourceKey,
+                Locale = locale,
+                DisplayNames = names.ToList()
+            };
+
+            Update(resourceKey, entry, locale);
+
+            return Get(resourceKey, locale);
+        }
+
+        /// <summary>
         /// Fetches the name of each version group in the given locale and returns them in an array.
-        /// TODO: make this generic to some ILocalizable interface in PokeApiNet
         /// </summary>
         protected async Task<string[]> FetchVersionGroupNames(string locale = "en")
         {
