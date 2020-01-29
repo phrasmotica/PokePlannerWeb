@@ -144,8 +144,12 @@ namespace PokePlannerWeb.Data.Extensions
         private static async Task<IEnumerable<Type>> GetPastTypes(this Pokemon pokemon, Generation generation)
         {
             var pastTypes = pokemon.PastTypes;
-            var pastTypeGenerations = await PokeAPI.Get(pastTypes.Select(t => t.Generation));
+            if (pastTypes == null)
+            {
+                return Enumerable.Empty<Type>();
+            }
 
+            var pastTypeGenerations = await PokeAPI.Get(pastTypes.Select(t => t.Generation));
             if (pastTypeGenerations.Any())
             {
                 // use the earliest generation after the given one with past type data, if it exists
