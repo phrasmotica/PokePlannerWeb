@@ -6,12 +6,16 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a Pokemon species mapped to its varieties in the data store.
     /// </summary>
-    public class PokemonVarietiesEntry : EntryBase
+    public class PokemonVarietiesEntry : EntryBase<int>
     {
         /// <summary>
         /// Gets or sets the ID of the species.
         /// </summary>
-        public int SpeciesId { get; set; }
+        public int SpeciesId
+        {
+            get => Key;
+            set => Key = value;
+        }
 
         /// <summary>
         /// Gets or sets this species' varieties.

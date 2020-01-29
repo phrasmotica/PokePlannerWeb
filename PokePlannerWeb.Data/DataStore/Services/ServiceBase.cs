@@ -9,7 +9,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing a collection in the database.
     /// </summary>
-    public abstract class ServiceBase<TSource, TEntry> where TEntry : EntryBase
+    public abstract class ServiceBase<TSource, TKey, TEntry> where TEntry : EntryBase<TKey>
     {
         /// <summary>
         /// The collection of entries.
@@ -19,12 +19,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The logger.
         /// </summary>
-        protected readonly ILogger<ServiceBase<TSource, TEntry>> Logger;
+        protected readonly ILogger<ServiceBase<TSource, TKey, TEntry>> Logger;
 
         /// <summary>
         /// Create connection to database and initalise logger.
         /// </summary>
-        public ServiceBase(IPokePlannerWebDbSettings settings, ILogger<ServiceBase<TSource, TEntry>> logger)
+        public ServiceBase(IPokePlannerWebDbSettings settings, ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
         {
             SetCollection(settings);
             Logger = logger;
@@ -45,7 +45,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given ID from the database.
         /// </summary>
-        public abstract TEntry Get(int id);
+        public abstract TEntry Get(TKey key);
 
         /// <summary>
         /// Creates a new entry in the database and returns it.
@@ -55,42 +55,42 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Removes the entry with the given ID and creates a new one in the database.
         /// </summary>
-        public void Update(int id, TEntry entry)
+        public void Update(TKey key, TEntry entry)
         {
-            Remove(id);
+            Remove(key);
             Create(entry);
         }
 
         /// <summary>
         /// Removes the entry with the given ID from the database.
         /// </summary>
-        public abstract void Remove(int id);
+        public abstract void Remove(TKey key);
 
         #endregion
 
         /// <summary>
         /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
         /// </summary>
-        public async Task<TEntry> GetOrCreate(int id)
+        public async Task<TEntry> GetOrCreate(TKey key)
         {
-            var entry = Get(id);
+            var entry = Get(key);
             if (entry == null)
             {
                 var sourceType = typeof(TSource).Name;
                 var entryType = typeof(TEntry).Name;
-                Logger.LogInformation($"Creating {entryType} entry for {sourceType} {id} in database...");
+                Logger.LogInformation($"Creating {entryType} entry for {sourceType} {key} in database...");
 
-                entry = await FetchSourceAndCreateEntry(id);
+                entry = await FetchSourceAndCreateEntry(key);
             }
             else if (entry.CreationTime < DateTime.UtcNow - TimeToLive)
             {
                 // update entry if it's exceeded its TTL
                 var sourceType = typeof(TSource).Name;
                 var entryType = typeof(TEntry).Name;
-                Logger.LogInformation($"{entryType} entry with id {id} exceeded TTL.");
-                Logger.LogInformation($"Creating {entryType} entry for {sourceType} {id} in database...");
+                Logger.LogInformation($"{entryType} entry with key {key} exceeded TTL.");
+                Logger.LogInformation($"Creating {entryType} entry for {sourceType} {key} in database...");
 
-                entry = await FetchSourceAndUpdateEntry(id);
+                entry = await FetchSourceAndUpdateEntry(key);
             }
 
             return entry;
@@ -99,10 +99,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Fetches the source object with the given ID and creates an entry for it.
         /// </summary>
-        protected async Task<TEntry> FetchSourceAndCreateEntry(int id)
+        protected async Task<TEntry> FetchSourceAndCreateEntry(TKey key)
         {
             // fetch source
-            var source = await FetchSource(id);
+            var source = await FetchSource(key);
 
             // create entry
             return await CreateEntry(source);
@@ -111,21 +111,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Fetches the source object with the given ID, updates the entry for it and returns the entry.
         /// </summary>
-        protected async Task<TEntry> FetchSourceAndUpdateEntry(int id)
+        protected async Task<TEntry> FetchSourceAndUpdateEntry(TKey key)
         {
             // fetch source
-            var source = await FetchSource(id);
+            var source = await FetchSource(key);
 
             // update entry
-            await UpdateEntry(id, source);
+            await UpdateEntry(key, source);
 
-            return Get(id);
+            return Get(key);
         }
 
         /// <summary>
         /// Returns the source object required to create an entry with the given ID.
         /// </summary>
-        protected abstract Task<TSource> FetchSource(int id);
+        protected abstract Task<TSource> FetchSource(TKey key);
 
         /// <summary>
         /// Creates a new entry in the database for the source object and returns it.
@@ -139,10 +139,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Updates the entry with the given ID in the database for the source object.
         /// </summary>
-        protected async Task UpdateEntry(int id, TSource source)
+        protected async Task UpdateEntry(TKey key, TSource source)
         {
             var entry = await ConvertToEntry(source);
-            Update(id, entry);
+            Update(key, entry);
         }
 
         /// <summary>

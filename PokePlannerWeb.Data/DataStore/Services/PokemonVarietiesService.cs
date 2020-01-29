@@ -11,7 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the Pokemon varieties entries in the database.
     /// </summary>
-    public class PokemonVarietiesService : ServiceBase<PokemonSpecies, PokemonVarietiesEntry>
+    public class PokemonVarietiesService : ServiceBase<PokemonSpecies, int, PokemonVarietiesEntry>
     {
         /// <summary>
         /// The Pokemon service.

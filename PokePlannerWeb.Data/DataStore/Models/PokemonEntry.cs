@@ -6,12 +6,16 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a Pokemon in the data store.
     /// </summary>
-    public class PokemonEntry : EntryBase
+    public class PokemonEntry : EntryBase<int>
     {
         /// <summary>
         /// Gets or sets the ID of the Pokemon.
         /// </summary>
-        public int PokemonId { get; set; }
+        public int PokemonId
+        {
+            get => Key;
+            set => Key = value;
+        }
 
         /// <summary>
         /// Gets or sets this Pokemon's display names.
