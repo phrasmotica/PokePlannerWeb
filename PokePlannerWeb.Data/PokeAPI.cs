@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using PokeApiNet;
 using PokePlannerWeb.Data.Cache;
 
@@ -313,7 +313,7 @@ namespace PokePlannerWeb.Data
             response.EnsureSuccessStatusCode();
 
             var resp = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(resp);
+            return JsonSerializer.Deserialize<T>(resp);
         }
 
         #endregion
