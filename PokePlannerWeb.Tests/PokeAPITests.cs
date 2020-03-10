@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using PokeApiNet;
 using PokePlannerWeb.Cache;
@@ -18,6 +21,31 @@ namespace PokePlannerWeb.Tests
     public class PokeAPITests
     {
         /// <summary>
+        /// The service provider.
+        /// </summary>
+        private IServiceProvider serviceProvider;
+
+        /// <summary>
+        /// Setup hook.
+        /// </summary>
+        [OneTimeSetUp]
+        public void Setup()
+        {
+            var serviceCollection = new ServiceCollection();
+
+            serviceCollection.AddSingleton<ILogger<PokeAPI>, NullLogger<PokeAPI>>();
+            serviceCollection.AddSingleton<IPokeAPI, PokeAPI>();
+
+            serviceCollection.AddSingleton<ILogger<StatData>, NullLogger<StatData>>();
+            serviceCollection.AddSingleton<StatData>();
+
+            serviceCollection.AddSingleton<ILogger<VersionGroupData>, NullLogger<VersionGroupData>>();
+            serviceCollection.AddSingleton<VersionGroupData>();
+
+            serviceProvider = serviceCollection.BuildServiceProvider();
+        }
+
+        /// <summary>
         /// Verifies that version group loading works correctly.
         /// </summary>
         [Test]
@@ -25,10 +53,11 @@ namespace PokePlannerWeb.Tests
         public async Task VersionGroupsLoadingTest()
         {
             // load version groups
-            await VersionGroupData.Instance.LoadData();
+            var versionGroupData = serviceProvider.GetService<VersionGroupData>();
+            await versionGroupData.LoadData();
 
             // verify it's all loaded
-            Assert.AreEqual(18, VersionGroupData.Instance.DataCount);
+            Assert.AreEqual(18, versionGroupData.DataCount);
         }
 
         /// <summary>
@@ -39,10 +68,11 @@ namespace PokePlannerWeb.Tests
         public async Task StatsLoadingTest()
         {
             // load stats
-            await StatData.Instance.LoadData();
+            var statData = serviceProvider.GetService<StatData>();
+            await statData.LoadData();
 
             // verify it's all loaded
-            Assert.AreEqual(8, StatData.Instance.DataCount);
+            Assert.AreEqual(8, statData.DataCount);
         }
 
         /// <summary>
@@ -53,7 +83,8 @@ namespace PokePlannerWeb.Tests
         public async Task PokemonNamesLoadingTest()
         {
             // load all Pokemon names
-            var speciesPage = await PokeAPI.GetFullPage<PokemonSpecies>();
+            var pokeApi = serviceProvider.GetService<IPokeAPI>();
+            var speciesPage = await pokeApi.GetFullPage<PokemonSpecies>();
 
             // verify they're all there
             Assert.AreEqual(807, speciesPage.Count);
@@ -81,7 +112,7 @@ namespace PokePlannerWeb.Tests
         [Category("Unit")]
         public void PokemonSpeciesCacheTest()
         {
-            var cache = PokemonSpeciesCacheManager.Instance.ReadCache();
+            var cache = serviceProvider.GetService<PokemonSpeciesCacheManager>().ReadCache();
             Assert.AreEqual(807, cache.Count);
 
             var entry = cache.Get(3);
@@ -98,18 +129,20 @@ namespace PokePlannerWeb.Tests
         [Category("Integration")]
         public async Task PokemonFormsVarietiesDifferencesTest()
         {
+            var pokeApi = serviceProvider.GetService<IPokeAPI>();
+
             // list of Pokemon IDs
             var ids = new[] { 3, 6, 9, 386, 479, 493, 649 };
 
             foreach (var id in ids)
             {
                 // check forms
-                var pokemon = await PokeAPI.Get<Pokemon>(id);
+                var pokemon = await pokeApi.Get<Pokemon>(id);
                 Console.WriteLine($"{pokemon.Name} has {pokemon.Forms.Count} forms");
 
                 var pokemonName = pokemon.Name;
                 var pokemonStats = pokemon.Stats.Select(s => s.BaseStat).ToArray();
-                var forms = (await PokeAPI.Get(pokemon.Forms)).ToList();
+                var forms = (await pokeApi.Get(pokemon.Forms)).ToList();
 
                 var formsDifferentStats = new List<bool>();
                 foreach (var form in forms)
@@ -122,7 +155,7 @@ namespace PokePlannerWeb.Tests
                     if (pokemonName != formPokemonName)
                     {
                         // check form has different stats to the primary form
-                        var formPokemon = await PokeAPI.Get(form.Pokemon);
+                        var formPokemon = await pokeApi.Get(form.Pokemon);
                         formsDifferentStats.Add(!CompareBaseStats(formPokemon, pokemon));
                     }
                     else
@@ -150,7 +183,7 @@ namespace PokePlannerWeb.Tests
                 Console.WriteLine(Environment.NewLine);
 
                 // check varieties
-                var species = await PokeAPI.Get(pokemon.Species);
+                var species = await pokeApi.Get(pokemon.Species);
                 var varieties = species.Varieties;
                 Console.WriteLine($"{species.Name} has {varieties.Count} varieties");
 
@@ -165,7 +198,7 @@ namespace PokePlannerWeb.Tests
                     if (pokemonName != varietyName)
                     {
                         // check variety has different stats to the default variety
-                        var varietyPokemon = await PokeAPI.Get(variety.Pokemon);
+                        var varietyPokemon = await pokeApi.Get(variety.Pokemon);
                         varietiesDifferentStats.Add(CompareBaseStats(varietyPokemon, pokemon));
                     }
                 }
@@ -232,7 +265,8 @@ namespace PokePlannerWeb.Tests
         public async Task PokemonFormsNamesTest()
         {
             // get secondary forms
-            var forms = await PokeAPI.GetPage<PokemonForm>(316, 807);
+            var pokeApi = serviceProvider.GetService<IPokeAPI>();
+            var forms = await pokeApi.GetPage<PokemonForm>(316, 807);
 
             // filter to those with type names in their name
             var typeNames = TypeData.AllTypes.Select(n => n.ToString().ToLower());
@@ -254,7 +288,8 @@ namespace PokePlannerWeb.Tests
         public async Task PokemonLocationAreaEncountersTest()
         {
             // get location area encounters for Abra
-            var encounters = await PokeAPI.Instance.GetLocationAreaEncounters(63);
+            var pokeApi = serviceProvider.GetService<IPokeAPI>();
+            var encounters = await pokeApi.GetLocationAreaEncounters(63);
             Assert.IsNotNull(encounters);
         }
     }

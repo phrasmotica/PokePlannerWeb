@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using PokeApiNet;
 using PokePlannerWeb.Data.Extensions;
 using PokePlannerWeb.Data.Mechanics;
 using PokePlannerWeb.Data.Util;
@@ -24,19 +26,30 @@ namespace PokePlannerWeb.Data.Types
     /// </summary>
     public class TypeData
     {
-        #region Singleton members
+        /// <summary>
+        /// The PokeAPI data fetcher.
+        /// </summary>
+        private readonly IPokeAPI PokeApi;
 
         /// <summary>
-        /// Gets the singleton instance.
+        /// The version group data singleton.
         /// </summary>
-        public static TypeData Instance { get; } = new TypeData();
+        private readonly VersionGroupData VersionGroupData;
 
         /// <summary>
-        /// Singleton constructor.
+        /// The logger.
         /// </summary>
-        private TypeData() { }
+        private readonly ILogger<TypeData> Logger;
 
-        #endregion
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public TypeData(IPokeAPI pokeApi, VersionGroupData versionGroupData, ILogger<TypeData> logger)
+        {
+            PokeApi = pokeApi;
+            VersionGroupData = versionGroupData;
+            Logger = logger;
+        }
 
         #region Efficacy data
 
@@ -46,21 +59,23 @@ namespace PokePlannerWeb.Data.Types
         /// </summary>
         public async Task LoadTypeEfficacy(int? versionGroupId = null)
         {
-            Console.WriteLine($"Started loading efficacy data for version group {versionGroupId}...");
+            Logger.LogInformation($"Started loading efficacy data for version group {versionGroupId}...");
 
             Efficacy = new Dictionary<Type, Dictionary<Type, double>>();
 
             foreach (var thisType in ConcreteTypes)
             {
                 // retrieve type object from PokeAPI
+                // TODO: cache type objects in Mongo DB so we don't get 500 errors when efficacies
+                // are queries before the efficacy map has finished populating
                 var typeName = thisType.ToString().ToLower();
-                var typeObj = await PokeAPI.Get<PokeApiNet.Type>(typeName);
+                var typeObj = await PokeApi.Get<PokeApiNet.Type>(typeName);
 
-                Console.WriteLine($@"Setting {typeName} efficacy data...");
+                Logger.LogInformation($@"Setting {typeName} efficacy data...");
                 Efficacy[thisType] = ConcreteTypes.ToDictionary(1d);
 
                 // populate damage relations - we can do this with the 'from' relations alone
-                var damageRelations = await typeObj.GetDamageRelations(versionGroupId);
+                var damageRelations = await GetDamageRelations(typeObj, versionGroupId);
 
                 foreach (var typeFrom in damageRelations.DoubleDamageFrom.Select(x => x.Name.ToEnum<Type>()))
                 {
@@ -77,10 +92,10 @@ namespace PokePlannerWeb.Data.Types
                     Efficacy[thisType][typeFrom] = 0;
                 }
 
-                Console.WriteLine($@"Set {typeName} efficacy data.");
+                Logger.LogInformation($@"Set {typeName} efficacy data.");
             }
 
-            Console.WriteLine($"Finished loading efficacy data for version group {versionGroupId}.");
+            Logger.LogInformation($"Finished loading efficacy data for version group {versionGroupId}.");
         }
 
         /// <summary>
@@ -128,12 +143,12 @@ namespace PokePlannerWeb.Data.Types
 
             using (new CodeTimer("Generate type set"))
             {
-                versionGroupId ??= VersionGroupData.Instance.LatestVersionGroupIndex;
-                var generation = await VersionGroupData.Instance.GetGeneration(versionGroupId.Value);
+                versionGroupId ??= VersionGroupData.LatestVersionGroupIndex;
+                var generation = await VersionGroupData.GetGeneration(versionGroupId.Value);
                 for (var i = 0; i < types.Length; i++)
                 {
                     var type = types[i];
-                    if (await generation.HasType(type))
+                    if (await HasType(generation, type))
                     {
                         typesArePresent[i] = true;
                     }
@@ -213,5 +228,58 @@ namespace PokePlannerWeb.Data.Types
         {
             return GetEfficacy(offType, defType1) * GetEfficacy(offType, defType2);
         }
+
+        #region Helpers
+
+        /// <summary>
+        /// Returns true if the given generation uses the given type.
+        /// </summary>
+        private async Task<bool> HasType(Generation generation, Type type)
+        {
+            var typeObj = await PokeApi.Get<PokeApiNet.Type>(type.ToString().ToLower());
+            var generationIntroduced = await PokeApi.Get(typeObj.Generation);
+            return generationIntroduced.Id <= generation.Id;
+        }
+
+        /// <summary>
+        /// Returns this type's damage relations in the version group with the given ID.
+        /// </summary>
+        private async Task<TypeRelations> GetDamageRelations(PokeApiNet.Type type, int? versionGroupId = null)
+        {
+            if (!versionGroupId.HasValue)
+            {
+                return type.DamageRelations;
+            }
+
+            var generation = await VersionGroupData.GetGeneration(versionGroupId.Value);
+            var pastDamageRelations = await GetPastDamageRelations(type, generation);
+            return pastDamageRelations ?? type.DamageRelations;
+        }
+
+        /// <summary>
+        /// Returns this type's damage relations data for the given generation, if any.
+        /// </summary>
+        private async Task<TypeRelations> GetPastDamageRelations(PokeApiNet.Type type, Generation generation)
+        {
+            var pastDamageRelations = type.PastDamageRelations;
+            var pastGenerations = await PokeApi.Get(pastDamageRelations.Select(t => t.Generation));
+
+            if (pastGenerations.Any())
+            {
+                // use the earliest generation after the given one with past damage relation data,
+                // if it exists
+                var laterGens = pastGenerations.Where(g => g.Id >= generation.Id).ToList();
+                if (laterGens.Any())
+                {
+                    var genToUse = laterGens.Aggregate((g, h) => g.Id < h.Id ? g : h);
+                    return pastDamageRelations.Single(p => p.Generation.Name == genToUse.Name)
+                                              .DamageRelations;
+                }
+            }
+
+            return null;
+        }
+
+        #endregion
     }
 }

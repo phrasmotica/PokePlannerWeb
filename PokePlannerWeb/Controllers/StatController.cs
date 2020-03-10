@@ -13,10 +13,16 @@ namespace PokePlannerWeb.Controllers
     public class StatController : ResourceController<Stat>
     {
         /// <summary>
+        /// The stat data singleton.
+        /// </summary>
+        private readonly StatData StatData;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
-        public StatController(ILogger<ResourceController<Stat>> logger) : base(logger)
+        public StatController(StatData statData, ILogger<ResourceController<Stat>> logger) : base(logger)
         {
+            StatData = statData;
         }
 
         /// <summary>
@@ -24,7 +30,7 @@ namespace PokePlannerWeb.Controllers
         /// </summary>
         protected override Task LoadResources()
         {
-            return StatData.Instance.LoadData();
+            return StatData.LoadData();
         }
 
         /// <summary>
@@ -34,7 +40,7 @@ namespace PokePlannerWeb.Controllers
         public string[] GetBaseStatNamesInVersionGroup(int versionGroupId)
         {
             Logger.LogInformation($"Getting names of base stats in version group {versionGroupId}...");
-            return StatData.Instance.GetBaseStatNames(versionGroupId).ToArray();
+            return StatData.GetBaseStatNames(versionGroupId).ToArray();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Mechanics
@@ -8,19 +9,12 @@ namespace PokePlannerWeb.Data.Mechanics
     /// </summary>
     public class VersionGroupData : ResourceData<VersionGroup>
     {
-        #region Singleton members
-
         /// <summary>
-        /// Gets the singleton instance.
+        /// Constructor.
         /// </summary>
-        public static new VersionGroupData Instance { get; } = new VersionGroupData();
-
-        /// <summary>
-        /// Singleton constructor.
-        /// </summary>
-        private VersionGroupData() { }
-
-        #endregion
+        public VersionGroupData(IPokeAPI pokeApi, ILogger<VersionGroupData> logger) : base(pokeApi, logger)
+        {
+        }
 
         /// <summary>
         /// Loads all version group data.
@@ -51,12 +45,20 @@ namespace PokePlannerWeb.Data.Mechanics
         public int LatestVersionGroupIndex => VersionGroups.Length - 1;
 
         /// <summary>
+        /// Returns the version group with the given ID.
+        /// </summary>
+        public VersionGroup Get(int versionGroupId)
+        {
+            return VersionGroups[versionGroupId - 1];
+        }
+
+        /// <summary>
         /// Returns the generation of the version group with the given ID.
         /// </summary>
         public async Task<Generation> GetGeneration(int versionGroupId)
         {
-            var versionGroup = VersionGroups[versionGroupId];
-            return await PokeAPI.Get(versionGroup.Generation);
+            var versionGroup = Get(versionGroupId);
+            return await PokeApi.Get(versionGroup.Generation);
         }
     }
 }

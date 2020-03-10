@@ -21,11 +21,20 @@ namespace PokePlannerWeb.Controllers
         private readonly VersionGroupsNamesService VersionGroupsNamesService;
 
         /// <summary>
+        /// The version group data singleton.
+        /// </summary>
+        protected readonly VersionGroupData VersionGroupData;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupController(VersionGroupsNamesService versionGroupsNamesService, ILogger<ResourceController<VersionGroup>> logger) : base(logger)
+        public VersionGroupController(
+            VersionGroupsNamesService versionGroupsNamesService,
+            VersionGroupData versionGroupData,
+            ILogger<ResourceController<VersionGroup>> logger) : base(logger)
         {
             VersionGroupsNamesService = versionGroupsNamesService;
+            VersionGroupData = versionGroupData;
         }
 
         /// <summary>
@@ -33,7 +42,7 @@ namespace PokePlannerWeb.Controllers
         /// </summary>
         protected override Task LoadResources()
         {
-            return VersionGroupData.Instance.LoadData();
+            return VersionGroupData.LoadData();
         }
 
         /// <summary>
@@ -52,7 +61,7 @@ namespace PokePlannerWeb.Controllers
         [HttpGet("selected")]
         public int GetSelectedVersionGroup()
         {
-            var index = VersionGroupData.Instance.VersionGroupIndex;
+            var index = VersionGroupData.VersionGroupIndex;
             Logger.LogInformation($"VersionGroupController: selected version group index is {index}");
             return index;
         }
@@ -65,7 +74,7 @@ namespace PokePlannerWeb.Controllers
         {
             var newIndex = requestBody.Index;
             Logger.LogInformation($"VersionGroupController: setting selected version group index to {newIndex}");
-            VersionGroupData.Instance.VersionGroupIndex = requestBody.Index;
+            VersionGroupData.VersionGroupIndex = requestBody.Index;
         }
     }
 }

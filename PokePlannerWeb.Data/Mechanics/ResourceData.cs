@@ -1,6 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Mechanics
@@ -10,28 +10,35 @@ namespace PokePlannerWeb.Data.Mechanics
     /// </summary>
     public class ResourceData<T> where T : NamedApiResource
     {
-        #region Singleton members
+        /// <summary>
+        /// The PokeAPI data fetcher.
+        /// </summary>
+        protected readonly IPokeAPI PokeApi;
 
         /// <summary>
-        /// Gets the singleton instance.
+        /// The logger.
         /// </summary>
-        public static ResourceData<T> Instance { get; } = new ResourceData<T>();
+        protected ILogger<ResourceData<T>> Logger;
 
         /// <summary>
         /// Singleton constructor.
         /// </summary>
-        protected ResourceData() { }
-
-        #endregion
+        protected ResourceData(IPokeAPI pokeApi, ILogger<ResourceData<T>> logger)
+        {
+            PokeApi = pokeApi;
+            Logger = logger;
+        }
 
         /// <summary>
         /// Loads all data.
         /// </summary>
         public virtual async Task LoadData()
         {
-            Console.WriteLine($"{GetType().Name}: getting {typeof(T).Name} data...");
-            Data = (await PokeAPI.GetMany<T>()).ToArray();
-            Console.WriteLine($"{GetType().Name}: got data for {Data.Length} {typeof(T).Name} items.");
+            Logger.LogInformation($"{GetType().Name}: getting {typeof(T).Name} data...");
+
+            Data = (await PokeApi.GetMany<T>()).ToArray();
+
+            Logger.LogInformation($"{GetType().Name}: got data for {Data.Length} {typeof(T).Name} items.");
         }
 
         /// <summary>

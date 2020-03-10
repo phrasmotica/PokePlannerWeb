@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Extensions;
 
@@ -9,19 +11,12 @@ namespace PokePlannerWeb.Data.Mechanics
     /// </summary>
     public class StatData : ResourceData<Stat>
     {
-        #region Singleton members
-
         /// <summary>
-        /// Gets the singleton instance.
+        /// Constructor.
         /// </summary>
-        public static new StatData Instance { get; } = new StatData();
-
-        /// <summary>
-        /// Singleton constructor.
-        /// </summary>
-        private StatData() { }
-
-        #endregion
+        public StatData(IPokeAPI pokeApi, ILogger<StatData> logger) : base(pokeApi, logger)
+        {
+        }
 
         /// <summary>
         /// Gets or sets the stats.
@@ -37,8 +32,10 @@ namespace PokePlannerWeb.Data.Mechanics
         /// </summary>
         public IEnumerable<string> GetBaseStatNames(int versionGroupId)
         {
-            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
-            return versionGroup.GetBaseStatNames();
+            // FUTURE: anticipating a generation-based base stats changelog
+
+            return Stats.Where(s => !s.IsBattleOnly)
+                        .Select(s => s.Names.GetName());
         }
     }
 }

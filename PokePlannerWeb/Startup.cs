@@ -5,8 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
+using PokePlannerWeb.Data.Mechanics;
+using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb
 {
@@ -32,11 +35,22 @@ namespace PokePlannerWeb
                 sp.GetRequiredService<IOptions<PokePlannerWebDbSettings>>().Value
             );
 
-            services.AddSingleton<PokemonSpeciesNamesService>();
-            services.AddSingleton<VersionGroupsNamesService>();
+            services.AddSingleton<IPokeAPI, PokeAPI>();
+
+            services.AddSingleton<TypeData>();
+            services.AddSingleton<StatData>();
+            services.AddSingleton<VersionGroupData>();
+
+            services.AddSingleton<EfficacyService>();
+            services.AddSingleton<EncountersService>();
+            services.AddSingleton<MachinesService>();
             services.AddSingleton<PokemonService>();
             services.AddSingleton<PokemonFormsService>();
             services.AddSingleton<PokemonVarietiesService>();
+            services.AddSingleton<TypesService>();
+
+            services.AddSingleton<PokemonSpeciesNamesService>();
+            services.AddSingleton<VersionGroupsNamesService>();
 
             services.AddControllersWithViews();
 

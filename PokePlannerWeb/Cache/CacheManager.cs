@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace PokePlannerWeb.Cache
 {
@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Cache
             }
 
             var contents = File.ReadAllText(CachePath);
-            return JsonSerializer.Deserialize<Cache<T>>(contents);
+            return JsonConvert.DeserializeObject<Cache<T>>(contents);
         }
 
         /// <summary>

@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PokeApiNet;
-using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Data.Mechanics
 {
@@ -10,27 +11,32 @@ namespace PokePlannerWeb.Data.Mechanics
     /// </summary>
     public class HMData
     {
-        #region Singleton members
+        /// <summary>
+        /// The machines service.
+        /// </summary>
+        protected readonly MachinesService MachinesService;
 
         /// <summary>
-        /// Gets the singleton instance.
+        /// The logger.
         /// </summary>
-        public static HMData Instance { get; } = new HMData();
+        protected readonly ILogger<HMData> Logger;
 
         /// <summary>
-        /// Singleton constructor.
+        /// Constructor.
         /// </summary>
-        private HMData() { }
-
-        #endregion
+        public HMData(MachinesService machinesService, ILogger<HMData> logger)
+        {
+            MachinesService = machinesService;
+            Logger = logger;
+        }
 
         /// <summary>
         /// Returns the HM moves in the version group with the given ID.
         /// </summary>
         public async Task<IEnumerable<Move>> GetHMMoves(int versionGroupId)
         {
-            var versionGroup = VersionGroupData.Instance.VersionGroups[versionGroupId];
-            return await versionGroup.GetHMMoves();
+            Logger.LogInformation($"Getting HM moves for version group {versionGroupId}...");
+            return await MachinesService.GetHMMoves(versionGroupId);
         }
     }
 }

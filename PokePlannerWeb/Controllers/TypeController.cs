@@ -13,6 +13,11 @@ namespace PokePlannerWeb.Controllers
     public class TypeController : ControllerBase
     {
         /// <summary>
+        /// The type data singleton.
+        /// </summary>
+        protected readonly TypeData TypeData;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         private readonly ILogger<TypeController> Logger;
@@ -20,8 +25,11 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TypeController(ILogger<TypeController> logger)
+        public TypeController(
+            TypeData typeData,
+            ILogger<TypeController> logger)
         {
+            TypeData = typeData;
             Logger = logger;
         }
 
@@ -32,7 +40,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<TypeSet> GetTypeSet(int versionGroupId)
         {
             Logger.LogInformation($"Getting type set for version group {versionGroupId}...");
-            return await TypeData.Instance.GetTypeSet(versionGroupId);
+            return await TypeData.GetTypeSet(versionGroupId);
         }
     }
 }

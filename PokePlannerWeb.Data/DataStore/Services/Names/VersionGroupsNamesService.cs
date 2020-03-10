@@ -17,7 +17,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupsNamesService(IPokePlannerWebDbSettings settings, ILogger<NamesService> logger) : base(settings, logger)
+        public VersionGroupsNamesService(
+            IPokePlannerWebDbSettings settings,
+            IPokeAPI pokeApi,
+            ILogger<NamesService> logger) : base(settings, pokeApi, logger)
         {
         }
 
@@ -98,7 +101,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected async Task<string[]> FetchVersionGroupNames(string locale = "en")
         {
             // get version group results
-            var allVersionGroups = await PokeAPI.GetFullPage<VersionGroup>();
+            var allVersionGroups = await PokeApi.GetFullPage<VersionGroup>();
 
             // get name for each version group in turn
             var names = new string[allVersionGroups.Count];
@@ -107,12 +110,25 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var result = allVersionGroups.Results[i];
 
                 Logger.LogInformation($"Fetching name for version group {result.Name} in {locale} locale...");
-                var versionGroup = await PokeAPI.Get(result);
+                var versionGroup = await PokeApi.Get(result);
 
-                names[i] = await versionGroup.GetName(locale);
+                names[i] = await GetName(versionGroup, locale);
             }
 
             return names;
         }
+
+        #region Helpers
+
+        /// <summary>
+        /// Returns the name of the given version group in the given locale.
+        /// </summary>
+        private async Task<string> GetName(VersionGroup vg, string locale = "en")
+        {
+            var versions = await PokeApi.Get(vg.Versions);
+            return string.Join("/", versions.Select(v => v.Names.GetName(locale)));
+        }
+
+        #endregion
     }
 }

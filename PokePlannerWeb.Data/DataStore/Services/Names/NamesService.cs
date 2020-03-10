@@ -20,6 +20,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected IMongoCollection<NamesEntry> Collection;
 
         /// <summary>
+        /// The PokeAPI data fetcher.
+        /// </summary>
+        protected IPokeAPI PokeApi;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         protected readonly ILogger<NamesService> Logger;
@@ -27,11 +32,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Create connection to database and initalise logger.
         /// </summary>
-        public NamesService(IPokePlannerWebDbSettings settings, ILogger<NamesService> logger)
+        public NamesService(IPokePlannerWebDbSettings settings, IPokeAPI pokeApi, ILogger<NamesService> logger)
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
             Collection = database.GetCollection<NamesEntry>(settings.NamesCollectionName);
+            PokeApi = pokeApi;
             Logger = logger;
         }
 

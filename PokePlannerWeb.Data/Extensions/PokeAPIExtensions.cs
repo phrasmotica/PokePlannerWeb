@@ -24,8 +24,15 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static IEnumerable<Type> ToTypes(this IEnumerable<PokemonType> typeMap)
         {
-            return typeMap.OrderBy(t => t.Slot)
-                          .Select(t => t.Type.Name.ToEnum<Type>());
+            return typeMap.ToNames().Select(name => name.ToEnum<Type>());
+        }
+
+        /// <summary>
+        /// Returns this type map as an array of Type enum values.
+        /// </summary>
+        public static IEnumerable<string> ToNames(this IEnumerable<PokemonType> typeMap)
+        {
+            return typeMap.OrderBy(t => t.Slot).Select(t => t.Type.Name);
         }
 
         /// <summary>

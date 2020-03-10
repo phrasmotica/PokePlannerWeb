@@ -17,6 +17,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected IMongoCollection<TEntry> Collection;
 
         /// <summary>
+        /// The PokeAPI data fetcher.
+        /// </summary>
+        protected IPokeAPI PokeApi;
+
+        /// <summary>
         /// The logger.
         /// </summary>
         protected readonly ILogger<ServiceBase<TSource, TKey, TEntry>> Logger;
@@ -24,9 +29,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Create connection to database and initalise logger.
         /// </summary>
-        public ServiceBase(IPokePlannerWebDbSettings settings, ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
+        public ServiceBase(IPokePlannerWebDbSettings settings, IPokeAPI pokeApi, ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
         {
             SetCollection(settings);
+            PokeApi = pokeApi;
             Logger = logger;
         }
 
@@ -80,6 +86,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var entryType = typeof(TEntry).Name;
                 Logger.LogInformation($"Creating {entryType} entry for {sourceType} {key} in database...");
 
+                // TODO: lots of calls overlap with initial entry creation, which thus trigger
+                // entry creation. Easiest optimisation would be to have one call fetch the whole entry
                 entry = await FetchSourceAndCreateEntry(key);
             }
             else if (entry.CreationTime < DateTime.UtcNow - TimeToLive)

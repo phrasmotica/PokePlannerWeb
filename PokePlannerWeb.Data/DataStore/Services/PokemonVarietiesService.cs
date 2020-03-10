@@ -24,8 +24,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public PokemonVarietiesService(
             IPokePlannerWebDbSettings settings,
             PokemonService pokemonService,
+            IPokeAPI pokeApi,
             ILogger<PokemonVarietiesService> logger
-        ) : base(settings, logger)
+        ) : base(settings, pokeApi, logger)
         {
             PokemonService = pokemonService;
         }
@@ -69,12 +70,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
         #endregion
 
+        #region Entry conversion methods
+
         /// <summary>
         /// Returns the Pokemon species with the given ID.
         /// </summary>
         protected override async Task<PokemonSpecies> FetchSource(int speciesId)
         {
-            return await PokeAPI.Get<PokemonSpecies>(speciesId);
+            return await PokeApi.Get<PokemonSpecies>(speciesId);
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonVarietiesEntry> ConvertToEntry(PokemonSpecies species)
         {
-            var varietyResources = await PokeAPI.Get(species.Varieties.Select(v => v.Pokemon));
+            var varietyResources = await PokeApi.Get(species.Varieties.Select(v => v.Pokemon));
             var varieties = new List<PokemonVariety>();
 
             foreach (var v in varietyResources)
@@ -103,5 +106,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Varieties = varieties
             };
         }
+
+        #endregion
     }
 }

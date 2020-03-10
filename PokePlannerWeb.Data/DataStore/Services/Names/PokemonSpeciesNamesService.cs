@@ -17,7 +17,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PokemonSpeciesNamesService(IPokePlannerWebDbSettings settings, ILogger<NamesService> logger) : base(settings, logger)
+        public PokemonSpeciesNamesService(
+            IPokePlannerWebDbSettings settings,
+            IPokeAPI pokeApi,
+            ILogger<NamesService> logger) : base(settings, pokeApi, logger)
         {
         }
 
@@ -98,7 +101,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected async Task<string[]> FetchPokemonSpeciesNames(string locale = "en")
         {
             // get species results
-            var allSpecies = await PokeAPI.GetFullPage<PokemonSpecies>();
+            var allSpecies = await PokeApi.GetFullPage<PokemonSpecies>();
 
             // get name for each species in turn
             var names = new string[allSpecies.Count];
@@ -107,7 +110,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var result = allSpecies.Results[i];
 
                 Logger.LogInformation($"Fetching name for Pokemon species {result.Name} in {locale} locale...");
-                var species = await PokeAPI.Get(result);
+                var species = await PokeApi.Get(result);
 
                 names[i] = species.Names.GetName(locale);
             }

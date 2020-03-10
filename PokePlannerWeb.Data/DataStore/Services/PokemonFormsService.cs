@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Types;
 using Pokemon = PokeApiNet.Pokemon;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -15,10 +16,20 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class PokemonFormsService : ServiceBase<Pokemon, int, PokemonFormsEntry>
     {
         /// <summary>
+        /// The Pokemon service.
+        /// </summary>
+        private readonly PokemonService PokemonService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
-        public PokemonFormsService(IPokePlannerWebDbSettings settings, ILogger<PokemonFormsService> logger) : base(settings, logger)
+        public PokemonFormsService(
+            IPokePlannerWebDbSettings settings,
+            IPokeAPI pokeApi,
+            PokemonService pokemonService,
+            ILogger<PokemonFormsService> logger) : base(settings, pokeApi, logger)
         {
+            PokemonService = pokemonService;
         }
 
         /// <summary>
@@ -60,12 +71,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
         #endregion
 
+        #region Entry conversion methods
+
         /// <summary>
         /// Returns the Pokemon with the given ID.
         /// </summary>
         protected override async Task<Pokemon> FetchSource(int pokemonId)
         {
-            return await PokeAPI.Get<Pokemon>(pokemonId);
+            return await PokeApi.Get<Pokemon>(pokemonId);
         }
 
         /// <summary>
@@ -73,7 +86,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonFormsEntry> ConvertToEntry(Pokemon pokemon)
         {
-            var formResources = await PokeAPI.Get(pokemon.Forms);
+            var formResources = await PokeApi.Get(pokemon.Forms);
             var forms = formResources.Select(f =>
             {
                 return new PokemonForm
@@ -90,14 +103,107 @@ namespace PokePlannerWeb.Data.DataStore.Services
             };
         }
 
+        #endregion
+
+        #region Public methods
+
         /// <summary>
         /// Returns the display names of the forms of the Pokemon with the given ID in the given
         /// locale from the data store.
         /// </summary>
-        public IEnumerable<string> GetFormDisplayNames(int pokemonId, string locale = "en")
+        public async Task<IEnumerable<string>> GetFormDisplayNames(int pokemonId, string locale = "en")
         {
-            var entry = Get(pokemonId);
+            var entry = await GetOrCreate(pokemonId);
             return entry.GetFormDisplayNames(locale);
         }
+
+        /// <summary>
+        /// Returns the display name of the Pokemon form with the given ID in the given locale.
+        /// </summary>
+        public async Task<string> GetFormDisplayName(int formId, string locale = "en")
+        {
+            var form = await PokeApi.Get<PokeApiNet.PokemonForm>(formId);
+            return form.Names.GetName(locale);
+        }
+
+        /// <summary>
+        /// Returns the front default sprite URL of the Pokemon form with the given ID.
+        /// </summary>
+        public async Task<string> GetFormSpriteUrl(int formId)
+        {
+            var form = await PokeApi.Get<PokeApiNet.PokemonForm>(formId);
+            var frontDefaultUrl = form.Sprites.FrontDefault;
+            if (frontDefaultUrl == null)
+            {
+                Logger.LogInformation($"Front default sprite URL for Pokemon form {formId} missing from PokeAPI, creating URL manually");
+                return MakeSpriteUrl(formId);
+            }
+
+            return frontDefaultUrl;
+        }
+
+        /// <summary>
+        /// Returns the front shiny sprite URL of the Pokemon form with the given ID.
+        /// </summary>
+        public async Task<string> GetFormShinySpriteUrl(int formId)
+        {
+            var form = await PokeApi.Get<PokeApiNet.PokemonForm>(formId);
+            var frontDefaultUrl = form.Sprites.FrontShiny;
+            if (frontDefaultUrl == null)
+            {
+                Logger.LogInformation($"Front shint sprite URL for Pokemon form {formId} missing from PokeAPI, creating URL manually");
+                return MakeSpriteUrl(formId);
+            }
+
+            return frontDefaultUrl;
+        }
+
+        /// <summary>
+        /// Returns the types of the Pokemon form with the given ID in the version group with the
+        /// given ID.
+        /// </summary>
+        public async Task<string[]> GetFormTypesInVersionGroup(int formId, int versionGroupId)
+        {
+            var form = await PokeApi.Get<PokeApiNet.PokemonForm>(formId);
+            var types = await GetTypes(form, versionGroupId);
+            return types.ToArray();
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Creates and returns the URL of the sprite of the Pokemon form with the given ID.
+        /// </summary>
+        private string MakeSpriteUrl(int formId, bool shiny = false)
+        {
+            const string baseUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
+            if (shiny)
+            {
+                return $"{baseUrl}/shiny/{formId}.png";
+            }
+
+            return $"{baseUrl}/{formId}.png";
+        }
+
+        /// <summary>
+        /// Returns the given Pokemon form's types in the version group with the given ID.
+        /// </summary>
+        private async Task<IEnumerable<string>> GetTypes(PokeApiNet.PokemonForm form, int versionGroupId)
+        {
+            // some forms have different types indicated by their names, i.e. arceus, silvally
+            var typeNames = TypeData.AllTypes.Select(n => n.ToString().ToLower());
+            if (typeNames.Contains(form.FormName))
+            {
+                return new[] { form.FormName };
+            }
+
+            // else get types from underlying Pokemon
+            var pokemon = await PokeApi.Get(form.Pokemon);
+            return await PokemonService.GetPokemonTypesInVersionGroup(pokemon.Id, versionGroupId);
+        }
+
+        #endregion
     }
 }
