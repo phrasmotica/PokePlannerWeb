@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
 using PokePlannerWeb.Data.Mechanics;
-using PokePlannerWeb.Models;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -15,6 +15,11 @@ namespace PokePlannerWeb.Controllers
     [Route("[controller]")]
     public class VersionGroupController : ResourceController<VersionGroup>
     {
+        /// <summary>
+        /// The version groups service.
+        /// </summary>
+        private readonly VersionGroupsService VersionGroupsService;
+
         /// <summary>
         /// The names service.
         /// </summary>
@@ -29,10 +34,12 @@ namespace PokePlannerWeb.Controllers
         /// Constructor.
         /// </summary>
         public VersionGroupController(
+            VersionGroupsService versionGroupsService,
             VersionGroupsNamesService versionGroupsNamesService,
             VersionGroupData versionGroupData,
             ILogger<ResourceController<VersionGroup>> logger) : base(logger)
         {
+            VersionGroupsService = versionGroupsService;
             VersionGroupsNamesService = versionGroupsNamesService;
             VersionGroupData = versionGroupData;
         }
@@ -48,33 +55,21 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Returns the names of all version groups.
         /// </summary>
-        [HttpGet("all")]
-        public async Task<string[]> GetVersionGroups()
+        [HttpGet("names")]
+        public async Task<string[]> GetVersionGroupNames()
         {
             Logger.LogInformation("VersionGroupController: getting version group names...");
             return await VersionGroupsNamesService.GetVersionGroupNames();
         }
 
         /// <summary>
-        /// Returns the index of the selected version group.
+        /// Returns all version groups.
         /// </summary>
-        [HttpGet("selected")]
-        public int GetSelectedVersionGroup()
+        [HttpGet("all")]
+        public async Task<VersionGroupEntry[]> GetVersionGroups()
         {
-            var index = VersionGroupData.VersionGroupIndex;
-            Logger.LogInformation($"VersionGroupController: selected version group index is {index}");
-            return index;
-        }
-
-        /// <summary>
-        /// Sets the index of the selected version group.
-        /// </summary>
-        [HttpPost("selected")]
-        public void SetSelectedVersionGroup([FromBody] SetSelectedVersionGroupModel requestBody)
-        {
-            var newIndex = requestBody.Index;
-            Logger.LogInformation($"VersionGroupController: setting selected version group index to {newIndex}");
-            VersionGroupData.VersionGroupIndex = requestBody.Index;
+            Logger.LogInformation("VersionGroupController: getting version groups...");
+            return await VersionGroupsService.GetVersionGroups();
         }
     }
 }

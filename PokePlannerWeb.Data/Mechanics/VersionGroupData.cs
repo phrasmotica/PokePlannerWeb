@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 
@@ -17,15 +18,6 @@ namespace PokePlannerWeb.Data.Mechanics
         }
 
         /// <summary>
-        /// Loads all version group data.
-        /// </summary>
-        public override async Task LoadData()
-        {
-            await base.LoadData();
-            VersionGroupIndex = VersionGroups.Length - 1;
-        }
-
-        /// <summary>
         /// Gets or sets the version groups.
         /// </summary>
         public VersionGroup[] VersionGroups
@@ -35,21 +27,21 @@ namespace PokePlannerWeb.Data.Mechanics
         }
 
         /// <summary>
-        /// Gets or sets the index of the selected version group.
+        /// Gets the index of the oldest version group.
         /// </summary>
-        public int VersionGroupIndex { get; set; }
+        public int OldestVersionGroupId => VersionGroups.Select(vg => vg.Id).Min();
 
         /// <summary>
-        /// Gets the index of the latest version group.
+        /// Gets the index of the newest version group.
         /// </summary>
-        public int LatestVersionGroupIndex => VersionGroups.Length - 1;
+        public int NewestVersionGroupId => VersionGroups.Select(vg => vg.Id).Max();
 
         /// <summary>
         /// Returns the version group with the given ID.
         /// </summary>
         public VersionGroup Get(int versionGroupId)
         {
-            return VersionGroups[versionGroupId - 1];
+            return VersionGroups.Single(vg => vg.Id == versionGroupId);
         }
 
         /// <summary>

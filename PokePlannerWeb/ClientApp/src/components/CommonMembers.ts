@@ -15,7 +15,7 @@ export interface IHasVersionGroup {
     /**
      * The index of the version group.
      */
-    versionGroupIndex: number
+    versionGroupId: number | undefined
 }
 
 /**

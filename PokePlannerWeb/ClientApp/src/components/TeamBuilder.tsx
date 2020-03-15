@@ -24,7 +24,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
      * List of version groups.
      */
-    versionGroups: string[],
+    versionGroups: any[],
 
     /**
      * Whether the page is loading.
@@ -66,10 +66,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.state = {
             speciesNames: [],
             versionGroups: [],
-            versionGroupIndex: -1,
+            versionGroupId: undefined,
             loading: true,
             typeSet: {
-                versionGroupId: -1,
+                versionGroupId: undefined,
                 types: [],
                 typesArePresent: []
             },
@@ -86,16 +86,16 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.loadVersionGroups()
             .then(() => {
                 this.loadStats()
-                    .then(() => this.getBaseStatNames(this.state.versionGroupIndex))
-                this.getTypeSet(this.state.versionGroupIndex)
-                this.loadTypeEfficacy(this.state.versionGroupIndex)
+                    .then(() => this.getBaseStatNames(this.state.versionGroupId))
+                this.getTypeSet(this.state.versionGroupId)
+                this.loadTypeEfficacy(this.state.versionGroupId)
             })
     }
 
     // load all species names
     loadSpeciesNames() {
         fetch("species/allNames")
-            .then((response) => response.json())
+            .then(response => response.json())
             .then(speciesNames => this.setState({ speciesNames: speciesNames }))
             .catch(error => console.log(error))
     }
@@ -105,24 +105,13 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         // get list of version groups
         await fetch("versionGroup", { method: "POST" })
             .then(() => fetch("versionGroup/all"))
-            .then((response) => response.json())
-            .then((groups) => {
-                this.setState({
-                    versionGroups: groups
-                })
-            })
+            .then(response => response.json())
+            .then((groups: any[]) => this.setState({
+                versionGroups: groups,
+                versionGroupId: groups[groups.length - 1].versionGroupId
+            }))
             .catch(error => console.log(error))
-
-            // get selected version group
-            .then(() => fetch("versionGroup/selected"))
-            .then((response) => response.json())
-            .then((idx) => {
-                this.setState({
-                    versionGroupIndex: Number(idx),
-                    loading: false
-                })
-            })
-            .catch(error => console.log(error))
+            .finally(() => this.setState({ loading: false }))
     }
 
     // load all stats
@@ -131,23 +120,25 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     // retrieves the type set for the given version group from TypeController
-    async getTypeSet(versionGroupIndex: number) {
-        console.log(`Team builder: getting type set for version group ${versionGroupIndex}...`)
+    async getTypeSet(versionGroupId: number | undefined) {
+        if (versionGroupId === undefined) {
+            return
+        }
+
+        console.log(`Team builder: getting type set for version group ${versionGroupId}...`)
 
         // loading begins
-        this.setState({
-            loadingTypeSet: true
-        })
+        this.setState({ loadingTypeSet: true })
 
         // get type set
-        fetch(`type/typeSet/${versionGroupIndex}`)
+        fetch(`type/typeSet/${versionGroupId}`)
             .then(response => {
                 if (response.status === 200) {
                     return response
                 }
 
                 // concrete types endpoint couldn't be found
-                throw new Error(`Team builder: couldn't get type set for version group ${versionGroupIndex}!`)
+                throw new Error(`Team builder: couldn't get type set for version group ${versionGroupId}!`)
             })
             .then(response => response.json())
             .then(typeSet => this.setState({ typeSet: typeSet }))
@@ -156,23 +147,25 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     // retrieves the type set for the given version group from TypeController
-    async getBaseStatNames(versionGroupIndex: number) {
-        console.log(`Team builder: getting base stat names for version group ${versionGroupIndex}...`)
+    async getBaseStatNames(versionGroupId: number | undefined) {
+        if (versionGroupId === undefined) {
+            return
+        }
+
+        console.log(`Team builder: getting base stat names for version group ${versionGroupId}...`)
 
         // loading begins
-        this.setState({
-            loadingBaseStatNames: true
-        })
+        this.setState({ loadingBaseStatNames: true })
 
         // get base stat names
-        fetch(`stat/baseStatNames/${versionGroupIndex}`)
+        fetch(`stat/baseStatNames/${versionGroupId}`)
             .then(response => {
                 if (response.status === 200) {
                     return response
                 }
 
                 // concrete types endpoint couldn't be found
-                throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupIndex}!`)
+                throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
             })
             .then(response => response.json())
             .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
@@ -181,26 +174,22 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     // loads type efficacy data
-    async loadTypeEfficacy(versionGroupIndex: number) {
-        fetch(`efficacy/${versionGroupIndex}`, { method: "POST" })
+    async loadTypeEfficacy(versionGroupId: number | undefined) {
+        if (versionGroupId === undefined) {
+            return
+        }
+
+        fetch(`efficacy/${versionGroupId}`, { method: "POST" })
             .catch(error => console.log(error))
     }
 
     // set selected version group
-    async setVersionGroup(idx: number) {
-        this.setState({ versionGroupIndex: idx })
+    async setVersionGroup(versionGroupId: number) {
+        this.setState({ versionGroupId: versionGroupId })
 
         // reload type set and efficacy
-        this.getTypeSet(idx)
-        this.loadTypeEfficacy(idx)
-
-        // set index in backend
-        fetch("versionGroup/selected", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ index: idx })
-        })
-            .catch(error => console.log(error))
+        this.getTypeSet(versionGroupId)
+        this.loadTypeEfficacy(versionGroupId)
     }
 
     // toggle validity check on Pokemon
@@ -257,12 +246,14 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     renderVersionGroupMenu() {
-        let options = this.state.versionGroups.map((vg, index) => {
+        let options = this.state.versionGroups.map(vg => {
             return {
-                value: index,
-                label: vg
+                label: vg.displayNames.filter((n: any) => n.language === "en")[0].name,
+                value: vg.versionGroupId
             }
         })
+
+        let defaultOption = options.filter(o => o.value == this.state.versionGroupId)
 
         return (
             <FormGroup>
@@ -271,7 +262,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                 <Select
                     id="versionGroupSelect"
                     className="version-group-select"
-                    defaultValue={options[this.state.versionGroupIndex]}
+                    defaultValue={defaultOption}
                     onChange={(e: any) => this.setVersionGroup(e.value)}
                     options={options} />
             </FormGroup>
@@ -319,7 +310,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     <PokemonPanel
                         key={index}
                         index={index}
-                        versionGroupIndex={this.state.versionGroupIndex}
+                        versionGroupId={this.state.versionGroupId}
                         ignoreValidity={this.state.ignoreValidity}
                         toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                         hideTooltips={this.state.hideTooltips}

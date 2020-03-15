@@ -33,19 +33,19 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public string ShinySpriteUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets this Pokemon's types indexed by version group index.
+        /// Gets or sets this Pokemon's types indexed by version group ID.
         /// </summary>
-        public List<string[]> Types { get; set; }
+        public List<WithId<string[]>> Types { get; set; }
 
         /// <summary>
-        /// Gets or sets this Pokemon's base stats indexed by version group index.
+        /// Gets or sets this Pokemon's base stats indexed by version group ID.
         /// </summary>
-        public List<int[]> BaseStats { get; set; }
+        public List<WithId<int[]>> BaseStats { get; set; }
 
         /// <summary>
-        /// Gets or sets this Pokemon's validity indexed by version group index.
+        /// Gets or sets this Pokemon's validity indexed by version group ID.
         /// </summary>
-        public List<bool> Validity { get; set; }
+        public List<WithId<bool>> Validity { get; set; }
 
         /// <summary>
         /// Returns the name of this Pokemon entry in the given locale.
@@ -60,7 +60,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public string[] GetTypes(int versionGroupId)
         {
-            return Types[versionGroupId - 1];
+            return Types.Single(t => t.Id == versionGroupId).Data;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public int[] GetBaseStats(int versionGroupId)
         {
-            return BaseStats[versionGroupId - 1];
+            return BaseStats.Single(bs => bs.Id == versionGroupId).Data;
         }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public bool GetValidity(int versionGroupId)
         {
-            return Validity[versionGroupId - 1];
+            return Validity.Single(v => v.Id == versionGroupId).Data;
         }
     }
 }

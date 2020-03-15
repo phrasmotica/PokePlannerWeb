@@ -65,9 +65,9 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     componentDidUpdate(previousProps: IEfficacyListProps) {
         // refresh efficacy if the version group changed...
-        let previousVersionGroupIndex = previousProps.versionGroupIndex
-        let versionGroupIndex = this.props.versionGroupIndex
-        let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
+        let previousVersionGroupId = previousProps.versionGroupId
+        let versionGroupId = this.props.versionGroupId
+        let versionGroupChanged = versionGroupId !== previousVersionGroupId
 
         // ...or if the types changed
         let previousTypeNames = previousProps.typeNames
@@ -262,7 +262,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     // returns the endpoint to use when fetching efficacy of the given types
     constructEndpointUrl(typeNames: string[]): string {
-        let endpointUrl = `efficacy?versionGroupId=${this.props.versionGroupIndex}`
+        let endpointUrl = `efficacy?versionGroupId=${this.props.versionGroupId}`
         for (var i = 0; i < typeNames.length; i++) {
             endpointUrl += `&type${i+1}=${typeNames[i]}`
         }

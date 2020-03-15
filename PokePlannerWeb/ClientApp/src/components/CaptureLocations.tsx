@@ -50,9 +50,9 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     componentDidUpdate(previousProps: ICaptureLocationsProps) {
         // refresh capture locations if the version group changed...
-        let previousVersionGroupIndex = previousProps.versionGroupIndex
-        let versionGroupIndex = this.props.versionGroupIndex
-        let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
+        let previousVersionGroupId = previousProps.versionGroupId
+        let versionGroupId = this.props.versionGroupId
+        let versionGroupChanged = versionGroupId !== previousVersionGroupId
 
         // ...or if the Pokemon ID changed
         let previousPokemonId = previousProps.pokemonId
@@ -133,15 +133,20 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     // retrieves the Pokemon's capture locations from EncounterController
     getCaptureLocations() {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            return
+        }
+
         if (this.hasPokemon()) {
             let pokemonId = this.props.pokemonId
-            console.log(`Capture locations ${this.props.index}: getting capture locations for Pokemon ${pokemonId}...`)
+            console.log(`Capture locations ${this.props.index}: getting capture locations for Pokemon ${pokemonId} in version group ${versionGroupId}...`)
 
             // loading begins
             this.setState({ loadingLocations: true })
 
             // construct endpoint URL
-            let endpointUrl = this.constructEndpointUrl(pokemonId, this.props.versionGroupIndex)
+            let endpointUrl = this.constructEndpointUrl(pokemonId, versionGroupId)
 
             // get encounter data
             fetch(endpointUrl)
@@ -163,7 +168,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     // returns the endpoint to use when fetching encounters of the given Pokemon
-    constructEndpointUrl(pokemonId: number, versionGroupIndex: number): string {
-        return `encounter/${pokemonId}/${versionGroupIndex}`
+    constructEndpointUrl(pokemonId: number, versionGroupId: number): string {
+        return `encounter/${pokemonId}/${versionGroupId}`
     }
 }

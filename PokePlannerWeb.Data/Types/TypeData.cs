@@ -136,15 +136,14 @@ namespace PokePlannerWeb.Data.Types
         /// <summary>
         /// Returns the type set for the version group with the given ID.
         /// </summary>
-        public async Task<TypeSet> GetTypeSet(int? versionGroupId = null)
+        public async Task<TypeSet> GetTypeSet(int versionGroupId)
         {
             var types = ConcreteTypes.ToArray();
             var typesArePresent = Enumerable.Repeat(false, types.Length).ToArray();
 
             using (new CodeTimer("Generate type set"))
             {
-                versionGroupId ??= VersionGroupData.LatestVersionGroupIndex;
-                var generation = await VersionGroupData.GetGeneration(versionGroupId.Value);
+                var generation = await VersionGroupData.GetGeneration(versionGroupId);
                 for (var i = 0; i < types.Length; i++)
                 {
                     var type = types[i];
@@ -157,7 +156,7 @@ namespace PokePlannerWeb.Data.Types
 
             return new TypeSet
             {
-                VersionGroupId = versionGroupId.Value,
+                VersionGroupId = versionGroupId,
                 Types = types.Select(t => t.ToString()).ToArray(),
                 TypesArePresent = typesArePresent
             };

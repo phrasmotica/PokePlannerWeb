@@ -233,38 +233,36 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the types of the given Pokemon in all version groups.
         /// </summary>
-        private List<string[]> GetTypes(Pokemon pokemon)
+        private List<WithId<string[]>> GetTypes(Pokemon pokemon)
         {
-            var typesList = new List<string[]>();
+            var typesList = new List<WithId<string[]>>();
 
-            var lastVersionGroupIndexWithData = 0;
+            var newestIdWithoutData = VersionGroupData.OldestVersionGroupId;
 
             if (pokemon.PastTypes != null)
             {
-                for (var i = 0; i < VersionGroupData.VersionGroups.Length; i++)
+                foreach (var vg in VersionGroupData.VersionGroups)
                 {
-                    var vg = VersionGroupData.VersionGroups[i];
-
                     var types = pokemon.PastTypes.FirstOrDefault(t => t.Generation.Name == vg.Generation.Name);
                     if (types != null)
                     {
                         var typeNames = types.Types.ToNames().ToArray();
-                        for (var j = lastVersionGroupIndexWithData; j < vg.Id; j++)
+                        for (var id = newestIdWithoutData; id <= vg.Id; id++)
                         {
-                            typesList.Add(typeNames);
+                            typesList.Add(new WithId<string[]>(id, typeNames));
                         }
 
-                        lastVersionGroupIndexWithData = vg.Id;
+                        newestIdWithoutData = vg.Id + 1;
                     }
                 }
             }
 
-            // always include the current types
-            var latestIndex = VersionGroupData.LatestVersionGroupIndex;
-            var currentTypeNames = pokemon.Types.ToNames().ToArray();
-            for (var i = lastVersionGroupIndexWithData; i < latestIndex; i++)
+            // always include the newest types
+            var newestId = VersionGroupData.NewestVersionGroupId;
+            var newestTypeNames = pokemon.Types.ToNames().ToArray();
+            for (var id = newestIdWithoutData; id <= newestId; id++)
             {
-                typesList.Add(currentTypeNames);
+                typesList.Add(new WithId<string[]>(id, newestTypeNames));
             }
 
             return typesList;
@@ -273,36 +271,34 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the base stats of the given Pokemon.
         /// </summary>
-        private List<int[]> GetBaseStats(Pokemon pokemon)
+        private List<WithId<int[]>> GetBaseStats(Pokemon pokemon)
         {
-            var statsList = new List<int[]>();
-
             // FUTURE: anticipating a generation-based base stats changelog
+            // in which case this method will need to look like GetTypes()
+            var newestId = VersionGroupData.NewestVersionGroupId;
+            var currentBaseStats = pokemon.GetBaseStats(newestId);
 
-            // always include the current base stats
-            var latestIndex = VersionGroupData.LatestVersionGroupIndex;
-            var currentBaseStats = pokemon.GetBaseStats(latestIndex);
-            for (var i = 0; i < latestIndex; i++)
-            {
-                statsList.Add(currentBaseStats);
-            }
+            var statsList = VersionGroupData.VersionGroups.Select(
+                vg => new WithId<int[]>(vg.Id, currentBaseStats)
+            );
 
-            return statsList;
+            return statsList.ToList();
         }
 
         /// <summary>
         /// Returns the given Pokemon's validity in all version groups.
         /// </summary>
-        private async Task<List<bool>> GetValidity(Pokemon pokemon)
+        private async Task<List<WithId<bool>>> GetValidity(Pokemon pokemon)
         {
-            var validityDict = new List<bool>();
+            var validityList = new List<WithId<bool>>();
 
             foreach (var vg in VersionGroupData.VersionGroups)
             {
-                validityDict.Add(await IsValid(pokemon, vg));
+                var isValid = await IsValid(pokemon, vg);
+                validityList.Add(new WithId<bool>(vg.Id, isValid));
             }
 
-            return validityDict;
+            return validityList;
         }
 
         /// <summary>

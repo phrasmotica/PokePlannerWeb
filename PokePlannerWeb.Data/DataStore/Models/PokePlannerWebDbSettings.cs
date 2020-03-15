@@ -34,6 +34,11 @@
         /// The name of the collection of Pokemon varieties.
         /// </summary>
         public string PokemonVarietiesCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of version groups.
+        /// </summary>
+        public string VersionGroupsCollectionName { get; set; }
     }
 
     /// <summary>
@@ -70,5 +75,10 @@
         /// The name of the collection of Pokemon varieties.
         /// </summary>
         string PokemonVarietiesCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of version groups.
+        /// </summary>
+        string VersionGroupsCollectionName { get; set; }
     }
 }

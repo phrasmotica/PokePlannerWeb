@@ -149,9 +149,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     componentDidUpdate(previousProps: IPokemonPanelProps) {
         // refresh if the version group index changed
-        let previousVersionGroupIndex = previousProps.versionGroupIndex
-        let versionGroupIndex = this.props.versionGroupIndex
-        let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
+        let previousVersionGroupId = previousProps.versionGroupId
+        let versionGroupId = this.props.versionGroupId
+        let versionGroupChanged = versionGroupId !== previousVersionGroupId
 
         if (versionGroupChanged) {
             let pokemonId = this.state.pokemonId
@@ -174,7 +174,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 <div className="flex">
                     <PokemonSelector
                         index={this.props.index}
-                        versionGroupIndex={this.props.versionGroupIndex}
+                        versionGroupId={this.props.versionGroupId}
                         speciesNames={this.props.speciesNames}
                         ignoreValidity={this.props.ignoreValidity}
                         hideTooltips={this.props.ignoreValidity}
@@ -208,7 +208,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                     </Tabs>
                 </div>
             </div>
-        );
+        )
     }
 
     // returns the Pokemon info
@@ -334,7 +334,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 index={this.props.index}
                 typeNames={this.state.typeNames}
                 typeSet={this.props.typeSet}
-                versionGroupIndex={this.props.versionGroupIndex}
+                versionGroupId={this.props.versionGroupId}
                 parentIsLoading={this.isLoading()}
                 showMultipliers={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
@@ -347,7 +347,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             <CaptureLocations
                 index={this.props.index}
                 pokemonId={this.state.pokemonId}
-                versionGroupIndex={this.props.versionGroupIndex}
+                versionGroupId={this.props.versionGroupId}
                 parentIsLoading={this.isLoading()}
                 showLocations={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
@@ -561,7 +561,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ loadingTypeNames: true })
 
         // fetch types description
-        fetch(`pokemon/${pokemonId}/types/${this.props.versionGroupIndex}`)
+        fetch(`pokemon/${pokemonId}/types/${this.props.versionGroupId}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
@@ -582,7 +582,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ loadingTypeNames: true })
 
         // fetch types description
-        fetch(`form/${formId}/types/${this.props.versionGroupIndex}`)
+        fetch(`form/${formId}/types/${this.props.versionGroupId}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
@@ -603,7 +603,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ loadingBaseStatValues: true })
 
         // fetch base stat values
-        fetch(`pokemon/${pokemonId}/baseStats/${this.props.versionGroupIndex}`)
+        fetch(`pokemon/${pokemonId}/baseStats/${this.props.versionGroupId}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response

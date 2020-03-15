@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -9,7 +12,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing a collection in the database.
     /// </summary>
-    public abstract class ServiceBase<TSource, TKey, TEntry> where TEntry : EntryBase<TKey>
+    public abstract class ServiceBase<TSource, TKey, TEntry>
+        where TSource : NamedApiResource
+        where TEntry : EntryBase<TKey>
     {
         /// <summary>
         /// The collection of entries.
@@ -54,6 +59,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public abstract TEntry Get(TKey key);
 
         /// <summary>
+        /// Returns all entries from the database.
+        /// </summary>
+        public IEnumerable<TEntry> AllEntries => Collection.Find(_ => true).ToEnumerable();
+
+        /// <summary>
+        /// Returns all stale entries from the database.
+        /// </summary>
+        public IEnumerable<TEntry> StaleEntries => AllEntries.Where(IsStale);
+
+        /// <summary>
         /// Creates a new entry in the database and returns it.
         /// </summary>
         public abstract TEntry Create(TEntry entry);
@@ -86,22 +101,71 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var entryType = typeof(TEntry).Name;
                 Logger.LogInformation($"Creating {entryType} entry for {sourceType} {key} in database...");
 
-                // TODO: lots of calls overlap with initial entry creation, which thus trigger
+                // TODO: lots of calls overlap with initial entry creation, which thus trigger duplicate
                 // entry creation. Easiest optimisation would be to have one call fetch the whole entry
                 entry = await FetchSourceAndCreateEntry(key);
             }
-            else if (entry.CreationTime < DateTime.UtcNow - TimeToLive)
+            else if (IsStale(entry))
             {
-                // update entry if it's exceeded its TTL
+                // update entry if it's stale
                 var sourceType = typeof(TSource).Name;
                 var entryType = typeof(TEntry).Name;
-                Logger.LogInformation($"{entryType} entry with key {key} exceeded TTL.");
-                Logger.LogInformation($"Creating {entryType} entry for {sourceType} {key} in database...");
+                Logger.LogInformation($"{entryType} entry with key {key} is stale.");
+                Logger.LogInformation($"Updating {entryType} entry for {sourceType} {key} in database...");
 
                 entry = await FetchSourceAndUpdateEntry(key);
             }
 
             return entry;
+        }
+
+        /// <summary>
+        /// Returns all entries from the database, creating them if they don't exist.
+        /// </summary>
+        public async Task<IEnumerable<TEntry>> GetAllOrCreate()
+        {
+            var resourcesList = await PokeApi.GetFullPage<TSource>();
+            
+            var allEntries = AllEntries.ToList();
+            if (!allEntries.Any() || allEntries.Count != resourcesList.Count)
+            {
+                var sourceType = typeof(TSource).Name;
+                var entryType = typeof(TEntry).Name;
+                Logger.LogInformation($"Creating {resourcesList.Count} {entryType} entries for {sourceType} in database...");
+
+                var sourceList = await PokeApi.GetMany<TSource>(resourcesList.Count);
+
+                // create all entries
+                var newEntryList = new List<TEntry>();
+                foreach (var o in sourceList)
+                {
+                    var entry = await CreateEntry(o);
+                    newEntryList.Add(entry);
+                }
+
+                return newEntryList;
+            }
+
+            var staleEntries = StaleEntries.ToList();
+            if (staleEntries.Any())
+            {
+                var sourceType = typeof(TSource).Name;
+                var entryType = typeof(TEntry).Name;
+                Logger.LogInformation($"{staleEntries.Count} {entryType} entries are stale.");
+
+                // update stale entries
+                foreach (var entry in staleEntries)
+                {
+                    var key = entry.Key;
+                    Logger.LogInformation($"Updating {entryType} entry for {sourceType} {key} in database...");
+                    await FetchSourceAndUpdateEntry(key);
+                }
+
+                // use AllEntries property since we've updated some entries
+                return AllEntries;
+            }
+
+            return allEntries;
         }
 
         /// <summary>
@@ -157,5 +221,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns an entry for the given source object.
         /// </summary>
         protected abstract Task<TEntry> ConvertToEntry(TSource pokemon);
+
+        /// <summary>
+        /// Returns whether the entry is considered stale.
+        /// </summary>
+        protected bool IsStale(TEntry entry)
+        {
+            return entry.CreationTime < DateTime.UtcNow - TimeToLive;
+        }
     }
 }

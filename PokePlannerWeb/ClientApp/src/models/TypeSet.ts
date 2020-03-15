@@ -1,21 +1,23 @@
-﻿/**
+﻿import { IHasVersionGroup } from "../components/CommonMembers"
+
+/**
  * Class mapping types to whether they're present in a version group.
  */
-export class TypeSet {
+export class TypeSet implements IHasVersionGroup {
     /**
      * The version group ID.
      */
-    versionGroupId: number;
+    versionGroupId: number | undefined
 
     /**
      * The types.
      */
-    types: string[];
+    types: string[]
 
     /**
      * Whether the types are present.
      */
-    typesArePresent: boolean[];
+    typesArePresent: boolean[]
 
     /**
      * Default constructor.
@@ -23,7 +25,7 @@ export class TypeSet {
      * @param types The types.
      * @param typesArePresent Whether the types are present.
      */
-    constructor(versionGroupId: number, types: string[], typesArePresent: boolean[]) {
+    constructor(versionGroupId: number | undefined, types: string[], typesArePresent: boolean[]) {
         this.versionGroupId = versionGroupId
         this.types = types
         this.typesArePresent = typesArePresent

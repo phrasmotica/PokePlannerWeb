@@ -149,9 +149,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
     componentDidUpdate(previousProps: IPokemonSelectorProps) {
         // refresh if the version group index changed
-        let previousVersionGroupIndex = previousProps.versionGroupIndex
-        let versionGroupIndex = this.props.versionGroupIndex
-        let versionGroupChanged = versionGroupIndex !== previousVersionGroupIndex
+        let previousVersionGroupId = previousProps.versionGroupId
+        let versionGroupId = this.props.versionGroupId
+        let versionGroupChanged = versionGroupId !== previousVersionGroupId
 
         if (versionGroupChanged) {
             let pokemonId = this.state.formId
@@ -194,7 +194,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                     </Button>
                 </div>
             </div>
-        );
+        )
     }
 
     // returns a box for selecting a species
@@ -560,7 +560,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setState({ loadingPokemonValidity: true })
 
         // fetch validity
-        await fetch(`pokemon/${pokemonId}/validity/${this.props.versionGroupIndex}`)
+        await fetch(`pokemon/${pokemonId}/validity/${this.props.versionGroupId}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
@@ -591,7 +591,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setState({ loadingFormIds: true })
 
         // fetch IDs
-        await fetch(`pokemon/${pokemonId}/forms/${this.props.versionGroupIndex}/ids`)
+        await fetch(`pokemon/${pokemonId}/forms/${this.props.versionGroupId}/ids`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
@@ -616,7 +616,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setState({ loadingFormNames: true })
 
         // fetch names
-        await fetch(`pokemon/${pokemonId}/forms/${this.props.versionGroupIndex}/names`)
+        await fetch(`pokemon/${pokemonId}/forms/${this.props.versionGroupId}/names`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
@@ -641,7 +641,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setState({ loadingVarietyIds: true })
 
         // fetch IDs
-        await fetch(`species/${speciesId}/varieties/${this.props.versionGroupIndex}/ids`)
+        await fetch(`species/${speciesId}/varieties/${this.props.versionGroupId}/ids`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
@@ -666,7 +666,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setState({ loadingVarietyNames: true })
 
         // fetch names
-        await fetch(`species/${speciesId}/varieties/${this.props.versionGroupIndex}/names`)
+        await fetch(`species/${speciesId}/varieties/${this.props.versionGroupId}/names`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
