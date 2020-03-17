@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
@@ -11,69 +12,50 @@ namespace PokePlannerWeb.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class SpeciesController : ControllerBase
+    public class SpeciesController
     {
         /// <summary>
-        /// The names service.
+        /// The Pokemon species service.
         /// </summary>
-        private readonly PokemonSpeciesNamesService PokemonSpeciesNamesService;
-
-        /// <summary>
-        /// The Pokemon varieties service.
-        /// </summary>
-        private readonly PokemonVarietiesService PokemonVarietiesService;
+        private readonly PokemonSpeciesService PokemonSpeciesService;
 
         /// <summary>
         /// The logger.
         /// </summary>
-        private readonly ILogger<SpeciesController> Logger;
+        protected readonly ILogger<SpeciesController> Logger;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public SpeciesController(PokemonSpeciesNamesService pokemonSpeciesNamesService, PokemonVarietiesService pokemonVarietiesService, ILogger<SpeciesController> logger)
+        public SpeciesController(
+            PokemonSpeciesService pokemonSpeciesService,
+            ILogger<SpeciesController> logger)
         {
-            PokemonSpeciesNamesService = pokemonSpeciesNamesService;
-            PokemonVarietiesService = pokemonVarietiesService;
+            PokemonSpeciesService = pokemonSpeciesService;
             Logger = logger;
         }
 
         /// <summary>
-        /// Returns the names of all species.
+        /// Returns the names of all Pokemon species.
         /// </summary>
         [HttpGet("allNames")]
         public async Task<string[]> GetAllSpeciesNames()
         {
-            Logger.LogInformation($"Getting names of all species...");
-
-            // get list of names from database
-            return await PokemonSpeciesNamesService.GetPokemonSpeciesNames();
+            Logger.LogInformation($"Getting names of all Pokemon species...");
+            var entries = await PokemonSpeciesService.GetPokemonSpecies();
+            return entries.Select(e => e.DisplayNames.SingleOrDefault(n => n.Language == "en"))
+                          .Select(n => n.Name)
+                          .ToArray();
         }
 
         /// <summary>
-        /// Returns the IDs of the varieties of the species with the given ID.
+        /// Returns the all Pokemon species.
         /// </summary>
-        [HttpGet("{id:int}/varieties/{versionGroupId:int}/ids")]
-        public async Task<int[]> GetSpeciesVarietyIdsById(int id, int versionGroupId)
+        [HttpGet("all")]
+        public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies()
         {
-            Logger.LogInformation($"Getting IDs of varieties of species of Pokemon {id} in version group {versionGroupId}...");
-
-            // get varieties document from database
-            var entry = await PokemonVarietiesService.GetOrCreate(id);
-            return entry.GetVarietyIds().ToArray();
-        }
-
-        /// <summary>
-        /// Returns the names of the varieties of the species with the given ID.
-        /// </summary>
-        [HttpGet("{id:int}/varieties/{versionGroupId:int}/names")]
-        public async Task<string[]> GetSpeciesVarietyNamesById(int id, int versionGroupId)
-        {
-            Logger.LogInformation($"Getting names of varieties of species of Pokemon {id} in version group {versionGroupId}...");
-
-            // get varieties document from database
-            var entry = await PokemonVarietiesService.GetOrCreate(id);
-            return entry.GetVarietyDisplayNames().ToArray();
+            Logger.LogInformation($"Getting all Pokemon species...");
+            return await PokemonSpeciesService.GetPokemonSpecies();
         }
     }
 }

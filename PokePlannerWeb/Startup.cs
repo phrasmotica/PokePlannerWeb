@@ -46,11 +46,11 @@ namespace PokePlannerWeb
             services.AddSingleton<MachinesService>();
             services.AddSingleton<PokemonService>();
             services.AddSingleton<PokemonFormsService>();
+            services.AddSingleton<PokemonSpeciesService>();
             services.AddSingleton<PokemonVarietiesService>();
             services.AddSingleton<TypesService>();
             services.AddSingleton<VersionGroupsService>();
 
-            services.AddSingleton<PokemonSpeciesNamesService>();
             services.AddSingleton<VersionGroupsNamesService>();
 
             services.AddControllersWithViews();

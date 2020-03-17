@@ -64,11 +64,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public IEnumerable<TEntry> AllEntries => Collection.Find(_ => true).ToEnumerable();
 
         /// <summary>
-        /// Returns all stale entries from the database.
-        /// </summary>
-        public IEnumerable<TEntry> StaleEntries => AllEntries.Where(IsStale);
-
-        /// <summary>
         /// Creates a new entry in the database and returns it.
         /// </summary>
         public abstract TEntry Create(TEntry entry);
@@ -120,52 +115,54 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns all entries from the database, creating them if they don't exist.
+        /// Upserts all entries into the database.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> GetAllOrCreate()
+        public async Task<IEnumerable<TEntry>> UpsertAll(bool replace = false)
         {
-            var resourcesList = await PokeApi.GetFullPage<TSource>();
-            
+            var resourcesPage = await PokeApi.GetPage<TSource>();
+
             var allEntries = AllEntries.ToList();
-            if (!allEntries.Any() || allEntries.Count != resourcesList.Count)
+            if (!allEntries.Any() || allEntries.Count != resourcesPage.Count)
             {
-                var sourceType = typeof(TSource).Name;
-                var entryType = typeof(TEntry).Name;
-                Logger.LogInformation($"Creating {resourcesList.Count} {entryType} entries for {sourceType} in database...");
+                const int pageSize = 20;
 
-                var sourceList = await PokeApi.GetMany<TSource>(resourcesList.Count);
+                var entryList = new List<TEntry>();
 
-                // create all entries
-                var newEntryList = new List<TEntry>();
-                foreach (var o in sourceList)
+                var pagesUsed = 0;
+                NamedApiResourceList<TSource> page;
+                do
                 {
-                    var entry = await CreateEntry(o);
-                    newEntryList.Add(entry);
-                }
+                    page = await PokeApi.GetPage<TSource>(pageSize, pageSize * pagesUsed++);
+                    var entries = await UpsertMany(page, replace);
+                    entryList.AddRange(entries);
+                } while (!string.IsNullOrEmpty(page.Next));
 
-                return newEntryList;
+                return entryList;
             }
 
-            var staleEntries = StaleEntries.ToList();
-            if (staleEntries.Any())
-            {
-                var sourceType = typeof(TSource).Name;
-                var entryType = typeof(TEntry).Name;
-                Logger.LogInformation($"{staleEntries.Count} {entryType} entries are stale.");
-
-                // update stale entries
-                foreach (var entry in staleEntries)
-                {
-                    var key = entry.Key;
-                    Logger.LogInformation($"Updating {entryType} entry for {sourceType} {key} in database...");
-                    await FetchSourceAndUpdateEntry(key);
-                }
-
-                // use AllEntries property since we've updated some entries
-                return AllEntries;
-            }
-
+            // if we have the right number of entries then we're probably good
             return allEntries;
+        }
+
+        /// <summary>
+        /// Upserts many entries into the database.
+        /// </summary>
+        protected async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
+        {
+            var sourceType = typeof(TSource).Name;
+            var entryType = typeof(TEntry).Name;
+            Logger.LogInformation($"Upserting {resources.Results.Count} {entryType} entries for {sourceType} in database...");
+
+            var sourceList = await PokeApi.Get(resources.Results);
+
+            var entryList = new List<TEntry>();
+            foreach (var o in sourceList)
+            {
+                var entry = await UpsertEntry(o, replace);
+                entryList.Add(entry);
+            }
+
+            return entryList;
         }
 
         /// <summary>
@@ -215,6 +212,27 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var entry = await ConvertToEntry(source);
             Update(key, entry);
+        }
+
+        /// <summary>
+        /// Creates or updates the entry with the given ID in the database for the source object as needed.
+        /// </summary>
+        protected async Task<TEntry> UpsertEntry(TSource source, bool replace = false)
+        {
+            var entry = await ConvertToEntry(source);
+            var existingEntry = Get(entry.Key);
+            if (existingEntry != null)
+            {
+                if (replace)
+                {
+                    Update(entry.Key, entry);
+                    return entry;
+                }
+
+                return existingEntry;
+            }
+
+            return Create(entry);
         }
 
         /// <summary>

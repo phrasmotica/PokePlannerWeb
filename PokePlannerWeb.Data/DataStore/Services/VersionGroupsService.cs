@@ -96,7 +96,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<VersionGroupEntry[]> GetVersionGroups()
         {
-            var allVersionGroups = await GetAllOrCreate();
+            var allVersionGroups = await UpsertAll();
             return allVersionGroups.ToArray();
         }
 

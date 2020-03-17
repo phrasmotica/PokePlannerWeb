@@ -47,13 +47,13 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Returns a page of the given size and offset with resources of the given type.
         /// </summary>
-        Task<NamedApiResourceList<T>> GetPage<T>(int limit, int offset) where T : NamedApiResource;
+        Task<NamedApiResourceList<T>> GetPage<T>(int limit = 20, int offset = 0) where T : NamedApiResource;
 
         /// <summary>
         /// Returns a list of the given size and offset with resources of the given type.
         /// </summary>
         Task<IEnumerable<T>> GetMany<T>(int limit = 20, int offset = 0) where T : NamedApiResource;
-        
+
         /// <summary>
         /// Returns the last named API resource of the given type.
         /// </summary>
