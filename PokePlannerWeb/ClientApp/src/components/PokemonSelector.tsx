@@ -496,9 +496,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                         value: pokemonId
                     }
                 })
-            }
 
-            this.props.setVariety(variety)
+                this.props.setVariety(variety)
+            }
+            else {
+                this.props.setVariety(null)
+            }
         }
     }
 
@@ -528,9 +531,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                         value: formId
                     }
                 })
-            }
 
-            this.props.setForm(form)
+                this.props.setForm(form)
+            }
+            else {
+                this.props.setForm(null)
+            }
         }
     }
 

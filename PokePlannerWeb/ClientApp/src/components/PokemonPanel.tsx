@@ -487,7 +487,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     // returns true if the Pokemon should be displayed
     shouldShowPokemon() {
         return this.hasPokemon()
-            && this.hasForm()
             && (this.props.ignoreValidity || this.pokemonIsValid())
     }
 
