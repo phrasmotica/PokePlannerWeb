@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -18,6 +19,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         }
 
         /// <summary>
+        /// Gets or sets the name of the Pokemon.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon's display names.
         /// </summary>
         public List<DisplayName> DisplayNames { get; set; }
@@ -33,9 +39,14 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public string ShinySpriteUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets this Pokemon's forms.
+        /// </summary>
+        public List<PokemonForm> Forms { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon's types indexed by version group ID.
         /// </summary>
-        public List<WithId<string[]>> Types { get; set; }
+        public List<WithId<Type[]>> Types { get; set; }
 
         /// <summary>
         /// Gets or sets this Pokemon's base stats indexed by version group ID.
@@ -58,7 +69,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Returns this Pokemon entry's types in the version group with the given ID.
         /// </summary>
-        public string[] GetTypes(int versionGroupId)
+        public Type[] GetTypes(int versionGroupId)
         {
             return Types.Single(t => t.Id == versionGroupId).Data;
         }

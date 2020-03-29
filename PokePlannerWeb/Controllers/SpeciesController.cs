@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -36,26 +35,24 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the names of all Pokemon species.
-        /// </summary>
-        [HttpGet("allNames")]
-        public async Task<string[]> GetAllSpeciesNames()
-        {
-            Logger.LogInformation($"Getting names of all Pokemon species...");
-            var entries = await PokemonSpeciesService.GetPokemonSpecies();
-            return entries.Select(e => e.DisplayNames.SingleOrDefault(n => n.Language == "en"))
-                          .Select(n => n.Name)
-                          .ToArray();
-        }
-
-        /// <summary>
-        /// Returns the all Pokemon species.
+        /// Returns all Pokemon species.
         /// </summary>
         [HttpGet("all")]
         public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies()
         {
-            Logger.LogInformation($"Getting all Pokemon species...");
+            Logger.LogInformation("Getting all Pokemon species...");
             return await PokemonSpeciesService.GetPokemonSpecies();
+        }
+
+        /// <summary>
+        /// Returns the varieties of the Pokemon species with the given ID in the version group with
+        /// the given ID.
+        /// </summary>
+        [HttpGet("{speciesId:int}/varieties/{versionGroupId:int}")]
+        public async Task<PokemonEntry[]> GetPokemonSpeciesVarieties(int speciesId, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting varieties of Pokemon species {speciesId} in version group {versionGroupId}...");
+            return await PokemonSpeciesService.GetPokemonSpeciesVarieties(speciesId, versionGroupId);
         }
     }
 }

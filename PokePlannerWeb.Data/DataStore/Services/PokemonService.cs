@@ -6,7 +6,6 @@ using MongoDB.Driver;
 using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Mechanics;
 using Pokemon = PokeApiNet.Pokemon;
 using PokemonEntry = PokePlannerWeb.Data.DataStore.Models.PokemonEntry;
 
@@ -18,9 +17,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class PokemonService : ServiceBase<Pokemon, int, PokemonEntry>
     {
         /// <summary>
-        /// The version group data singleton.
+        /// The Pokemon forms service.
         /// </summary>
-        private readonly VersionGroupData VersionGroupData;
+        private readonly PokemonFormsService PokemonFormsService;
+
+        /// <summary>
+        /// The types service.
+        /// </summary>
+        private readonly TypesService TypesService;
+
+        /// <summary>
+        /// The version groups service.
+        /// </summary>
+        private readonly VersionGroupsService VersionGroupsService;
 
         /// <summary>
         /// Constructor.
@@ -28,10 +37,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public PokemonService(
             IPokePlannerWebDbSettings settings,
             IPokeAPI pokeApi,
-            VersionGroupData versionGroupData,
+            PokemonFormsService pokemonFormsService,
+            TypesService typesService,
+            VersionGroupsService versionGroupsService,
             ILogger<PokemonService> logger) : base(settings, pokeApi, logger)
         {
-            VersionGroupData = versionGroupData;
+            PokemonFormsService = pokemonFormsService;
+            TypesService = typesService;
+            VersionGroupsService = versionGroupsService;
         }
 
         /// <summary>
@@ -49,7 +62,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the Pokemon with the given ID from the database.
         /// </summary>
-        public override PokemonEntry Get(int pokemonId)
+        protected override PokemonEntry Get(int pokemonId)
         {
             return Collection.Find(p => p.PokemonId == pokemonId).FirstOrDefault();
         }
@@ -57,7 +70,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates a new Pokemon in the database and returns it.
         /// </summary>
-        public override PokemonEntry Create(PokemonEntry entry)
+        protected override PokemonEntry Create(PokemonEntry entry)
         {
             Collection.InsertOne(entry);
             return entry;
@@ -66,7 +79,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Removes the Pokemon with the given ID from the database.
         /// </summary>
-        public override void Remove(int pokemonId)
+        protected override void Remove(int pokemonId)
         {
             Collection.DeleteOne(p => p.PokemonId == pokemonId);
         }
@@ -80,6 +93,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<Pokemon> FetchSource(int pokemonId)
         {
+            Logger.LogInformation($"Fetching Pokemon source object with ID {pokemonId}...");
             return await PokeApi.Get<Pokemon>(pokemonId);
         }
 
@@ -89,16 +103,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<PokemonEntry> ConvertToEntry(Pokemon pokemon)
         {
             var displayNames = await GetDisplayNames(pokemon);
+            var forms = await GetForms(pokemon);
+            var types = await GetTypes(pokemon);
+            var baseStats = await GetBaseStats(pokemon);
             var validity = await GetValidity(pokemon);
 
             return new PokemonEntry
             {
                 PokemonId = pokemon.Id,
+                Name = pokemon.Name,
                 DisplayNames = displayNames.ToList(),
                 SpriteUrl = GetSpriteUrl(pokemon),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemon),
-                Types = GetTypes(pokemon),
-                BaseStats = GetBaseStats(pokemon),
+                Forms = forms.ToList(),
+                Types = types,
+                BaseStats = baseStats,
                 Validity = validity
             };
         }
@@ -106,6 +125,25 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// Returns the Pokemon with the given ID from the data store.
+        /// </summary>
+        public async Task<PokemonEntry> GetPokemon(int pokemonId)
+        {
+            return await GetOrCreate(pokemonId);
+        }
+
+        /// <summary>
+        /// Returns the Pokemon forms of the Pokemon with the given ID in the version group with the
+        /// given ID from the data store.
+        /// </summary>
+        public async Task<PokemonFormsEntry[]> GetPokemonForms(int pokemonId, int versionGroupId)
+        {
+            var entry = await GetOrCreate(pokemonId);
+            var formEntries = await PokemonFormsService.GetOrCreateMany(entry.Forms.Select(f => f.Id));
+            return formEntries.ToArray();
+        }
 
         /// <summary>
         /// Returns the display name of the Pokemon with the given ID in the given locale from the
@@ -139,7 +177,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns the types of the Pokemon with the given ID in the version group with the given
         /// ID from the data store.
         /// </summary>
-        public async Task<string[]> GetPokemonTypesInVersionGroup(int pokemonId, int versionGroupId)
+        public async Task<Type[]> GetPokemonTypesInVersionGroup(int pokemonId, int versionGroupId)
         {
             var entry = await GetOrCreate(pokemonId);
             return entry.GetTypes(versionGroupId);
@@ -174,16 +212,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<DisplayName>> GetDisplayNames(Pokemon pokemon)
         {
-            var form = await PokeApi.Get(pokemon.Forms[0]);
+            var form = await PokemonFormsService.Upsert(pokemon.Forms[0]);
             if (string.IsNullOrEmpty(form.FormName))
             {
                 // form has empty form_name if it's the standard form
-                var species = await PokeApi.Get(pokemon.Species);
-                return species.Names.ToDisplayNames().ToList();
+                // so use names of species
+                return Enumerable.Empty<DisplayName>();
             }
 
             // use names of secondary form
-            return form.Names.ToDisplayNames().ToList();
+            return form.DisplayNames;
         }
 
         /// <summary>
@@ -231,55 +269,91 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Returns the Pokemon that this Pokemon species represents.
+        /// </summary>
+        private async Task<IEnumerable<PokemonForm>> GetForms(Pokemon pokemon)
+        {
+            var formsList = new List<PokemonForm>();
+
+            foreach (var form in pokemon.Forms)
+            {
+                var source = await PokemonFormsService.Upsert(form);
+                formsList.Add(new PokemonForm
+                {
+                    Id = source.FormId,
+                    Name = source.Name
+                });
+            }
+
+            return formsList;
+        }
+
+        /// <summary>
         /// Returns the types of the given Pokemon in all version groups.
         /// </summary>
-        private List<WithId<string[]>> GetTypes(Pokemon pokemon)
+        private async Task<List<WithId<Type[]>>> GetTypes(Pokemon pokemon)
         {
-            var typesList = new List<WithId<string[]>>();
+            var typesList = new List<WithId<Type[]>>();
 
-            var newestIdWithoutData = VersionGroupData.OldestVersionGroupId;
+            var newestIdWithoutData = VersionGroupsService.OldestVersionGroupId;
 
-            if (pokemon.PastTypes != null)
+            if (pokemon.PastTypes.Any())
             {
-                foreach (var vg in VersionGroupData.VersionGroups)
+                foreach (var vg in await VersionGroupsService.GetAll())
                 {
                     var types = pokemon.PastTypes.FirstOrDefault(t => t.Generation.Name == vg.Generation.Name);
                     if (types != null)
                     {
-                        var typeNames = types.Types.ToNames().ToArray();
-                        for (var id = newestIdWithoutData; id <= vg.Id; id++)
+                        // TODO: cache type names to IDs somewhere in an efficient way...
+                        // ...maybe create a generic named resource names to IDs cache
+                        var typeEntries = await MinimiseTypes(types.Types);
+                        for (var id = newestIdWithoutData; id <= vg.VersionGroupId; id++)
                         {
-                            typesList.Add(new WithId<string[]>(id, typeNames));
+                            typesList.Add(new WithId<Type[]>(id, typeEntries.ToArray()));
                         }
 
-                        newestIdWithoutData = vg.Id + 1;
+                        newestIdWithoutData = vg.VersionGroupId + 1;
                     }
                 }
             }
 
             // always include the newest types
-            var newestId = VersionGroupData.NewestVersionGroupId;
-            var newestTypeNames = pokemon.Types.ToNames().ToArray();
+            var newestId = VersionGroupsService.NewestVersionGroupId;
+            var newestTypeEntries = await MinimiseTypes(pokemon.Types);
             for (var id = newestIdWithoutData; id <= newestId; id++)
             {
-                typesList.Add(new WithId<string[]>(id, newestTypeNames));
+                typesList.Add(new WithId<Type[]>(id, newestTypeEntries.ToArray()));
             }
 
             return typesList;
         }
 
         /// <summary>
+        /// Minimises a set of Pokemon types.
+        /// </summary>
+        private async Task<IEnumerable<Type>> MinimiseTypes(IEnumerable<PokemonType> types)
+        {
+            var newestTypeObjs = await TypesService.UpsertMany(types.Select(t => t.Type));
+            return newestTypeObjs.Select(t => new Type
+            {
+                Id = t.TypeId,
+                Name = t.Name
+            });
+        }
+
+        /// <summary>
         /// Returns the base stats of the given Pokemon.
         /// </summary>
-        private List<WithId<int[]>> GetBaseStats(Pokemon pokemon)
+        private async Task<List<WithId<int[]>>> GetBaseStats(Pokemon pokemon)
         {
             // FUTURE: anticipating a generation-based base stats changelog
             // in which case this method will need to look like GetTypes()
-            var newestId = VersionGroupData.NewestVersionGroupId;
+            var newestId = VersionGroupsService.NewestVersionGroupId;
             var currentBaseStats = pokemon.GetBaseStats(newestId);
 
-            var statsList = VersionGroupData.VersionGroups.Select(
-                vg => new WithId<int[]>(vg.Id, currentBaseStats)
+            var versionGroups = await VersionGroupsService.GetAll();
+            var statsList = versionGroups.Select(
+                vg => new WithId<int[]>(vg.VersionGroupId, currentBaseStats)
             );
 
             return statsList.ToList();
@@ -292,10 +366,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var validityList = new List<WithId<bool>>();
 
-            foreach (var vg in VersionGroupData.VersionGroups)
+            foreach (var vg in await VersionGroupsService.GetAll())
             {
                 var isValid = await IsValid(pokemon, vg);
-                validityList.Add(new WithId<bool>(vg.Id, isValid));
+                validityList.Add(new WithId<bool>(vg.VersionGroupId, isValid));
             }
 
             return validityList;
@@ -304,7 +378,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns true if the given Pokemon can be obtained in the given version group.
         /// </summary>
-        private async Task<bool> IsValid(Pokemon pokemon, VersionGroup versionGroup)
+        private async Task<bool> IsValid(Pokemon pokemon, VersionGroupEntry versionGroup)
         {
             var form = await PokeApi.Get(pokemon.Forms[0]);
             if (form.IsMega)
@@ -321,7 +395,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns true if the given Pokemon species can be obtained in the given version group.
         /// </summary>
-        private bool IsValid(PokemonSpecies pokemonSpecies, VersionGroup versionGroup)
+        private bool IsValid(PokemonSpecies pokemonSpecies, VersionGroupEntry versionGroup)
         {
             if (!versionGroup.Pokedexes.Any() || !pokemonSpecies.PokedexNumbers.Any())
             {

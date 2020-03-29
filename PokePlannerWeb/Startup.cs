@@ -1,19 +1,31 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson.Serialization.Conventions;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
-using PokePlannerWeb.Data.Mechanics;
-using PokePlannerWeb.Data.Types;
 
 namespace PokePlannerWeb
 {
     public class Startup
     {
+        /// <summary>
+        /// Types whose fields should not be serialised if they have default values assigned.
+        /// </summary>
+        private static readonly System.Type[] IgnoreDefaultValuesTypes =
+        {
+            typeof(PokeApiNet.PokemonForm),
+            typeof(PokeApiNet.Pokemon),
+            typeof(PokeApiNet.Generation),
+            typeof(PokeApiNet.Type),
+            typeof(PokeApiNet.VersionGroup)
+        };
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,21 +48,19 @@ namespace PokePlannerWeb
 
             services.AddSingleton<IPokeAPI, PokeAPI>();
 
-            services.AddSingleton<TypeData>();
-            services.AddSingleton<StatData>();
-            services.AddSingleton<VersionGroupData>();
-
             services.AddSingleton<EfficacyService>();
             services.AddSingleton<EncountersService>();
+            services.AddSingleton<GenerationsService>();
             services.AddSingleton<MachinesService>();
+            services.AddSingleton<PokedexesService>();
             services.AddSingleton<PokemonService>();
             services.AddSingleton<PokemonFormsService>();
             services.AddSingleton<PokemonSpeciesService>();
-            services.AddSingleton<PokemonVarietiesService>();
+            services.AddSingleton<StatsService>();
             services.AddSingleton<TypesService>();
+            services.AddSingleton<VersionsService>();
             services.AddSingleton<VersionGroupsService>();
 
-            services.AddSingleton<VersionGroupsNamesService>();
             services.AddCors();
 
             services.AddControllersWithViews();
@@ -60,6 +70,13 @@ namespace PokePlannerWeb
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            // ignore null values when writing to datastore
+            ConventionRegistry.Register(
+                "IgnoreIfDefault",
+                new ConventionPack { new IgnoreIfDefaultConvention(true) },
+                t => IgnoreDefaultValuesTypes.Contains(t)
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

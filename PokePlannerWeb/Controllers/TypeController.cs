@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokePlannerWeb.Data.Types;
+using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -13,9 +14,9 @@ namespace PokePlannerWeb.Controllers
     public class TypeController : ControllerBase
     {
         /// <summary>
-        /// The type data singleton.
+        /// The Types service.
         /// </summary>
-        protected readonly TypeData TypeData;
+        private readonly TypesService TypesService;
 
         /// <summary>
         /// The logger.
@@ -26,10 +27,10 @@ namespace PokePlannerWeb.Controllers
         /// Constructor.
         /// </summary>
         public TypeController(
-            TypeData typeData,
+            TypesService typesService,
             ILogger<TypeController> logger)
         {
-            TypeData = typeData;
+            TypesService = typesService;
             Logger = logger;
         }
 
@@ -40,7 +41,17 @@ namespace PokePlannerWeb.Controllers
         public async Task<TypeSet> GetTypeSet(int versionGroupId)
         {
             Logger.LogInformation($"Getting type set for version group {versionGroupId}...");
-            return await TypeData.GetTypeSet(versionGroupId);
+            return await TypesService.GetTypeSet(versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the type with the given ID.
+        /// </summary>
+        [HttpGet("type/{typeId:int}/name")]
+        public async Task<TypeEntry> GetTypeById(int typeId)
+        {
+            Logger.LogInformation($"Getting type {typeId}...");
+            return await TypesService.GetOrCreate(typeId);
         }
     }
 }

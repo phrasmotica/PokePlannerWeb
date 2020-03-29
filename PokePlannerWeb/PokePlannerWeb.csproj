@@ -20,14 +20,17 @@
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="ClientApp\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="ClientApp\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="ClientApp\src\components\CommonMembers.ts" />
-    <None Remove="ClientApp\src\models\PokemonValidity.ts" />
-    <None Remove="ClientApp\src\models\TypeSet.ts" />
+    <None Remove="ClientApp\**" />
+    <Compile Remove="ClientApp\**" />
+    <EmbeddedResource Remove="ClientApp\**" />
+    <TypeScriptCompile Remove="ClientApp\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,15 +41,6 @@
     <Reference Include="PokeApiNet">
       <HintPath>..\..\PokeApiNet\PokeApiNet\bin\Debug\netstandard2.0\PokeApiNet.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="ClientApp\src\components\TeamBuilder.tsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\PokemonPanel.tsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\PokemonSelector.tsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\StatGraph.tsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\EfficacyList.tsx" />
-    <TypeScriptCompile Include="ClientApp\src\components\CaptureLocations.tsx" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

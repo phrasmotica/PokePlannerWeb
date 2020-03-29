@@ -4,19 +4,16 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using PokeApiNet;
 using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
-using PokePlannerWeb.Data.Mechanics;
-using PokePlannerWeb.Data.Types;
+using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Tests
 {
     /// <summary>
-    /// Tests for the <see cref="PokeAPI"/> singleton.
+    /// Tests for various operations that access resources from PokeAPI.
     /// </summary>
     public class PokeAPITests
     {
@@ -31,18 +28,7 @@ namespace PokePlannerWeb.Tests
         [OneTimeSetUp]
         public void Setup()
         {
-            var serviceCollection = new ServiceCollection();
-
-            serviceCollection.AddSingleton<ILogger<PokeAPI>, NullLogger<PokeAPI>>();
-            serviceCollection.AddSingleton<IPokeAPI, PokeAPI>();
-
-            serviceCollection.AddSingleton<ILogger<StatData>, NullLogger<StatData>>();
-            serviceCollection.AddSingleton<StatData>();
-
-            serviceCollection.AddSingleton<ILogger<VersionGroupData>, NullLogger<VersionGroupData>>();
-            serviceCollection.AddSingleton<VersionGroupData>();
-
-            serviceProvider = serviceCollection.BuildServiceProvider();
+            serviceProvider = TestHelper.BuildServiceProvider();
         }
 
         /// <summary>
@@ -53,11 +39,11 @@ namespace PokePlannerWeb.Tests
         public async Task VersionGroupsLoadingTest()
         {
             // load version groups
-            var versionGroupData = serviceProvider.GetService<VersionGroupData>();
-            await versionGroupData.LoadData();
+            var versionGroupsService = serviceProvider.GetService<VersionGroupsService>();
+            var versionGroups = await versionGroupsService.GetAll();
 
             // verify it's all loaded
-            Assert.AreEqual(18, versionGroupData.DataCount);
+            Assert.AreEqual(18, versionGroups.Length);
         }
 
         /// <summary>
@@ -68,11 +54,11 @@ namespace PokePlannerWeb.Tests
         public async Task StatsLoadingTest()
         {
             // load stats
-            var statData = serviceProvider.GetService<StatData>();
-            await statData.LoadData();
+            var statsService = serviceProvider.GetService<StatsService>();
+            var stats = await statsService.GetAll();
 
             // verify it's all loaded
-            Assert.AreEqual(8, statData.DataCount);
+            Assert.AreEqual(8, stats.Length);
         }
 
         /// <summary>
@@ -269,7 +255,9 @@ namespace PokePlannerWeb.Tests
             var forms = await pokeApi.GetPage<PokemonForm>(316, 807);
 
             // filter to those with type names in their name
-            var typeNames = TypeData.AllTypes.Select(n => n.ToString().ToLower());
+            var typesService = serviceProvider.GetService<TypesService>();
+            var types = await typesService.GetAll();
+            var typeNames = types.Select(t => t.Name);
             var regex = $"({string.Join("|", typeNames)})$";
             var typeForms = forms.Results.Where(f => Regex.IsMatch(f.Name, regex)).ToList();
 

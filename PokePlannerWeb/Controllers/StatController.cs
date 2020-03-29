@@ -2,45 +2,45 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet;
-using PokePlannerWeb.Data.Mechanics;
+using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
 {
     /// <summary>
     /// Controller for getting stats.
     /// </summary>
-    public class StatController : ResourceController<Stat>
+    [ApiController]
+    [Route("[controller]")]
+    public class StatController : ControllerBase
     {
         /// <summary>
-        /// The stat data singleton.
+        /// The stats service.
         /// </summary>
-        private readonly StatData StatData;
+        private readonly StatsService StatsService;
+
+        /// <summary>
+        /// The logger.
+        /// </summary>
+        private readonly ILogger<StatsService> Logger;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StatController(StatData statData, ILogger<ResourceController<Stat>> logger) : base(logger)
+        public StatController(StatsService statsService, ILogger<StatsService> logger)
         {
-            StatData = statData;
-        }
-
-        /// <summary>
-        /// Loads the stat data from PokeAPI.
-        /// </summary>
-        protected override Task LoadResources()
-        {
-            return StatData.LoadData();
+            StatsService = statsService;
+            Logger = logger;
         }
 
         /// <summary>
         /// Returns the names of the base stats in the version group with the given ID.
         /// </summary>
         [HttpGet("baseStatNames/{versionGroupId:int}")]
-        public string[] GetBaseStatNamesInVersionGroup(int versionGroupId)
+        public async Task<string[]> GetBaseStatNamesInVersionGroup(int versionGroupId)
         {
             Logger.LogInformation($"Getting names of base stats in version group {versionGroupId}...");
-            return StatData.GetBaseStatNames(versionGroupId).ToArray();
+            var allStats = await StatsService.GetBaseStats(versionGroupId);
+            return allStats.Select(s => s.GetDisplayName()).ToArray();
         }
     }
 }

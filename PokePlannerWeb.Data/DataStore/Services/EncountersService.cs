@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
@@ -18,9 +18,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected IPokeAPI PokeApi;
 
         /// <summary>
-        /// The type data singleton.
+        /// The version groups service.
         /// </summary>
-        private readonly VersionGroupData VersionGroupData;
+        private readonly VersionGroupsService VersionGroupsService;
 
         /// <summary>
         /// The logger.
@@ -32,11 +32,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public EncountersService(
             IPokeAPI pokeApi,
-            VersionGroupData versionGroupData,
+            VersionGroupsService versionGroupsService,
             ILogger<EncountersService> logger)
         {
             PokeApi = pokeApi;
-            VersionGroupData = versionGroupData;
+            VersionGroupsService = versionGroupsService;
             Logger = logger;
         }
 
@@ -71,15 +71,26 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             Logger.LogInformation($"Getting encounters for Pokemon {pokemonId} in version group {versionGroupId}...");
             var encounters = await PokeApi.GetLocationAreaEncounters(pokemonId);
-            return encounters.Where(e => IsInVersionGroup(e, versionGroupId)).ToArray();
+
+            var relevantEncounters = new List<LocationAreaEncounter>();
+            foreach (var encounter in encounters)
+            {
+                if (await IsInVersionGroup(encounter, versionGroupId))
+                {
+                    relevantEncounters.Add(encounter);
+                }
+            }
+
+            return relevantEncounters.ToArray();
         }
 
         /// <summary>
         /// Returns whether the given encounter is present in the given version group ID.
         /// </summary>
-        private bool IsInVersionGroup(LocationAreaEncounter encounter, int versionGroupId)
+        private async Task<bool> IsInVersionGroup(LocationAreaEncounter encounter, int versionGroupId)
         {
-            var versionGroup = VersionGroupData.Get(versionGroupId);
+            var versionGroup = await VersionGroupsService.GetOrCreate(versionGroupId);
+
             var versions = versionGroup.Versions.Select(v => v.Name);
             var encounterVersions = encounter.VersionDetails.Select(vd => vd.Version.Name);
 

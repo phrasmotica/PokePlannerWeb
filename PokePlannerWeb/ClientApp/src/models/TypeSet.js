@@ -7,12 +7,12 @@ var TypeSet = /** @class */ (function () {
     /**
      * Default constructor.
      * @param versionGroupId The version group ID.
-     * @param types The types.
+     * @param typeIds The IDs of the types.
      * @param typesArePresent Whether the types are present.
      */
-    function TypeSet(versionGroupId, types, typesArePresent) {
+    function TypeSet(versionGroupId, typeIds, typesArePresent) {
         this.versionGroupId = versionGroupId;
-        this.types = types;
+        this.typeIds = typeIds;
         this.typesArePresent = typesArePresent;
     }
     return TypeSet;

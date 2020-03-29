@@ -12,22 +12,22 @@ export class TypeSet implements IHasVersionGroup {
     /**
      * The types.
      */
-    types: string[]
+    typeIds: number[]
 
     /**
      * Whether the types are present.
      */
-    typesArePresent: boolean[]
+    typesArePresent: any[]
 
     /**
      * Default constructor.
      * @param versionGroupId The version group ID.
-     * @param types The types.
+     * @param typeIds The IDs of the types.
      * @param typesArePresent Whether the types are present.
      */
-    constructor(versionGroupId: number | undefined, types: string[], typesArePresent: boolean[]) {
+    constructor(versionGroupId: number | undefined, typeIds: number[], typesArePresent: any[]) {
         this.versionGroupId = versionGroupId
-        this.types = types
+        this.typeIds = typeIds
         this.typesArePresent = typesArePresent
     }
 }

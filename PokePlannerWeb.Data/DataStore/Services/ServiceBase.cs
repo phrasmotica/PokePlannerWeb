@@ -56,22 +56,22 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given ID from the database.
         /// </summary>
-        public abstract TEntry Get(TKey key);
+        protected abstract TEntry Get(TKey key);
 
         /// <summary>
         /// Returns all entries from the database.
         /// </summary>
-        public IEnumerable<TEntry> AllEntries => Collection.Find(_ => true).ToEnumerable();
+        protected IEnumerable<TEntry> AllEntries => Collection.Find(_ => true).ToEnumerable();
 
         /// <summary>
         /// Creates a new entry in the database and returns it.
         /// </summary>
-        public abstract TEntry Create(TEntry entry);
+        protected abstract TEntry Create(TEntry entry);
 
         /// <summary>
         /// Removes the entry with the given ID and creates a new one in the database.
         /// </summary>
-        public void Update(TKey key, TEntry entry)
+        protected void Update(TKey key, TEntry entry)
         {
             Remove(key);
             Create(entry);
@@ -80,9 +80,29 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Removes the entry with the given ID from the database.
         /// </summary>
-        public abstract void Remove(TKey key);
+        protected abstract void Remove(TKey key);
 
         #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Creates a new entry in the database for the given named API resource and returns it.
+        /// </summary>
+        public async Task<TEntry> Upsert(NamedApiResource<TSource> res)
+        {
+            var source = await PokeApi.Get(res);
+            return await Upsert(source);
+        }
+
+        /// <summary>
+        /// Creates new entries in the database for the given named API resources and returns them.
+        /// </summary>
+        public async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
+        {
+            var sources = await PokeApi.Get(resources);
+            return await UpsertMany(sources);
+        }
 
         /// <summary>
         /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
@@ -96,8 +116,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var entryType = typeof(TEntry).Name;
                 Logger.LogInformation($"Creating {entryType} entry for {sourceType} {key} in database...");
 
-                // TODO: lots of calls overlap with initial entry creation, which thus trigger duplicate
-                // entry creation. Easiest optimisation would be to have one call fetch the whole entry
                 entry = await FetchSourceAndCreateEntry(key);
             }
             else if (IsStale(entry))
@@ -112,6 +130,22 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return entry;
+        }
+
+        /// <summary>
+        /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
+        /// </summary>
+        public async Task<IEnumerable<TEntry>> GetOrCreateMany(IEnumerable<TKey> keys)
+        {
+            var entries = new List<TEntry>();
+
+            foreach (var key in keys)
+            {
+                var entry = await GetOrCreate(key);
+                entries.Add(entry);
+            }
+
+            return entries;
         }
 
         /// <summary>
@@ -147,7 +181,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Upserts many entries into the database.
         /// </summary>
-        protected async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
+        public async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
         {
             var sourceType = typeof(TSource).Name;
             var entryType = typeof(TEntry).Name;
@@ -158,11 +192,23 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var entryList = new List<TEntry>();
             foreach (var o in sourceList)
             {
-                var entry = await UpsertEntry(o, replace);
+                var entry = await Upsert(o, replace);
                 entryList.Add(entry);
             }
 
             return entryList;
+        }
+
+        #endregion
+
+        #region Helpers
+
+        /// <summary>
+        /// Returns the entries with the given keys from the database.
+        /// </summary>
+        protected IEnumerable<TEntry> GetMany(IEnumerable<TKey> keys)
+        {
+            return AllEntries.Where(e => keys.Contains(e.Key));
         }
 
         /// <summary>
@@ -217,7 +263,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates or updates the entry with the given ID in the database for the source object as needed.
         /// </summary>
-        protected async Task<TEntry> UpsertEntry(TSource source, bool replace = false)
+        protected async Task<TEntry> Upsert(TSource source, bool replace = false)
         {
             var entry = await ConvertToEntry(source);
             var existingEntry = Get(entry.Key);
@@ -236,9 +282,41 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Creates or updates the entry with the given ID in the database for the source object as needed.
+        /// </summary>
+        protected async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
+        {
+            var entries = new List<TEntry>();
+
+            foreach (var source in sources)
+            {
+                var entry = await ConvertToEntry(source);
+                var existingEntry = Get(entry.Key);
+                if (existingEntry != null)
+                {
+                    if (replace)
+                    {
+                        Update(entry.Key, entry);
+                        entries.Add(entry);
+                    }
+                    else
+                    {
+                        entries.Add(existingEntry);
+                    }
+                }
+                else
+                {
+                    entries.Add(Create(entry));
+                }
+            }
+
+            return entries;
+        }
+
+        /// <summary>
         /// Returns an entry for the given source object.
         /// </summary>
-        protected abstract Task<TEntry> ConvertToEntry(TSource pokemon);
+        protected abstract Task<TEntry> ConvertToEntry(TSource source);
 
         /// <summary>
         /// Returns whether the entry is considered stale.
@@ -247,5 +325,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             return entry.CreationTime < DateTime.UtcNow - TimeToLive;
         }
+
+        #endregion
     }
 }

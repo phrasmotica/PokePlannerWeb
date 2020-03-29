@@ -47,7 +47,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the Pokemon with the given ID from the database.
         /// </summary>
-        public override PokemonSpeciesEntry Get(int speciesId)
+        protected override PokemonSpeciesEntry Get(int speciesId)
         {
             return Collection.Find(p => p.SpeciesId == speciesId).FirstOrDefault();
         }
@@ -55,7 +55,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates a new Pokemon in the database and returns it.
         /// </summary>
-        public override PokemonSpeciesEntry Create(PokemonSpeciesEntry entry)
+        protected override PokemonSpeciesEntry Create(PokemonSpeciesEntry entry)
         {
             Collection.InsertOne(entry);
             return entry;
@@ -64,7 +64,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Removes the Pokemon with the given ID from the database.
         /// </summary>
-        public override void Remove(int speciesId)
+        protected override void Remove(int speciesId)
         {
             Collection.DeleteOne(p => p.SpeciesId == speciesId);
         }
@@ -78,6 +78,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonSpecies> FetchSource(int speciesId)
         {
+            Logger.LogInformation($"Fetching Pokemon species source object with ID {speciesId}...");
             return await PokeApi.Get<PokemonSpecies>(speciesId);
         }
 
@@ -109,6 +110,17 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return allSpecies.ToArray();
         }
 
+        /// <summary>
+        /// Returns the varieties of the Pokemon species with the given ID in the version group with
+        /// the given ID.
+        /// </summary>
+        public async Task<Models.PokemonEntry[]> GetPokemonSpeciesVarieties(int speciesId, int versionGroupId)
+        {
+            var entry = await GetOrCreate(speciesId);
+            var varietyEntries = await PokemonService.GetOrCreateMany(entry.Varieties.Select(v => v.Id));
+            return varietyEntries.ToArray();
+        }
+
         #endregion
 
         #region Helpers
@@ -124,17 +136,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the Pokemon that this Pokemon species represents.
         /// </summary>
-        private async Task<IEnumerable<WithId<List<DisplayName>>>> GetVarieties(PokemonSpecies species)
+        private async Task<IEnumerable<Pokemon>> GetVarieties(PokemonSpecies species)
         {
-            var varietiesList = new List<WithId<List<DisplayName>>>();
+            var varietiesList = new List<Pokemon>();
 
             foreach (var res in species.Varieties)
             {
-                var source = await PokeApi.Get(res.Pokemon);
-                var id = source.Id;
-                var sourceEntry = await PokemonService.GetPokemon(id);
-
-                varietiesList.Add(new WithId<List<DisplayName>>(id, sourceEntry.DisplayNames));
+                var sourceEntry = await PokemonService.Upsert(res.Pokemon);
+                varietiesList.Add(new Pokemon
+                {
+                    Id = sourceEntry.PokemonId,
+                    Name = sourceEntry.Name
+                });
             }
 
             return varietiesList;

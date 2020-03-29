@@ -15,13 +15,34 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class VersionGroupsService : ServiceBase<VersionGroup, int, VersionGroupEntry>
     {
         /// <summary>
+        /// The generations service.
+        /// </summary>
+        private readonly GenerationsService GenerationsService;
+
+        /// <summary>
+        /// The pokedexes service.
+        /// </summary>
+        private readonly PokedexesService PokedexesService;
+
+        /// <summary>
+        /// The versions service.
+        /// </summary>
+        private readonly VersionsService VersionsService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public VersionGroupsService(
             IPokePlannerWebDbSettings settings,
             IPokeAPI pokeApi,
+            GenerationsService generationsService,
+            PokedexesService pokedexesService,
+            VersionsService versionsService,
             ILogger<VersionGroupsService> logger) : base(settings, pokeApi, logger)
         {
+            GenerationsService = generationsService;
+            PokedexesService = pokedexesService;
+            VersionsService = versionsService;
         }
 
         /// <summary>
@@ -37,26 +58,26 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region CRUD methods
 
         /// <summary>
-        /// Returns the Pokemon forms entry with the given ID from the database.
+        /// Returns the version group entry with the given ID from the database.
         /// </summary>
-        public override VersionGroupEntry Get(int versionGroupId)
+        protected override VersionGroupEntry Get(int versionGroupId)
         {
             return Collection.Find(p => p.VersionGroupId == versionGroupId).FirstOrDefault();
         }
 
         /// <summary>
-        /// Creates a new Pokemon forms entry in the database and returns it.
+        /// Creates a new version group entry in the database and returns it.
         /// </summary>
-        public override VersionGroupEntry Create(VersionGroupEntry entry)
+        protected override VersionGroupEntry Create(VersionGroupEntry entry)
         {
             Collection.InsertOne(entry);
             return entry;
         }
 
         /// <summary>
-        /// Removes the Pokemon forms entry with the given ID from the database.
+        /// Removes the version group entry with the given ID from the database.
         /// </summary>
-        public override void Remove(int versionGroupId)
+        protected override void Remove(int versionGroupId)
         {
             Collection.DeleteOne(p => p.VersionGroupId == versionGroupId);
         }
@@ -66,24 +87,45 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns the Pokemon with the given ID.
+        /// Returns the version group with the given ID.
         /// </summary>
         protected override async Task<VersionGroup> FetchSource(int versionGroupId)
         {
+            Logger.LogInformation($"Fetching version group source object with ID {versionGroupId}...");
             return await PokeApi.Get<VersionGroup>(versionGroupId);
         }
 
         /// <summary>
-        /// Returns a Pokemon forms entry for the given Pokemon.
+        /// Returns a version group entry for the given Pokemon.
         /// </summary>
         protected override async Task<VersionGroupEntry> ConvertToEntry(VersionGroup versionGroup)
         {
             var displayNames = await GetDisplayNames(versionGroup);
+            var generation = await GenerationsService.GetByVersionGroup(versionGroup);
+            var versions = await VersionsService.UpsertMany(versionGroup.Versions);
+            var pokedexes = await PokedexesService.UpsertMany(versionGroup.Pokedexes);
 
             return new VersionGroupEntry
             {
                 VersionGroupId = versionGroup.Id,
-                DisplayNames = displayNames.ToList()
+                Name = versionGroup.Name,
+                Order = versionGroup.Order,
+                DisplayNames = displayNames.ToList(),
+                Generation = new Generation
+                {
+                    Id = generation.GenerationId,
+                    Name = generation.Name
+                },
+                Versions = versions.Select(v => new Version
+                {
+                    Id = v.VersionId,
+                    Name = v.Name
+                }).ToList(),
+                Pokedexes = pokedexes.Select(p => new Pokedex
+                {
+                    Id = p.PokedexId,
+                    Name = p.Name
+                }).ToList()
             };
         }
 
@@ -92,9 +134,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Public methods
 
         /// <summary>
+        /// Gets the index of the oldest version group.
+        /// </summary>
+        public int OldestVersionGroupId => AllEntries.Select(vg => vg.VersionGroupId).Min();
+
+        /// <summary>
+        /// Gets the index of the newest version group.
+        /// </summary>
+        public int NewestVersionGroupId => AllEntries.Select(vg => vg.VersionGroupId).Max();
+
+        /// <summary>
         /// Returns all version groups.
         /// </summary>
-        public async Task<VersionGroupEntry[]> GetVersionGroups()
+        public async Task<VersionGroupEntry[]> GetAll()
         {
             var allVersionGroups = await UpsertAll();
             return allVersionGroups.ToArray();
@@ -109,7 +161,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<DisplayName>> GetDisplayNames(VersionGroup versionGroup)
         {
-            // TODO: similar method in VersionGroupsNamesService
             var versions = await PokeApi.Get(versionGroup.Versions);
             var versionsNames = versions.Select(v => v.Names.OrderBy(n => n.Language.Name).ToList());
             var namesList = versionsNames.Aggregate(

@@ -5,7 +5,7 @@ interface ICaptureLocationsProps extends IHasCommon {
     /**
      * The ID of the Pokemon to show capture locations for.
      */
-    pokemonId: number,
+    pokemonId: number | undefined,
 
     /**
      * Whether to show the capture locations.
@@ -44,8 +44,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     componentDidMount() {
-        // get locations
-        this.getCaptureLocations()
+        this.fetchCaptureLocations()
     }
 
     componentDidUpdate(previousProps: ICaptureLocationsProps) {
@@ -60,7 +59,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         let pokemonChanged = pokemonId !== previousPokemonId
 
         if (versionGroupChanged || pokemonChanged) {
-            this.getCaptureLocations()
+            this.fetchCaptureLocations()
         }
     }
 
@@ -94,7 +93,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
             return (
                 <div>
-                    No capture locations
+                    No capture locations in this version group
                 </div>
             )
         }
@@ -109,7 +108,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     // toggle the location tooltip with the given index
     toggleLocationTooltip(index: number) {
         let newLocationTooltipOpen = this.state.locationTooltipOpen.map((item, j) => {
-            if (j == index) {
+            if (j === index) {
                 return !item
             }
 
@@ -123,7 +122,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     // returns true if we have a Pokemon
     hasPokemon() {
-        return this.props.pokemonId > 0
+        return this.props.pokemonId !== undefined
     }
 
     // returns true if we have capture locations
@@ -131,44 +130,45 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         return this.state.locations.length > 0
     }
 
-    // retrieves the Pokemon's capture locations from EncounterController
-    getCaptureLocations() {
+    // fetches the Pokemon's capture locations from EncounterController
+    fetchCaptureLocations() {
         let versionGroupId = this.props.versionGroupId
         if (versionGroupId === undefined) {
+            this.setState({ locations: [] })
             return
         }
 
-        if (this.hasPokemon()) {
-            let pokemonId = this.props.pokemonId
-            console.log(`Capture locations ${this.props.index}: getting capture locations for Pokemon ${pokemonId} in version group ${versionGroupId}...`)
-
-            // loading begins
-            this.setState({ loadingLocations: true })
-
-            // construct endpoint URL
-            let endpointUrl = this.constructEndpointUrl(pokemonId, versionGroupId)
-
-            // get encounter data
-            fetch(endpointUrl)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response
-                    }
-
-                    throw new Error(`Capture locations ${this.props.index}: tried to get capture locations for Pokemon ${pokemonId} but failed with status ${response.status}!`)
-                })
-                .then(response => response.json())
-                .then(locations => this.setState({ locations: locations }))
-                .catch(error => console.log(error))
-                .then(() => this.setState({ loadingLocations: false }))
-        }
-        else {
+        let pokemonId = this.props.pokemonId
+        if (pokemonId === undefined) {
             this.setState({ locations: [] })
+            return
         }
+
+        console.log(`Capture locations ${this.props.index}: getting capture locations for Pokemon ${pokemonId} in version group ${versionGroupId}...`)
+
+        // loading begins
+        this.setState({ loadingLocations: true })
+
+        // construct endpoint URL
+        let endpointUrl = this.constructEndpointUrl(pokemonId, versionGroupId)
+
+        // get encounter data
+        fetch(endpointUrl)
+            .then(response => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                throw new Error(`Capture locations ${this.props.index}: tried to get capture locations for Pokemon ${pokemonId} but failed with status ${response.status}!`)
+            })
+            .then(response => response.json())
+            .then(locations => this.setState({ locations: locations }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingLocations: false }))
     }
 
     // returns the endpoint to use when fetching encounters of the given Pokemon
     constructEndpointUrl(pokemonId: number, versionGroupId: number): string {
-        return `encounter/${pokemonId}/${versionGroupId}`
+        return `${process.env.REACT_APP_API_URL}/encounter/${pokemonId}/${versionGroupId}`
     }
 }

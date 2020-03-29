@@ -1,9 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using PokeApiNet;
-using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Types;
+using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
@@ -23,9 +22,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly PokemonService PokemonService;
 
         /// <summary>
-        /// The type data singleton.
+        /// The types service.
         /// </summary>
-        private readonly TypeData TypeData;
+        private readonly TypesService TypesService;
 
         /// <summary>
         /// The logger.
@@ -38,12 +37,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public EfficacyService(
             IPokeAPI pokeApi,
             PokemonService pokemonService,
-            TypeData typeData,
+            TypesService typesService,
             ILogger<EfficacyService> logger)
         {
             PokeApi = pokeApi;
             PokemonService = pokemonService;
-            TypeData = typeData;
+            TypesService = typesService;
             Logger = logger;
         }
 
@@ -51,33 +50,45 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns the efficacy of the Pokemon with the given ID in the version group with the
         /// given ID.
         /// </summary>
-        public async Task<double[]> GetTypeEfficacy(int pokemonId, int versionGroupId)
+        public async Task<EfficacySet> GetTypeEfficacyByTypeId(int typeId, int versionGroupId)
         {
-            var pokemon = await PokeApi.Get<Pokemon>(pokemonId);
-            return await GetTypeEfficacy(pokemon, versionGroupId);
+            var entry = await TypesService.GetOrCreate(typeId);
+            return await TypesService.GetTypesEfficacySet(new[] { entry.TypeId }, versionGroupId);
         }
 
         /// <summary>
-        /// Returns the efficacy of the Pokemon with the given name in the version group with the
+        /// Returns the efficacy of the Pokemon with the given ID in the version group with the
         /// given ID.
         /// </summary>
-        public async Task<double[]> GetTypeEfficacy(string pokemonName, int versionGroupId)
+        public async Task<EfficacySet> GetTypeEfficacyByTypeIds(IEnumerable<int> typeIds, int versionGroupId)
         {
-            var pokemon = await PokeApi.Get<Pokemon>(pokemonName);
-            return await GetTypeEfficacy(pokemon, versionGroupId);
-        }
+            var validTypeIds = ValidateTypeIds(typeIds).ToArray();
+            if (validTypeIds.Length != typeIds.ToArray().Length)
+            {
+                var invalidTypes = typeIds.Except(validTypeIds).ToArray();
+                var invalidTypesStr = string.Join(", ", invalidTypes);
+                Logger.LogWarning($"Attempted to get type efficacy for {invalidTypes.Length} invalid type(s): {invalidTypesStr}");
+            }
 
-        #region Helpers
+            return await TypesService.GetTypesEfficacySet(validTypeIds, versionGroupId);
+        }
 
         /// <summary>
-        /// Returns the given Pokemon's type efficacy in the version group with the given ID as an array.
+        /// Returns the efficacy of the Pokemon with the given ID in the version group with the
+        /// given ID.
         /// </summary>
-        private async Task<double[]> GetTypeEfficacy(Pokemon pokemon, int versionGroupId)
+        public async Task<EfficacySet> GetTypeEfficacyByPokemonId(int pokemonId, int versionGroupId)
         {
-            var types = await PokemonService.GetPokemonTypesInVersionGroup(pokemon.Id, versionGroupId);
-            return TypeData.GetEfficacyArr(types.Select(t => t.ToEnum<Types.Type>()));
+            var pokemon = await PokemonService.GetOrCreate(pokemonId);
+            return await TypesService.GetTypesEfficacySet(pokemon.Types.Select(t => t.Id), versionGroupId);
         }
 
-        #endregion
+        /// <summary>
+        /// Returns all valid type IDs from the given list.
+        /// </summary>
+        private IEnumerable<int> ValidateTypeIds(IEnumerable<int> typeIds)
+        {
+            return typeIds.Where(id => id != 0);
+        }
     }
 }

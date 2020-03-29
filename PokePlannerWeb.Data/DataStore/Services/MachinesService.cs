@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
-using PokePlannerWeb.Data.Mechanics;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
@@ -25,7 +24,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The version group data singleton.
         /// </summary>
-        protected readonly VersionGroupData VersionGroupData;
+        protected readonly VersionGroupsService VersionGroupsService;
 
         /// <summary>
         /// The logger.
@@ -37,11 +36,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public MachinesService(
             IPokeAPI pokeApi,
-            VersionGroupData versionGroupData,
+            VersionGroupsService versionGroupsService,
             ILogger<MachinesService> logger)
         {
             PokeApi = pokeApi;
-            VersionGroupData = versionGroupData;
+            VersionGroupsService = versionGroupsService;
             Logger = logger;
         }
 
@@ -50,7 +49,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<List<Move>> GetHMMoves(int versionGroupId)
         {
-            var versionGroup = VersionGroupData.Get(versionGroupId);
+            var versionGroup = await VersionGroupsService.GetOrCreate(versionGroupId);
 
             var hmMoves = new List<Move>();
             for (int i = 0; i < NUMBER_OF_HMS; i++)

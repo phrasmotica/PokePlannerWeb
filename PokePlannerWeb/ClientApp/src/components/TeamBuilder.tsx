@@ -17,39 +17,44 @@ const NUMBER_OF_ROWS: number = 2
 
 interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
-     * List of Pokemon species names.
+     * List of Pokemon species.
      */
-    speciesNames: string[],
+    species: any[]
+
+    /**
+     * Whether the Pokemon species are loading.
+     */
+    loadingSpecies: boolean
 
     /**
      * List of version groups.
      */
-    versionGroups: any[],
+    versionGroups: any[]
 
     /**
-     * Whether the page is loading.
+     * Whether the version groups are loading.
      */
-    loading: boolean,
+    loadingVersionGroups: boolean
 
     /**
      * The type set.
      */
-    typeSet: TypeSet,
+    typeSet: TypeSet
 
     /**
-     * Whether we're loading the type set.
+     * Whether the type set is loading.
      */
-    loadingTypeSet: boolean,
+    loadingTypeSet: boolean
 
     /**
      * The base stat names.
      */
-    baseStatNames: string[],
+    baseStatNames: string[]
 
     /**
-     * Whether we're loading the base stat names.
+     * Whether the base stat names are loading.
      */
-    loadingBaseStatNames: boolean,
+    loadingBaseStatNames: boolean
 
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
@@ -64,13 +69,14 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     constructor(props: any) {
         super(props)
         this.state = {
-            speciesNames: [],
+            species: [],
+            loadingSpecies: true,
             versionGroups: [],
+            loadingVersionGroups: true,
             versionGroupId: undefined,
-            loading: true,
             typeSet: {
                 versionGroupId: undefined,
-                types: [],
+                typeIds: [],
                 typesArePresent: []
             },
             loadingTypeSet: true,
@@ -82,134 +88,18 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     componentDidMount() {
-        this.loadSpeciesNames()
-        this.loadVersionGroups()
+        this.getSpecies()
+        this.getVersionGroups()
             .then(() => {
-                this.loadStats()
-                    .then(() => this.getBaseStatNames(this.state.versionGroupId))
+                this.getBaseStatNames(this.state.versionGroupId)
                 this.getTypeSet(this.state.versionGroupId)
-                this.loadTypeEfficacy(this.state.versionGroupId)
             })
-    }
-
-    // load all species names
-    loadSpeciesNames() {
-        fetch("species/allNames")
-            .then(response => response.json())
-            .then(speciesNames => this.setState({ speciesNames: speciesNames }))
-            .catch(error => console.log(error))
-    }
-
-    // load all version groups
-    async loadVersionGroups() {
-        // get list of version groups
-        await fetch("versionGroup", { method: "POST" })
-            .then(() => fetch("versionGroup/all"))
-            .then(response => response.json())
-            .then((groups: any[]) => this.setState({
-                versionGroups: groups,
-                versionGroupId: groups[groups.length - 1].versionGroupId
-            }))
-            .catch(error => console.log(error))
-            .finally(() => this.setState({ loading: false }))
-    }
-
-    // load all stats
-    async loadStats() {
-        await fetch("stat", { method: "POST" })
-    }
-
-    // retrieves the type set for the given version group from TypeController
-    async getTypeSet(versionGroupId: number | undefined) {
-        if (versionGroupId === undefined) {
-            return
-        }
-
-        console.log(`Team builder: getting type set for version group ${versionGroupId}...`)
-
-        // loading begins
-        this.setState({ loadingTypeSet: true })
-
-        // get type set
-        fetch(`type/typeSet/${versionGroupId}`)
-            .then(response => {
-                if (response.status === 200) {
-                    return response
-                }
-
-                // concrete types endpoint couldn't be found
-                throw new Error(`Team builder: couldn't get type set for version group ${versionGroupId}!`)
-            })
-            .then(response => response.json())
-            .then(typeSet => this.setState({ typeSet: typeSet }))
-            .catch(error => console.log(error))
-            .then(() => this.setState({ loadingTypeSet: false }))
-    }
-
-    // retrieves the type set for the given version group from TypeController
-    async getBaseStatNames(versionGroupId: number | undefined) {
-        if (versionGroupId === undefined) {
-            return
-        }
-
-        console.log(`Team builder: getting base stat names for version group ${versionGroupId}...`)
-
-        // loading begins
-        this.setState({ loadingBaseStatNames: true })
-
-        // get base stat names
-        fetch(`stat/baseStatNames/${versionGroupId}`)
-            .then(response => {
-                if (response.status === 200) {
-                    return response
-                }
-
-                // concrete types endpoint couldn't be found
-                throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
-            })
-            .then(response => response.json())
-            .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
-            .catch(error => console.log(error))
-            .then(() => this.setState({ loadingBaseStatNames: false }))
-    }
-
-    // loads type efficacy data
-    async loadTypeEfficacy(versionGroupId: number | undefined) {
-        if (versionGroupId === undefined) {
-            return
-        }
-
-        fetch(`efficacy/${versionGroupId}`, { method: "POST" })
-            .catch(error => console.log(error))
-    }
-
-    // set selected version group
-    async setVersionGroup(versionGroupId: number) {
-        this.setState({ versionGroupId: versionGroupId })
-
-        // reload type set and efficacy
-        this.getTypeSet(versionGroupId)
-        this.loadTypeEfficacy(versionGroupId)
-    }
-
-    // toggle validity check on Pokemon
-    toggleIgnoreValidity() {
-        this.setState((previousState) => ({
-            ignoreValidity: !previousState.ignoreValidity
-        }))
-    }
-
-    // toggle tooltip hiding
-    toggleHideTooltips() {
-        this.setState((previousState) => ({
-            hideTooltips: !previousState.hideTooltips
-        }))
     }
 
     render() {
         let menu = this.renderMenu()
 
-        let pokemonPanels = this.state.loading
+        let pokemonPanels = this.pageIsLoading()
             ? <p><em>Loading...</em></p>
             : this.renderPokemonPanels()
 
@@ -223,7 +113,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     renderMenu() {
-        if (this.state.loading) {
+        if (this.pageIsLoading()) {
             return null
         }
 
@@ -253,7 +143,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             }
         })
 
-        let defaultOption = options.filter(o => o.value == this.state.versionGroupId)
+        let defaultOption = options.filter(o => o.value === this.state.versionGroupId)
 
         return (
             <FormGroup>
@@ -263,7 +153,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     id="versionGroupSelect"
                     className="version-group-select"
                     defaultValue={defaultOption}
-                    onChange={(e: any) => this.setVersionGroup(e.value)}
+                    onChange={(option: any) => this.setVersionGroup(option.value)}
                     options={options} />
             </FormGroup>
         )
@@ -314,7 +204,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                         ignoreValidity={this.state.ignoreValidity}
                         toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                         hideTooltips={this.state.hideTooltips}
-                        speciesNames={this.state.speciesNames}
+                        species={this.state.species}
                         typeSet={this.state.typeSet}
                         baseStatNames={this.state.baseStatNames} />
                 )
@@ -334,5 +224,111 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                 {rows}
             </div>
         )
+    }
+
+    // load all species
+    getSpecies() {
+        fetch(`${process.env.REACT_APP_API_URL}/species/all`)
+            .then(response => response.json())
+            .then(species => this.setState({ species: species }))
+            .catch(error => console.log(error))
+            .finally(() => this.setState({ loadingSpecies: false }))
+    }
+
+    // load all version groups
+    async getVersionGroups() {
+        await fetch(`${process.env.REACT_APP_API_URL}/versionGroup/all`)
+            .then(response => response.json())
+            .then((groups: any[]) => this.setState({
+                versionGroups: groups,
+                versionGroupId: groups[groups.length - 1].versionGroupId
+            }))
+            .catch(error => console.log(error))
+            .finally(() => this.setState({ loadingVersionGroups: false }))
+    }
+
+    // retrieves the type set for the given version group from TypeController
+    getTypeSet(versionGroupId: number | undefined) {
+        if (versionGroupId === undefined) {
+            return
+        }
+
+        console.log(`Team builder: getting type set for version group ${versionGroupId}...`)
+
+        // loading begins
+        this.setState({ loadingTypeSet: true })
+
+        // get type set
+        fetch(`${process.env.REACT_APP_API_URL}/type/typeSet/${versionGroupId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                // concrete types endpoint couldn't be found
+                throw new Error(`Team builder: couldn't get type set for version group ${versionGroupId}!`)
+            })
+            .then(response => response.json())
+            .then(typeSet => this.setState({ typeSet: typeSet }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingTypeSet: false }))
+    }
+
+    // retrieves the type set for the given version group from TypeController
+    getBaseStatNames(versionGroupId: number | undefined) {
+        if (versionGroupId === undefined) {
+            return
+        }
+
+        console.log(`Team builder: getting base stat names for version group ${versionGroupId}...`)
+
+        // loading begins
+        this.setState({ loadingBaseStatNames: true })
+
+        // get base stat names
+        fetch(`${process.env.REACT_APP_API_URL}/stat/baseStatNames/${versionGroupId}`)
+            .then(response => {
+                if (response.status === 200) {
+                    return response
+                }
+
+                // concrete types endpoint couldn't be found
+                throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
+            })
+            .then(response => response.json())
+            .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
+            .catch(error => console.log(error))
+            .then(() => this.setState({ loadingBaseStatNames: false }))
+    }
+
+    // set selected version group
+    setVersionGroup(versionGroupId: number) {
+        this.setState({ versionGroupId: versionGroupId })
+
+        // reload type set and base stat names
+        this.getTypeSet(versionGroupId)
+        this.getBaseStatNames(versionGroupId)
+    }
+
+    // toggle validity check on Pokemon
+    toggleIgnoreValidity() {
+        this.setState((previousState) => ({
+            ignoreValidity: !previousState.ignoreValidity
+        }))
+    }
+
+    // toggle tooltip hiding
+    toggleHideTooltips() {
+        this.setState((previousState) => ({
+            hideTooltips: !previousState.hideTooltips
+        }))
+    }
+
+    /**
+     * Returns whether the page is loading.
+     */
+    pageIsLoading() {
+        return this.state.loadingSpecies
+            || this.state.loadingVersionGroups
     }
 }

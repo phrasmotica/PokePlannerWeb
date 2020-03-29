@@ -1,11 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
-using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Types;
-using Type = PokePlannerWeb.Data.Types.Type;
 
 namespace PokePlannerWeb.Controllers
 {
@@ -22,11 +19,6 @@ namespace PokePlannerWeb.Controllers
         private readonly EfficacyService EfficacyService;
 
         /// <summary>
-        /// The type data singleton.
-        /// </summary>
-        private readonly TypeData TypeData;
-
-        /// <summary>
         /// The logger.
         /// </summary>
         private readonly ILogger<EfficacyController> Logger;
@@ -36,45 +28,20 @@ namespace PokePlannerWeb.Controllers
         /// </summary>
         public EfficacyController(
             EfficacyService efficacyService,
-            TypeData versionGroupData,
             ILogger<EfficacyController> logger)
         {
             EfficacyService = efficacyService;
-            TypeData = versionGroupData;
             Logger = logger;
         }
 
         /// <summary>
-        /// Loads the type efficacy data for the latest version group from PokeAPI.Instance.
-        /// </summary>
-        [HttpPost]
-        public async Task LoadTypeEfficacy()
-        {
-            Logger.LogInformation("Loading efficacy for latest version group...");
-            await TypeData.LoadTypeEfficacy();
-        }
-
-        /// <summary>
-        /// Loads the type efficacy data for the given version group from PokeAPI.Instance.
-        /// </summary>
-        [HttpPost("{versionGroupId:int}")]
-        public async Task LoadTypeEfficacy(int versionGroupId)
-        {
-            Logger.LogInformation($"Loading efficacy for version group {versionGroupId}...");
-            await TypeData.LoadTypeEfficacy(versionGroupId);
-        }
-
-        /// <summary>
-        /// Returns the efficacy of the given types in the version group with the given ID.
+        /// Returns the efficacy of the types with the given IDs in the version group with the given ID.
         /// </summary>
         [HttpGet]
-        public double[] GetEfficacyInVersionGroupByTypeNames(int versionGroupId, string type1, string type2)
+        public async Task<EfficacySet> GetEfficacyInVersionGroupByTypeIds(int versionGroupId, int type1, int type2)
         {
-            Logger.LogInformation($"Getting efficacy for {type1}-{type2} in version group {versionGroupId}...");
-            var types = new[] { type1, type2 }.Where(s => !string.IsNullOrEmpty(s))
-                                              .Select(s => s.ToEnum<Type>())
-                                              .Where(t => TypeData.ConcreteTypes.Contains(t));
-            return TypeData.GetEfficacyArr(types);
+            Logger.LogInformation($"Getting efficacy for types {type1}/{type2} in version group {versionGroupId}...");
+            return await EfficacyService.GetTypeEfficacyByTypeIds(new[] { type1, type2 }, versionGroupId);
         }
 
         /// <summary>
@@ -82,21 +49,10 @@ namespace PokePlannerWeb.Controllers
         /// given ID.
         /// </summary>
         [HttpGet("{pokemonId:int}/{versionGroupId:int}")]
-        public async Task<double[]> GetEfficacyInVersionGroupById(int pokemonId, int versionGroupId)
+        public async Task<EfficacySet> GetEfficacyInVersionGroupById(int pokemonId, int versionGroupId)
         {
             Logger.LogInformation($"Getting efficacy for Pokemon {pokemonId}...");
-            return await EfficacyService.GetTypeEfficacy(pokemonId, versionGroupId);
-        }
-
-        /// <summary>
-        /// Returns the efficacy of the Pokemon with the given species name in the version group
-        /// with the given ID.
-        /// </summary>
-        [HttpGet("{name}/{versionGroupId:int}")]
-        public async Task<double[]> GetEfficacyInVersionGroupByName(string name, int versionGroupId)
-        {
-            Logger.LogInformation($"Getting efficacy for Pokemon \"{name}\"...");
-            return await EfficacyService.GetTypeEfficacy(name, versionGroupId);
+            return await EfficacyService.GetTypeEfficacyByPokemonId(pokemonId, versionGroupId);
         }
     }
 }

@@ -7,12 +7,12 @@ interface IStatGraphProps extends IHasIndex {
     /**
      * The stat names.
      */
-    statNames: string[],
+    statNames: string[]
 
     /**
      * The stat values.
      */
-    statValues: number[],
+    statValues: number[]
 
     /**
      * Whether to show the stat graph.
@@ -24,10 +24,6 @@ interface IStatGraphProps extends IHasIndex {
  * Component for showing a set of stats as a graph.
  */
 export class StatGraph extends Component<IStatGraphProps, any> {
-    constructor(props: any) {
-        super(props)
-    }
-
     render() {
         return this.renderStatGraph()
     }

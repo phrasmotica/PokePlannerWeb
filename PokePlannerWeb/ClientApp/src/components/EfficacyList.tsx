@@ -13,9 +13,9 @@ const NUMBER_OF_ROWS: number = 3
 
 interface IEfficacyListProps extends IHasCommon {
     /**
-     * The types to show efficacy for.
+     * The IDs of the types to show efficacy for.
      */
-    typeNames: string[],
+    typeIds: number[],
 
     /**
      * The type set.
@@ -30,9 +30,9 @@ interface IEfficacyListProps extends IHasCommon {
 
 interface IEfficacyListState {
     /**
-     * The efficacy to show.
+     * The efficacy set to show.
      */
-    efficacy: number[],
+    efficacy: any,
 
     /**
      * Whether we're loading the efficacy.
@@ -52,7 +52,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     constructor(props: any) {
         super(props)
         this.state = {
-            efficacy: [],
+            efficacy: null,
             loadingEfficacy: false,
             typeTooltipOpen: []
         }
@@ -70,9 +70,9 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
         let versionGroupChanged = versionGroupId !== previousVersionGroupId
 
         // ...or if the types changed
-        let previousTypeNames = previousProps.typeNames
-        let typeNames = this.props.typeNames
-        let typesChanged = !this.arraysEqual(typeNames, previousTypeNames)
+        let previousTypeIds = previousProps.typeIds
+        let typeIds = this.props.typeIds
+        let typesChanged = !this.arraysEqual(typeIds, previousTypeIds)
 
         if (versionGroupChanged || typesChanged) {
             this.getEfficacy()
@@ -85,7 +85,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
         if (typeSetChanged) {
             this.setState({
-                typeTooltipOpen: typeSet.types.map(_ => false)
+                typeTooltipOpen: typeSet.typeIds.map(_ => false)
             })
         }
     }
@@ -97,7 +97,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     renderTypeEfficacy() {
         let rows = []
         let typeSet = this.props.typeSet
-        let itemsPerRow = typeSet.types.length / NUMBER_OF_ROWS
+        let itemsPerRow = typeSet.typeIds.length / NUMBER_OF_ROWS
 
         let efficacy = this.state.efficacy
         for (let row = 0; row < NUMBER_OF_ROWS; row++) {
@@ -107,48 +107,70 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 let index = row * itemsPerRow + col
                 let headerId = `list${this.props.index}type${index}`
 
-                let type = typeSet.types[index]
+                let typeId = typeSet.typeIds[index]
                 let typeHeader = <img
                                     id={headerId}
                                     className="type-icon-small padded"
-                                    src={require(`../images/typeIcons/${type.toLowerCase()}-small.png`)} />
+                                    alt={`type${typeId}`}
+                                    src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
-                if (typeSet.typesArePresent[index]) {
-                    let multiplierElement = this.getElementFromMultiplier(efficacy[index])
+                if (efficacy === null) {
                     items.push(
                         <div
                             key={index}
                             className="efficacy">
                             {typeHeader}
                             <br />
-                            {multiplierElement}
+                            <span>-</span>
                         </div>
                     )
                 }
                 else {
-                    let tooltip = null
-                    if (!this.props.hideTooltips) {
-                        tooltip = (
-                            <Tooltip
-                                isOpen={this.state.typeTooltipOpen[index]}
-                                toggle={() => this.toggleTypeTooltip(index)}
-                                placement="top"
-                                target={headerId}>
-                                {type} is absent from this game version
-                            </Tooltip>
+                    let typeIsPresent = typeSet.typesArePresent.filter((t: any) => t.id === typeId)[0].data
+                    if (typeIsPresent) {
+                        let matchingData = efficacy.efficacyMultipliers.filter((m: any) => m.id === typeId)
+
+                        let multiplier = 1
+                        if (matchingData.length > 0) {
+                            multiplier = matchingData[0].data
+                        }
+
+                        let multiplierElement = this.getElementFromMultiplier(multiplier)
+                        items.push(
+                            <div
+                                key={index}
+                                className="efficacy">
+                                {typeHeader}
+                                <br />
+                                {multiplierElement}
+                            </div>
                         )
                     }
+                    else {
+                        let tooltip = null
+                        if (!this.props.hideTooltips) {
+                            tooltip = (
+                                <Tooltip
+                                    isOpen={this.state.typeTooltipOpen[index]}
+                                    toggle={() => this.toggleTypeTooltip(index)}
+                                    placement="top"
+                                    target={headerId}>
+                                    {typeId} is absent from this game version
+                                </Tooltip>
+                            )
+                        }
 
-                    items.push(
-                        <div
-                            key={index}
-                            className="efficacy">
-                            {typeHeader}
-                            <br />
-                            <b>N/A</b>
-                            {tooltip}
-                        </div>
-                    )
+                        items.push(
+                            <div
+                                key={index}
+                                className="efficacy">
+                                {typeHeader}
+                                <br />
+                                <b>N/A</b>
+                                {tooltip}
+                            </div>
+                        )
+                    }
                 }
             }
 
@@ -214,7 +236,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     // toggle the type tooltip with the given index
     toggleTypeTooltip(index: number) {
         let newTypeTooltipOpen = this.state.typeTooltipOpen.map((item, j) => {
-            if (j == index) {
+            if (j === index) {
                 return !item
             }
 
@@ -228,21 +250,21 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     // returns true if we have types
     hasTypes() {
-        return this.props.typeNames.length > 0
+        return this.props.typeIds.length > 0
     }
 
     // retrieves the types' efficacy from EfficacyController
     getEfficacy() {
         if (this.hasTypes()) {
-            let typeNames = this.props.typeNames
-            let typeNamesStr = typeNames.join("-")
-            console.log(`Efficacy list ${this.props.index}: getting efficacy for ${typeNamesStr}...`)
+            let typeIds = this.props.typeIds
+            let typesStr = typeIds.join("/")
+            console.log(`Efficacy list ${this.props.index}: getting efficacy for ${typesStr}...`)
 
             // loading begins
             this.setState({ loadingEfficacy: true })
 
             // construct endpoint URL
-            let endpointUrl = this.constructEndpointUrl(typeNames)
+            let endpointUrl = this.constructEndpointUrl(typeIds)
 
             // get efficacy data
             fetch(endpointUrl)
@@ -251,7 +273,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                         return response
                     }
 
-                    throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${typeNamesStr} but failed with status ${response.status}!`)
+                    throw new Error(`Efficacy list ${this.props.index}: tried to get efficacy for ${typesStr} but failed with status ${response.status}!`)
                 })
                 .then(response => response.json())
                 .then(efficacy => this.setState({ efficacy: efficacy }))
@@ -261,10 +283,10 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     }
 
     // returns the endpoint to use when fetching efficacy of the given types
-    constructEndpointUrl(typeNames: string[]): string {
-        let endpointUrl = `efficacy?versionGroupId=${this.props.versionGroupId}`
-        for (var i = 0; i < typeNames.length; i++) {
-            endpointUrl += `&type${i+1}=${typeNames[i]}`
+    constructEndpointUrl(typeIds: number[]): string {
+        let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroupId=${this.props.versionGroupId}`
+        for (var i = 0; i < typeIds.length; i++) {
+            endpointUrl += `&type${i + 1}=${typeIds[i]}`
         }
 
         return endpointUrl
@@ -272,7 +294,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     // returns true if the two arrays are componentwise equal
     arraysEqual(arr1: any[], arr2: any[]) {
-        if (arr1 == arr2) {
+        if (arr1 === arr2) {
             return true
         }
 
@@ -280,7 +302,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
             return false
         }
 
-        if (arr1.length != arr2.length) {
+        if (arr1.length !== arr2.length) {
             return false
         }
 

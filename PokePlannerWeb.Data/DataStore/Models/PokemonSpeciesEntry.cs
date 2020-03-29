@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -24,6 +25,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the Pokemon this species represents.
         /// </summary>
-        public List<WithId<List<DisplayName>>> Varieties { get; set; }
+        public List<Pokemon> Varieties { get; set; }
     }
 }
