@@ -21,26 +21,23 @@ namespace PokePlannerWeb.Data
         private readonly ILogger<PokeAPI> Logger;
 
         /// <summary>
+        /// The client for PokeAPI.
+        /// </summary>
+        private readonly PokeApiClient PokeApiClient;
+
+        /// <summary>
         /// The base URI for PokeAPI.
         /// </summary>
         private readonly Uri BaseUri = new Uri("http://localhost:8000/api/v2/");
 
         /// <summary>
-        /// Singleton constructor.
+        /// Constructor.
         /// </summary>
-        public PokeAPI(ILogger<PokeAPI> logger)
+        public PokeAPI(PokeApiClient pokeApiClient, ILogger<PokeAPI> logger)
         {
+            PokeApiClient = pokeApiClient;
             Logger = logger;
         }
-
-        #region PokeAPI client
-
-        /// <summary>
-        /// Client for PokeAPI.
-        /// </summary>
-        private PokeApiClient Client { get; } = new PokeApiClient();
-
-        #endregion
 
         #region Caching
 
@@ -64,7 +61,7 @@ namespace PokePlannerWeb.Data
             {
                 Logger.LogInformation($"{call} started...");
 
-                res = await Client.GetResourceAsync<T>(id);
+                res = await PokeApiClient.GetResourceAsync<T>(id);
 
                 Logger.LogInformation($"{call} finished.");
             }
@@ -88,7 +85,7 @@ namespace PokePlannerWeb.Data
             {
                 Logger.LogInformation($"{call} started...");
 
-                res = await Client.GetResourceAsync<T>(name);
+                res = await PokeApiClient.GetResourceAsync<T>(name);
 
                 Logger.LogInformation($"{call} finished.");
             }
@@ -113,7 +110,7 @@ namespace PokePlannerWeb.Data
             {
                 Logger.LogInformation($"{call} started...");
 
-                res = await Client.GetResourceAsync(nav);
+                res = await PokeApiClient.GetResourceAsync(nav);
 
                 Logger.LogInformation($"{call} finished.");
             }
@@ -138,7 +135,7 @@ namespace PokePlannerWeb.Data
             {
                 Logger.LogInformation($"{call} started...");
 
-                resList = await Client.GetResourceAsync(nav);
+                resList = await PokeApiClient.GetResourceAsync(nav);
 
                 Logger.LogInformation($"{call} finished.");
             }
@@ -226,7 +223,7 @@ namespace PokePlannerWeb.Data
             {
                 Logger.LogInformation($"{call} started...");
 
-                resList = await Client.GetNamedResourcePageAsync<T>(limit, offset);
+                resList = await PokeApiClient.GetNamedResourcePageAsync<T>(limit, offset);
 
                 Logger.LogInformation($"{call} finished.");
             }

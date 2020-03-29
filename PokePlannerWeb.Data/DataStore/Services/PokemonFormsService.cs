@@ -207,7 +207,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var newestTypeEntries = new List<Type>();
 
             // some forms have different types indicated by their names, i.e. arceus, silvally
-            // TODO: some forms don't do this...
             var allTypes = await TypesService.GetAll();
             var matchingType = allTypes.SingleOrDefault(t => t.Name == form.FormName);
 
@@ -221,6 +220,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
             else
             {
+                // some forms' types need to be looked up...
                 var formTypes = await GetFormTypesByName(form.Name);
                 if (formTypes.Any())
                 {

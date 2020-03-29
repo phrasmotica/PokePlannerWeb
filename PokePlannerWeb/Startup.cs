@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization.Conventions;
+using PokeApiNet;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
@@ -46,6 +47,7 @@ namespace PokePlannerWeb
                 sp.GetRequiredService<IOptions<PokePlannerWebDbSettings>>().Value
             );
 
+            services.AddSingleton<PokeApiClient>();
             services.AddSingleton<IPokeAPI, PokeAPI>();
 
             services.AddSingleton<EfficacyService>();
