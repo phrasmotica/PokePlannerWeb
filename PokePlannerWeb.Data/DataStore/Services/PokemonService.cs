@@ -145,64 +145,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return formEntries.ToArray();
         }
 
-        /// <summary>
-        /// Returns the display name of the Pokemon with the given ID in the given locale from the
-        /// data store.
-        /// </summary>
-        public async Task<string> GetPokemonDisplayName(int pokemonId, string locale = "en")
-        {
-            var entry = await GetOrCreate(pokemonId);
-            return entry.GetDisplayName(locale);
-        }
-
-        /// <summary>
-        /// Returns the front default sprite URL of the Pokemon with the given ID from the data store.
-        /// </summary>
-        public async Task<string> GetPokemonSpriteUrl(int pokemonId)
-        {
-            var entry = await GetOrCreate(pokemonId);
-            return entry.SpriteUrl;
-        }
-
-        /// <summary>
-        /// Returns the front shiny sprite URL of the Pokemon with the given ID from the data store.
-        /// </summary>
-        public async Task<string> GetPokemonShinySpriteUrl(int pokemonId)
-        {
-            var entry = await GetOrCreate(pokemonId);
-            return entry.ShinySpriteUrl;
-        }
-
-        /// <summary>
-        /// Returns the types of the Pokemon with the given ID in the version group with the given
-        /// ID from the data store.
-        /// </summary>
-        public async Task<Type[]> GetPokemonTypesInVersionGroup(int pokemonId, int versionGroupId)
-        {
-            var entry = await GetOrCreate(pokemonId);
-            return entry.GetTypes(versionGroupId);
-        }
-
-        /// <summary>
-        /// Returns the base stats of the Pokemon with the given ID in the version group with the
-        /// given ID from the data store.
-        /// </summary>
-        public async Task<int[]> GetPokemonBaseStatsInVersionGroup(int pokemonId, int versionGroupId)
-        {
-            var entry = await GetOrCreate(pokemonId);
-            return entry.GetBaseStats(versionGroupId);
-        }
-
-        /// <summary>
-        /// Returns the validity of the Pokemon with the given ID in the version group with the
-        /// given ID from the data store.
-        /// </summary>
-        public async Task<bool> GetPokemonValidityInVersionGroup(int pokemonId, int versionGroupId)
-        {
-            var entry = await GetOrCreate(pokemonId);
-            return entry.GetValidity(versionGroupId);
-        }
-
         #endregion
 
         #region Helpers

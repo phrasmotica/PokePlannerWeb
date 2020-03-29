@@ -159,30 +159,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns the efficacy of the Type with the given ID in the version group with the given
         /// ID from the data store.
         /// </summary>
-        public async Task<EfficacySet> GetTypeEfficacySet(int typeId, int versionGroupId)
-        {
-            var entry = await GetOrCreate(typeId);
-            return entry.GetEfficacySet(versionGroupId);
-        }
-
-        /// <summary>
-        /// Returns the efficacy of the Type with the given ID in the version group with the given
-        /// ID from the data store.
-        /// </summary>
         public async Task<EfficacySet> GetTypesEfficacySet(IEnumerable<int> typeIds, int versionGroupId)
         {
             var entries = await GetOrCreateMany(typeIds);
             var efficacySets = entries.Select(e => e.GetEfficacySet(versionGroupId));
             return efficacySets.Aggregate((e1, e2) => e1.Product(e2));
-        }
-
-        /// <summary>
-        /// Returns the display name of the Type with the given ID in the given locale from the data store.
-        /// </summary>
-        public async Task<string> GetTypeDisplayName(int typeId, string locale = "en")
-        {
-            var entry = await GetOrCreate(typeId);
-            return entry.GetDisplayName(locale);
         }
 
         #endregion

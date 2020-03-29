@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
@@ -57,37 +56,5 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets this Pokemon's validity indexed by version group ID.
         /// </summary>
         public List<WithId<bool>> Validity { get; set; }
-
-        /// <summary>
-        /// Returns the name of this Pokemon entry in the given locale.
-        /// </summary>
-        public string GetDisplayName(string locale = "en")
-        {
-            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Name;
-        }
-
-        /// <summary>
-        /// Returns this Pokemon entry's types in the version group with the given ID.
-        /// </summary>
-        public Type[] GetTypes(int versionGroupId)
-        {
-            return Types.Single(t => t.Id == versionGroupId).Data;
-        }
-
-        /// <summary>
-        /// Returns this Pokemon entry's types in the version group with the given ID.
-        /// </summary>
-        public int[] GetBaseStats(int versionGroupId)
-        {
-            return BaseStats.Single(bs => bs.Id == versionGroupId).Data;
-        }
-
-        /// <summary>
-        /// Returns this Pokemon entry's validity in the version group with the given ID.
-        /// </summary>
-        public bool GetValidity(int versionGroupId)
-        {
-            return Validity.Single(v => v.Id == versionGroupId).Data;
-        }
     }
 }

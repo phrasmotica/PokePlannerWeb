@@ -57,13 +57,5 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets this Pokemon form's types indexed by version group ID.
         /// </summary>
         public List<WithId<Type[]>> Types { get; set; }
-
-        /// <summary>
-        /// Returns the name of this Pokemon form in the given locale.
-        /// </summary>
-        public string GetDisplayName(string locale = "en")
-        {
-            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Name;
-        }
     }
 }

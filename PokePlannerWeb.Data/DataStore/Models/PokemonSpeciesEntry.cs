@@ -18,7 +18,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         }
 
         /// <summary>
-        /// Gets or sets this Pokemon species's display names.
+        /// Gets or sets this Pokemon species' display names.
         /// </summary>
         public List<DisplayName> DisplayNames { get; set; }
 
