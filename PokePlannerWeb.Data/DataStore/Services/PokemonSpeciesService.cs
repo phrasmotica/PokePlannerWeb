@@ -116,7 +116,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies()
         {
             var allSpecies = await UpsertAll();
-            return allSpecies.ToArray();
+            return allSpecies.OrderBy(s => s.SpeciesId).ToArray();
         }
 
         /// <summary>
