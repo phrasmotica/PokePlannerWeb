@@ -138,20 +138,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
     }
 
-    componentDidUpdate(previousProps: IPokemonSelectorProps) {
-        // refresh if the version group index changed
-        let previousVersionGroupId = previousProps.versionGroupId
-        let versionGroupId = this.props.versionGroupId
-        let versionGroupChanged = versionGroupId !== previousVersionGroupId
-
-        if (versionGroupChanged) {
-            let pokemonId = this.state.formId
-            if (pokemonId !== undefined) {
-                this.fetchPokemon(pokemonId)
-            }
-        }
-    }
-
     render() {
         // sub-components
         let speciesSelect = this.renderSpeciesSelect()

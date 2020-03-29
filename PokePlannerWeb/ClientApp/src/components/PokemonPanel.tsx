@@ -110,7 +110,7 @@ interface IPokemonPanelState {
  * Component for selecting a Pokemon and displaying information about it.
  */
 export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelState> {
-    constructor(props: any) {
+    constructor(props: IPokemonPanelProps) {
         super(props)
         this.state = {
             pokemon: null,
