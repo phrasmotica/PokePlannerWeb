@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,6 +51,7 @@ namespace PokePlannerWeb
             services.AddSingleton<VersionGroupsService>();
 
             services.AddSingleton<VersionGroupsNamesService>();
+            services.AddCors();
 
             services.AddControllersWithViews();
 
@@ -77,6 +77,14 @@ namespace PokePlannerWeb
                 app.UseHsts();
             }
 
+            // Shows UseCors with CorsPolicyBuilder.
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                       .AllowAnyMethod()
+                       .AllowCredentials();
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
@@ -96,7 +104,7 @@ namespace PokePlannerWeb
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }
