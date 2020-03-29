@@ -478,10 +478,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     // returns true if the Pokemon is valid
     pokemonIsValid() {
-        let validityArr = this.state.pokemon.validity
-        return validityArr.filter(
-            (v: any) => v.id === this.props.versionGroupId
-        )[0].data
+        return this.state.pokemon.validity.includes(this.props.versionGroupId)
     }
 
     // returns true if the Pokemon should be displayed

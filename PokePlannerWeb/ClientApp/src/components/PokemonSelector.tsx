@@ -419,12 +419,18 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
     // returns true if the Pokemon should be marked as invalid
     shouldMarkPokemonInvalid() {
-        let checked = this.hasPokemon() && !this.state.loadingPokemon
-        let shouldMarkInvalid = checked
-                                && !this.props.ignoreValidity
-                                    && this.state.pokemon.validity.filter(
-                                        (v: any) => v.id === this.props.versionGroupId
-                                    )[0].data
+        if (this.state.pokemon === null) {
+            return false
+        }
+
+        let pokemonValidity = this.state.pokemon.validity
+        let speciesValidity = this.getSelectedSpecies().validity
+        let pokemonIsValid = pokemonValidity.includes(this.props.versionGroupId)
+                          || speciesValidity.includes(this.props.versionGroupId)
+
+        let shouldMarkInvalid = !this.state.loadingPokemon
+                             && !this.props.ignoreValidity
+                             && !pokemonIsValid
 
         return shouldMarkInvalid
     }
@@ -445,6 +451,16 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.setPokemon(newSpeciesOption.value)
             this.fetchVarieties(newSpeciesOption.value)
         }
+    }
+
+    /**
+     * Returns the data object for the selected species.
+     */
+    getSelectedSpecies() {
+        let allSpecies = this.props.species
+        let selectedSpeciesId = this.state.speciesOption.value
+        let matchingSpecies = allSpecies.filter((s: any) => s.speciesId === selectedSpeciesId)
+        return matchingSpecies[0]
     }
 
     // set this selector to the Pokemon with the given ID

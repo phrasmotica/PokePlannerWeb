@@ -53,8 +53,8 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<WithId<int[]>> BaseStats { get; set; }
 
         /// <summary>
-        /// Gets or sets this Pokemon's validity indexed by version group ID.
+        /// Gets or sets the IDs of the version groups where this Pokemon is valid.
         /// </summary>
-        public List<WithId<bool>> Validity { get; set; }
+        public List<int> Validity { get; set; }
     }
 }

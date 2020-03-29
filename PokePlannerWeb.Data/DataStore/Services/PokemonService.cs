@@ -118,7 +118,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Forms = forms.ToList(),
                 Types = types,
                 BaseStats = baseStats,
-                Validity = validity
+                Validity = validity.ToList()
             };
         }
 
@@ -304,14 +304,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the given Pokemon's validity in all version groups.
         /// </summary>
-        private async Task<List<WithId<bool>>> GetValidity(Pokemon pokemon)
+        private async Task<IEnumerable<int>> GetValidity(Pokemon pokemon)
         {
-            var validityList = new List<WithId<bool>>();
+            var validityList = new List<int>();
 
             foreach (var vg in await VersionGroupsService.GetAll())
             {
                 var isValid = await IsValid(pokemon, vg);
-                validityList.Add(new WithId<bool>(vg.VersionGroupId, isValid));
+                if (isValid)
+                {
+                    // Pokemon is only valid if the version group's ID is in the list
+                    validityList.Add(vg.VersionGroupId);
+                }
             }
 
             return validityList;
@@ -330,24 +334,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 return formVersionGroup.Order <= versionGroup.Order;
             }
 
-            var pokemonSpecies = await PokeApi.Get(pokemon.Species);
-            return IsValid(pokemonSpecies, versionGroup);
-        }
-
-        /// <summary>
-        /// Returns true if the given Pokemon species can be obtained in the given version group.
-        /// </summary>
-        private bool IsValid(PokemonSpecies pokemonSpecies, VersionGroupEntry versionGroup)
-        {
-            if (!versionGroup.Pokedexes.Any() || !pokemonSpecies.PokedexNumbers.Any())
-            {
-                // PokeAPI data is incomplete
-                return true;
-            }
-
-            var versionGroupPokedexes = versionGroup.Pokedexes.Select(p => p.Name);
-            var pokemonPokedexes = pokemonSpecies.PokedexNumbers.Select(pn => pn.Pokedex.Name);
-            return versionGroupPokedexes.Intersect(pokemonPokedexes).Any();
+            // TODO: defer to PokemonSpeciesEntry's validity information
+            return false;
         }
 
         #endregion

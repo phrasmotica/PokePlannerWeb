@@ -26,5 +26,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the Pokemon this species represents.
         /// </summary>
         public List<Pokemon> Varieties { get; set; }
+
+        /// <summary>
+        /// Gets or sets the IDs of the version groups where this Pokemon species is valid.
+        /// </summary>
+        public List<int> Validity { get; set; }
     }
 }

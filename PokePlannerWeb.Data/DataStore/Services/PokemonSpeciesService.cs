@@ -21,15 +21,22 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly PokemonService PokemonService;
 
         /// <summary>
+        /// The version groups service.
+        /// </summary>
+        private readonly VersionGroupsService VersionGroupsService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public PokemonSpeciesService(
             IPokePlannerWebDbSettings settings,
             IPokeAPI pokeApi,
             PokemonService pokemonService,
+            VersionGroupsService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(settings, pokeApi, logger)
         {
             PokemonService = pokemonService;
+            VersionGroupsService = versionGroupsService;
         }
 
         /// <summary>
@@ -88,12 +95,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<PokemonSpeciesEntry> ConvertToEntry(PokemonSpecies species)
         {
             var varieties = await GetVarieties(species);
+            var validity = await GetValidity(species);
 
             return new PokemonSpeciesEntry
             {
                 SpeciesId = species.Id,
                 DisplayNames = GetDisplayNames(species).ToList(),
-                Varieties = varieties.ToList()
+                Varieties = varieties.ToList(),
+                Validity = validity.ToList()
             };
         }
 
@@ -151,6 +160,32 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return varietiesList;
+        }
+
+        /// <summary>
+        /// Returns the IDs of the version groups where the given Pokemon species is valid.
+        /// </summary>
+        private async Task<IEnumerable<int>> GetValidity(PokemonSpecies pokemonSpecies)
+        {
+            var versionGroups = await VersionGroupsService.GetAll();
+            return versionGroups.Where(vg => IsValid(pokemonSpecies, vg))
+                                .Select(vg => vg.VersionGroupId);
+        }
+
+        /// <summary>
+        /// Returns true if the given Pokemon species can be obtained in the given version group.
+        /// </summary>
+        private bool IsValid(PokemonSpecies pokemonSpecies, VersionGroupEntry versionGroup)
+        {
+            if (!versionGroup.Pokedexes.Any() || !pokemonSpecies.PokedexNumbers.Any())
+            {
+                // PokeAPI data is incomplete
+                return true;
+            }
+
+            var versionGroupPokedexes = versionGroup.Pokedexes.Select(p => p.Name);
+            var pokemonPokedexes = pokemonSpecies.PokedexNumbers.Select(pn => pn.Pokedex.Name);
+            return versionGroupPokedexes.Intersect(pokemonPokedexes).Any();
         }
 
         #endregion
