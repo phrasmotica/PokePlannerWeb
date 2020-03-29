@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using PokeApiNet;
-using PokePlannerWeb.Cache;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Services;
 
@@ -89,23 +88,6 @@ namespace PokePlannerWeb.Tests
             }
 
             Console.WriteLine(remainingCount);
-        }
-
-        /// <summary>
-        /// Verifies that the Pokemon species cache works correctly.
-        /// </summary>
-        [Test]
-        [Category("Unit")]
-        public void PokemonSpeciesCacheTest()
-        {
-            var cache = serviceProvider.GetService<PokemonSpeciesCacheManager>().ReadCache();
-            Assert.AreEqual(807, cache.Count);
-
-            var entry = cache.Get(3);
-            Assert.AreEqual(entry.DisplayNames.Single(dn => dn.Language == "en").Name, "Venusaur");
-
-            var variety = entry.Varieties.Last();
-            Assert.AreEqual(variety.DisplayNames.Single(dn => dn.Language == "en").Name, "Mega Venusaur");
         }
 
         /// <summary>
