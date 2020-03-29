@@ -34,7 +34,7 @@ interface ICaptureLocationsState {
  * Component for displaying a Pokemon's capture locations.
  */
 export class CaptureLocations extends Component<ICaptureLocationsProps, ICaptureLocationsState> {
-    constructor(props: any) {
+    constructor(props: ICaptureLocationsProps) {
         super(props)
         this.state = {
             locations: null,
@@ -48,17 +48,12 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     componentDidUpdate(previousProps: ICaptureLocationsProps) {
-        // refresh capture locations if the version group changed...
-        let previousVersionGroupId = previousProps.versionGroupId
-        let versionGroupId = this.props.versionGroupId
-        let versionGroupChanged = versionGroupId !== previousVersionGroupId
-
-        // ...or if the Pokemon ID changed
+        // refresh capture locations if the Pokemon ID changed
         let previousPokemonId = previousProps.pokemonId
         let pokemonId = this.props.pokemonId
         let pokemonChanged = pokemonId !== previousPokemonId
 
-        if (versionGroupChanged || pokemonChanged) {
+        if (pokemonChanged) {
             this.fetchCaptureLocations()
         }
     }
