@@ -29,6 +29,16 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public string FormName { get; set; }
 
         /// <summary>
+        /// Gets or sets whether the form is a mega evolution.
+        /// </summary>
+        public bool IsMega { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version group in which this form was introduced.
+        /// </summary>
+        public VersionGroup VersionGroup { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon form's display names.
         /// </summary>
         public List<DisplayName> DisplayNames { get; set; }

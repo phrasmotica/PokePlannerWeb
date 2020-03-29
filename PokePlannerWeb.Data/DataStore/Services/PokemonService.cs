@@ -380,11 +380,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<bool> IsValid(Pokemon pokemon, VersionGroupEntry versionGroup)
         {
-            var form = await PokeApi.Get(pokemon.Forms[0]);
+            var form = await PokemonFormsService.Upsert(pokemon.Forms[0]);
             if (form.IsMega)
             {
                 // decide based on version group in which it was introduced
-                var formVersionGroup = await PokeApi.Get(form.VersionGroup);
+                var formVersionGroup = await VersionGroupsService.GetOrCreate(form.VersionGroup.Id);
                 return formVersionGroup.Order <= versionGroup.Order;
             }
 

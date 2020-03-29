@@ -94,12 +94,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<PokemonFormEntry> ConvertToEntry(PokemonForm pokemonForm)
         {
             var types = await GetTypes(pokemonForm);
+            var versionGroup = await VersionGroupsService.Upsert(pokemonForm.VersionGroup);
 
             return new PokemonFormEntry
             {
                 FormId = pokemonForm.Id,
                 Name = pokemonForm.Name,
                 FormName = pokemonForm.FormName,
+                IsMega = pokemonForm.IsMega,
+                VersionGroup = new VersionGroup
+                {
+                    Id = versionGroup.VersionGroupId,
+                    Name = versionGroup.Name
+                },
                 DisplayNames = pokemonForm.GetDisplayNames().ToList(),
                 SpriteUrl = GetSpriteUrl(pokemonForm),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemonForm),
