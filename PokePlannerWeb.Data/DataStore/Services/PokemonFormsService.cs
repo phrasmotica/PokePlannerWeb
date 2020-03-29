@@ -210,6 +210,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             // TODO: some forms don't do this...
             var allTypes = await TypesService.GetAll();
             var matchingType = allTypes.SingleOrDefault(t => t.Name == form.FormName);
+
             if (matchingType != null)
             {
                 newestTypeEntries.Add(new Type
@@ -217,6 +218,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     Id = matchingType.TypeId,
                     Name = matchingType.Name
                 });
+            }
+            else
+            {
+                var formTypes = await GetFormTypesByName(form.Name);
+                if (formTypes.Any())
+                {
+                    newestTypeEntries = formTypes.Select(t => new Type
+                    {
+                        Id = matchingType.TypeId,
+                        Name = matchingType.Name
+                    }).ToList();
+                }
             }
 
             // FUTURE: anticipating a generation-based types changelog
@@ -228,6 +241,159 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return typesList;
+        }
+
+        /// <summary>
+        /// Returns the types of the Pokemon form with the given form name.
+        /// </summary>
+        // TODO: store this somewhere sensible
+        private async Task<IEnumerable<TypeEntry>> GetFormTypesByName(string name)
+        {
+            IEnumerable<int> typeIds = new int[0];
+
+            switch (name)
+            {
+                case "castform-sunny":
+                    typeIds = new[] { 10 };
+                    break;
+
+                case "castform-rainy":
+                    typeIds = new[] { 11 };
+                    break;
+
+                case "castform-snowy":
+                    typeIds = new[] { 15 };
+                    break;
+
+                case "wormadam-sandy":
+                    typeIds = new[] { 7, 5 };
+                    break;
+
+                case "wormadam-trash":
+                    typeIds = new[] { 7, 9 };
+                    break;
+
+                case "rotom-heat":
+                    typeIds = new[] { 13, 10 };
+                    break;
+
+                case "rotom-wash":
+                    typeIds = new[] { 13, 11 };
+                    break;
+
+                case "rotom-frost":
+                    typeIds = new[] { 13, 15 };
+                    break;
+
+                case "rotom-fan":
+                    typeIds = new[] { 13, 3 };
+                    break;
+
+                case "rotom-mow":
+                    typeIds = new[] { 13, 12 };
+                    break;
+
+                case "shaymin-sky":
+                    typeIds = new[] { 12, 3 };
+                    break;
+
+                case "darmanitan-zen":
+                    typeIds = new[] { 10, 14 };
+                    break;
+
+                case "meloetta-pirouette":
+                    typeIds = new[] { 1, 2 };
+                    break;
+
+                case "groudon-primal":
+                    typeIds = new[] { 5, 10 };
+                    break;
+
+                case "hoopa-unbound":
+                    typeIds = new[] { 14, 17 };
+                    break;
+
+                case "rattata-alola":
+                case "raticate-alola":
+                case "raticate-totem-alola":
+                    typeIds = new[] { 17, 1 };
+                    break;
+
+                case "raichu-alola":
+                    typeIds = new[] { 13, 14 };
+                    break;
+
+                case "sandshrew-alola":
+                case "sandslash-alola":
+                    typeIds = new[] { 15, 9 };
+                    break;
+
+                case "vulpix-alola":
+                    typeIds = new[] { 15 };
+                    break;
+
+                case "ninetales-alola":
+                    typeIds = new[] { 15, 18 };
+                    break;
+
+                case "diglett-alola":
+                case "dugtrio-alola":
+                    typeIds = new[] { 5, 9 };
+                    break;
+
+                case "meowth-alola":
+                case "persian-alola":
+                    typeIds = new[] { 17 };
+                    break;
+
+                case "geodude-alola":
+                case "graveler-alola":
+                case "golem-alola":
+                    typeIds = new[] { 6, 13 };
+                    break;
+
+                case "grimer-alola":
+                case "muk-alola":
+                    typeIds = new[] { 4, 17 };
+                    break;
+
+                case "exeggutor-alola":
+                    typeIds = new[] { 12, 16 };
+                    break;
+
+                case "marowak-alola":
+                    typeIds = new[] { 10, 8 };
+                    break;
+
+                case "oricorio-pom-pom":
+                    typeIds = new[] { 13, 3 };
+                    break;
+
+                case "oricorio-pau":
+                    typeIds = new[] { 14, 3 };
+                    break;
+
+                case "oricorio-sensu":
+                    typeIds = new[] { 18, 3 };
+                    break;
+
+                case "necrozma-dusk":
+                    typeIds = new[] { 14, 9 };
+                    break;
+
+                case "necrozma-dawn":
+                    typeIds = new[] { 14, 8 };
+                    break;
+
+                case "necrozma-ultra":
+                    typeIds = new[] { 14, 16 };
+                    break;
+
+                default:
+                    break;
+            }
+
+            return await TypesService.GetOrCreateMany(typeIds);
         }
 
         #endregion
