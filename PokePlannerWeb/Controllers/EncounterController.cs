@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
@@ -32,14 +33,14 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the names of the locations where the Pokemon with the given ID can be found in
-        /// the version group with the given ID.
+        /// Returns the locations where the Pokemon with the given ID can be found in the version
+        /// group with the given ID.
         /// </summary>
-        [HttpGet("{pokemonId:int}/{versionGroupId:int}")]
-        public async Task<string[]> GetCaptureLocationNames(int pokemonId, int versionGroupId)
+        [HttpGet("{pokemonId:int}")]
+        public async Task<EncountersEntry> GetCaptureLocations(int pokemonId)
         {
-            Logger.LogInformation($"Getting capture location names for Pokemon {pokemonId} in version group {versionGroupId}...");
-            return await EncountersService.GetCaptureLocationNames(pokemonId, versionGroupId);
+            Logger.LogInformation($"Getting capture locations for Pokemon {pokemonId}...");
+            return await EncountersService.GetEncounters(pokemonId);
         }
     }
 }

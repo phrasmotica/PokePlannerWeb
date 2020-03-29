@@ -33,5 +33,16 @@ namespace PokePlannerWeb.Data.Extensions
         {
             return names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Name });
         }
+
+        /// <summary>
+        /// Returns resources for all the versions spanned by this list of encounters.
+        /// </summary>
+        public static IEnumerable<NamedApiResource<Version>> GetDistinctVersions(this IEnumerable<LocationAreaEncounter> encounters)
+        {
+            return encounters.SelectMany(e => e.VersionDetails)
+                             .GroupBy(ved => ved.Version)
+                             .Select(g => g.First())
+                             .Select(ved => ved.Version);
+        }
     }
 }

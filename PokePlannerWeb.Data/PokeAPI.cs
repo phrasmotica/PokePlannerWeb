@@ -149,17 +149,16 @@ namespace PokePlannerWeb.Data
         }
 
         /// <summary>
-        /// Returns the location area encounters for the Pokemon with the given ID.
+        /// Returns the encounters for the given Pokemon.
         /// </summary>
-        public async Task<IEnumerable<LocationAreaEncounter>> GetLocationAreaEncounters(int id)
+        public async Task<IEnumerable<LocationAreaEncounter>> GetEncounters(Pokemon pokemon)
         {
-            var call = $"GetLocationAreaEncounters({id})";
+            var call = $"GetLocationAreaEncounters({pokemon.Id})";
             IEnumerable<LocationAreaEncounter> res;
             try
             {
                 Logger.LogInformation($"{call} started...");
 
-                var pokemon = await Get<Pokemon>(id);
                 var url = pokemon.LocationAreaEncounters;
                 res = cache.Get<IEnumerable<LocationAreaEncounter>>(url);
                 if (res == null)

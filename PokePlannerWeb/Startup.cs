@@ -20,11 +20,13 @@ namespace PokePlannerWeb
         /// </summary>
         private static readonly System.Type[] IgnoreDefaultValuesTypes =
         {
-            typeof(PokeApiNet.PokemonForm),
-            typeof(PokeApiNet.Pokemon),
-            typeof(PokeApiNet.Generation),
-            typeof(PokeApiNet.Type),
-            typeof(PokeApiNet.VersionGroup)
+            typeof(Pokedex),
+            typeof(PokemonForm),
+            typeof(Pokemon),
+            typeof(Generation),
+            typeof(Type),
+            typeof(Version),
+            typeof(VersionGroup)
         };
 
         public Startup(IConfiguration configuration)

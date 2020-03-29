@@ -17,7 +17,7 @@ interface ICaptureLocationsState {
     /**
      * The capture locations to show.
      */
-    locations: string[],
+    locations: any,
 
     /**
      * Whether we're loading the capture locations.
@@ -37,7 +37,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     constructor(props: any) {
         super(props)
         this.state = {
-            locations: [],
+            locations: null,
             loadingLocations: false,
             locationTooltipOpen: []
         }
@@ -68,18 +68,44 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     renderCaptureLocations() {
+        let encountersElement = (
+            <div>
+                -
+            </div>
+        )
+
         if (this.hasPokemon()) {
+            encountersElement = (
+                <div>
+                    No capture locations in this version group
+                </div>
+            )
+
             if (this.hasLocations()) {
-                let locations = this.state.locations
+                let encounters = this.state.locations.encounters
+                let matchingEncounters = encounters.filter((e: any) => e.id === this.props.versionGroupId)
+                if (matchingEncounters.length <= 0) {
+                    return encountersElement
+                }
+
+                let encountersData = matchingEncounters[0].data
+
                 let items = []
-                for (let row = 0; row < locations.length; row++) {
+                for (let row = 0; row < encountersData.length; row++) {
                     // ensure each headers have unique IDs between all instances
                     let id = `locations${this.props.index}row${row}`
+                    let encounter = encountersData[row]
 
-                    let location = locations[row]
+                    let displayName = "encounter"
+
+                    let matchingNames = encounter.displayNames.filter((n: any) => n.language === "en")
+                    if (matchingNames.length > 0) {
+                        displayName = matchingNames[0].name
+                    }
+
                     items.push(
                         <div key={id}>
-                            {location}
+                            {displayName}
                         </div>
                     )
                 }
@@ -90,19 +116,9 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     </div>
                 )
             }
-
-            return (
-                <div>
-                    No capture locations in this version group
-                </div>
-            )
         }
 
-        return (
-            <div>
-                -
-            </div>
-        )
+        return encountersElement
     }
 
     // toggle the location tooltip with the given index
@@ -127,30 +143,25 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     // returns true if we have capture locations
     hasLocations() {
-        return this.state.locations.length > 0
+        let locations = this.state.locations
+        return locations !== null && locations.encounters.length > 0
     }
 
     // fetches the Pokemon's capture locations from EncounterController
     fetchCaptureLocations() {
-        let versionGroupId = this.props.versionGroupId
-        if (versionGroupId === undefined) {
-            this.setState({ locations: [] })
-            return
-        }
-
         let pokemonId = this.props.pokemonId
         if (pokemonId === undefined) {
-            this.setState({ locations: [] })
+            this.setState({ locations: null })
             return
         }
 
-        console.log(`Capture locations ${this.props.index}: getting capture locations for Pokemon ${pokemonId} in version group ${versionGroupId}...`)
+        console.log(`Capture locations ${this.props.index}: getting capture locations for Pokemon ${pokemonId}...`)
 
         // loading begins
         this.setState({ loadingLocations: true })
 
         // construct endpoint URL
-        let endpointUrl = this.constructEndpointUrl(pokemonId, versionGroupId)
+        let endpointUrl = this.constructEndpointUrl(pokemonId)
 
         // get encounter data
         fetch(endpointUrl)
@@ -168,7 +179,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     // returns the endpoint to use when fetching encounters of the given Pokemon
-    constructEndpointUrl(pokemonId: number, versionGroupId: number): string {
-        return `${process.env.REACT_APP_API_URL}/encounter/${pokemonId}/${versionGroupId}`
+    constructEndpointUrl(pokemonId: number): string {
+        return `${process.env.REACT_APP_API_URL}/encounter/${pokemonId}`
     }
 }

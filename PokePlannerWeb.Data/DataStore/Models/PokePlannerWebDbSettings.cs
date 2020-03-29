@@ -16,6 +16,11 @@
         public string DatabaseName { get; set; }
 
         /// <summary>
+        /// The name of the collection of encounters.
+        /// </summary>
+        public string EncountersCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of generations.
         /// </summary>
         public string GenerationsCollectionName { get; set; }
@@ -75,6 +80,11 @@
         /// The name of the database.
         /// </summary>
         string DatabaseName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of encounters.
+        /// </summary>
+        string EncountersCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of generations.

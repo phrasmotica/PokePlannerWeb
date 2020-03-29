@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data
         /// <summary>
         /// Returns the location area encounters for the Pokemon with the given ID.
         /// </summary>
-        Task<IEnumerable<LocationAreaEncounter>> GetLocationAreaEncounters(int id);
+        Task<IEnumerable<LocationAreaEncounter>> GetEncounters(Pokemon pokemon);
 
         /// <summary>
         /// Returns a page with all resources of the given type.
