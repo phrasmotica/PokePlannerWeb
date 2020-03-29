@@ -7,7 +7,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a Pokemon form in the data store.
     /// </summary>
-    public class PokemonFormsEntry : EntryBase<int>
+    public class PokemonFormEntry : EntryBase<int>
     {
         /// <summary>
         /// Gets or sets the ID of the Pokemon form.

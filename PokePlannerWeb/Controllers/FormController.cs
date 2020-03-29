@@ -36,7 +36,7 @@ namespace PokePlannerWeb.Controllers
         /// Returns the Pokemon form with the given ID.
         /// </summary>
         [HttpGet("{formId:int}")]
-        public async Task<PokemonFormsEntry> GetFormById(int formId)
+        public async Task<PokemonFormEntry> GetFormById(int formId)
         {
             Logger.LogInformation($"Getting Pokemon form {formId}...");
             return await PokemonFormsService.GetPokemonForm(formId);

@@ -138,7 +138,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns the Pokemon forms of the Pokemon with the given ID in the version group with the
         /// given ID from the data store.
         /// </summary>
-        public async Task<PokemonFormsEntry[]> GetPokemonForms(int pokemonId, int versionGroupId)
+        public async Task<PokemonFormEntry[]> GetPokemonForms(int pokemonId, int versionGroupId)
         {
             var entry = await GetOrCreate(pokemonId);
             var formEntries = await PokemonFormsService.GetOrCreateMany(entry.Forms.Select(f => f.Id));

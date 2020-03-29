@@ -12,7 +12,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the Pokemon forms entries in the database.
     /// </summary>
-    public class PokemonFormsService : ServiceBase<PokemonForm, int, PokemonFormsEntry>
+    public class PokemonFormsService : ServiceBase<PokemonForm, int, PokemonFormEntry>
     {
         /// <summary>
         /// The types service.
@@ -45,7 +45,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var client = new MongoClient(settings.ConnectionString);
             var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<PokemonFormsEntry>(settings.PokemonFormsCollectionName);
+            Collection = database.GetCollection<PokemonFormEntry>(settings.PokemonFormsCollectionName);
         }
 
         #region CRUD methods
@@ -53,7 +53,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the Pokemon forms entry with the given ID from the database.
         /// </summary>
-        protected override PokemonFormsEntry Get(int pokemonId)
+        protected override PokemonFormEntry Get(int pokemonId)
         {
             return Collection.Find(p => p.FormId == pokemonId).FirstOrDefault();
         }
@@ -61,7 +61,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates a new Pokemon forms entry in the database and returns it.
         /// </summary>
-        protected override PokemonFormsEntry Create(PokemonFormsEntry entry)
+        protected override PokemonFormEntry Create(PokemonFormEntry entry)
         {
             Collection.InsertOne(entry);
             return entry;
@@ -91,11 +91,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns a Pokemon forms entry for the given Pokemon.
         /// </summary>
-        protected override async Task<PokemonFormsEntry> ConvertToEntry(PokemonForm pokemonForm)
+        protected override async Task<PokemonFormEntry> ConvertToEntry(PokemonForm pokemonForm)
         {
             var types = await GetTypes(pokemonForm);
 
-            return new PokemonFormsEntry
+            return new PokemonFormEntry
             {
                 FormId = pokemonForm.Id,
                 Name = pokemonForm.Name,
@@ -114,7 +114,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the Pokemon form with the given ID from the data store.
         /// </summary>
-        public async Task<PokemonFormsEntry> GetPokemonForm(int formId)
+        public async Task<PokemonFormEntry> GetPokemonForm(int formId)
         {
             return await GetOrCreate(formId);
         }
