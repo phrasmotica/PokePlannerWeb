@@ -19,6 +19,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The collection of entries.
         /// </summary>
+        // TODO: try out Azure Cosmos DB!
         protected IMongoCollection<TEntry> Collection;
 
         /// <summary>
@@ -265,6 +266,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected async Task<TEntry> Upsert(TSource source, bool replace = false)
         {
+            // TODO: reduce number of calls to Upsert methods
+            // TODO: figure out a way of upserting that doesn't require
+            // entry conversion, because that's expensive.
+            // start by storing resource name in every entry...
             var entry = await ConvertToEntry(source);
             var existingEntry = Get(entry.Key);
             if (existingEntry != null)

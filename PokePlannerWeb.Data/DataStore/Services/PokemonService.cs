@@ -152,6 +152,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<DisplayName>> GetDisplayNames(Pokemon pokemon)
         {
+            // TODO: move names to PokemonFormsEntry
             var form = await PokemonFormsService.Upsert(pokemon.Forms[0]);
             if (string.IsNullOrEmpty(form.FormName))
             {
