@@ -106,7 +106,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var forms = await GetForms(pokemon);
             var types = await GetTypes(pokemon);
             var baseStats = await GetBaseStats(pokemon);
-            var validity = await GetValidity(pokemon);
 
             return new PokemonEntry
             {
@@ -117,8 +116,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 ShinySpriteUrl = GetShinySpriteUrl(pokemon),
                 Forms = forms.ToList(),
                 Types = types,
-                BaseStats = baseStats,
-                Validity = validity.ToList()
+                BaseStats = baseStats
             };
         }
 
@@ -299,43 +297,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             );
 
             return statsList.ToList();
-        }
-
-        /// <summary>
-        /// Returns the given Pokemon's validity in all version groups.
-        /// </summary>
-        private async Task<IEnumerable<int>> GetValidity(Pokemon pokemon)
-        {
-            var validityList = new List<int>();
-
-            foreach (var vg in await VersionGroupsService.GetAll())
-            {
-                var isValid = await IsValid(pokemon, vg);
-                if (isValid)
-                {
-                    // Pokemon is only valid if the version group's ID is in the list
-                    validityList.Add(vg.VersionGroupId);
-                }
-            }
-
-            return validityList;
-        }
-
-        /// <summary>
-        /// Returns true if the given Pokemon can be obtained in the given version group.
-        /// </summary>
-        private async Task<bool> IsValid(Pokemon pokemon, VersionGroupEntry versionGroup)
-        {
-            // TODO: store validity info in PokemonFormEntry
-            var form = await PokemonFormsService.Upsert(pokemon.Forms[0]);
-            if (form.IsMega)
-            {
-                // decide based on version group in which it was introduced
-                var formVersionGroup = await VersionGroupsService.GetOrCreate(form.VersionGroup.Id);
-                return formVersionGroup.Order <= versionGroup.Order;
-            }
-
-            return false;
         }
 
         #endregion

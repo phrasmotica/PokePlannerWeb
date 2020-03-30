@@ -57,5 +57,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets this Pokemon form's types indexed by version group ID.
         /// </summary>
         public List<WithId<Type[]>> Types { get; set; }
+
+        /// <summary>
+        /// Gets or sets the IDs of the version groups where this Pokemon form is valid.
+        /// </summary>
+        public List<int> Validity { get; set; }
     }
 }

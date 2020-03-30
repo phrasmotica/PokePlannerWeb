@@ -95,6 +95,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var types = await GetTypes(pokemonForm);
             var versionGroup = await VersionGroupsService.Upsert(pokemonForm.VersionGroup);
+            var validity = await GetValidity(pokemonForm);
 
             return new PokemonFormEntry
             {
@@ -110,7 +111,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 DisplayNames = pokemonForm.GetDisplayNames().ToList(),
                 SpriteUrl = GetSpriteUrl(pokemonForm),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemonForm),
-                Types = types.ToList()
+                Types = types.ToList(),
+                Validity = validity.ToList()
             };
         }
 
@@ -401,6 +403,41 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return await TypesService.GetOrCreateMany(typeIds);
+        }
+
+        /// <summary>
+        /// Returns the given Pokemon form's validity in all version groups.
+        /// </summary>
+        private async Task<IEnumerable<int>> GetValidity(PokemonForm pokemonForm)
+        {
+            var validityList = new List<int>();
+
+            foreach (var vg in await VersionGroupsService.GetAll())
+            {
+                var isValid = await IsValid(pokemonForm, vg);
+                if (isValid)
+                {
+                    // form is only valid if the version group's ID is in the list
+                    validityList.Add(vg.VersionGroupId);
+                }
+            }
+
+            return validityList;
+        }
+
+        /// <summary>
+        /// Returns true if the given Pokemon form can be obtained in the given version group.
+        /// </summary>
+        private async Task<bool> IsValid(PokemonForm pokemonForm, VersionGroupEntry versionGroup)
+        {
+            if (pokemonForm.IsMega)
+            {
+                // decide based on version group in which it was introduced
+                var formVersionGroup = await VersionGroupsService.Upsert(pokemonForm.VersionGroup);
+                return formVersionGroup.Order <= versionGroup.Order;
+            }
+
+            return false;
         }
 
         #endregion

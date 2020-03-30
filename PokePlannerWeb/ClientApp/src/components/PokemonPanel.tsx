@@ -368,14 +368,22 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     // returns whether the Pokemon is valid
     pokemonIsValid() {
-        return this.state.variety.validity.includes(this.props.versionGroupId)
-            || this.getSpecies().validity.includes(this.props.versionGroupId)
+        let speciesValidity = this.getSpecies().validity
+        let pokemonIsValid = speciesValidity.includes(this.props.versionGroupId)
+
+        let formValidity = this.state.form.validity
+        if (formValidity.length > 0) {
+            // can only obtain form if base species is obtainable
+            pokemonIsValid &= formValidity.includes(this.props.versionGroupId)
+        }
+
+        return pokemonIsValid
     }
 
     // returns true if the Pokemon should be displayed
     shouldShowPokemon() {
         return this.hasSpecies()
-            && this.hasVariety()
+            && this.hasForm()
             && (this.props.ignoreValidity || this.pokemonIsValid())
     }
 
