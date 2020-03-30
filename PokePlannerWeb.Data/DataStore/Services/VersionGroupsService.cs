@@ -176,11 +176,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<DisplayName>> GetDisplayNames(VersionGroup versionGroup)
         {
-            var versions = await PokeApi.Get(versionGroup.Versions);
-            var versionsNames = versions.Select(v => v.Names.OrderBy(n => n.Language.Name).ToList());
+            var versions = await VersionsService.UpsertMany(versionGroup.Versions);
+            var versionsNames = versions.Select(v => v.DisplayNames.OrderBy(n => n.Language).ToList());
             var namesList = versionsNames.Aggregate(
                 (nv1, nv2) => nv1.Zip(
-                    nv2, (n1, n2) => new Names
+                    nv2, (n1, n2) => new DisplayName
                     {
                         Language = n1.Language,
                         Name = n1.Name + "/" + n2.Name
@@ -188,7 +188,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 ).ToList()
             );
 
-            return namesList.ToDisplayNames();
+            return namesList;
         }
 
         #endregion

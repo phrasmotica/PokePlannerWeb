@@ -196,6 +196,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 foreach (var typeFrom in damageRelations.DoubleDamageFrom)
                 {
                     // can't upsert due to infinite recursion...
+                    // TODO: come up with a sensible solution
                     var o = await PokeApi.Get(typeFrom);
                     efficacySet.Add(o.Id, 2);
                 }
@@ -239,13 +240,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private async Task<TypeRelations> GetPastDamageRelations(Type type, Generation generation)
         {
             var pastDamageRelations = type.PastDamageRelations;
-            var pastGenerations = await PokeApi.Get(pastDamageRelations.Select(t => t.Generation));
+            var pastGenerations = await GenerationsService.UpsertMany(pastDamageRelations.Select(t => t.Generation));
 
             if (pastGenerations.Any())
             {
                 // use the earliest generation after the given one with past damage relation data,
                 // if it exists
-                var laterGens = pastGenerations.Where(g => g.Id >= generation.Id).ToList();
+                var laterGens = pastGenerations.Where(g => g.GenerationId >= generation.Id).ToList();
                 if (laterGens.Any())
                 {
                     var genToUse = laterGens.Aggregate((g, h) => g.Id < h.Id ? g : h);
