@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected readonly ILogger<ServiceBase<TSource, TKey, TEntry>> Logger;
 
         /// <summary>
-        /// Create connection to database and initalise logger.
+        /// Create connection to database and initialise logger.
         /// </summary>
         public ServiceBase(IPokePlannerWebDbSettings settings, IPokeAPI pokeApi, ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
         {
