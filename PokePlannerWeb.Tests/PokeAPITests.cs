@@ -259,7 +259,8 @@ namespace PokePlannerWeb.Tests
         {
             // get location area encounters for Abra
             var pokeApi = serviceProvider.GetService<IPokeAPI>();
-            var encounters = await pokeApi.GetEncounters(63);
+            var pokemon = await pokeApi.Get<Pokemon>(63);
+            var encounters = await pokeApi.GetEncounters(pokemon);
             Assert.IsNotNull(encounters);
         }
     }
