@@ -19,16 +19,6 @@ export interface IHasVersionGroup {
 }
 
 /**
- * Interface for a parent loading flag member.
- */
-export interface IHasParentLoading {
-    /**
-     * Whether the parent component is loading.
-     */
-    parentIsLoading: boolean
-}
-
-/**
  * Interface for a hide tooltips flag member.
  */
 export interface IHasHideTooltips {
@@ -41,5 +31,5 @@ export interface IHasHideTooltips {
 /**
  * Interface for members shared by numerous components.
  */
-export interface IHasCommon extends IHasIndex, IHasVersionGroup, IHasParentLoading, IHasHideTooltips {
+export interface IHasCommon extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
 }

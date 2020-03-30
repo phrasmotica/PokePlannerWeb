@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { Spinner, FormGroup, CustomInput } from "reactstrap"
+import { FormGroup, CustomInput } from "reactstrap"
 import { Tabs, Tab } from "react-bootstrap"
 import { EfficacyList } from "./EfficacyList"
 import { PokemonSelector } from "./PokemonSelector"
@@ -41,19 +41,9 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
 
 interface IPokemonPanelState {
     /**
-     * The Pokemon.
-     */
-    pokemon: any
-
-    /**
      * The ID of the Pokemon species.
      */
     speciesId: number | undefined
-
-    /**
-     * The Pokemon form.
-     */
-    form: any
 
     /**
      * The species variety.
@@ -61,44 +51,9 @@ interface IPokemonPanelState {
     variety: any
 
     /**
-     * The Pokemon's name.
+     * The Pokemon form.
      */
-    displayName: string
-
-    /**
-     * Whether we're loading the Pokemon's name.
-     */
-    loadingDisplayName: boolean
-
-    /**
-     * The URL of the Pokemon's sprite.
-     */
-    spriteUrl: string
-
-    /**
-     * Whether we're loading the URL of the Pokemon's sprite.
-     */
-    loadingSpriteUrl: boolean
-
-    /**
-     * The URL of the Pokemon's shiny sprite.
-     */
-    shinySpriteUrl: string
-
-    /**
-     * Whether we're loading the URL of the Pokemon's shiny sprite.
-     */
-    loadingShinySpriteUrl: boolean
-
-    /**
-     * The Pokemon's types.
-     */
-    typeNames: string[]
-
-    /**
-     * Whether we're loading the Pokemon's types.
-     */
-    loadingTypeNames: boolean
+    form: any
 
     /**
      * Whether to show the shiny sprite.
@@ -113,29 +68,19 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     constructor(props: IPokemonPanelProps) {
         super(props)
         this.state = {
-            pokemon: null,
             speciesId: undefined,
-            form: null,
             variety: null,
-            displayName: "",
-            loadingDisplayName: false,
-            spriteUrl: "",
-            loadingSpriteUrl: false,
-            shinySpriteUrl: "",
-            loadingShinySpriteUrl: false,
-            typeNames: [],
-            loadingTypeNames: false,
+            form: null,
             showShinySprite: false
         }
     }
 
     render() {
         // handlers
-        const setPokemon = (pokemon: any) => this.setPokemon(pokemon)
         const clearPokemon = () => this.clearPokemon()
         const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
-        const setForm = (form: any) => this.setForm(form)
         const setVariety = (variety: any) => this.setVariety(variety)
+        const setForm = (form: any) => this.setForm(form)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
@@ -147,11 +92,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         species={this.props.species}
                         ignoreValidity={this.props.ignoreValidity}
                         hideTooltips={this.props.ignoreValidity}
-                        setPokemon={setPokemon}
                         clearPokemon={clearPokemon}
                         setSpecies={setSpecies}
-                        setForm={setForm}
                         setVariety={setVariety}
+                        setForm={setForm}
                         toggleIgnoreValidity={toggleIgnoreValidity} />
 
                     {this.renderPokemonInfo()}
@@ -203,32 +147,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     // returns the Pokemon's name
     renderPokemonName() {
-        let shouldShowPokemon = this.shouldShowPokemon()
-        if (shouldShowPokemon && this.isLoading()) {
-            return (
-                <div className="center-text loading">
-                    {this.makeSpinner()}
-                </div>
-            )
-        }
-
         let displayNameElement = "-"
-        if (shouldShowPokemon) {
-            let dataObject = this.getDataObject()
-            let matchingData = dataObject.displayNames.filter((n: any) => n.language === "en")
-
-            if (matchingData.length > 0) {
-                // Pokemon's name derived from its form
-                let displayName = matchingData[0].name
-                displayNameElement = displayName
-            }
-            else {
-                // Pokemon's name derived from its species
-                let species = this.props.species.filter((s: any) => s.speciesId === this.state.speciesId)[0]
-                matchingData = species.displayNames.filter((n: any) => n.language === "en")
-                let displayName = matchingData[0].name
-                displayNameElement = displayName
-            }
+        if (this.shouldShowPokemon()) {
+            displayNameElement = this.getEffectiveDisplayName()
         }
 
         return (
@@ -238,28 +159,36 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    // returns the Pokemon's types
-    renderPokemonTypes() {
-        let shouldShowPokemon = this.shouldShowPokemon()
-        if (shouldShowPokemon && this.isLoading()) {
-            return (
-                <div className="flex-center type-pair loading">
-                    {this.makeSpinner()}
-                </div>
-            )
+    /**
+     * Returns the Pokemon's effective display name.
+     */
+    getEffectiveDisplayName() {
+        // default to species display name
+        let matchingData = this.getSpecies().displayNames.filter((n: any) => n.language === "en")
+        let displayName = matchingData[0].name
+
+        if (this.hasForm()) {
+            let matchingData = this.state.form.displayNames.filter((n: any) => n.language === "en")
+            if (matchingData.length > 0) {
+                displayName = matchingData[0].name
+            }
+        }
+        else if (this.hasVariety()) {
+            let matchingData = this.state.variety.displayNames.filter((n: any) => n.language === "en")
+            if (matchingData.length > 0) {
+                displayName = matchingData[0].name
+            }
         }
 
-        let typesElement = "-"
-        if (shouldShowPokemon) {
-            // favour the form's types
-            let dataObject = this.getDataObject()
-            let matchingTypes = dataObject.types.filter((t: any) => t.id === this.props.versionGroupId)
-            let types = matchingTypes[0].data
+        return displayName
+    }
 
-            if (types.length <= 0) {
-                matchingTypes = this.state.pokemon.types.filter((t: any) => t.id === this.props.versionGroupId)
-                types = matchingTypes[0].data
-            }
+    // returns the Pokemon's types
+    renderPokemonTypes() {
+        let typesElement = "-"
+        let shouldShowPokemon = this.shouldShowPokemon()
+        if (shouldShowPokemon) {
+            let types = this.getEffectiveTypes()
 
             typesElement = types.map((type: any) => {
                 return (
@@ -283,21 +212,41 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    // returns the Pokemon's sprite
-    renderPokemonSprite() {
-        let shouldShowPokemon = this.shouldShowPokemon()
-        let isLoading = this.isLoading()
-        if (shouldShowPokemon && isLoading) {
-            return (
-                <div className="sprite margin-auto-horiz flex-center loading">
-                    {this.makeSpinner()}
-                </div>
-            )
+    /**
+     * Returns the Pokemon's effective types.
+     */
+    getEffectiveTypes() {
+        if (!this.hasVariety()) {
+            return []
         }
 
+        let types = this.state.variety.types.filter(
+            (type: any) => type.id === this.props.versionGroupId
+        )[0].data
+
+        if (this.hasForm()) {
+            let matchingTypes = this.state.form.types.filter(
+                (type: any) => type.id === this.props.versionGroupId
+            )
+
+            if (matchingTypes.length > 0) {
+                let formTypes = matchingTypes[0].data
+                if (formTypes.length > 0) {
+                    // use form-specific types if present
+                    types = formTypes
+                }
+            }
+        }
+
+        return types
+    }
+
+    // returns the Pokemon's sprite
+    renderPokemonSprite() {
         let spriteUrl = ""
+        let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon) {
-            let dataObject = this.getDataObject()
+            let dataObject = this.getEffectiveDataObject()
             spriteUrl = this.state.showShinySprite
                         ? dataObject.shinySpriteUrl
                         : dataObject.spriteUrl
@@ -311,6 +260,17 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                     src={spriteUrl} />
             </div>
         )
+    }
+
+    /**
+     * Returns the variety or form data object as needed.
+     */
+    getEffectiveDataObject() {
+        if (this.hasForm()) {
+            return this.state.form
+        }
+
+        return this.state.variety
     }
 
     // returns a switch that toggles between default and shiny sprites
@@ -332,18 +292,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     // returns a graph of the Pokemon's base stats
     renderStatsGraph() {
         let baseStats = []
-        let dataObject = null
 
-        // form has no base stat data so we ignore it
         if (this.hasVariety()) {
-            dataObject = this.state.variety
-        }
-        else {
-            dataObject = this.state.pokemon
-        }
-
-        if (dataObject !== null) {
-            baseStats = dataObject.baseStats.filter(
+            baseStats = this.state.variety.baseStats.filter(
                 (bs: any) => bs.id === this.props.versionGroupId
             )[0].data
         }
@@ -367,65 +318,21 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 typeIds={types.map((type: any) => type.id)}
                 typeSet={this.props.typeSet}
                 versionGroupId={this.props.versionGroupId}
-                parentIsLoading={this.isLoading()}
                 showMultipliers={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
         )
     }
 
-    /**
-     * Returns the Pokemon's effective types.
-     */
-    getEffectiveTypes() {
-        if (this.state.pokemon === null) {
-            return []
-        }
-
-        let baseTypes = this.state.pokemon.types.filter(
-            (type: any) => type.id === this.props.versionGroupId
-        )[0].data
-
-        let variant = null
-        if (this.hasVariety()) {
-            variant = this.state.variety
-        }
-        else if (this.hasForm()) {
-            variant = this.state.form
-        }
-        else {
-            // no variant => use base types
-            return baseTypes
-        }
-
-        let types = variant.types.filter(
-            (type: any) => type.id === this.props.versionGroupId
-        )[0].data
-
-        if (types.length > 0) {
-            // variant has different types
-            return types
-        }
-
-        return baseTypes
-    }
-
     // returns the capture locations
     renderCaptureLocations() {
-        // TODO: show capture locations of selected variety
         return (
             <CaptureLocations
                 index={this.props.index}
-                pokemonId={this.state.pokemon?.pokemonId}
+                pokemonId={this.state.variety?.pokemonId}
                 versionGroupId={this.props.versionGroupId}
-                parentIsLoading={this.isLoading()}
                 showLocations={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
         )
-    }
-
-    // returns a loading spinner
-    makeSpinner() {
-        return <Spinner animation="border" size="sm" />
     }
 
     // toggle the shiny sprite
@@ -435,55 +342,40 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }))
     }
 
-    // returns whether this component is loading
-    isLoading() {
-        return this.state.loadingDisplayName
-            || this.state.loadingSpriteUrl
-            || this.state.loadingTypeNames
-    }
-
     /**
-     * Returns the variety, form or base Pokemon for rendering as needed.
+     * Returns the data object for the selected species.
      */
-    getDataObject() {
-        if (this.hasVariety()) {
-            return this.state.variety
-        }
-
-        if (this.hasForm()) {
-            return this.state.form
-        }
-
-        if (this.hasPokemon()) {
-            return this.state.pokemon
-        }
-
-        return null
+    getSpecies() {
+        return this.props.species.filter(
+            (s: any) => s.speciesId === this.state.speciesId
+        )[0]
     }
 
-    // returns true if we have a Pokemon
-    hasPokemon() {
-        return this.state.pokemon !== null
+    // returns whether we have a species
+    hasSpecies() {
+        return this.state.speciesId !== undefined
     }
 
-    // returns true if we have a Pokemon form
-    hasForm() {
-        return this.state.form !== null
-    }
-
-    // returns true if we have a species variety
+    // returns whether we have a species variety
     hasVariety() {
         return this.state.variety !== null
     }
 
-    // returns true if the Pokemon is valid
+    // returns whether we have a Pokemon form
+    hasForm() {
+        return this.state.form !== null
+    }
+
+    // returns whether the Pokemon is valid
     pokemonIsValid() {
-        return this.state.pokemon.validity.includes(this.props.versionGroupId)
+        return this.state.variety.validity.includes(this.props.versionGroupId)
+            || this.getSpecies().validity.includes(this.props.versionGroupId)
     }
 
     // returns true if the Pokemon should be displayed
     shouldShowPokemon() {
-        return this.hasPokemon()
+        return this.hasSpecies()
+            && this.hasVariety()
             && (this.props.ignoreValidity || this.pokemonIsValid())
     }
 
@@ -492,16 +384,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ speciesId: speciesId })
     }
 
-    // set the Pokemon
-    setPokemon(pokemon: any) {
-        this.setState({ pokemon: pokemon })
-    }
-
     // remove all Pokemon data from this panel
     clearPokemon() {
         this.setState({
             speciesId: undefined,
-            pokemon: null,
+            variety: null,
             form: null
         })
     }

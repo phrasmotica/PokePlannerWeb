@@ -155,7 +155,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                                     toggle={() => this.toggleTypeTooltip(index)}
                                     placement="top"
                                     target={headerId}>
-                                    {typeId} is absent from this game version
+                                    absent from this game version
                                 </Tooltip>
                             )
                         }
