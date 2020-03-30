@@ -326,6 +326,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<bool> IsValid(Pokemon pokemon, VersionGroupEntry versionGroup)
         {
+            // TODO: store validity info in PokemonFormEntry
             var form = await PokemonFormsService.Upsert(pokemon.Forms[0]);
             if (form.IsMega)
             {
@@ -334,7 +335,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 return formVersionGroup.Order <= versionGroup.Order;
             }
 
-            // TODO: defer to PokemonSpeciesEntry's validity information
             return false;
         }
 
