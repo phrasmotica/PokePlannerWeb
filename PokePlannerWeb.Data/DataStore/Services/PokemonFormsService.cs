@@ -233,8 +233,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 {
                     newestTypeEntries = formTypes.Select(t => new Type
                     {
-                        Id = matchingType.TypeId,
-                        Name = matchingType.Name
+                        Id = t.TypeId,
+                        Name = t.Name
                     }).ToList();
                 }
             }
