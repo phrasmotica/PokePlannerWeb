@@ -35,11 +35,22 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns all Pokemon species.
+        /// Returns all Pokemon species, optionally up to the given limit from the given offset.
         /// </summary>
-        [HttpGet("all")]
-        public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies()
+        public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies(int? limit = null, int? offset = null)
         {
+            if (limit.HasValue)
+            {
+                if (offset.HasValue)
+                {
+                    Logger.LogInformation($"Getting first {limit.Value} Pokemon species starting at {offset.Value}...");
+                    return await PokemonSpeciesService.GetPokemonSpecies(limit.Value, offset.Value);
+                }
+
+                Logger.LogInformation($"Getting first {limit.Value} Pokemon species...");
+                return await PokemonSpeciesService.GetPokemonSpecies(limit.Value, 0);
+            }
+
             Logger.LogInformation("Getting all Pokemon species...");
             return await PokemonSpeciesService.GetPokemonSpecies();
         }

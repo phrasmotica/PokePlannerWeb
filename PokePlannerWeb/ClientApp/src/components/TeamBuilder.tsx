@@ -228,7 +228,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // load all species
     getSpecies() {
-        fetch(`${process.env.REACT_APP_API_URL}/species/all`)
+        fetch(`${process.env.REACT_APP_API_URL}/species`)
             .then(response => response.json())
             .then(species => this.setState({ species: species }))
             .catch(error => console.log(error))

@@ -120,6 +120,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Returns all Pokemon species up to a limit from an offset.
+        /// </summary>
+        public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies(int limit, int offset)
+        {
+            var resources = await PokeApi.GetPage<PokemonSpecies>(limit, offset);
+            var species = await UpsertMany(resources);
+            return species.OrderBy(s => s.SpeciesId).ToArray();
+        }
+
+        /// <summary>
         /// Returns the varieties of the Pokemon species with the given ID in the version group with
         /// the given ID.
         /// </summary>
