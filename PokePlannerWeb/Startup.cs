@@ -20,10 +20,10 @@ namespace PokePlannerWeb
         /// </summary>
         private static readonly System.Type[] IgnoreDefaultValuesTypes =
         {
+            typeof(Generation),
             typeof(Pokedex),
             typeof(PokemonForm),
             typeof(Pokemon),
-            typeof(Generation),
             typeof(Type),
             typeof(Version),
             typeof(VersionGroup)
@@ -55,6 +55,8 @@ namespace PokePlannerWeb
             services.AddSingleton<EfficacyService>();
             services.AddSingleton<EncountersService>();
             services.AddSingleton<GenerationsService>();
+            services.AddSingleton<LocationsService>();
+            services.AddSingleton<LocationAreasService>();
             services.AddSingleton<MachinesService>();
             services.AddSingleton<PokedexesService>();
             services.AddSingleton<PokemonService>();

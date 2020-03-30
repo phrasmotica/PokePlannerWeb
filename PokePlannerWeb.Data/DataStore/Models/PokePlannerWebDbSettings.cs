@@ -26,6 +26,16 @@
         public string GenerationsCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of locations.
+        /// </summary>
+        public string LocationsCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of location areas.
+        /// </summary>
+        public string LocationAreasCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of pokedexes.
         /// </summary>
         public string PokedexesCollectionName { get; set; }
@@ -90,6 +100,16 @@
         /// The name of the collection of generations.
         /// </summary>
         string GenerationsCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of locations.
+        /// </summary>
+        string LocationsCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of location areas.
+        /// </summary>
+        string LocationAreasCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of pokedexes.

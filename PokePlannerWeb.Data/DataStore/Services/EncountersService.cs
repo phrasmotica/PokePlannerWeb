@@ -15,6 +15,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class EncountersService : ServiceBase<Pokemon, int, EncountersEntry>
     {
         /// <summary>
+        /// The locations service.
+        /// </summary>
+        private readonly LocationsService LocationsService;
+
+        /// <summary>
+        /// The location areas service.
+        /// </summary>
+        private readonly LocationAreasService LocationAreasService;
+
+        /// <summary>
         /// The versions service.
         /// </summary>
         private readonly VersionsService VersionsService;
@@ -30,10 +40,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public EncountersService(
             IPokePlannerWebDbSettings settings,
             IPokeAPI pokeApi,
+            LocationsService locationsService,
+            LocationAreasService locationAreasService,
             VersionsService versionsService,
             VersionGroupsService versionGroupsService,
             ILogger<EncountersService> logger) : base(settings, pokeApi, logger)
         {
+            LocationsService = locationsService;
+            LocationAreasService = locationAreasService;
             VersionsService = versionsService;
             VersionGroupsService = versionGroupsService;
         }
@@ -182,12 +196,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<DisplayName>> GetDisplayNames(LocationAreaEncounter encounter)
         {
-            // TODO: create caching services for LocationAreas and Locations
-            var locationArea = await PokeApi.Get(encounter.LocationArea);
-            var locationAreaNames = locationArea.Names.ToDisplayNames();
+            var locationArea = await LocationAreasService.Upsert(encounter.LocationArea);
+            var locationAreaNames = locationArea.DisplayNames;
 
-            var location = await PokeApi.Get(locationArea.Location);
-            var locationNames = location.Names.ToDisplayNames();
+            var location = await LocationsService.GetOrCreate(locationArea.Location.Id);
+            var locationNames = location.DisplayNames;
 
             // only provide names in locales that have name data for both location and location area
             var availableLocales = locationNames.Select(n => n.Language)
