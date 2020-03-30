@@ -153,6 +153,8 @@ namespace PokePlannerWeb.Data
         /// </summary>
         public async Task<IEnumerable<LocationAreaEncounter>> GetEncounters(Pokemon pokemon)
         {
+            // TODO: cache a Pokemon's list of encounters in MongoDB
+            // (so we can get rid of this in-memory cache!)
             var call = $"GetLocationAreaEncounters({pokemon.Id})";
             IEnumerable<LocationAreaEncounter> res;
             try
