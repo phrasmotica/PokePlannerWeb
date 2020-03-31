@@ -173,12 +173,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 displayName = matchingData[0].name
             }
         }
-        else if (this.hasVariety()) {
-            let matchingData = this.state.variety.displayNames.filter((n: any) => n.language === "en")
-            if (matchingData.length > 0) {
-                displayName = matchingData[0].name
-            }
-        }
 
         return displayName
     }
@@ -401,13 +395,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         })
     }
 
-    // set the Pokemon form
-    setForm(form: any) {
-        this.setState({ form: form })
-    }
-
     // set the species variety
     setVariety(variety: any) {
         this.setState({ variety: variety })
+    }
+
+    // set the Pokemon form
+    setForm(form: any) {
+        this.setState({ form: form })
     }
 }

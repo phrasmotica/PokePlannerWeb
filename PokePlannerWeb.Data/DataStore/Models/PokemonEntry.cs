@@ -18,11 +18,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         }
 
         /// <summary>
-        /// Gets or sets this Pokemon's display names.
-        /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
-
-        /// <summary>
         /// Gets or sets this Pokemon's front default sprite URL.
         /// </summary>
         public string SpriteUrl { get; set; }

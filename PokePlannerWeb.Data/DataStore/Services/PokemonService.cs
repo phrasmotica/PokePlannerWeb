@@ -102,7 +102,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonEntry> ConvertToEntry(Pokemon pokemon)
         {
-            var displayNames = await GetDisplayNames(pokemon);
             var forms = await GetForms(pokemon);
             var types = await GetTypes(pokemon);
             var baseStats = await GetBaseStats(pokemon);
@@ -111,7 +110,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             {
                 PokemonId = pokemon.Id,
                 Name = pokemon.Name,
-                DisplayNames = displayNames.ToList(),
                 SpriteUrl = GetSpriteUrl(pokemon),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemon),
                 Forms = forms.ToList(),
@@ -146,24 +144,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #endregion
 
         #region Helpers
-
-        /// <summary>
-        /// Returns this Pokemon's display names.
-        /// </summary>
-        private async Task<IEnumerable<DisplayName>> GetDisplayNames(Pokemon pokemon)
-        {
-            // TODO: move names to PokemonFormsEntry
-            var form = await PokemonFormsService.Upsert(pokemon.Forms[0]);
-            if (string.IsNullOrEmpty(form.FormName))
-            {
-                // form has empty form_name if it's the standard form
-                // so use names of species
-                return Enumerable.Empty<DisplayName>();
-            }
-
-            // use names of secondary form
-            return form.DisplayNames;
-        }
 
         /// <summary>
         /// Returns the URL of the shiny sprite of this Pokemon.
