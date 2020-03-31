@@ -474,6 +474,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
     setVariety(variety: any) {
         let varietyOption = this.createVarietyOption(variety)
+        // (for TODO below) varietyOption needs to be set so
+        // we can fetch forms for its value (the variety ID).
+        // maybe needs a rethink so we only store the variety ID
+        // in state?
         this.setState({ varietyOption: varietyOption })
         this.props.setVariety(variety)
     }
@@ -481,7 +485,18 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
     setForm(form: any) {
         let formOption = this.createFormOption(form)
-        this.setState({ formOption: formOption })
+
+        // TODO: species with primary varieties whose form's display name
+        // differs from the species display name don't have the form name
+        // appear straight away in the variety option when selecting the species.
+        // Make it so the variety option is set with the correct display name
+        // only once we have the form
+
+        this.setState({
+            varietyOption: formOption,
+            formOption: formOption
+        })
+
         this.props.setForm(form)
     }
 
