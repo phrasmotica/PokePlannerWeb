@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -64,6 +65,17 @@ namespace PokePlannerWeb.Controllers
         {
             Logger.LogInformation($"Getting varieties of Pokemon species {speciesId} in version group {versionGroupId}...");
             return await PokemonSpeciesService.GetPokemonSpeciesVarieties(speciesId, versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the forms of each variety of the Pokemon species with the given ID in the
+        /// version group with the given ID.
+        /// </summary>
+        [HttpGet("{speciesId:int}/forms/{versionGroupId:int}")]
+        public async Task<IEnumerable<WithId<PokemonFormEntry[]>>> GetPokemonSpeciesForms(int speciesId, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting forms of varieties of Pokemon species {speciesId} in version group {versionGroupId}...");
+            return await PokemonSpeciesService.GetPokemonSpeciesForms(speciesId, versionGroupId);
         }
     }
 }

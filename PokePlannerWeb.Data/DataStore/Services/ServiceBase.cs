@@ -200,6 +200,38 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return entryList;
         }
 
+        /// <summary>
+        /// Creates or updates the entry with the given ID in the database for the source object as needed.
+        /// </summary>
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
+        {
+            var entries = new List<TEntry>();
+
+            foreach (var source in sources)
+            {
+                var entry = await ConvertToEntry(source);
+                var existingEntry = Get(entry.Key);
+                if (existingEntry != null)
+                {
+                    if (replace)
+                    {
+                        Update(entry.Key, entry);
+                        entries.Add(entry);
+                    }
+                    else
+                    {
+                        entries.Add(existingEntry);
+                    }
+                }
+                else
+                {
+                    entries.Add(Create(entry));
+                }
+            }
+
+            return entries;
+        }
+
         #endregion
 
         #region Helpers
@@ -282,38 +314,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return Create(entry);
-        }
-
-        /// <summary>
-        /// Creates or updates the entry with the given ID in the database for the source object as needed.
-        /// </summary>
-        protected virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
-        {
-            var entries = new List<TEntry>();
-
-            foreach (var source in sources)
-            {
-                var entry = await ConvertToEntry(source);
-                var existingEntry = Get(entry.Key);
-                if (existingEntry != null)
-                {
-                    if (replace)
-                    {
-                        Update(entry.Key, entry);
-                        entries.Add(entry);
-                    }
-                    else
-                    {
-                        entries.Add(existingEntry);
-                    }
-                }
-                else
-                {
-                    entries.Add(Create(entry));
-                }
-            }
-
-            return entries;
         }
 
         /// <summary>

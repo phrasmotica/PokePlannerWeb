@@ -87,6 +87,38 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return await base.UpsertMany(resources);
         }
 
+        /// <summary>
+        /// Creates or updates the entry with the given ID in the database for the source object as needed.
+        /// </summary>
+        public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
+        {
+            var entries = new List<TEntry>();
+
+            foreach (var source in sources)
+            {
+                var existingEntry = GetByName(source.Name);
+                if (existingEntry != null)
+                {
+                    if (replace)
+                    {
+                        var entry = await ConvertToEntry(source);
+                        UpdateByName(source.Name, entry);
+                        entries.Add(entry);
+                    }
+                    else
+                    {
+                        entries.Add(existingEntry);
+                    }
+                }
+                else
+                {
+                    entries.Add(await CreateEntry(source));
+                }
+            }
+
+            return entries;
+        }
+
         #endregion
 
         #region Helpers
@@ -118,38 +150,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return await CreateEntry(source);
-        }
-
-        /// <summary>
-        /// Creates or updates the entry with the given ID in the database for the source object as needed.
-        /// </summary>
-        protected override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
-        {
-            var entries = new List<TEntry>();
-
-            foreach (var source in sources)
-            {
-                var existingEntry = GetByName(source.Name);
-                if (existingEntry != null)
-                {
-                    if (replace)
-                    {
-                        var entry = await ConvertToEntry(source);
-                        UpdateByName(source.Name, entry);
-                        entries.Add(entry);
-                    }
-                    else
-                    {
-                        entries.Add(existingEntry);
-                    }
-                }
-                else
-                {
-                    entries.Add(await CreateEntry(source));
-                }
-            }
-
-            return entries;
         }
 
         #endregion

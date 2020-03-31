@@ -141,6 +141,26 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return varietyEntries.ToArray();
         }
 
+        /// <summary>
+        /// Returns the forms of each variety of the Pokemon species with the given ID in the
+        /// version group with the given ID.
+        /// </summary>
+        public async Task<IEnumerable<WithId<PokemonFormEntry[]>>> GetPokemonSpeciesForms(int speciesId, int versionGroupId)
+        {
+            var formsListList = new List<WithId<PokemonFormEntry[]>>();
+
+            var speciesEntry = await Upsert(speciesId);
+            var varietyEntries = await PokemonService.UpsertMany(speciesEntry.Varieties);
+
+            foreach (var varietyEntry in varietyEntries)
+            {
+                var formsEntry = await PokemonService.GetPokemonForms(varietyEntry.PokemonId, versionGroupId);
+                formsListList.Add(new WithId<PokemonFormEntry[]>(varietyEntry.PokemonId, formsEntry));
+            }
+
+            return formsListList;
+        }
+
         #endregion
 
         #region Helpers
