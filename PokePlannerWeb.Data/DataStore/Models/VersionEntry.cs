@@ -5,7 +5,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a version in the data store.
     /// </summary>
-    public class VersionEntry : EntryBase<int>
+    public class VersionEntry : NamedApiResourceEntry
     {
         /// <summary>
         /// Gets or sets the ID of the version.
@@ -15,11 +15,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
             get => Key;
             set => Key = value;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the version.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the display names of the version.

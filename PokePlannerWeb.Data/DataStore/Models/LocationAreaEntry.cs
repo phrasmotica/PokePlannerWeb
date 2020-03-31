@@ -6,7 +6,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a location area in the data store.
     /// </summary>
-    public class LocationAreaEntry : EntryBase<int>
+    public class LocationAreaEntry : NamedApiResourceEntry
     {
         /// <summary>
         /// Gets or sets the ID of the location area.
@@ -16,11 +16,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
             get => Key;
             set => Key = value;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the location area.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the display names of the location area.

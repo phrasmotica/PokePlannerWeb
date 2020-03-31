@@ -6,7 +6,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a stat in the data store.
     /// </summary>
-    public class StatEntry : EntryBase<int>
+    public class StatEntry : NamedApiResourceEntry
     {
         /// <summary>
         /// Gets or sets the ID of the stat.
@@ -16,11 +16,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
             get => Key;
             set => Key = value;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the stat.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets this stat's display names.

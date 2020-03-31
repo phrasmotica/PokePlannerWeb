@@ -7,7 +7,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a Type in the data store.
     /// </summary>
-    public class TypeEntry : EntryBase<int>
+    public class TypeEntry : NamedApiResourceEntry
     {
         /// <summary>
         /// Gets or sets the ID of the Type.
@@ -17,11 +17,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
             get => Key;
             set => Key = value;
         }
-
-        /// <summary>
-        /// Gets or sets the name of the Type.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets this Type's display names.
@@ -42,14 +37,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets this Type's efficacy indexed by version group ID and then type ID.
         /// </summary>
         public EfficacyMap EfficacyMap { get; set; }
-
-        /// <summary>
-        /// Returns the name of this Type entry in the given locale.
-        /// </summary>
-        public string GetDisplayName(string locale = "en")
-        {
-            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Name;
-        }
 
         /// <summary>
         /// Returns the efficacy set of this Type entry in the version group with the given ID.

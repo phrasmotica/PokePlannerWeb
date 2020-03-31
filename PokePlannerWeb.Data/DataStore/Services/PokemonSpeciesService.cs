@@ -100,6 +100,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return new PokemonSpeciesEntry
             {
                 SpeciesId = species.Id,
+                Name = species.Name,
                 DisplayNames = GetDisplayNames(species).ToList(),
                 Varieties = varieties.ToList(),
                 Validity = validity.ToList()
