@@ -492,10 +492,15 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         // Make it so the variety option is set with the correct display name
         // only once we have the form
 
-        this.setState({
-            varietyOption: formOption,
+        // update variety option with display name from its primary form
+        this.setState((previousState: IPokemonSelectorState) => ({
+            varietyOption: {
+                label: formOption.label,
+                // a variety's ID and its primary form's ID aren't always the same
+                value: previousState.varietyOption.value
+            },
             formOption: formOption
-        })
+        }))
 
         this.props.setForm(form)
     }
