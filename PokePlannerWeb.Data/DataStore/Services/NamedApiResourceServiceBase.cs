@@ -96,7 +96,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected IEnumerable<TEntry> GetManyByNames(IEnumerable<string> names)
         {
-            return AllEntries.Where(e => names.Contains(e.Name));
+            return names.Select(n => GetByName(n));
         }
 
         /// <summary>
