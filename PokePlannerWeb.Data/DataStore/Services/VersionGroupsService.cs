@@ -11,7 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the version group entries in the database.
     /// </summary>
-    public class VersionGroupsService : ServiceBase<VersionGroup, int, VersionGroupEntry>
+    public class VersionGroupsService : NamedApiResourceServiceBase<VersionGroup, VersionGroupEntry>
     {
         /// <summary>
         /// The generations service.

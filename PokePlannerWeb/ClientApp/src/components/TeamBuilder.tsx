@@ -82,7 +82,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             loadingTypeSet: true,
             baseStatNames: [],
             loadingBaseStatNames: true,
-            ignoreValidity: false,
+            ignoreValidity: true,
             hideTooltips: false
         }
     }
@@ -228,7 +228,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // load all species
     getSpecies() {
-        fetch(`${process.env.REACT_APP_API_URL}/species`)
+        fetch(`${process.env.REACT_APP_API_URL}/species?limit=9&offset=0`)
             .then(response => response.json())
             .then(species => this.setState({ species: species }))
             .catch(error => console.log(error))

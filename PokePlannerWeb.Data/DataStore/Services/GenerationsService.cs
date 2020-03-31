@@ -11,7 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the generation entries in the database.
     /// </summary>
-    public class GenerationsService : ServiceBase<Generation, int, GenerationEntry>
+    public class GenerationsService : NamedApiResourceServiceBase<Generation, GenerationEntry>
     {
         /// <summary>
         /// Constructor.

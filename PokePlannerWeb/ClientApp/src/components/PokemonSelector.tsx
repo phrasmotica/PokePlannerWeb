@@ -269,6 +269,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
     // returns options for the species select
     createSpeciesOptions() {
+        // TODO: allow filtering species by types and other properties
         return this.props.species.map(species => ({
             label: species.displayNames.filter((n: any) => n.language === "en")[0].name,
             value: species.speciesId

@@ -90,7 +90,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates a new entry in the database for the given named API resource and returns it.
         /// </summary>
-        public async Task<TEntry> Upsert(NamedApiResource<TSource> res)
+        public virtual async Task<TEntry> Upsert(NamedApiResource<TSource> res)
         {
             var source = await PokeApi.Get(res);
             return await Upsert(source);
@@ -99,7 +99,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates new entries in the database for the given named API resources and returns them.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
         {
             var sources = await PokeApi.Get(resources);
             return await UpsertMany(sources);
@@ -264,12 +264,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates or updates the entry with the given ID in the database for the source object as needed.
         /// </summary>
-        protected async Task<TEntry> Upsert(TSource source, bool replace = false)
+        protected virtual async Task<TEntry> Upsert(TSource source, bool replace = false)
         {
-            // TODO: reduce number of calls to Upsert methods
-            // TODO: figure out a way of upserting that doesn't require
-            // entry conversion, because that's expensive.
-            // start by storing resource name in every entry...
+            // TODO: reduce number of calls to Upsert methods.
+            // this method of upserting by key requires (expensive) entry conversions
             var entry = await ConvertToEntry(source);
             var existingEntry = Get(entry.Key);
             if (existingEntry != null)
@@ -289,7 +287,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates or updates the entry with the given ID in the database for the source object as needed.
         /// </summary>
-        protected async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
+        protected virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
         {
             var entries = new List<TEntry>();
 

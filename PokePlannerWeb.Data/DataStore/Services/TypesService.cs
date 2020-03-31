@@ -12,7 +12,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the Type entries in the database.
     /// </summary>
-    public class TypesService : ServiceBase<Type, int, TypeEntry>
+    public class TypesService : NamedApiResourceServiceBase<Type, TypeEntry>
     {
         /// <summary>
         /// The generations service.

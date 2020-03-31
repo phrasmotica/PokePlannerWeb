@@ -14,7 +14,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the Pokemon entries in the database.
     /// </summary>
-    public class PokemonService : ServiceBase<Pokemon, int, PokemonEntry>
+    public class PokemonService : NamedApiResourceServiceBase<Pokemon, PokemonEntry>
     {
         /// <summary>
         /// The Pokemon forms service.
@@ -245,8 +245,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     var types = pokemon.PastTypes.FirstOrDefault(t => t.Generation.Name == vg.Generation.Name);
                     if (types != null)
                     {
-                        // TODO: cache type names to IDs somewhere in an efficient way...
-                        // ...maybe create a generic named resource names to IDs cache
                         var typeEntries = await MinimiseTypes(types.Types);
                         for (var id = newestIdWithoutData; id <= vg.VersionGroupId; id++)
                         {

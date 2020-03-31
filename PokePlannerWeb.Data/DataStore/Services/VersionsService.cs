@@ -11,7 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the version entries in the database.
     /// </summary>
-    public class VersionsService : ServiceBase<Version, int, VersionEntry>
+    public class VersionsService : NamedApiResourceServiceBase<Version, VersionEntry>
     {
         /// <summary>
         /// Constructor.

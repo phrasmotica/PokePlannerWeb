@@ -11,7 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the pokedex entries in the database.
     /// </summary>
-    public class PokedexesService : ServiceBase<Pokedex, int, PokedexEntry>
+    public class PokedexesService : NamedApiResourceServiceBase<Pokedex, PokedexEntry>
     {
         /// <summary>
         /// Constructor.

@@ -13,7 +13,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the Pokemon species entries in the database.
     /// </summary>
-    public class PokemonSpeciesService : ServiceBase<PokemonSpecies, int, PokemonSpeciesEntry>
+    public class PokemonSpeciesService : NamedApiResourceServiceBase<PokemonSpecies, PokemonSpeciesEntry>
     {
         /// <summary>
         /// The Pokemon service.
