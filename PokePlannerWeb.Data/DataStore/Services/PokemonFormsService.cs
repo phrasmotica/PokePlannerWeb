@@ -125,7 +125,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<PokemonFormEntry> GetPokemonForm(int formId)
         {
-            return await GetOrCreate(formId);
+            return await Upsert(formId);
         }
 
         /// <summary>
@@ -402,7 +402,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     break;
             }
 
-            return await TypesService.GetOrCreateMany(typeIds);
+            return await TypesService.UpsertMany(typeIds);
         }
 
         /// <summary>

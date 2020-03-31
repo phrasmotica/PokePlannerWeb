@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
-using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {

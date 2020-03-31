@@ -52,7 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<EfficacySet> GetTypeEfficacyByTypeId(int typeId, int versionGroupId)
         {
-            var entry = await TypesService.GetOrCreate(typeId);
+            var entry = await TypesService.Upsert(typeId);
             return await TypesService.GetTypesEfficacySet(new[] { entry.TypeId }, versionGroupId);
         }
 
@@ -79,7 +79,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<EfficacySet> GetTypeEfficacyByPokemonId(int pokemonId, int versionGroupId)
         {
-            var pokemon = await PokemonService.GetOrCreate(pokemonId);
+            var pokemon = await PokemonService.Upsert(pokemonId);
             return await TypesService.GetTypesEfficacySet(pokemon.Types.Select(t => t.Id), versionGroupId);
         }
 

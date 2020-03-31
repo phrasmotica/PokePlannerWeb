@@ -49,7 +49,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<List<Move>> GetHMMoves(int versionGroupId)
         {
-            var versionGroup = await VersionGroupsService.GetOrCreate(versionGroupId);
+            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
 
             var hmMoves = new List<Move>();
             for (int i = 0; i < NUMBER_OF_HMS; i++)

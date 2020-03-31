@@ -129,7 +129,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<PokemonEntry> GetPokemon(int pokemonId)
         {
-            return await GetOrCreate(pokemonId);
+            return await Upsert(pokemonId);
         }
 
         /// <summary>
@@ -138,8 +138,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<PokemonFormEntry[]> GetPokemonForms(int pokemonId, int versionGroupId)
         {
-            var entry = await GetOrCreate(pokemonId);
-            var formEntries = await PokemonFormsService.GetOrCreateMany(entry.Forms.Select(f => f.Id));
+            var entry = await Upsert(pokemonId);
+            var formEntries = await PokemonFormsService.UpsertMany(entry.Forms.Select(f => f.Id));
             return formEntries.ToArray();
         }
 

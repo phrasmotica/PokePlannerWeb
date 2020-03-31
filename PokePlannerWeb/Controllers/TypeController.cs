@@ -51,7 +51,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<TypeEntry> GetTypeById(int typeId)
         {
             Logger.LogInformation($"Getting type {typeId}...");
-            return await TypesService.GetOrCreate(typeId);
+            return await TypesService.Upsert(typeId);
         }
     }
 }

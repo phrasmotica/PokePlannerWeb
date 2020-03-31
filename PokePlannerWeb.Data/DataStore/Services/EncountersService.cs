@@ -125,7 +125,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<EncountersEntry> GetEncounters(int pokemonId)
         {
-            return await GetOrCreate(pokemonId);
+            return await Upsert(pokemonId);
         }
 
         #endregion
@@ -199,7 +199,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var locationArea = await LocationAreasService.Upsert(encounter.LocationArea);
             var locationAreaNames = locationArea.DisplayNames;
 
-            var location = await LocationsService.GetOrCreate(locationArea.Location.Id);
+            var location = await LocationsService.Upsert(locationArea.Location.Id);
             var locationNames = location.DisplayNames;
 
             // only provide names in locales that have name data for both location and location area

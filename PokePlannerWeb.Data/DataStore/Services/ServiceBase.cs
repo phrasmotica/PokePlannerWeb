@@ -108,7 +108,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
         /// </summary>
-        public async Task<TEntry> GetOrCreate(TKey key)
+        public async Task<TEntry> Upsert(TKey key)
         {
             var entry = Get(key);
             if (entry == null)
@@ -136,13 +136,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> GetOrCreateMany(IEnumerable<TKey> keys)
+        public async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TKey> keys)
         {
             var entries = new List<TEntry>();
 
             foreach (var key in keys)
             {
-                var entry = await GetOrCreate(key);
+                var entry = await Upsert(key);
                 entries.Add(entry);
             }
 

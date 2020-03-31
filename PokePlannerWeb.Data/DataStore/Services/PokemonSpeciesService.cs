@@ -136,8 +136,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<Models.PokemonEntry[]> GetPokemonSpeciesVarieties(int speciesId, int versionGroupId)
         {
-            var entry = await GetOrCreate(speciesId);
-            var varietyEntries = await PokemonService.GetOrCreateMany(entry.Varieties.Select(v => v.Id));
+            var entry = await Upsert(speciesId);
+            var varietyEntries = await PokemonService.UpsertMany(entry.Varieties.Select(v => v.Id));
             return varietyEntries.ToArray();
         }
 

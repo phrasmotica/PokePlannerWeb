@@ -139,7 +139,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<TypeSet> GetTypeSet(int versionGroupId)
         {
-            var versionGroup = await VersionGroupsService.GetOrCreate(versionGroupId);
+            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
             var types = await GetConcrete();
             var typesArePresent = types.Select(t =>
             {
@@ -161,7 +161,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<EfficacySet> GetTypesEfficacySet(IEnumerable<int> typeIds, int versionGroupId)
         {
-            var entries = await GetOrCreateMany(typeIds);
+            var entries = await UpsertMany(typeIds);
             var efficacySets = entries.Select(e => e.GetEfficacySet(versionGroupId));
             return efficacySets.Aggregate((e1, e2) => e1.Product(e2));
         }
@@ -229,7 +229,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 return type.DamageRelations;
             }
 
-            var versionGroup = await VersionGroupsService.GetOrCreate(versionGroupId);
+            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
             var pastDamageRelations = await GetPastDamageRelations(type, versionGroup.Generation);
             return pastDamageRelations ?? type.DamageRelations;
         }
