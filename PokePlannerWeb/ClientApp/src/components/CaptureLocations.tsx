@@ -1,11 +1,14 @@
 ﻿import React, { Component } from "react"
+
+import { EncountersEntry } from "../models/EncountersEntry"
+
 import { IHasCommon } from "./CommonMembers"
 
 interface ICaptureLocationsProps extends IHasCommon {
     /**
      * The ID of the Pokemon to show capture locations for.
      */
-    pokemonId: number | undefined,
+    pokemonId: number | undefined
 
     /**
      * Whether to show the capture locations.
@@ -17,12 +20,12 @@ interface ICaptureLocationsState {
     /**
      * The capture locations to show.
      */
-    locations: any,
+    locations: EncountersEntry | undefined
 
     /**
      * Whether we're loading the capture locations.
      */
-    loadingLocations: boolean,
+    loadingLocations: boolean
 
     /**
      * Whether the location tooltips are open.
@@ -37,7 +40,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     constructor(props: ICaptureLocationsProps) {
         super(props)
         this.state = {
-            locations: null,
+            locations: undefined,
             loadingLocations: false,
             locationTooltipOpen: []
         }
@@ -76,9 +79,10 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 </div>
             )
 
-            if (this.hasLocations()) {
-                let encounters = this.state.locations.encounters
-                let matchingEncounters = encounters.filter((e: any) => e.id === this.props.versionGroupId)
+            let locations = this.state.locations
+            if (locations !== undefined) {
+                let encounters = locations.encounters
+                let matchingEncounters = encounters.filter(e => e.id === this.props.versionGroupId)
                 if (matchingEncounters.length <= 0) {
                     return encountersElement
                 }
@@ -93,7 +97,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
                     let displayName = "encounter"
 
-                    let matchingNames = encounter.displayNames.filter((n: any) => n.language === "en")
+                    let matchingNames = encounter.displayNames.filter(n => n.language === "en")
                     if (matchingNames.length > 0) {
                         displayName = matchingNames[0].name
                     }
@@ -136,17 +140,11 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         return this.props.pokemonId !== undefined
     }
 
-    // returns true if we have capture locations
-    hasLocations() {
-        let locations = this.state.locations
-        return locations !== null && locations.encounters.length > 0
-    }
-
     // fetches the Pokemon's capture locations from EncounterController
     fetchCaptureLocations() {
         let pokemonId = this.props.pokemonId
         if (pokemonId === undefined) {
-            this.setState({ locations: null })
+            this.setState({ locations: undefined })
             return
         }
 

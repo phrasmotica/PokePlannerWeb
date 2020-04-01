@@ -23,7 +23,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     }
 
     /// <summary>
-    /// Represents an encounter.
+    /// Represents an encounter in the data store.
     /// </summary>
     public class EncounterEntry
     {
