@@ -8,8 +8,10 @@ using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization.Conventions;
 using PokeApiNet;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
+using PokemonEntry = PokePlannerWeb.Data.DataStore.Models.PokemonEntry;
 
 namespace PokePlannerWeb
 {
@@ -22,8 +24,8 @@ namespace PokePlannerWeb
         {
             typeof(Generation),
             typeof(Pokedex),
-            typeof(PokemonForm),
             typeof(Pokemon),
+            typeof(PokemonForm),
             typeof(Type),
             typeof(Version),
             typeof(VersionGroup)
@@ -52,19 +54,72 @@ namespace PokePlannerWeb
             services.AddSingleton<PokeApiClient>();
             services.AddSingleton<IPokeAPI, PokeAPI>();
 
+            // create DB services
+            var dbSettings = Configuration.GetSection(nameof(PokePlannerWebDbSettings)).Get<PokePlannerWebDbSettings>();
+            var cacheSourceFactory = new CacheSourceFactory(dbSettings.ConnectionString, dbSettings.DatabaseName);
+
             services.AddSingleton<EfficacyService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<EncountersEntry>(dbSettings.EncountersCollectionName)
+            );
             services.AddSingleton<EncountersService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<GenerationEntry>(dbSettings.GenerationsCollectionName)
+            );
             services.AddSingleton<GenerationsService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<LocationEntry>(dbSettings.LocationsCollectionName)
+            );
             services.AddSingleton<LocationsService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<LocationAreaEntry>(dbSettings.LocationAreasCollectionName)
+            );
             services.AddSingleton<LocationAreasService>();
+
             services.AddSingleton<MachinesService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<PokedexEntry>(dbSettings.PokedexesCollectionName)
+            );
             services.AddSingleton<PokedexesService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<PokemonEntry>(dbSettings.PokemonCollectionName)
+            );
             services.AddSingleton<PokemonService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<PokemonFormEntry>(dbSettings.PokemonFormsCollectionName)
+            );
             services.AddSingleton<PokemonFormsService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<PokemonSpeciesEntry>(dbSettings.PokemonSpeciesCollectionName)
+            );
             services.AddSingleton<PokemonSpeciesService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<StatEntry>(dbSettings.StatsCollectionName)
+            );
             services.AddSingleton<StatsService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<TypeEntry>(dbSettings.TypesCollectionName)
+            );
             services.AddSingleton<TypesService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<VersionEntry>(dbSettings.VersionsCollectionName)
+            );
             services.AddSingleton<VersionsService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<VersionGroupEntry>(dbSettings.VersionGroupsCollectionName)
+            );
             services.AddSingleton<VersionGroupsService>();
 
             services.AddCors();

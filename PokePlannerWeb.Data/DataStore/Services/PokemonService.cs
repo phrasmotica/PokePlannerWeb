@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 using Pokemon = PokeApiNet.Pokemon;
@@ -35,26 +36,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokemonService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<PokemonEntry> cacheSource,
             IPokeAPI pokeApi,
             PokemonFormsService pokemonFormsService,
             TypesService typesService,
             VersionGroupsService versionGroupsService,
-            ILogger<PokemonService> logger) : base(settings, pokeApi, logger)
+            ILogger<PokemonService> logger) : base(cacheSource, pokeApi, logger)
         {
             PokemonFormsService = pokemonFormsService;
             TypesService = typesService;
             VersionGroupsService = versionGroupsService;
-        }
-
-        /// <summary>
-        /// Creates a connection to the Pokemon collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<PokemonEntry>(settings.PokemonCollectionName);
         }
 
         #region CRUD methods
@@ -64,16 +55,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override PokemonEntry Get(int pokemonId)
         {
-            return Collection.Find(p => p.PokemonId == pokemonId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new Pokemon in the database and returns it.
-        /// </summary>
-        protected override PokemonEntry Create(PokemonEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(p => p.PokemonId == pokemonId);
         }
 
         /// <summary>
@@ -81,21 +63,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int pokemonId)
         {
-            Collection.DeleteOne(p => p.PokemonId == pokemonId);
+            CacheSource.DeleteOne(p => p.PokemonId == pokemonId);
         }
 
         #endregion
 
         #region Entry conversion methods
-
-        /// <summary>
-        /// Returns the Pokemon with the given ID.
-        /// </summary>
-        protected override async Task<Pokemon> FetchSource(int pokemonId)
-        {
-            Logger.LogInformation($"Fetching Pokemon source object with ID {pokemonId}...");
-            return await PokeApi.Get<Pokemon>(pokemonId);
-        }
 
         /// <summary>
         /// Returns a Pokemon entry for the given Pokemon.

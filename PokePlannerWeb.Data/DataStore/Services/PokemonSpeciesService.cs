@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 using PokemonSpeciesEntry = PokePlannerWeb.Data.DataStore.Models.PokemonSpeciesEntry;
@@ -29,24 +30,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokemonSpeciesService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<PokemonSpeciesEntry> cacheSource,
             IPokeAPI pokeApi,
             PokemonService pokemonService,
             VersionGroupsService versionGroupsService,
-            ILogger<PokemonSpeciesService> logger) : base(settings, pokeApi, logger)
+            ILogger<PokemonSpeciesService> logger) : base(cacheSource, pokeApi, logger)
         {
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;
-        }
-
-        /// <summary>
-        /// Creates a connection to the Pokemon collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<PokemonSpeciesEntry>(settings.PokemonSpeciesCollectionName);
         }
 
         #region CRUD methods
@@ -56,16 +47,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override PokemonSpeciesEntry Get(int speciesId)
         {
-            return Collection.Find(p => p.SpeciesId == speciesId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new Pokemon in the database and returns it.
-        /// </summary>
-        protected override PokemonSpeciesEntry Create(PokemonSpeciesEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(s => s.SpeciesId == speciesId);
         }
 
         /// <summary>
@@ -73,21 +55,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int speciesId)
         {
-            Collection.DeleteOne(p => p.SpeciesId == speciesId);
+            CacheSource.DeleteOne(s => s.SpeciesId == speciesId);
         }
 
         #endregion
 
         #region Entry conversion methods
-
-        /// <summary>
-        /// Returns the Pokemon species with the given ID.
-        /// </summary>
-        protected override async Task<PokemonSpecies> FetchSource(int speciesId)
-        {
-            Logger.LogInformation($"Fetching Pokemon species source object with ID {speciesId}...");
-            return await PokeApi.Get<PokemonSpecies>(speciesId);
-        }
 
         /// <summary>
         /// Returns a Pokemon species entry for the given Pokemon.

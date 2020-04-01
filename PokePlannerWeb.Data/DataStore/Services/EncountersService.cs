@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 
@@ -38,28 +39,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public EncountersService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<EncountersEntry> cacheSource,
             IPokeAPI pokeApi,
             LocationsService locationsService,
             LocationAreasService locationAreasService,
             VersionsService versionsService,
             VersionGroupsService versionGroupsService,
-            ILogger<EncountersService> logger) : base(settings, pokeApi, logger)
+            ILogger<EncountersService> logger) : base(cacheSource, pokeApi, logger)
         {
             LocationsService = locationsService;
             LocationAreasService = locationAreasService;
             VersionsService = versionsService;
             VersionGroupsService = versionGroupsService;
-        }
-
-        /// <summary>
-        /// Creates a connection to the location area encounters collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<EncountersEntry>(settings.EncountersCollectionName);
         }
 
         #region CRUD methods
@@ -69,16 +60,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override EncountersEntry Get(int pokemonId)
         {
-            return Collection.Find(p => p.PokemonId == pokemonId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new location area encounters entry in the database and returns it.
-        /// </summary>
-        protected override EncountersEntry Create(EncountersEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(e => e.PokemonId == pokemonId);
         }
 
         /// <summary>
@@ -86,7 +68,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int pokemonId)
         {
-            Collection.DeleteOne(p => p.PokemonId == pokemonId);
+            CacheSource.DeleteOne(e => e.PokemonId == pokemonId);
         }
 
         #endregion

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -32,26 +33,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public VersionGroupsService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<VersionGroupEntry> cacheSource,
             IPokeAPI pokeApi,
             GenerationsService generationsService,
             PokedexesService pokedexesService,
             VersionsService versionsService,
-            ILogger<VersionGroupsService> logger) : base(settings, pokeApi, logger)
+            ILogger<VersionGroupsService> logger) : base(cacheSource, pokeApi, logger)
         {
             GenerationsService = generationsService;
             PokedexesService = pokedexesService;
             VersionsService = versionsService;
-        }
-
-        /// <summary>
-        /// Creates a connection to the version groups collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<VersionGroupEntry>(settings.VersionGroupsCollectionName);
         }
 
         #region CRUD methods
@@ -61,16 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override VersionGroupEntry Get(int versionGroupId)
         {
-            return Collection.Find(p => p.VersionGroupId == versionGroupId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new version group entry in the database and returns it.
-        /// </summary>
-        protected override VersionGroupEntry Create(VersionGroupEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(vg => vg.VersionGroupId == versionGroupId);
         }
 
         /// <summary>
@@ -78,21 +60,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int versionGroupId)
         {
-            Collection.DeleteOne(p => p.VersionGroupId == versionGroupId);
+            CacheSource.DeleteOne(vg => vg.VersionGroupId == versionGroupId);
         }
 
         #endregion
 
         #region Entry conversion methods
-
-        /// <summary>
-        /// Returns the version group with the given ID.
-        /// </summary>
-        protected override async Task<VersionGroup> FetchSource(int versionGroupId)
-        {
-            Logger.LogInformation($"Fetching version group source object with ID {versionGroupId}...");
-            return await PokeApi.Get<VersionGroup>(versionGroupId);
-        }
 
         /// <summary>
         /// Returns a version group entry for the given Pokemon.

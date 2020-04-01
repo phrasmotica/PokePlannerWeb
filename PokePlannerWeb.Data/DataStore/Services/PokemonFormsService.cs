@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 
@@ -28,24 +29,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokemonFormsService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<PokemonFormEntry> cacheSource,
             IPokeAPI pokeApi,
             TypesService typesService,
             VersionGroupsService versionGroupsService,
-            ILogger<PokemonFormsService> logger) : base(settings, pokeApi, logger)
+            ILogger<PokemonFormsService> logger) : base(cacheSource, pokeApi, logger)
         {
             VersionGroupsService = versionGroupsService;
             TypesService = typesService;
-        }
-
-        /// <summary>
-        /// Creates a connection to the Pokemon forms collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<PokemonFormEntry>(settings.PokemonFormsCollectionName);
         }
 
         #region CRUD methods
@@ -55,16 +46,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override PokemonFormEntry Get(int pokemonId)
         {
-            return Collection.Find(p => p.FormId == pokemonId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new Pokemon forms entry in the database and returns it.
-        /// </summary>
-        protected override PokemonFormEntry Create(PokemonFormEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(f => f.FormId == pokemonId);
         }
 
         /// <summary>
@@ -72,21 +54,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int pokemonId)
         {
-            Collection.DeleteOne(p => p.FormId == pokemonId);
+            CacheSource.DeleteOne(f => f.FormId == pokemonId);
         }
 
         #endregion
 
         #region Entry conversion methods
-
-        /// <summary>
-        /// Returns the Pokemon with the given ID.
-        /// </summary>
-        protected override async Task<PokemonForm> FetchSource(int pokemonId)
-        {
-            Logger.LogInformation($"Fetching Pokemon form source object with ID {pokemonId}...");
-            return await PokeApi.Get<PokemonForm>(pokemonId);
-        }
 
         /// <summary>
         /// Returns a Pokemon forms entry for the given Pokemon.

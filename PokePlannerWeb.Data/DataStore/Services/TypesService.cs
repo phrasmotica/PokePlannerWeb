@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the Type entries in the database.
+    /// Service for managing the type entries in the database.
     /// </summary>
     public class TypesService : NamedApiResourceServiceBase<Type, TypeEntry>
     {
@@ -28,51 +29,32 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public TypesService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<TypeEntry> cacheSource,
             IPokeAPI pokeApi,
             GenerationsService generationsService,
             VersionGroupsService versionGroupsService,
-            ILogger<TypesService> logger) : base(settings, pokeApi, logger)
+            ILogger<TypesService> logger) : base(cacheSource, pokeApi, logger)
         {
             GenerationsService = generationsService;
             VersionGroupsService = versionGroupsService;
         }
 
-        /// <summary>
-        /// Creates a connection to the Type collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<TypeEntry>(settings.TypesCollectionName);
-        }
-
         #region CRUD methods
 
         /// <summary>
-        /// Returns the Type with the given ID from the database.
+        /// Returns the type with the given ID from the database.
         /// </summary>
         protected override TypeEntry Get(int typeId)
         {
-            return Collection.Find(p => p.TypeId == typeId).FirstOrDefault();
+            return CacheSource.GetOne(t => t.TypeId == typeId);
         }
 
         /// <summary>
-        /// Creates a new Type in the database and returns it.
-        /// </summary>
-        protected override TypeEntry Create(TypeEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
-        }
-
-        /// <summary>
-        /// Removes the Type with the given ID from the database.
+        /// Removes the type with the given ID from the database.
         /// </summary>
         protected override void Remove(int typeId)
         {
-            Collection.DeleteOne(p => p.TypeId == typeId);
+            CacheSource.DeleteOne(t => t.TypeId == typeId);
         }
 
         #endregion
@@ -80,16 +62,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns the Type with the given ID.
-        /// </summary>
-        protected override async Task<Type> FetchSource(int typeId)
-        {
-            Logger.LogInformation($"Fetching type source object with ID {typeId}...");
-            return await PokeApi.Get<Type>(typeId);
-        }
-
-        /// <summary>
-        /// Returns a Type entry for the given Type.
+        /// Returns a type entry for the given type.
         /// </summary>
         protected override async Task<TypeEntry> ConvertToEntry(Type type)
         {
@@ -158,7 +131,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the efficacy of the Type with the given ID in the version group with the given
+        /// Returns the efficacy of the type with the given ID in the version group with the given
         /// ID from the data store.
         /// </summary>
         public async Task<EfficacySet> GetTypesEfficacySet(IEnumerable<int> typeIds, int versionGroupId)

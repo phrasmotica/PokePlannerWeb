@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -20,9 +21,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Create connection to database and initialise logger.
         /// </summary>
         public NamedApiResourceServiceBase(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<TEntry> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(settings, pokeApi, logger)
+            ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(cacheSource, pokeApi, logger)
         {
         }
 
@@ -33,7 +34,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected TEntry GetByName(string name)
         {
-            return Collection.Find(e => e.Name == name).FirstOrDefault();
+            return CacheSource.GetOne(e => e.Name == name);
         }
 
         /// <summary>
@@ -50,7 +51,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected void RemoveByName(string name)
         {
-            Collection.DeleteOne(p => p.Name == name);
+            CacheSource.DeleteOne(p => p.Name == name);
         }
 
         #endregion
@@ -122,6 +123,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Returns the source object with the given ID.
+        /// </summary>
+        protected override async Task<TSource> FetchSource(int key)
+        {
+            var typeName = typeof(TSource).Name;
+            Logger.LogInformation($"Fetching {typeName} source object with ID {key}...");
+            return await PokeApi.Get<TSource>(key);
+        }
 
         /// <summary>
         /// Returns the entries with the given names from the database.

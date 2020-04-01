@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 
@@ -17,20 +18,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public StatsService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<StatEntry> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<StatsService> logger) : base(settings, pokeApi, logger)
+            ILogger<StatsService> logger) : base(cacheSource, pokeApi, logger)
         {
-        }
-
-        /// <summary>
-        /// Creates a connection to the stat collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<StatEntry>(settings.StatsCollectionName);
         }
 
         #region CRUD methods
@@ -40,16 +31,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override StatEntry Get(int statId)
         {
-            return Collection.Find(p => p.StatId == statId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new stat in the database and returns it.
-        /// </summary>
-        protected override StatEntry Create(StatEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(s => s.StatId == statId);
         }
 
         /// <summary>
@@ -57,21 +39,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int statId)
         {
-            Collection.DeleteOne(p => p.StatId == statId);
+            CacheSource.DeleteOne(s => s.StatId == statId);
         }
 
         #endregion
 
         #region Entry conversion methods
-
-        /// <summary>
-        /// Returns the Type with the given ID.
-        /// </summary>
-        protected override async Task<Stat> FetchSource(int typeId)
-        {
-            Logger.LogInformation($"Fetching stat source object with ID {typeId}...");
-            return await PokeApi.Get<Stat>(typeId);
-        }
 
         /// <summary>
         /// Returns a Type entry for the given Type.

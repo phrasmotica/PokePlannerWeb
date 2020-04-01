@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Services
@@ -17,10 +18,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         where TEntry : EntryBase<TKey>
     {
         /// <summary>
-        /// The collection of entries.
+        /// The cache source.
         /// </summary>
         // TODO: try out Azure Cosmos DB!
-        protected IMongoCollection<TEntry> Collection;
+        protected ICacheSource<TEntry> CacheSource;
 
         /// <summary>
         /// The PokeAPI data fetcher.
@@ -35,17 +36,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Create connection to database and initialise logger.
         /// </summary>
-        public ServiceBase(IPokePlannerWebDbSettings settings, IPokeAPI pokeApi, ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
+        public ServiceBase(
+            ICacheSource<TEntry> cacheSource,
+            IPokeAPI pokeApi,
+            ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
         {
-            SetCollection(settings);
+            CacheSource = cacheSource;
             PokeApi = pokeApi;
             Logger = logger;
         }
-
-        /// <summary>
-        /// Creates a connection to the collection in the database.
-        /// </summary>
-        protected abstract void SetCollection(IPokePlannerWebDbSettings settings);
 
         /// <summary>
         /// Gets the time to live for documents in the collection.
@@ -62,12 +61,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns all entries from the database.
         /// </summary>
-        protected IEnumerable<TEntry> AllEntries => Collection.Find(_ => true).ToEnumerable();
+        protected IEnumerable<TEntry> AllEntries => CacheSource.GetAll();
 
         /// <summary>
         /// Creates a new entry in the database and returns it.
         /// </summary>
-        protected abstract TEntry Create(TEntry entry);
+        protected TEntry Create(TEntry entry)
+        {
+            CacheSource.Create(entry);
+            return entry;
+        }
 
         /// <summary>
         /// Removes the entry with the given ID and creates a new one in the database.

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
 
@@ -17,20 +18,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokedexesService(
-            IPokePlannerWebDbSettings settings,
+            ICacheSource<PokedexEntry> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<PokedexesService> logger) : base(settings, pokeApi, logger)
+            ILogger<PokedexesService> logger) : base(cacheSource, pokeApi, logger)
         {
-        }
-
-        /// <summary>
-        /// Creates a connection to the pokedex collection in the database.
-        /// </summary>
-        protected override void SetCollection(IPokePlannerWebDbSettings settings)
-        {
-            var client = new MongoClient(settings.ConnectionString);
-            var database = client.GetDatabase(settings.DatabaseName);
-            Collection = database.GetCollection<PokedexEntry>(settings.PokedexesCollectionName);
         }
 
         #region CRUD methods
@@ -40,16 +31,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override PokedexEntry Get(int pokedexId)
         {
-            return Collection.Find(p => p.PokedexId == pokedexId).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Creates a new pokedex in the database and returns it.
-        /// </summary>
-        protected override PokedexEntry Create(PokedexEntry entry)
-        {
-            Collection.InsertOne(entry);
-            return entry;
+            return CacheSource.GetOne(p => p.PokedexId == pokedexId);
         }
 
         /// <summary>
@@ -57,21 +39,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override void Remove(int pokedexId)
         {
-            Collection.DeleteOne(v => v.PokedexId == pokedexId);
+            CacheSource.DeleteOne(p => p.PokedexId == pokedexId);
         }
 
         #endregion
 
         #region Entry conversion methods
-
-        /// <summary>
-        /// Returns the version with the given ID.
-        /// </summary>
-        protected override async Task<Pokedex> FetchSource(int pokedexId)
-        {
-            Logger.LogInformation($"Fetching pokedex source object with ID {pokedexId}...");
-            return await PokeApi.Get<Pokedex>(pokedexId);
-        }
 
         /// <summary>
         /// Returns a version entry for the given version.
