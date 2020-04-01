@@ -5,12 +5,12 @@ using PokeApiNet;
 namespace PokePlannerWeb.Data.DataStore.Models
 {
     /// <summary>
-    /// Represents a Type in the data store.
+    /// Represents a type in the data store.
     /// </summary>
     public class TypeEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the Type.
+        /// Gets or sets the ID of the type.
         /// </summary>
         public int TypeId
         {
@@ -19,27 +19,27 @@ namespace PokePlannerWeb.Data.DataStore.Models
         }
 
         /// <summary>
-        /// Gets or sets this Type's display names.
+        /// Gets or sets the type's display names.
         /// </summary>
         public List<DisplayName> DisplayNames { get; set; }
 
         /// <summary>
-        /// Gets or sets whether this Type is concrete.
+        /// Gets or sets whether the type is concrete.
         /// </summary>
         public bool IsConcrete { get; set; }
 
         /// <summary>
-        /// Gets or sets the generation in which this Type was introduced.
+        /// Gets or sets the generation in which the type was introduced.
         /// </summary>
         public Generation Generation { get; set; }
 
         /// <summary>
-        /// Gets or sets this Type's efficacy indexed by version group ID and then type ID.
+        /// Gets or sets the type's efficacy indexed by version group ID and then type ID.
         /// </summary>
         public EfficacyMap EfficacyMap { get; set; }
 
         /// <summary>
-        /// Returns the efficacy set of this Type entry in the version group with the given ID.
+        /// Returns the efficacy set of the type entry in the version group with the given ID.
         /// </summary>
         public EfficacySet GetEfficacySet(int versionGroupId)
         {
@@ -53,7 +53,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class EfficacyMap
     {
         /// <summary>
-        /// Gets or sets this Type's efficacy indexed by version group ID and then type ID.
+        /// Gets or sets this type's efficacy indexed by version group ID and then type ID.
         /// </summary>
         public List<WithId<EfficacySet>> EfficacySets { get; set; }
 

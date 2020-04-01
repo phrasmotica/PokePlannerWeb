@@ -1,5 +1,7 @@
 ﻿import React, { Component } from "react"
 import { Tooltip } from "reactstrap"
+
+import { EfficacySet } from "../models/EfficacyMap"
 import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
 import "../styles/types.scss"
@@ -32,7 +34,7 @@ interface IEfficacyListState {
     /**
      * The efficacy set to show.
      */
-    efficacy: any
+    efficacy: EfficacySet | undefined
 
     /**
      * Whether we're loading the efficacy.
@@ -52,7 +54,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     constructor(props: IEfficacyListProps) {
         super(props)
         this.state = {
-            efficacy: null,
+            efficacy: undefined,
             loadingEfficacy: false,
             typeTooltipOpen: []
         }
@@ -109,7 +111,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                                     alt={`type${typeId}`}
                                     src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
-                if (!this.props.showMultipliers || efficacy === null) {
+                if (!this.props.showMultipliers || efficacy === undefined) {
                     items.push(
                         <div
                             key={index}
@@ -123,7 +125,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 else {
                     let typeIsPresent = presenceMap[index].data
                     if (typeIsPresent) {
-                        let matchingData = efficacy.efficacyMultipliers.filter((m: any) => m.id === typeId)
+                        let matchingData = efficacy.efficacyMultipliers.filter(m => m.id === typeId)
 
                         let multiplier = 1
                         if (matchingData.length > 0) {
