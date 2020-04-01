@@ -1,10 +1,28 @@
-﻿namespace PokePlannerWeb.Data.DataStore.Abstractions
+﻿using System.Linq;
+using MongoDB.Bson.Serialization.Conventions;
+using PokeApiNet;
+
+namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
     /// <summary>
     /// Factory for cache sources.
     /// </summary>
     public class CacheSourceFactory
     {
+        /// <summary>
+        /// Types whose fields should not be serialised if they have default values assigned.
+        /// </summary>
+        private static readonly System.Type[] IgnoreDefaultValuesTypes =
+        {
+            typeof(Generation),
+            typeof(Pokedex),
+            typeof(Pokemon),
+            typeof(PokemonForm),
+            typeof(Type),
+            typeof(Version),
+            typeof(VersionGroup)
+        };
+
         /// <summary>
         /// The connection string to the database instance.
         /// </summary>
@@ -19,7 +37,17 @@
         /// Constructor.
         /// </summary>
         public CacheSourceFactory(string connectionString, string databaseName)
-            => (ConnectionString, DatabaseName) = (connectionString, databaseName);
+        {
+            ConnectionString = connectionString;
+            DatabaseName = databaseName;
+
+            // ignore null values of certain types when writing to Mongo DB
+            ConventionRegistry.Register(
+                "IgnoreIfDefault",
+                new ConventionPack { new IgnoreIfDefaultConvention(true) },
+                t => IgnoreDefaultValuesTypes.Contains(t)
+            );
+        }
 
         /// <summary>
         /// Creates a cache source for the given entry type.

@@ -1,11 +1,9 @@
-using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using MongoDB.Bson.Serialization.Conventions;
 using PokeApiNet;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.DataStore.Abstractions;
@@ -17,20 +15,6 @@ namespace PokePlannerWeb
 {
     public class Startup
     {
-        /// <summary>
-        /// Types whose fields should not be serialised if they have default values assigned.
-        /// </summary>
-        private static readonly System.Type[] IgnoreDefaultValuesTypes =
-        {
-            typeof(Generation),
-            typeof(Pokedex),
-            typeof(Pokemon),
-            typeof(PokemonForm),
-            typeof(Type),
-            typeof(Version),
-            typeof(VersionGroup)
-        };
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -131,13 +115,6 @@ namespace PokePlannerWeb
             {
                 configuration.RootPath = "ClientApp/build";
             });
-
-            // ignore null values when writing to datastore
-            ConventionRegistry.Register(
-                "IgnoreIfDefault",
-                new ConventionPack { new IgnoreIfDefaultConvention(true) },
-                t => IgnoreDefaultValuesTypes.Contains(t)
-            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
