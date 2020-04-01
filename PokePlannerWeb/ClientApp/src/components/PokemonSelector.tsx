@@ -192,7 +192,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
-        let placeholder = hasVarieties ? "Select a variety!" : "No varieties"
+        let placeholder = hasVarieties ? "Select a variety!" : "-"
         let customStyles = this.createCustomSelectStyles(hasVarieties)
         const onChange = (option: any) => {
             let varietyId = option.value
@@ -244,7 +244,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
-        let placeholder = hasForms ? "Select a form!" : "No forms"
+        let placeholder = hasForms ? "Select a form!" : "-"
         let customStyles = this.createCustomSelectStyles(hasForms)
         const onChange = (option: any) => {
             let formId = option.value
