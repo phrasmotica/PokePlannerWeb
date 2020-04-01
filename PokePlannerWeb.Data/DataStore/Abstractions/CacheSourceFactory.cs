@@ -41,11 +41,24 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
             ConnectionString = connectionString;
             DatabaseName = databaseName;
 
-            // ignore null values of certain types when writing to Mongo DB
+            // ignore null values of certain types
             ConventionRegistry.Register(
                 "IgnoreIfDefault",
-                new ConventionPack { new IgnoreIfDefaultConvention(true) },
+                new ConventionPack
+                {
+                    new IgnoreIfDefaultConvention(true)
+                },
                 t => IgnoreDefaultValuesTypes.Contains(t)
+            );
+
+            // ignore extra values for all types
+            ConventionRegistry.Register(
+                "IgnoreExtra",
+                new ConventionPack
+                {
+                    new IgnoreExtraElementsConvention(true)
+                },
+                t => true
             );
         }
 
