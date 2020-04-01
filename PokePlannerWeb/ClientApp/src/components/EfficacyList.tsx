@@ -114,7 +114,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                                     alt={`type${typeId}`}
                                     src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
-                if (efficacy === null) {
+                if (!this.props.showMultipliers || efficacy === null) {
                     items.push(
                         <div
                             key={index}
@@ -192,7 +192,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     // returns the style class to use for the given multiplier
     getElementFromMultiplier(multiplier: number) {
-        if (!this.hasTypes() || !this.props.showMultipliers) {
+        if (!this.hasTypes()) {
             return <span>-</span>
         }
 

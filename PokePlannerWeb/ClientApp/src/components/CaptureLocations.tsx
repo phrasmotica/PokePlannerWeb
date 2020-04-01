@@ -69,7 +69,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             </div>
         )
 
-        if (this.hasPokemon()) {
+        if (this.props.showLocations && this.hasPokemon()) {
             encountersElement = (
                 <div>
                     No capture locations in this version group
