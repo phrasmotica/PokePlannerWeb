@@ -24,7 +24,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public string FormName { get; set; }
 
         /// <summary>
-        /// Gets or sets whether the form is a mega evolution.
+        /// Gets or sets whether the Pokemon form is a mega evolution.
         /// </summary>
         public bool IsMega { get; set; }
 

@@ -14,6 +14,7 @@ import "../styles/types.scss"
 import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
+import { PokemonFormEntry } from "../models/PokemonFormEntry"
 
 interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
@@ -56,7 +57,7 @@ interface IPokemonPanelState {
     /**
      * The Pokemon form.
      */
-    form: any
+    form: PokemonFormEntry | undefined
 
     /**
      * Whether to show the shiny sprite.
@@ -73,7 +74,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.state = {
             speciesId: undefined,
             variety: undefined,
-            form: null,
+            form: undefined,
             showShinySprite: false
         }
     }
@@ -170,8 +171,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let matchingData = this.getSpecies().displayNames.filter((n: any) => n.language === "en")
         let displayName = matchingData[0].name
 
-        if (this.hasForm()) {
-            let matchingData = this.state.form.displayNames.filter((n: any) => n.language === "en")
+        let form = this.state.form
+        if (form !== undefined) {
+            let matchingData = form.displayNames.filter((n: any) => n.language === "en")
             if (matchingData.length > 0) {
                 displayName = matchingData[0].name
             }
@@ -222,8 +224,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             (type: any) => type.id === this.props.versionGroupId
         )[0].data
 
-        if (this.hasForm()) {
-            let matchingTypes = this.state.form.types.filter(
+        let form = this.state.form
+        if (form !== undefined) {
+            let matchingTypes = form.types.filter(
                 (type: any) => type.id === this.props.versionGroupId
             )
 
@@ -245,9 +248,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon) {
             let dataObject = this.getEffectiveDataObject()
-            spriteUrl = this.state.showShinySprite
-                        ? dataObject.shinySpriteUrl
-                        : dataObject.spriteUrl
+            if (dataObject !== undefined) {
+                spriteUrl = this.state.showShinySprite
+                            ? dataObject.shinySpriteUrl
+                            : dataObject.spriteUrl
+            }
         }
 
         return (
@@ -264,8 +269,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns the variety or form data object as needed.
      */
     getEffectiveDataObject() {
-        if (this.hasForm()) {
-            return this.state.form
+        let form = this.state.form
+        if (form !== undefined) {
+            return form
         }
 
         return this.state.variety
@@ -355,11 +361,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return this.state.speciesId !== undefined
     }
 
-    // returns whether we have a Pokemon form
-    hasForm() {
-        return this.state.form !== null
-    }
-
     // returns whether the Pokemon is valid
     pokemonIsValid() {
         let versionGroupId = this.props.versionGroupId
@@ -370,10 +371,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let speciesValidity = this.getSpecies().validity
         let pokemonIsValid = speciesValidity.includes(versionGroupId)
 
-        let formValidity = this.state.form.validity
-        if (formValidity.length > 0) {
-            // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
+        let form = this.state.form
+        if (form !== undefined) {
+            let formValidity = form.validity
+            if (formValidity.length > 0) {
+                // can only obtain form if base species is obtainable
+                pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
+            }
         }
 
         return pokemonIsValid
@@ -382,7 +386,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     // returns true if the Pokemon should be displayed
     shouldShowPokemon() {
         return this.hasSpecies()
-            && this.hasForm()
+            && this.state.form !== undefined
             && (this.props.ignoreValidity || this.pokemonIsValid())
     }
 
@@ -396,7 +400,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({
             speciesId: undefined,
             variety: undefined,
-            form: null
+            form: undefined
         })
     }
 
