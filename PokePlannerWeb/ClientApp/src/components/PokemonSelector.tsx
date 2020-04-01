@@ -136,8 +136,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     renderSpeciesSelect() {
         let speciesOptions = this.createSpeciesOptions()
         let hasNoVariants = !this.hasSecondaryForms() && !this.hasSecondaryVarieties()
+
+        let selectedSpeciesOption = null
         let speciesId = this.state.speciesId
-        let selectedSpeciesOption = speciesOptions.filter((o: any) => o.value === speciesId)[0]
+        if (speciesId !== undefined) {
+            selectedSpeciesOption = speciesOptions.filter((o: any) => o.value === speciesId)[0]
+        }
 
         // attach validity tooltip and red border if necessary
         let idPrefix = "speciesSelect"
