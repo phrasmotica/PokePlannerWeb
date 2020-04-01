@@ -1,12 +1,12 @@
 ﻿namespace PokePlannerWeb.Data.DataStore.Models
 {
     /// <summary>
-    /// Model class for some data associated with a numeric ID.
+    /// Represents some data associated with a numeric ID.
     /// </summary>
     public class WithId<T>
     {
         /// <summary>
-        /// Gets or set the numeric ID.
+        /// Gets or set the ID.
         /// </summary>
         public int Id { get; set; }
 

@@ -6,6 +6,7 @@ import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
 import { CaptureLocations } from "./CaptureLocations"
 
+import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
@@ -50,7 +51,7 @@ interface IPokemonPanelState {
     /**
      * The species variety.
      */
-    variety: any
+    variety: PokemonEntry | undefined
 
     /**
      * The Pokemon form.
@@ -71,7 +72,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         super(props)
         this.state = {
             speciesId: undefined,
-            variety: null,
+            variety: undefined,
             form: null,
             showShinySprite: false
         }
@@ -181,7 +182,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     // returns the Pokemon's types
     renderPokemonTypes() {
-        let typesElement = "-"
+        let typesElement: any = "-"
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon) {
             let types = this.getEffectiveTypes()
@@ -212,11 +213,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns the Pokemon's effective types.
      */
     getEffectiveTypes() {
-        if (!this.hasVariety()) {
+        let variety = this.state.variety
+        if (variety === undefined) {
             return []
         }
 
-        let types = this.state.variety.types.filter(
+        let types = variety.types.filter(
             (type: any) => type.id === this.props.versionGroupId
         )[0].data
 
@@ -287,11 +289,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     // returns a graph of the Pokemon's base stats
     renderStatsGraph() {
-        let baseStats = []
+        let baseStats: number[] = []
 
-        if (this.hasVariety()) {
-            baseStats = this.state.variety.baseStats.filter(
-                (bs: any) => bs.id === this.props.versionGroupId
+        let variety = this.state.variety
+        if (variety !== undefined) {
+            baseStats = variety.baseStats.filter(
+                bs => bs.id === this.props.versionGroupId
             )[0].data
         }
 
@@ -352,11 +355,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return this.state.speciesId !== undefined
     }
 
-    // returns whether we have a species variety
-    hasVariety() {
-        return this.state.variety !== null
-    }
-
     // returns whether we have a Pokemon form
     hasForm() {
         return this.state.form !== null
@@ -397,7 +395,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     clearPokemon() {
         this.setState({
             speciesId: undefined,
-            variety: null,
+            variety: undefined,
             form: null
         })
     }
