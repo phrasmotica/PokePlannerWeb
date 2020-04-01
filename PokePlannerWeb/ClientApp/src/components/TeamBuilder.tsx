@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 import { PokemonPanel } from './PokemonPanel'
-import { TypeSet } from '../models/TypeSet'
+import { TypesPresenceMap } from '../models/TypesPresenceMap'
 import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
 
 /**
@@ -37,14 +37,14 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     loadingVersionGroups: boolean
 
     /**
-     * The type set.
+     * The types presence map.
      */
-    typeSet: TypeSet
+    typesPresenceMap: TypesPresenceMap
 
     /**
-     * Whether the type set is loading.
+     * Whether the types presence map is loading.
      */
-    loadingTypeSet: boolean
+    loadingTypesPresenceMap: boolean
 
     /**
      * The base stat names.
@@ -74,12 +74,11 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             versionGroups: [],
             loadingVersionGroups: true,
             versionGroupId: undefined,
-            typeSet: {
+            typesPresenceMap: {
                 versionGroupId: undefined,
-                typeIds: [],
-                typesArePresent: []
+                presenceMap: []
             },
-            loadingTypeSet: true,
+            loadingTypesPresenceMap: true,
             baseStatNames: [],
             loadingBaseStatNames: true,
             ignoreValidity: true,
@@ -92,7 +91,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.getVersionGroups()
             .then(() => {
                 this.getBaseStatNames(this.state.versionGroupId)
-                this.getTypeSet(this.state.versionGroupId)
+                this.fetchTypesPresenceMap(this.state.versionGroupId)
             })
     }
 
@@ -205,7 +204,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                         toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                         hideTooltips={this.state.hideTooltips}
                         species={this.state.species}
-                        typeSet={this.state.typeSet}
+                        typesPresenceMap={this.state.typesPresenceMap}
                         baseStatNames={this.state.baseStatNames} />
                 )
             }
@@ -247,34 +246,33 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             .finally(() => this.setState({ loadingVersionGroups: false }))
     }
 
-    // retrieves the type set for the given version group from TypeController
-    getTypeSet(versionGroupId: number | undefined) {
+    // retrieves the types presence map for the given version group from TypeController
+    fetchTypesPresenceMap(versionGroupId: number | undefined) {
         if (versionGroupId === undefined) {
             return
         }
 
-        console.log(`Team builder: getting type set for version group ${versionGroupId}...`)
+        console.log(`Team builder: getting types presence map for version group ${versionGroupId}...`)
 
         // loading begins
-        this.setState({ loadingTypeSet: true })
+        this.setState({ loadingTypesPresenceMap: true })
 
-        // get type set
-        fetch(`${process.env.REACT_APP_API_URL}/type/typeSet/${versionGroupId}`)
+        // get types presence map
+        fetch(`${process.env.REACT_APP_API_URL}/type/presence/${versionGroupId}`)
             .then(response => {
                 if (response.status === 200) {
                     return response
                 }
 
-                // concrete types endpoint couldn't be found
-                throw new Error(`Team builder: couldn't get type set for version group ${versionGroupId}!`)
+                throw new Error(`Team builder: couldn't get types presence map for version group ${versionGroupId}!`)
             })
             .then(response => response.json())
-            .then(typeSet => this.setState({ typeSet: typeSet }))
+            .then(typesPresenceMap => this.setState({ typesPresenceMap: typesPresenceMap }))
             .catch(error => console.log(error))
-            .then(() => this.setState({ loadingTypeSet: false }))
+            .then(() => this.setState({ loadingTypesPresenceMap: false }))
     }
 
-    // retrieves the type set for the given version group from TypeController
+    // retrieves the types presence map for the given version group from TypeController
     getBaseStatNames(versionGroupId: number | undefined) {
         if (versionGroupId === undefined) {
             return
@@ -305,8 +303,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     setVersionGroup(versionGroupId: number) {
         this.setState({ versionGroupId: versionGroupId })
 
-        // reload type set and base stat names
-        this.getTypeSet(versionGroupId)
+        // reload types presence map and base stat names
+        this.fetchTypesPresenceMap(versionGroupId)
         this.getBaseStatNames(versionGroupId)
     }
 

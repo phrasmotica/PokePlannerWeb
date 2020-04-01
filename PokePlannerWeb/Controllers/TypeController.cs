@@ -35,13 +35,13 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the type set for the version group with the given ID.
+        /// Returns the types presence map for the version group with the given ID.
         /// </summary>
-        [HttpGet("typeSet/{versionGroupId:int}")]
-        public async Task<TypeSet> GetTypeSet(int versionGroupId)
+        [HttpGet("presence/{versionGroupId:int}")]
+        public async Task<TypesPresenceMap> GetTypesPresenceMap(int versionGroupId)
         {
-            Logger.LogInformation($"Getting type set for version group {versionGroupId}...");
-            return await TypesService.GetTypeSet(versionGroupId);
+            Logger.LogInformation($"Getting types presence map for version group {versionGroupId}...");
+            return await TypesService.GetTypesPresenceMap(versionGroupId);
         }
 
         /// <summary>

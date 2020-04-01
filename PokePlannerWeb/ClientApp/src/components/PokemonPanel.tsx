@@ -5,7 +5,7 @@ import { EfficacyList } from "./EfficacyList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
 import { CaptureLocations } from "./CaptureLocations"
-import { TypeSet } from "../models/TypeSet"
+import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
 import "../styles/types.scss"
 import "./PokemonPanel.scss"
@@ -24,9 +24,9 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
     species: any[]
 
     /**
-     * The type set.
+     * The types presence map.
      */
-    typeSet: TypeSet
+    typesPresenceMap: TypesPresenceMap
 
     /**
      * The base stat names.
@@ -310,7 +310,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             <EfficacyList
                 index={this.props.index}
                 typeIds={types.map((type: any) => type.id)}
-                typeSet={this.props.typeSet}
+                typesPresenceMap={this.props.typesPresenceMap}
                 versionGroupId={this.props.versionGroupId}
                 showMultipliers={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />

@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react"
 import { Tooltip } from "reactstrap"
-import { TypeSet } from "../models/TypeSet"
+import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
 import "../styles/types.scss"
 import "./EfficacyList.scss"
@@ -18,9 +18,9 @@ interface IEfficacyListProps extends IHasCommon {
     typeIds: number[],
 
     /**
-     * The type set.
+     * The types presence map.
      */
-    typeSet: TypeSet,
+    typesPresenceMap: TypesPresenceMap,
 
     /**
      * Whether to show the multipliers.
@@ -76,16 +76,11 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
         if (versionGroupChanged || typesChanged) {
             this.getEfficacy()
-        }
 
-        // refresh tooltip states if the type set changed
-        let previousTypeSet = previousProps.typeSet
-        let typeSet = this.props.typeSet
-        let typeSetChanged = typeSet !== previousTypeSet
-
-        if (typeSetChanged) {
+            // hide types presence tooltips
+            let typesPresenceMap = this.props.typesPresenceMap.presenceMap
             this.setState({
-                typeTooltipOpen: typeSet.typeIds.map(_ => false)
+                typeTooltipOpen: typesPresenceMap.map(_ => false)
             })
         }
     }
@@ -96,8 +91,8 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     renderTypeEfficacy() {
         let rows = []
-        let typeSet = this.props.typeSet
-        let itemsPerRow = typeSet.typeIds.length / NUMBER_OF_ROWS
+        let presenceMap = this.props.typesPresenceMap.presenceMap
+        let itemsPerRow = presenceMap.length / NUMBER_OF_ROWS
 
         let efficacy = this.state.efficacy
         for (let row = 0; row < NUMBER_OF_ROWS; row++) {
@@ -107,7 +102,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 let index = row * itemsPerRow + col
                 let headerId = `list${this.props.index}type${index}`
 
-                let typeId = typeSet.typeIds[index]
+                let typeId = presenceMap[index].id
                 let typeHeader = <img
                                     id={headerId}
                                     className="type-icon-small padded"
@@ -126,7 +121,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                     )
                 }
                 else {
-                    let typeIsPresent = typeSet.typesArePresent.filter((t: any) => t.id === typeId)[0].data
+                    let typeIsPresent = presenceMap[index].data
                     if (typeIsPresent) {
                         let matchingData = efficacy.efficacyMultipliers.filter((m: any) => m.id === typeId)
 

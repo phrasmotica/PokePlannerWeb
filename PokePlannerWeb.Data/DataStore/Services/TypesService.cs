@@ -135,23 +135,25 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the type set for the version group with the given ID.
+        /// Returns the types presence map for the version group with the given ID.
         /// </summary>
-        public async Task<TypeSet> GetTypeSet(int versionGroupId)
+        public async Task<TypesPresenceMap> GetTypesPresenceMap(int versionGroupId)
         {
+            var typeMap = new TypesPresenceMap();
+
             var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
             var types = await GetConcrete();
-            var typesArePresent = types.Select(t =>
+
+            var presenceMap = types.Select(type =>
             {
-                var typeIsPresent = HasType(versionGroup.Generation, t);
-                return new WithId<bool>(t.TypeId, typeIsPresent);
+                var typeIsPresent = HasType(versionGroup.Generation, type);
+                return new WithId<bool>(type.TypeId, typeIsPresent);
             });
 
-            return new TypeSet
+            return new TypesPresenceMap
             {
                 VersionGroupId = versionGroupId,
-                TypeIds = types.Select(t => t.TypeId).ToArray(),
-                TypesArePresent = typesArePresent.ToList()
+                PresenceMap = presenceMap.ToList()
             };
         }
 
@@ -260,11 +262,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
         #endregion
     }
-    
+
     /// <summary>
-    /// Class mapping types to whether they're present in a version group.
+    /// Class mapping types by ID to whether they're present in some version group.
     /// </summary>
-    public class TypeSet
+    public class TypesPresenceMap
     {
         /// <summary>
         /// Gets or sets the version group ID.
@@ -272,13 +274,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public int VersionGroupId { get; set; }
 
         /// <summary>
-        /// Gets or sets the type IDs.
-        /// </summary>
-        public int[] TypeIds { get; set; }
-
-        /// <summary>
         /// Gets or sets whether the types are present.
         /// </summary>
-        public List<WithId<bool>> TypesArePresent { get; set; }
+        public List<WithId<bool>> PresenceMap { get; set; }
     }
 }
