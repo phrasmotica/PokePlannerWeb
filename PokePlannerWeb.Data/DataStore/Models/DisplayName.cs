@@ -1,7 +1,7 @@
 ﻿namespace PokePlannerWeb.Data.DataStore
 {
     /// <summary>
-    /// Class for a display name.
+    /// Represents a display name for a given language.
     /// </summary>
     public class DisplayName
     {

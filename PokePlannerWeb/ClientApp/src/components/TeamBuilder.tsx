@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 import { PokemonPanel } from './PokemonPanel'
+import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
 import { TypesPresenceMap } from '../models/TypesPresenceMap'
 import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
 
@@ -19,7 +20,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
      * List of Pokemon species.
      */
-    species: any[]
+    species: PokemonSpeciesEntry[]
 
     /**
      * Whether the Pokemon species are loading.

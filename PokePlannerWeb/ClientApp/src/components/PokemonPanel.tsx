@@ -5,6 +5,8 @@ import { EfficacyList } from "./EfficacyList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
 import { CaptureLocations } from "./CaptureLocations"
+
+import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
 import "../styles/types.scss"
@@ -21,7 +23,7 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
     /**
      * List of Pokemon species.
      */
-    species: any[]
+    species: PokemonSpeciesEntry[]
 
     /**
      * The types presence map.
@@ -362,13 +364,18 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
     // returns whether the Pokemon is valid
     pokemonIsValid() {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            return true
+        }
+
         let speciesValidity = this.getSpecies().validity
-        let pokemonIsValid = speciesValidity.includes(this.props.versionGroupId)
+        let pokemonIsValid = speciesValidity.includes(versionGroupId)
 
         let formValidity = this.state.form.validity
         if (formValidity.length > 0) {
             // can only obtain form if base species is obtainable
-            pokemonIsValid &= formValidity.includes(this.props.versionGroupId)
+            pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
         }
 
         return pokemonIsValid

@@ -2,6 +2,8 @@
 import { Button, Tooltip } from "reactstrap"
 import Select from "react-select"
 
+import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
+
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
@@ -10,7 +12,7 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     /**
      * List of Pokemon species.
      */
-    species: any[]
+    species: PokemonSpeciesEntry[]
 
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
@@ -89,7 +91,7 @@ interface IPokemonSelectorState {
  * Component for selecting a Pokemon.
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
-    constructor(props: any) {
+    constructor(props: IPokemonSelectorProps) {
         super(props)
         this.state = {
             speciesId: undefined,
@@ -431,6 +433,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
     // returns true if the Pokemon should be marked as invalid
     shouldMarkPokemonInvalid() {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            return true
+        }
+
         if (this.state.formId === undefined) {
             return false
         }
@@ -440,12 +447,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
 
         let speciesValidity = this.getSelectedSpecies().validity
-        let pokemonIsValid = speciesValidity.includes(this.props.versionGroupId)
+        let pokemonIsValid = speciesValidity.includes(versionGroupId)
 
         let formValidity = this.getSelectedForm().validity
         if (formValidity.length > 0) {
             // can only obtain form if base species is obtainable
-            pokemonIsValid &= formValidity.includes(this.props.versionGroupId)
+            pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
         }
 
         return !this.props.ignoreValidity && !pokemonIsValid
