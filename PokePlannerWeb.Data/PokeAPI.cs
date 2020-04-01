@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PokeApiNet;
-using PokePlannerWeb.Data.Cache;
 
 namespace PokePlannerWeb.Data
 {
@@ -38,15 +37,6 @@ namespace PokePlannerWeb.Data
             PokeApiClient = pokeApiClient;
             Logger = logger;
         }
-
-        #region Caching
-
-        /// <summary>
-        /// Manager for in-memory caches.
-        /// </summary>
-        private readonly CacheManager cache = new CacheManager();
-
-        #endregion
 
         #region Resource Get() methods
 
@@ -153,8 +143,6 @@ namespace PokePlannerWeb.Data
         /// </summary>
         public async Task<IEnumerable<LocationAreaEncounter>> GetEncounters(Pokemon pokemon)
         {
-            // TODO: cache a Pokemon's list of encounters in MongoDB
-            // (so we can get rid of this in-memory cache!)
             var call = $"GetLocationAreaEncounters({pokemon.Id})";
             IEnumerable<LocationAreaEncounter> res;
             try
@@ -162,12 +150,7 @@ namespace PokePlannerWeb.Data
                 Logger.LogInformation($"{call} started...");
 
                 var url = pokemon.LocationAreaEncounters;
-                res = cache.Get<IEnumerable<LocationAreaEncounter>>(url);
-                if (res == null)
-                {
-                    res = await GetFromUrl<IEnumerable<LocationAreaEncounter>>(url);
-                    cache.Store(url, res);
-                }
+                res = await GetFromUrl<IEnumerable<LocationAreaEncounter>>(url);
 
                 Logger.LogInformation($"{call} finished.");
             }
