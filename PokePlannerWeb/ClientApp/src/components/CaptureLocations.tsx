@@ -66,6 +66,14 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     renderCaptureLocations() {
+        if (this.state.loadingLocations) {
+            return (
+                <div>
+                    Loading...
+                </div>
+            )
+        }
+
         let encountersElement = (
             <div>
                 -
