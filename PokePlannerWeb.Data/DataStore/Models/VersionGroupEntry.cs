@@ -28,17 +28,17 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<DisplayName> DisplayNames { get; set; }
 
         /// <summary>
-        /// Gets or set the generation of the version group.
+        /// Gets or set the generation the version group belongs to.
         /// </summary>
         public Generation Generation { get; set; }
 
         /// <summary>
-        /// Gets or set the versions of the version group.
+        /// Gets or set the versions belonging to the version group.
         /// </summary>
         public List<Version> Versions { get; set; }
 
         /// <summary>
-        /// Gets or set the pokedexes of the version group.
+        /// Gets or set the Pokedexes present in the version group.
         /// </summary>
         public List<Pokedex> Pokedexes { get; set; }
     }

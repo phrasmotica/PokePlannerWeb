@@ -2,8 +2,11 @@ import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 import { PokemonPanel } from './PokemonPanel'
+
 import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
 import { TypesPresenceMap } from '../models/TypesPresenceMap'
+import { VersionGroupEntry } from '../models/VersionGroupEntry'
+
 import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
 
 /**
@@ -30,7 +33,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
      * List of version groups.
      */
-    versionGroups: any[]
+    versionGroups: VersionGroupEntry[]
 
     /**
      * Whether the version groups are loading.
@@ -239,7 +242,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     async getVersionGroups() {
         await fetch(`${process.env.REACT_APP_API_URL}/versionGroup/all`)
             .then(response => response.json())
-            .then((groups: any[]) => this.setState({
+            .then((groups: VersionGroupEntry[]) => this.setState({
                 versionGroups: groups,
                 versionGroupId: groups[groups.length - 1].versionGroupId
             }))
