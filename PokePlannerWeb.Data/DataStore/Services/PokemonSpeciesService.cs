@@ -91,7 +91,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var entry = await Upsert(speciesId);
             var varietyEntries = await PokemonService.UpsertMany(entry.Varieties.Select(v => v.Id));
-            return varietyEntries.ToArray();
+            return varietyEntries.OrderBy(v => v.PokemonId).ToArray();
         }
 
         /// <summary>
@@ -107,8 +107,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             foreach (var varietyEntry in varietyEntries)
             {
-                var formsEntry = await PokemonService.GetPokemonForms(varietyEntry.PokemonId, versionGroupId);
-                formsListList.Add(new WithId<PokemonFormEntry[]>(varietyEntry.PokemonId, formsEntry));
+                var formsList = await PokemonService.GetPokemonForms(varietyEntry.PokemonId, versionGroupId);
+                formsListList.Add(new WithId<PokemonFormEntry[]>(varietyEntry.PokemonId, formsList));
             }
 
             return formsListList;

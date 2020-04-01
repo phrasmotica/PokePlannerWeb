@@ -101,7 +101,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<VersionGroupEntry[]> GetAll()
         {
             var allVersionGroups = await UpsertAll();
-            return allVersionGroups.ToArray();
+            return allVersionGroups.OrderBy(vg => vg.Order).ToArray();
         }
 
         /// <summary>

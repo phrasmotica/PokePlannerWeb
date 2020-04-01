@@ -91,7 +91,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var entry = await Upsert(pokemonId);
             var formEntries = await PokemonFormsService.UpsertMany(entry.Forms.Select(f => f.Id));
-            return formEntries.ToArray();
+            return formEntries.OrderBy(f => f.FormId).ToArray();
         }
 
         #endregion
