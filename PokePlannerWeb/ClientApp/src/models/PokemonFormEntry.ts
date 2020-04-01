@@ -1,7 +1,7 @@
-import { Type } from "./Type"
-import { WithId } from "./WithId"
 import { DisplayName } from "./DisplayName"
+import { Type } from "./Type"
 import { VersionGroup } from "./VersionGroup"
+import { WithId } from "./WithId"
 
 /**
  * Represents a Pokemon form in the data store.

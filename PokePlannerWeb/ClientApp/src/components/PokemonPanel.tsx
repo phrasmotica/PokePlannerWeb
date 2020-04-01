@@ -83,8 +83,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         // handlers
         const clearPokemon = () => this.clearPokemon()
         const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
-        const setVariety = (variety: any) => this.setVariety(variety)
-        const setForm = (form: any) => this.setForm(form)
+        const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
+        const setForm = (form: PokemonFormEntry) => this.setForm(form)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
@@ -168,12 +168,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      */
     getEffectiveDisplayName() {
         // default to species display name
-        let matchingData = this.getSpecies().displayNames.filter((n: any) => n.language === "en")
+        let matchingData = this.getSpecies().displayNames.filter(n => n.language === "en")
         let displayName = matchingData[0].name
 
         let form = this.state.form
         if (form !== undefined) {
-            let matchingData = form.displayNames.filter((n: any) => n.language === "en")
+            let matchingData = form.displayNames.filter(n => n.language === "en")
             if (matchingData.length > 0) {
                 displayName = matchingData[0].name
             }
@@ -189,7 +189,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         if (shouldShowPokemon) {
             let types = this.getEffectiveTypes()
 
-            typesElement = types.map((type: any) => {
+            typesElement = types.map(type => {
                 return (
                     <div
                         key={type.id}
@@ -221,13 +221,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
 
         let types = variety.types.filter(
-            (type: any) => type.id === this.props.versionGroupId
+            type => type.id === this.props.versionGroupId
         )[0].data
 
         let form = this.state.form
         if (form !== undefined) {
             let matchingTypes = form.types.filter(
-                (type: any) => type.id === this.props.versionGroupId
+                type => type.id === this.props.versionGroupId
             )
 
             if (matchingTypes.length > 0) {
@@ -320,7 +320,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return (
             <EfficacyList
                 index={this.props.index}
-                typeIds={types.map((type: any) => type.id)}
+                typeIds={types.map(type => type.id)}
                 typesPresenceMap={this.props.typesPresenceMap}
                 versionGroupId={this.props.versionGroupId}
                 showMultipliers={this.shouldShowPokemon()}
@@ -352,7 +352,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      */
     getSpecies() {
         return this.props.species.filter(
-            (s: any) => s.speciesId === this.state.speciesId
+            s => s.speciesId === this.state.speciesId
         )[0]
     }
 
@@ -405,12 +405,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     // set the species variety
-    setVariety(variety: any) {
+    setVariety(variety: PokemonEntry) {
         this.setState({ variety: variety })
     }
 
     // set the Pokemon form
-    setForm(form: any) {
+    setForm(form: PokemonFormEntry) {
         this.setState({ form: form })
     }
 }

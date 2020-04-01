@@ -7,6 +7,9 @@ import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
+import { PokemonEntry } from "../models/PokemonEntry"
+import { PokemonFormEntry } from "../models/PokemonFormEntry"
+import { WithId } from "../models/WithId"
 
 interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
@@ -27,7 +30,7 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     /**
      * Handler for setting the Pokemon variety in the parent component.
      */
-    setVariety: (variety: any) => void
+    setVariety: (variety: PokemonEntry) => void
 
     /**
      * Handler for clearing the Pokemon in the parent component.
@@ -37,7 +40,7 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     /**
      * Handler for setting the Pokemon form in the parent component.
      */
-    setForm: (form: any) => void
+    setForm: (form: PokemonFormEntry) => void
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -59,7 +62,7 @@ interface IPokemonSelectorState {
     /**
      * The species' varieties.
      */
-    varieties: any[]
+    varieties: PokemonEntry[]
 
     /**
      * Whether we're loading the species' varieties.
@@ -74,7 +77,7 @@ interface IPokemonSelectorState {
     /**
      * List of objects mapping variety IDs to the variety's forms.
      */
-    formsDict: any[]
+    formsDict: WithId<PokemonFormEntry[]>[]
 
     /**
      * Whether we're loading the Pokemon's forms.
@@ -142,7 +145,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let selectedSpeciesOption = null
         let speciesId = this.state.speciesId
         if (speciesId !== undefined) {
-            selectedSpeciesOption = speciesOptions.filter((o: any) => o.value === speciesId)[0]
+            selectedSpeciesOption = speciesOptions.filter(o => o.value === speciesId)[0]
         }
 
         // attach validity tooltip and red border if necessary
@@ -190,7 +193,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let validityTooltip = null
         if (hasVarieties) {
             let varietyId = this.state.varietyId
-            selectedVarietyOption = varietyOptions.filter((o: any) => o.value === varietyId)[0]
+            selectedVarietyOption = varietyOptions.filter(o => o.value === varietyId)[0]
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
@@ -242,7 +245,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let validityTooltip = null
         if (hasForms) {
             let formId = this.state.formId
-            selectedFormOption = formOptions.filter((o: any) => o.value === formId)[0]
+            selectedFormOption = formOptions.filter(o => o.value === formId)[0]
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
@@ -299,7 +302,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     createSpeciesOptions() {
         // TODO: allow filtering species by types and other properties
         return this.props.species.map(species => ({
-            label: species.displayNames.filter((n: any) => n.language === "en")[0].name,
+            label: species.displayNames.filter(n => n.language === "en")[0].name,
             value: species.speciesId
         }))
     }
@@ -315,10 +318,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return []
         }
 
-        return this.state.varieties.map((variety: any) => {
+        return this.state.varieties.map((variety: PokemonEntry) => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
-            let speciesNames = species.displayNames.filter((n: any) => n.language === "en")
+            let speciesNames = species.displayNames.filter(n => n.language === "en")
             let label = speciesNames[0].name
 
             let forms = this.getFormsOfVariety(variety.pokemonId)
@@ -328,7 +331,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 let formNames = form.displayNames
                 if (formNames.length > 0) {
                     // non-default forms have their own name
-                    let matchingNames = formNames.filter((n: any) => n.language === "en")
+                    let matchingNames = formNames.filter(n => n.language === "en")
                     label = matchingNames[0].name
                 }
             }
@@ -347,16 +350,16 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
 
         let forms = this.getFormsOfSelectedVariety()
-        return forms.map((form: any) => {
+        return forms.map(form => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
-            let speciesNames = species.displayNames.filter((n: any) => n.language === "en")
+            let speciesNames = species.displayNames.filter(n => n.language === "en")
             let label = speciesNames[0].name
 
             let formNames = form.displayNames
             if (formNames.length > 0) {
                 // non-default forms have their own name
-                let matchingNames = formNames.filter((n: any) => n.language === "en")
+                let matchingNames = formNames.filter(n => n.language === "en")
                 label = matchingNames[0].name
             }
 
@@ -375,7 +378,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return []
         }
 
-        let matchingForms = this.state.formsDict.filter((e: any) => e.id === varietyId)
+        let matchingForms = this.state.formsDict.filter(e => e.id === varietyId)
         return matchingForms[0].data
     }
 
@@ -449,10 +452,13 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let speciesValidity = this.getSelectedSpecies().validity
         let pokemonIsValid = speciesValidity.includes(versionGroupId)
 
-        let formValidity = this.getSelectedForm().validity
-        if (formValidity.length > 0) {
-            // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
+        let form = this.getSelectedForm()
+        if (form !== undefined) {
+            let formValidity = form.validity
+            if (formValidity.length > 0) {
+                // can only obtain form if base species is obtainable
+                pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
+            }
         }
 
         return !this.props.ignoreValidity && !pokemonIsValid
@@ -481,7 +487,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     /**
      * Sets the variety.
      */
-    setVariety(variety: any) {
+    setVariety(variety: PokemonEntry) {
         this.setState({ varietyId: variety.pokemonId })
         this.props.setVariety(variety)
     }
@@ -489,7 +495,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     /**
      * Sets the form.
      */
-    setForm(form: any) {
+    setForm(form: PokemonFormEntry) {
         this.setState({ formId: form.formId })
         this.props.setForm(form)
     }
@@ -500,7 +506,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     getSelectedSpecies() {
         let allSpecies = this.props.species
         let selectedSpeciesId = this.state.speciesId
-        let matchingSpecies = allSpecies.filter((s: any) => s.speciesId === selectedSpeciesId)
+        let matchingSpecies = allSpecies.filter(s => s.speciesId === selectedSpeciesId)
         return matchingSpecies[0]
     }
 
@@ -509,7 +515,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     getVariety(varietyId: number) {
         let allVarieties = this.state.varieties
-        let matchingVarieties = allVarieties.filter((p: any) => p.pokemonId === varietyId)
+        let matchingVarieties = allVarieties.filter(p => p.pokemonId === varietyId)
         return matchingVarieties[0]
     }
 
@@ -518,7 +524,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     getForm(formId: number) {
         let allForms = this.getFormsOfSelectedVariety()
-        let matchingForms = allForms.filter((f: any) => f.formId === formId)
+        let matchingForms = allForms.filter(f => f.formId === formId)
         return matchingForms[0]
     }
 
@@ -528,7 +534,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     getSelectedForm() {
         let selectedFormId = this.state.formId
         if (selectedFormId === undefined) {
-            return null
+            return undefined
         }
 
         return this.getForm(selectedFormId)

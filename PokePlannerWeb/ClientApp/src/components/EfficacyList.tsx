@@ -15,12 +15,12 @@ interface IEfficacyListProps extends IHasCommon {
     /**
      * The IDs of the types to show efficacy for.
      */
-    typeIds: number[],
+    typeIds: number[]
 
     /**
      * The types presence map.
      */
-    typesPresenceMap: TypesPresenceMap,
+    typesPresenceMap: TypesPresenceMap
 
     /**
      * Whether to show the multipliers.
@@ -32,12 +32,12 @@ interface IEfficacyListState {
     /**
      * The efficacy set to show.
      */
-    efficacy: any,
+    efficacy: any
 
     /**
      * Whether we're loading the efficacy.
      */
-    loadingEfficacy: boolean,
+    loadingEfficacy: boolean
 
     /**
      * Whether the type tooltips are open.
@@ -49,7 +49,7 @@ interface IEfficacyListState {
  * Component for displaying defensive type efficacy.
  */
 export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListState> {
-    constructor(props: any) {
+    constructor(props: IEfficacyListProps) {
         super(props)
         this.state = {
             efficacy: null,

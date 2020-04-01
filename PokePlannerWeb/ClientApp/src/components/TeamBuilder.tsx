@@ -141,7 +141,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     renderVersionGroupMenu() {
         let options = this.state.versionGroups.map(vg => {
             return {
-                label: vg.displayNames.filter((n: any) => n.language === "en")[0].name,
+                label: vg.displayNames.filter(n => n.language === "en")[0].name,
                 value: vg.versionGroupId
             }
         })
