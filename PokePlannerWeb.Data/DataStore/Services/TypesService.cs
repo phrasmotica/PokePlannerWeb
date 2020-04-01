@@ -224,7 +224,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var laterGens = pastGenerations.Where(g => g.GenerationId >= generation.Id).ToList();
                 if (laterGens.Any())
                 {
-                    var genToUse = laterGens.Aggregate((g, h) => g.Id < h.Id ? g : h);
+                    var genToUse = laterGens.Aggregate((g, h) => g.GenerationId < h.GenerationId ? g : h);
                     return pastDamageRelations.Single(p => p.Generation.Name == genToUse.Name)
                                               .DamageRelations;
                 }
