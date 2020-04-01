@@ -304,6 +304,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return []
         }
 
+        // variety display names come from their forms
+        if (this.state.formId === undefined) {
+            return []
+        }
+
         return this.state.varieties.map((variety: any) => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
@@ -430,15 +435,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return false
         }
 
-        let selectedForm = this.getSelectedForm()
-        if (selectedForm === undefined) {
-            return false
-        }
-
         let speciesValidity = this.getSelectedSpecies().validity
         let pokemonIsValid = speciesValidity.includes(this.props.versionGroupId)
 
-        let formValidity = selectedForm.validity
+        let formValidity = this.getSelectedForm().validity
         if (formValidity.length > 0) {
             // can only obtain form if base species is obtainable
             pokemonIsValid &= formValidity.includes(this.props.versionGroupId)
@@ -467,20 +467,18 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
     }
 
-
+    /**
+     * Sets the variety.
+     */
     setVariety(variety: any) {
         this.setState({ varietyId: variety.pokemonId })
         this.props.setVariety(variety)
     }
 
-
+    /**
+     * Sets the form.
+     */
     setForm(form: any) {
-        // TODO: species with primary varieties whose form's display name
-        // differs from the species display name don't have the form name
-        // appear straight away in the variety option when selecting the species.
-        // Make it so the variety option is set with the correct display name
-        // only once we have the form
-
         this.setState({ formId: form.formId })
         this.props.setForm(form)
     }
