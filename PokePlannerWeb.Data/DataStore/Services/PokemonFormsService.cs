@@ -39,26 +39,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             TypesService = typesService;
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the Pokemon forms entry with the given ID from the database.
-        /// </summary>
-        protected override PokemonFormEntry Get(int pokemonId)
-        {
-            return CacheSource.GetOne(f => f.FormId == pokemonId);
-        }
-
-        /// <summary>
-        /// Removes the Pokemon forms entry with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int pokemonId)
-        {
-            CacheSource.DeleteOne(f => f.FormId == pokemonId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -72,7 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new PokemonFormEntry
             {
-                FormId = pokemonForm.Id,
+                Key = pokemonForm.Id,
                 Name = pokemonForm.Name,
                 FormName = pokemonForm.FormName,
                 IsMega = pokemonForm.IsMega,

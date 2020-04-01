@@ -48,26 +48,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionGroupsService = versionGroupsService;
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the Pokemon with the given ID from the database.
-        /// </summary>
-        protected override PokemonEntry Get(int pokemonId)
-        {
-            return CacheSource.GetOne(p => p.PokemonId == pokemonId);
-        }
-
-        /// <summary>
-        /// Removes the Pokemon with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int pokemonId)
-        {
-            CacheSource.DeleteOne(p => p.PokemonId == pokemonId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -81,7 +61,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new PokemonEntry
             {
-                PokemonId = pokemon.Id,
+                Key = pokemon.Id,
                 Name = pokemon.Name,
                 SpriteUrl = GetSpriteUrl(pokemon),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemon),

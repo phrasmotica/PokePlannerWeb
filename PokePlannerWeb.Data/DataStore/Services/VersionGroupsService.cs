@@ -45,26 +45,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionsService = versionsService;
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the version group entry with the given ID from the database.
-        /// </summary>
-        protected override VersionGroupEntry Get(int versionGroupId)
-        {
-            return CacheSource.GetOne(vg => vg.VersionGroupId == versionGroupId);
-        }
-
-        /// <summary>
-        /// Removes the version group entry with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int versionGroupId)
-        {
-            CacheSource.DeleteOne(vg => vg.VersionGroupId == versionGroupId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -79,7 +59,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new VersionGroupEntry
             {
-                VersionGroupId = versionGroup.Id,
+                Key = versionGroup.Id,
                 Name = versionGroup.Name,
                 Order = versionGroup.Order,
                 DisplayNames = displayNames.ToList(),

@@ -8,13 +8,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class VersionEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the version.
+        /// Gets the ID of the version.
         /// </summary>
-        public int VersionId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int VersionId => Key;
 
         /// <summary>
         /// Gets or sets the display names of the version.

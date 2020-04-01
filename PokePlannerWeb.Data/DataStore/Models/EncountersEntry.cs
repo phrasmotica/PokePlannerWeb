@@ -5,16 +5,12 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a Pokemon's encounters in the data store.
     /// </summary>
-    public class EncountersEntry : EntryBase<int>
+    public class EncountersEntry : EntryBase
     {
         /// <summary>
-        /// Gets or sets the ID of the Pokemon.
+        /// Gets the ID of the Pokemon.
         /// </summary>
-        public int PokemonId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int PokemonId => Key;
 
         /// <summary>
         /// Gets or sets the encounters indexed by version group ID.

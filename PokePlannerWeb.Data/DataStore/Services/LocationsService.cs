@@ -24,26 +24,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the location with the given ID from the database.
-        /// </summary>
-        protected override LocationEntry Get(int locationId)
-        {
-            return CacheSource.GetOne(l => l.LocationId == locationId);
-        }
-
-        /// <summary>
-        /// Removes the location with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int locationId)
-        {
-            CacheSource.DeleteOne(l => l.LocationId == locationId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -55,7 +35,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return Task.FromResult(new LocationEntry
             {
-                LocationId = location.Id,
+                Key = location.Id,
                 Name = location.Name,
                 DisplayNames = displayNames.ToList()
             });

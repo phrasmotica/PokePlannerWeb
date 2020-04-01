@@ -39,26 +39,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionGroupsService = versionGroupsService;
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the type with the given ID from the database.
-        /// </summary>
-        protected override TypeEntry Get(int typeId)
-        {
-            return CacheSource.GetOne(t => t.TypeId == typeId);
-        }
-
-        /// <summary>
-        /// Removes the type with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int typeId)
-        {
-            CacheSource.DeleteOne(t => t.TypeId == typeId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -72,7 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new TypeEntry
             {
-                TypeId = type.Id,
+                Key = type.Id,
                 Name = type.Name,
                 DisplayNames = displayNames.ToList(),
                 IsConcrete = type.Pokemon.Any(), // would like to use presence of move damage class but Fairy doesn't have it...
@@ -120,7 +100,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var presenceMap = types.Select(type =>
             {
                 var typeIsPresent = HasType(versionGroup.Generation, type);
-                return new WithId<bool>(type.TypeId, typeIsPresent);
+                return new WithId<bool>(type.Key, typeIsPresent);
             });
 
             return new TypesPresenceMap

@@ -9,13 +9,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class PokemonEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the Pokemon.
+        /// Gets the ID of the Pokemon.
         /// </summary>
-        public int PokemonId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int PokemonId => Key;
 
         /// <summary>
         /// Gets or sets this Pokemon's front default sprite URL.

@@ -40,26 +40,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionGroupsService = versionGroupsService;
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the Pokemon with the given ID from the database.
-        /// </summary>
-        protected override PokemonSpeciesEntry Get(int speciesId)
-        {
-            return CacheSource.GetOne(s => s.SpeciesId == speciesId);
-        }
-
-        /// <summary>
-        /// Removes the Pokemon with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int speciesId)
-        {
-            CacheSource.DeleteOne(s => s.SpeciesId == speciesId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -72,7 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new PokemonSpeciesEntry
             {
-                SpeciesId = species.Id,
+                Key = species.Id,
                 Name = species.Name,
                 DisplayNames = GetDisplayNames(species).ToList(),
                 Varieties = varieties.ToList(),

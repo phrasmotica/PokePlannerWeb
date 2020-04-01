@@ -13,7 +13,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for accessing encounters data.
     /// </summary>
-    public class EncountersService : ServiceBase<Pokemon, int, EncountersEntry>
+    public class EncountersService : ServiceBase<Pokemon, EncountersEntry>
     {
         /// <summary>
         /// The locations service.
@@ -53,26 +53,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionGroupsService = versionGroupsService;
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the location area encounters entry with the given ID from the database.
-        /// </summary>
-        protected override EncountersEntry Get(int pokemonId)
-        {
-            return CacheSource.GetOne(e => e.PokemonId == pokemonId);
-        }
-
-        /// <summary>
-        /// Removes the location area encounters entry with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int pokemonId)
-        {
-            CacheSource.DeleteOne(e => e.PokemonId == pokemonId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -93,7 +73,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new EncountersEntry
             {
-                PokemonId = pokemon.Id,
+                Key = pokemon.Id,
                 Encounters = encounters.ToList()
             };
         }

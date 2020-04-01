@@ -24,26 +24,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the stat with the given ID from the database.
-        /// </summary>
-        protected override StatEntry Get(int statId)
-        {
-            return CacheSource.GetOne(s => s.StatId == statId);
-        }
-
-        /// <summary>
-        /// Removes the stat with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int statId)
-        {
-            CacheSource.DeleteOne(s => s.StatId == statId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -55,7 +35,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return Task.FromResult(new StatEntry
             {
-                StatId = stat.Id,
+                Key = stat.Id,
                 Name = stat.Name,
                 IsBattleOnly = stat.IsBattleOnly,
                 DisplayNames = displayNames.ToList()

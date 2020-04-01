@@ -9,13 +9,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class VersionGroupEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the version group.
+        /// Gets the ID of the version group.
         /// </summary>
-        public int VersionGroupId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int VersionGroupId => Key;
 
         /// <summary>
         /// Gets or sets the order of the version group.

@@ -10,13 +10,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class PokemonFormEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the Pokemon form.
+        /// Gets the ID of the Pokemon form.
         /// </summary>
-        public int FormId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int FormId => Key;
 
         /// <summary>
         /// Gets or sets the form name of the Pokemon form.

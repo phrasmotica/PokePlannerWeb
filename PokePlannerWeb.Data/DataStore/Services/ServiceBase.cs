@@ -13,9 +13,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing a collection in the database.
     /// </summary>
-    public abstract class ServiceBase<TSource, TKey, TEntry>
+    public abstract class ServiceBase<TSource, TEntry>
         where TSource : NamedApiResource
-        where TEntry : EntryBase<TKey>
+        where TEntry : EntryBase
     {
         /// <summary>
         /// The cache source.
@@ -31,7 +31,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The logger.
         /// </summary>
-        protected readonly ILogger<ServiceBase<TSource, TKey, TEntry>> Logger;
+        protected readonly ILogger<ServiceBase<TSource, TEntry>> Logger;
 
         /// <summary>
         /// Create connection to database and initialise logger.
@@ -39,7 +39,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public ServiceBase(
             ICacheSource<TEntry> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<ServiceBase<TSource, TKey, TEntry>> logger)
+            ILogger<ServiceBase<TSource, TEntry>> logger)
         {
             CacheSource = cacheSource;
             PokeApi = pokeApi;
@@ -54,9 +54,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region CRUD methods
 
         /// <summary>
-        /// Returns the entry with the given ID from the database.
+        /// Returns the entry with the given key from the database.
         /// </summary>
-        protected abstract TEntry Get(TKey key);
+        protected TEntry Get(int key)
+        {
+            return CacheSource.GetOne(t => t.Key == key);
+        }
 
         /// <summary>
         /// Returns all entries from the database.
@@ -68,23 +71,27 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected TEntry Create(TEntry entry)
         {
+            entry.CreationTime = DateTime.UtcNow;
             CacheSource.Create(entry);
             return entry;
         }
 
         /// <summary>
-        /// Removes the entry with the given ID and creates a new one in the database.
+        /// Removes the entry with the given key and creates a new one in the database.
         /// </summary>
-        protected void Update(TKey key, TEntry entry)
+        protected void Update(int key, TEntry entry)
         {
             Remove(key);
             Create(entry);
         }
 
         /// <summary>
-        /// Removes the entry with the given ID from the database.
+        /// Removes the entry with the given key from the database.
         /// </summary>
-        protected abstract void Remove(TKey key);
+        protected void Remove(int key)
+        {
+            CacheSource.DeleteOne(t => t.Key == key);
+        }
 
         #endregion
 
@@ -111,7 +118,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
         /// </summary>
-        public async Task<TEntry> Upsert(TKey key)
+        public async Task<TEntry> Upsert(int key)
         {
             var entry = Get(key);
             if (entry == null)
@@ -139,7 +146,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given ID from the database, creating the entry if it doesn't exist.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TKey> keys)
+        public async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<int> keys)
         {
             var entries = new List<TEntry>();
 
@@ -242,7 +249,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entries with the given keys from the database.
         /// </summary>
-        protected IEnumerable<TEntry> GetMany(IEnumerable<TKey> keys)
+        protected IEnumerable<TEntry> GetMany(IEnumerable<int> keys)
         {
             return AllEntries.Where(e => keys.Contains(e.Key));
         }
@@ -250,7 +257,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Fetches the source object with the given ID and creates an entry for it.
         /// </summary>
-        protected async Task<TEntry> FetchSourceAndCreateEntry(TKey key)
+        protected async Task<TEntry> FetchSourceAndCreateEntry(int key)
         {
             // fetch source
             var source = await FetchSource(key);
@@ -262,7 +269,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Fetches the source object with the given ID, updates the entry for it and returns the entry.
         /// </summary>
-        protected async Task<TEntry> FetchSourceAndUpdateEntry(TKey key)
+        protected async Task<TEntry> FetchSourceAndUpdateEntry(int key)
         {
             // fetch source
             var source = await FetchSource(key);
@@ -276,7 +283,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the source object required to create an entry with the given ID.
         /// </summary>
-        protected abstract Task<TSource> FetchSource(TKey key);
+        protected abstract Task<TSource> FetchSource(int key);
 
         /// <summary>
         /// Creates a new entry in the database for the source object and returns it.
@@ -290,7 +297,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Updates the entry with the given ID in the database for the source object.
         /// </summary>
-        protected async Task UpdateEntry(TKey key, TSource source)
+        protected async Task UpdateEntry(int key, TSource source)
         {
             var entry = await ConvertToEntry(source);
             Update(key, entry);

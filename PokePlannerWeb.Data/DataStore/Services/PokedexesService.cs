@@ -24,26 +24,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the pokedex with the given ID from the database.
-        /// </summary>
-        protected override PokedexEntry Get(int pokedexId)
-        {
-            return CacheSource.GetOne(p => p.PokedexId == pokedexId);
-        }
-
-        /// <summary>
-        /// Removes the pokedex with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int pokedexId)
-        {
-            CacheSource.DeleteOne(p => p.PokedexId == pokedexId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -55,7 +35,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return Task.FromResult(new PokedexEntry
             {
-                PokedexId = pokedex.Id,
+                Key = pokedex.Id,
                 Name = pokedex.Name,
                 DisplayNames = displayNames.ToList()
             });

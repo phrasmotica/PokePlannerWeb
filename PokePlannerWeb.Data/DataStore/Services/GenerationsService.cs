@@ -24,26 +24,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
         }
 
-        #region CRUD methods
-
-        /// <summary>
-        /// Returns the generation with the given ID from the database.
-        /// </summary>
-        protected override GenerationEntry Get(int generationId)
-        {
-            return CacheSource.GetOne(g => g.GenerationId == generationId);
-        }
-
-        /// <summary>
-        /// Removes the generation with the given ID from the database.
-        /// </summary>
-        protected override void Remove(int generationId)
-        {
-            CacheSource.DeleteOne(g => g.GenerationId == generationId);
-        }
-
-        #endregion
-
         #region Entry conversion methods
 
         /// <summary>
@@ -55,7 +35,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return Task.FromResult(new GenerationEntry
             {
-                GenerationId = generation.Id,
+                Key = generation.Id,
                 Name = generation.Name,
                 DisplayNames = displayNames.ToList()
             });

@@ -9,13 +9,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class PokemonSpeciesEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the Pokemon species.
+        /// Gets the ID of the Pokemon species.
         /// </summary>
-        public int SpeciesId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int SpeciesId => Key;
 
         /// <summary>
         /// Gets or sets this Pokemon species' display names.

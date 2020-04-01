@@ -8,13 +8,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class PokedexEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the pokedex.
+        /// Gets the ID of the pokedex.
         /// </summary>
-        public int PokedexId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int PokedexId => Key;
 
         /// <summary>
         /// Gets or sets the display names of the pokedex.

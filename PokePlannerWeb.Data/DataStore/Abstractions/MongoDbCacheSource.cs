@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using MongoDB.Driver;
+using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
     /// <summary>
     /// Cache source for Mongo DB.
     /// </summary>
-    public class MongoDbCacheSource<TEntry> : ICacheSource<TEntry>
+    public class MongoDbCacheSource<TEntry> : ICacheSource<TEntry> where TEntry : EntryBase
     {
         /// <summary>
         /// The collection of entries.

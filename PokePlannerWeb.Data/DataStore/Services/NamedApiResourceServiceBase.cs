@@ -13,7 +13,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing a collection in the database.
     /// </summary>
-    public abstract class NamedApiResourceServiceBase<TSource, TEntry> : ServiceBase<TSource, int, TEntry>
+    public abstract class NamedApiResourceServiceBase<TSource, TEntry> : ServiceBase<TSource, TEntry>
         where TSource : NamedApiResource
         where TEntry : NamedApiResourceEntry
     {

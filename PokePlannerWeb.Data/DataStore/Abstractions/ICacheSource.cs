@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
     /// <summary>
     /// Interface for data sources used for caching PokeAPI resources.
     /// </summary>
-    public interface ICacheSource<TEntry>
+    public interface ICacheSource<TEntry> where TEntry : EntryBase
     {
         /// <summary>
         /// Returns all entries in the cache.

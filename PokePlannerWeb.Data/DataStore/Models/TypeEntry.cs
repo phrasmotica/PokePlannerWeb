@@ -10,13 +10,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class TypeEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the type.
+        /// Gets the ID of the type.
         /// </summary>
-        public int TypeId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int TypeId => Key;
 
         /// <summary>
         /// Gets or sets the type's display names.

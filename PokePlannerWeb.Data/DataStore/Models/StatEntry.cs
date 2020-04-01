@@ -9,13 +9,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class StatEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the stat.
+        /// Gets the ID of the stat.
         /// </summary>
-        public int StatId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int StatId => Key;
 
         /// <summary>
         /// Gets or sets this stat's display names.

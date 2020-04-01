@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using MongoDB.Bson.Serialization.Conventions;
 using PokeApiNet;
+using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
@@ -65,7 +66,7 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         /// <summary>
         /// Creates a cache source for the given entry type.
         /// </summary>
-        public ICacheSource<TEntry> Create<TEntry>(string collectionName)
+        public ICacheSource<TEntry> Create<TEntry>(string collectionName) where TEntry : EntryBase
         {
             return new MongoDbCacheSource<TEntry>(ConnectionString, DatabaseName, collectionName);
         }

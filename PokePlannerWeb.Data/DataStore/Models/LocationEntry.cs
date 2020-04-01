@@ -8,13 +8,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class LocationEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Gets or sets the ID of the location.
+        /// Gets the ID of the location.
         /// </summary>
-        public int LocationId
-        {
-            get => Key;
-            set => Key = value;
-        }
+        public int LocationId => Key;
 
         /// <summary>
         /// Gets or sets the display names of the location.
