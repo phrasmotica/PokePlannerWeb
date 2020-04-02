@@ -77,7 +77,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
         {
             // check for existing entries by name
-            var existingEntries = await GetManyByNames(resources.Select(r => r.Name));
+            var entries = await GetManyByNames(resources.Select(r => r.Name));
+            var existingEntries = entries.Where(e => e != null);
             if (existingEntries.ToList().Count == resources.ToList().Count)
             {
                 return existingEntries;
