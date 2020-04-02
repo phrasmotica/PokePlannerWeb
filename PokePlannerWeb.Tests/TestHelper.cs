@@ -25,13 +25,13 @@ namespace PokePlannerWeb.Tests
             IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.test.json").Build();
 
             // bind database settings
-            serviceCollection.Configure<PokePlannerWebDbSettings>(
-                configuration.GetSection(nameof(PokePlannerWebDbSettings))
+            serviceCollection.Configure<DataStoreSettings>(
+                configuration.GetSection(nameof(DataStoreSettings))
             );
 
             // create singleton for database settings
-            serviceCollection.AddSingleton<IPokePlannerWebDbSettings>(sp =>
-                sp.GetRequiredService<IOptions<PokePlannerWebDbSettings>>().Value
+            serviceCollection.AddSingleton<IDataStoreSettings>(sp =>
+                sp.GetRequiredService<IOptions<DataStoreSettings>>().Value
             );
 
             serviceCollection.AddSingleton<ILogger<PokeAPI>, NullLogger<PokeAPI>>();

@@ -10,7 +10,7 @@ using PokePlannerWeb.Data.Extensions;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the type entries in the database.
+    /// Service for managing the type entries in the data store.
     /// </summary>
     public class TypesService : NamedApiResourceServiceBase<Type, TypeEntry>
     {
@@ -28,11 +28,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public TypesService(
-            ICacheSource<TypeEntry> cacheSource,
+            IDataStoreSource<TypeEntry> dataStoreSource,
             IPokeAPI pokeApi,
             GenerationsService generationsService,
             VersionGroupsService versionGroupsService,
-            ILogger<TypesService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<TypesService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             GenerationsService = generationsService;
             VersionGroupsService = versionGroupsService;

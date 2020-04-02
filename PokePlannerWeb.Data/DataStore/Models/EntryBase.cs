@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace PokePlannerWeb.Data.DataStore.Models
 {
     /// <summary>
-    /// Base class for database entries.
+    /// Base class for data store entries.
     /// </summary>
     public class EntryBase
     {

@@ -9,7 +9,7 @@ using PokePlannerWeb.Data.Extensions;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the version entries in the database.
+    /// Service for managing the version entries in the data store.
     /// </summary>
     public class VersionsService : NamedApiResourceServiceBase<Version, VersionEntry>
     {
@@ -17,9 +17,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public VersionsService(
-            ICacheSource<VersionEntry> cacheSource,
+            IDataStoreSource<VersionEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<VersionsService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<VersionsService> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 

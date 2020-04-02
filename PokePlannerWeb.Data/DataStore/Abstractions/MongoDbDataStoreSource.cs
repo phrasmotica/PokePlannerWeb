@@ -8,9 +8,9 @@ using PokePlannerWeb.Data.DataStore.Models;
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
     /// <summary>
-    /// Cache source for Mongo DB.
+    /// Data store source for Mongo DB.
     /// </summary>
-    public class MongoDbCacheSource<TEntry> : ICacheSource<TEntry> where TEntry : EntryBase
+    public class MongoDbDataStoreSource<TEntry> : IDataStoreSource<TEntry> where TEntry : EntryBase
     {
         /// <summary>
         /// The collection of entries.
@@ -18,9 +18,9 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         protected IMongoCollection<TEntry> Collection;
 
         /// <summary>
-        /// Create connection to database.
+        /// Create connection to database collection.
         /// </summary>
-        public MongoDbCacheSource(string connectionString, string databaseName, string collectionName)
+        public MongoDbDataStoreSource(string connectionString, string databaseName, string collectionName)
         {
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase(databaseName);
@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         }
 
         /// <summary>
-        /// Returns all entries in the cache.
+        /// Returns all entries.
         /// </summary>
         public Task<IEnumerable<TEntry>> GetAll()
         {

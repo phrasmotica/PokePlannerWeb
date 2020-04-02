@@ -9,7 +9,7 @@ using PokePlannerWeb.Data.Extensions;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the generation entries in the database.
+    /// Service for managing the generation entries in the data store.
     /// </summary>
     public class GenerationsService : NamedApiResourceServiceBase<Generation, GenerationEntry>
     {
@@ -17,9 +17,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public GenerationsService(
-            ICacheSource<GenerationEntry> cacheSource,
+            IDataStoreSource<GenerationEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<GenerationsService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<GenerationsService> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 

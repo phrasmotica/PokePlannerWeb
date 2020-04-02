@@ -11,7 +11,7 @@ using PokemonSpeciesEntry = PokePlannerWeb.Data.DataStore.Models.PokemonSpeciesE
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the Pokemon species entries in the database.
+    /// Service for managing the Pokemon species entries in the data store.
     /// </summary>
     public class PokemonSpeciesService : NamedApiResourceServiceBase<PokemonSpecies, PokemonSpeciesEntry>
     {
@@ -29,11 +29,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokemonSpeciesService(
-            ICacheSource<PokemonSpeciesEntry> cacheSource,
+            IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonService pokemonService,
             VersionGroupsService versionGroupsService,
-            ILogger<PokemonSpeciesService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;

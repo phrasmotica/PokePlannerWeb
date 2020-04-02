@@ -10,7 +10,7 @@ using PokePlannerWeb.Data.Extensions;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the Pokemon forms entries in the database.
+    /// Service for managing the Pokemon forms entries in the data store.
     /// </summary>
     public class PokemonFormsService : NamedApiResourceServiceBase<PokemonForm, PokemonFormEntry>
     {
@@ -28,11 +28,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokemonFormsService(
-            ICacheSource<PokemonFormEntry> cacheSource,
+            IDataStoreSource<PokemonFormEntry> dataStoreSource,
             IPokeAPI pokeApi,
             TypesService typesService,
             VersionGroupsService versionGroupsService,
-            ILogger<PokemonFormsService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<PokemonFormsService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             VersionGroupsService = versionGroupsService;
             TypesService = typesService;

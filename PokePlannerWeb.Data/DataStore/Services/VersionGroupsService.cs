@@ -9,7 +9,7 @@ using PokePlannerWeb.Data.DataStore.Models;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the version group entries in the database.
+    /// Service for managing the version group entries in the data store.
     /// </summary>
     public class VersionGroupsService : NamedApiResourceServiceBase<VersionGroup, VersionGroupEntry>
     {
@@ -32,12 +32,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public VersionGroupsService(
-            ICacheSource<VersionGroupEntry> cacheSource,
+            IDataStoreSource<VersionGroupEntry> dataStoreSource,
             IPokeAPI pokeApi,
             GenerationsService generationsService,
             PokedexesService pokedexesService,
             VersionsService versionsService,
-            ILogger<VersionGroupsService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<VersionGroupsService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             GenerationsService = generationsService;
             PokedexesService = pokedexesService;

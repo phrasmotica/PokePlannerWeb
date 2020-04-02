@@ -6,9 +6,9 @@ using PokePlannerWeb.Data.DataStore.Models;
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
     /// <summary>
-    /// Factory for cache sources.
+    /// Factory for data store sources.
     /// </summary>
-    public class CacheSourceFactory
+    public class DataStoreSourceFactory
     {
         /// <summary>
         /// Types whose fields should not be serialised if they have default values assigned.
@@ -37,7 +37,7 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         /// <summary>
         /// Constructor.
         /// </summary>
-        public CacheSourceFactory(string connectionString, string databaseName)
+        public DataStoreSourceFactory(string connectionString, string databaseName)
         {
             ConnectionString = connectionString;
             DatabaseName = databaseName;
@@ -64,11 +64,11 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         }
 
         /// <summary>
-        /// Creates a cache source for the given entry type.
+        /// Creates an entry source for the given entry type.
         /// </summary>
-        public ICacheSource<TEntry> Create<TEntry>(string collectionName) where TEntry : EntryBase
+        public IDataStoreSource<TEntry> Create<TEntry>(string collectionName) where TEntry : EntryBase
         {
-            return new MongoDbCacheSource<TEntry>(ConnectionString, DatabaseName, collectionName);
+            return new MongoDbDataStoreSource<TEntry>(ConnectionString, DatabaseName, collectionName);
         }
     }
 }

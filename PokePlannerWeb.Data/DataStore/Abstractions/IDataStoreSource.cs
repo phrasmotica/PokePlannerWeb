@@ -7,12 +7,12 @@ using PokePlannerWeb.Data.DataStore.Models;
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
     /// <summary>
-    /// Interface for data sources used for caching PokeAPI resources.
+    /// Interface for data sources that store transformed representations of PokeAPI resources.
     /// </summary>
-    public interface ICacheSource<TEntry> where TEntry : EntryBase
+    public interface IDataStoreSource<TEntry> where TEntry : EntryBase
     {
         /// <summary>
-        /// Returns all entries in the cache.
+        /// Returns all entries.
         /// </summary>
         Task<IEnumerable<TEntry>> GetAll();
 

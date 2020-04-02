@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -10,34 +9,34 @@ using PokePlannerWeb.Data.DataStore.Models;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing a collection in the database.
+    /// Service for managing a collection of named API resource entries in the data store.
     /// </summary>
     public abstract class NamedApiResourceServiceBase<TSource, TEntry> : ServiceBase<TSource, TEntry>
         where TSource : NamedApiResource
         where TEntry : NamedApiResourceEntry
     {
         /// <summary>
-        /// Create connection to database and initialise logger.
+        /// Constructor.
         /// </summary>
         public NamedApiResourceServiceBase(
-            ICacheSource<TEntry> cacheSource,
+            IDataStoreSource<TEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 
         #region CRUD methods
 
         /// <summary>
-        /// Returns the entry with the given name from the database.
+        /// Returns the entry with the given name.
         /// </summary>
         protected async Task<TEntry> GetByName(string name)
         {
-            return await CacheSource.GetOne(e => e.Name == name);
+            return await DataStoreSource.GetOne(e => e.Name == name);
         }
 
         /// <summary>
-        /// Removes the entry with the given name and creates a new one in the database.
+        /// Removes the entry with the given name and creates a new one.
         /// </summary>
         protected void UpdateByName(string name, TEntry entry)
         {
@@ -46,11 +45,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Removes the entry with the given name from the database.
+        /// Removes the entry with the given name.
         /// </summary>
         protected void RemoveByName(string name)
         {
-            CacheSource.DeleteOne(p => p.Name == name);
+            DataStoreSource.DeleteOne(p => p.Name == name);
         }
 
         #endregion
@@ -58,7 +57,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Public methods
 
         /// <summary>
-        /// Creates a new entry in the database for the given named API resource and returns it.
+        /// Creates a new entry for the given named API resource and returns it.
         /// </summary>
         public override async Task<TEntry> Upsert(NamedApiResource<TSource> res)
         {
@@ -73,7 +72,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates new entries in the database for the given named API resources and returns them.
+        /// Creates new entries for the given named API resources and returns them.
         /// </summary>
         public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
         {
@@ -88,7 +87,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates or updates the entry with the given ID in the database for the source object as needed.
+        /// Creates or updates the entry with the given ID for the source object as needed.
         /// </summary>
         public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
         {
@@ -134,7 +133,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the entries with the given names from the database.
+        /// Returns the entries with the given names.
         /// </summary>
         protected async Task<IEnumerable<TEntry>> GetManyByNames(IEnumerable<string> names)
         {
@@ -149,7 +148,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates or updates the entry for the given source object in the database as needed.
+        /// Creates or updates the entry for the given source object as needed.
         /// </summary>
         protected override async Task<TEntry> Upsert(TSource source, bool replace = false)
         {

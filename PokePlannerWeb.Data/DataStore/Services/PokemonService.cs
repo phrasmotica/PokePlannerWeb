@@ -12,7 +12,7 @@ using PokemonEntry = PokePlannerWeb.Data.DataStore.Models.PokemonEntry;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the Pokemon entries in the database.
+    /// Service for managing the Pokemon entries in the data store.
     /// </summary>
     public class PokemonService : NamedApiResourceServiceBase<Pokemon, PokemonEntry>
     {
@@ -35,12 +35,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public PokemonService(
-            ICacheSource<PokemonEntry> cacheSource,
+            IDataStoreSource<PokemonEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonFormsService pokemonFormsService,
             TypesService typesService,
             VersionGroupsService versionGroupsService,
-            ILogger<PokemonService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<PokemonService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             PokemonFormsService = pokemonFormsService;
             TypesService = typesService;

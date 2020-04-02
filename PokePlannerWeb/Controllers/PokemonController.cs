@@ -41,8 +41,6 @@ namespace PokePlannerWeb.Controllers
         public async Task<PokemonEntry> GetPokemonById(int pokemonId)
         {
             Logger.LogInformation($"Getting Pokemon {pokemonId}...");
-
-            // get Pokemon document from database
             return await PokemonService.GetPokemon(pokemonId);
         }
 

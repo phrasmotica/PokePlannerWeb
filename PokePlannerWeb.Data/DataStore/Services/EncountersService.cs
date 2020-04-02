@@ -38,13 +38,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public EncountersService(
-            ICacheSource<EncountersEntry> cacheSource,
+            IDataStoreSource<EncountersEntry> dataStoreSource,
             IPokeAPI pokeApi,
             LocationsService locationsService,
             LocationAreasService locationAreasService,
             VersionsService versionsService,
             VersionGroupsService versionGroupsService,
-            ILogger<EncountersService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             LocationsService = locationsService;
             LocationAreasService = locationAreasService;

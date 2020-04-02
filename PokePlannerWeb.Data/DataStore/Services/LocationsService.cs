@@ -9,7 +9,7 @@ using PokePlannerWeb.Data.Extensions;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing the location entries in the database.
+    /// Service for managing the location entries in the data store.
     /// </summary>
     public class LocationsService : NamedApiResourceServiceBase<Location, LocationEntry>
     {
@@ -17,9 +17,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Constructor.
         /// </summary>
         public LocationsService(
-            ICacheSource<LocationEntry> cacheSource,
+            IDataStoreSource<LocationEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<LocationsService> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<LocationsService> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 
