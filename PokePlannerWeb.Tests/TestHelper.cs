@@ -45,40 +45,40 @@ namespace PokePlannerWeb.Tests
             serviceCollection.AddSingleton<IPokeAPI, PokeAPI>();
 
             serviceCollection.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<StatEntry>(dataStoreSettings.StatsCollectionName)
+                dataStoreSourceFactory.Create<StatEntry>(dataStoreSettings.StatCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<StatsService>, NullLogger<StatsService>>();
-            serviceCollection.AddSingleton<StatsService>();
+            serviceCollection.AddSingleton<ILogger<StatService>, NullLogger<StatService>>();
+            serviceCollection.AddSingleton<StatService>();
 
             serviceCollection.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationsCollectionName)
+                dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<GenerationsService>, NullLogger<GenerationsService>>();
-            serviceCollection.AddSingleton<GenerationsService>();
+            serviceCollection.AddSingleton<ILogger<GenerationService>, NullLogger<GenerationService>>();
+            serviceCollection.AddSingleton<GenerationService>();
 
             serviceCollection.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexesCollectionName)
+                dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<PokedexesService>, NullLogger<PokedexesService>>();
-            serviceCollection.AddSingleton<PokedexesService>();
+            serviceCollection.AddSingleton<ILogger<PokedexService>, NullLogger<PokedexService>>();
+            serviceCollection.AddSingleton<PokedexService>();
 
             serviceCollection.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<VersionEntry>(dataStoreSettings.VersionsCollectionName)
+                dataStoreSourceFactory.Create<VersionEntry>(dataStoreSettings.VersionCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<VersionsService>, NullLogger<VersionsService>>();
-            serviceCollection.AddSingleton<VersionsService>();
+            serviceCollection.AddSingleton<ILogger<VersionService>, NullLogger<VersionService>>();
+            serviceCollection.AddSingleton<VersionService>();
 
             serviceCollection.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupsCollectionName)
+                dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<VersionGroupsService>, NullLogger<VersionGroupsService>>();
-            serviceCollection.AddSingleton<VersionGroupsService>();
+            serviceCollection.AddSingleton<ILogger<VersionGroupService>, NullLogger<VersionGroupService>>();
+            serviceCollection.AddSingleton<VersionGroupService>();
 
             serviceCollection.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<TypeEntry>(dataStoreSettings.TypesCollectionName)
+                dataStoreSourceFactory.Create<TypeEntry>(dataStoreSettings.TypeCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<TypesService>, NullLogger<TypesService>>();
-            serviceCollection.AddSingleton<TypesService>();
+            serviceCollection.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
+            serviceCollection.AddSingleton<TypeService>();
 
             return serviceCollection.BuildServiceProvider();
         }

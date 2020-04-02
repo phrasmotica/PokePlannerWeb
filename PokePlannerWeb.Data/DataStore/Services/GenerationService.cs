@@ -11,15 +11,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the generation entries in the data store.
     /// </summary>
-    public class GenerationsService : NamedApiResourceServiceBase<Generation, GenerationEntry>
+    public class GenerationService : NamedApiResourceServiceBase<Generation, GenerationEntry>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public GenerationsService(
+        public GenerationService(
             IDataStoreSource<GenerationEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<GenerationsService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<GenerationService> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 

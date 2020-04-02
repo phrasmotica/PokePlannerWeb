@@ -9,7 +9,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for accessing machines information.
     /// </summary>
-    public class MachinesService
+    public class MachineService
     {
         /// <summary>
         /// The number of HM items in the Pokemon series.
@@ -24,20 +24,20 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The version group data singleton.
         /// </summary>
-        protected readonly VersionGroupsService VersionGroupsService;
+        protected readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// The logger.
         /// </summary>
-        protected readonly ILogger<MachinesService> Logger;
+        protected readonly ILogger<MachineService> Logger;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public MachinesService(
+        public MachineService(
             IPokeAPI pokeApi,
-            VersionGroupsService versionGroupsService,
-            ILogger<MachinesService> logger)
+            VersionGroupService versionGroupsService,
+            ILogger<MachineService> logger)
         {
             PokeApi = pokeApi;
             VersionGroupsService = versionGroupsService;

@@ -12,27 +12,27 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the Pokemon forms entries in the data store.
     /// </summary>
-    public class PokemonFormsService : NamedApiResourceServiceBase<PokemonForm, PokemonFormEntry>
+    public class PokemonFormService : NamedApiResourceServiceBase<PokemonForm, PokemonFormEntry>
     {
         /// <summary>
         /// The types service.
         /// </summary>
-        private readonly TypesService TypesService;
+        private readonly TypeService TypesService;
 
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupsService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PokemonFormsService(
+        public PokemonFormService(
             IDataStoreSource<PokemonFormEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            TypesService typesService,
-            VersionGroupsService versionGroupsService,
-            ILogger<PokemonFormsService> logger) : base(dataStoreSource, pokeApi, logger)
+            TypeService typesService,
+            VersionGroupService versionGroupsService,
+            ILogger<PokemonFormService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             VersionGroupsService = versionGroupsService;
             TypesService = typesService;

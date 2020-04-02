@@ -19,17 +19,17 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The Pokemon forms service.
         /// </summary>
-        private readonly PokemonFormsService PokemonFormsService;
+        private readonly PokemonFormService PokemonFormsService;
 
         /// <summary>
         /// The types service.
         /// </summary>
-        private readonly TypesService TypesService;
+        private readonly TypeService TypesService;
 
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupsService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// Constructor.
@@ -37,9 +37,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public PokemonService(
             IDataStoreSource<PokemonEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            PokemonFormsService pokemonFormsService,
-            TypesService typesService,
-            VersionGroupsService versionGroupsService,
+            PokemonFormService pokemonFormsService,
+            TypeService typesService,
+            VersionGroupService versionGroupsService,
             ILogger<PokemonService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             PokemonFormsService = pokemonFormsService;

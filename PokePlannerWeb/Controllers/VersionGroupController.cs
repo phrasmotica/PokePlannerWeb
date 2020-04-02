@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupsService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// The logger.
@@ -27,7 +27,7 @@ namespace PokePlannerWeb.Controllers
         /// Constructor.
         /// </summary>
         public VersionGroupController(
-            VersionGroupsService versionGroupsService,
+            VersionGroupService versionGroupsService,
             ILogger<VersionGroupController> logger)
         {
             VersionGroupsService = versionGroupsService;

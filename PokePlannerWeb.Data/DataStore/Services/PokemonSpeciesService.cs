@@ -23,7 +23,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupsService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// Constructor.
@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonService pokemonService,
-            VersionGroupsService versionGroupsService,
+            VersionGroupService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             PokemonService = pokemonService;

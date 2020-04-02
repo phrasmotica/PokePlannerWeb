@@ -24,7 +24,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The types service.
         /// </summary>
-        private readonly TypesService TypesService;
+        private readonly TypeService TypesService;
 
         /// <summary>
         /// The logger.
@@ -37,7 +37,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public EfficacyService(
             IPokeAPI pokeApi,
             PokemonService pokemonService,
-            TypesService typesService,
+            TypeService typesService,
             ILogger<EfficacyService> logger)
         {
             PokeApi = pokeApi;

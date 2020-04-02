@@ -17,22 +17,22 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The locations service.
         /// </summary>
-        private readonly LocationsService LocationsService;
+        private readonly LocationService LocationsService;
 
         /// <summary>
         /// The location areas service.
         /// </summary>
-        private readonly LocationAreasService LocationAreasService;
+        private readonly LocationAreaService LocationAreasService;
 
         /// <summary>
         /// The versions service.
         /// </summary>
-        private readonly VersionsService VersionsService;
+        private readonly VersionService VersionsService;
 
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupsService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// Constructor.
@@ -40,10 +40,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public EncountersService(
             IDataStoreSource<EncountersEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            LocationsService locationsService,
-            LocationAreasService locationAreasService,
-            VersionsService versionsService,
-            VersionGroupsService versionGroupsService,
+            LocationService locationsService,
+            LocationAreaService locationAreasService,
+            VersionService versionsService,
+            VersionGroupService versionGroupsService,
             ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             LocationsService = locationsService;

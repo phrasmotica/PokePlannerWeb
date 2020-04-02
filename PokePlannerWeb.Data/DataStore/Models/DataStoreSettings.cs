@@ -18,27 +18,27 @@
         /// <summary>
         /// The name of the collection of encounters.
         /// </summary>
-        public string EncountersCollectionName { get; set; }
+        public string EncounterCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of generations.
         /// </summary>
-        public string GenerationsCollectionName { get; set; }
+        public string GenerationCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of locations.
         /// </summary>
-        public string LocationsCollectionName { get; set; }
+        public string LocationCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of location areas.
         /// </summary>
-        public string LocationAreasCollectionName { get; set; }
+        public string LocationAreaCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of pokedexes.
         /// </summary>
-        public string PokedexesCollectionName { get; set; }
+        public string PokedexCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of Pokemon.
@@ -48,7 +48,7 @@
         /// <summary>
         /// The name of the collection of Pokemon forms.
         /// </summary>
-        public string PokemonFormsCollectionName { get; set; }
+        public string PokemonFormCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of Pokemon species.
@@ -58,22 +58,22 @@
         /// <summary>
         /// The name of the collection of stats.
         /// </summary>
-        public string StatsCollectionName { get; set; }
+        public string StatCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of types.
         /// </summary>
-        public string TypesCollectionName { get; set; }
+        public string TypeCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of versions.
         /// </summary>
-        public string VersionsCollectionName { get; set; }
+        public string VersionCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of version groups.
         /// </summary>
-        public string VersionGroupsCollectionName { get; set; }
+        public string VersionGroupCollectionName { get; set; }
     }
 
     /// <summary>
@@ -94,27 +94,27 @@
         /// <summary>
         /// The name of the collection of encounters.
         /// </summary>
-        string EncountersCollectionName { get; set; }
+        string EncounterCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of generations.
         /// </summary>
-        string GenerationsCollectionName { get; set; }
+        string GenerationCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of locations.
         /// </summary>
-        string LocationsCollectionName { get; set; }
+        string LocationCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of location areas.
         /// </summary>
-        string LocationAreasCollectionName { get; set; }
+        string LocationAreaCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of pokedexes.
         /// </summary>
-        string PokedexesCollectionName { get; set; }
+        string PokedexCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of Pokemon.
@@ -124,7 +124,7 @@
         /// <summary>
         /// The name of the collection of Pokemon forms.
         /// </summary>
-        string PokemonFormsCollectionName { get; set; }
+        string PokemonFormCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of Pokemon species.
@@ -134,21 +134,21 @@
         /// <summary>
         /// The name of the collection of stats.
         /// </summary>
-        string StatsCollectionName { get; set; }
+        string StatCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of types.
         /// </summary>
-        string TypesCollectionName { get; set; }
+        string TypeCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of versions.
         /// </summary>
-        string VersionsCollectionName { get; set; }
+        string VersionCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of version groups.
         /// </summary>
-        string VersionGroupsCollectionName { get; set; }
+        string VersionGroupCollectionName { get; set; }
     }
 }

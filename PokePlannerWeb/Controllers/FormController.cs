@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// THe Pokemon forms service.
         /// </summary>
-        private readonly PokemonFormsService PokemonFormsService;
+        private readonly PokemonFormService PokemonFormsService;
 
         /// <summary>
         /// The logger.
@@ -26,7 +26,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public FormController(PokemonFormsService pokemonFormsService, ILogger<FormController> logger)
+        public FormController(PokemonFormService pokemonFormsService, ILogger<FormController> logger)
         {
             PokemonFormsService = pokemonFormsService;
             Logger = logger;

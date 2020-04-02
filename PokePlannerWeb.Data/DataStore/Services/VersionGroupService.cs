@@ -11,33 +11,33 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the version group entries in the data store.
     /// </summary>
-    public class VersionGroupsService : NamedApiResourceServiceBase<VersionGroup, VersionGroupEntry>
+    public class VersionGroupService : NamedApiResourceServiceBase<VersionGroup, VersionGroupEntry>
     {
         /// <summary>
         /// The generations service.
         /// </summary>
-        private readonly GenerationsService GenerationsService;
+        private readonly GenerationService GenerationsService;
 
         /// <summary>
         /// The pokedexes service.
         /// </summary>
-        private readonly PokedexesService PokedexesService;
+        private readonly PokedexService PokedexesService;
 
         /// <summary>
         /// The versions service.
         /// </summary>
-        private readonly VersionsService VersionsService;
+        private readonly VersionService VersionsService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupsService(
+        public VersionGroupService(
             IDataStoreSource<VersionGroupEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            GenerationsService generationsService,
-            PokedexesService pokedexesService,
-            VersionsService versionsService,
-            ILogger<VersionGroupsService> logger) : base(dataStoreSource, pokeApi, logger)
+            GenerationService generationsService,
+            PokedexService pokedexesService,
+            VersionService versionsService,
+            ILogger<VersionGroupService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             GenerationsService = generationsService;
             PokedexesService = pokedexesService;

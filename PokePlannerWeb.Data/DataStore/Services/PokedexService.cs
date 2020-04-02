@@ -11,15 +11,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the pokedex entries in the data store.
     /// </summary>
-    public class PokedexesService : NamedApiResourceServiceBase<Pokedex, PokedexEntry>
+    public class PokedexService : NamedApiResourceServiceBase<Pokedex, PokedexEntry>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PokedexesService(
+        public PokedexService(
             IDataStoreSource<PokedexEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<PokedexesService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<PokedexService> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 

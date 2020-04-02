@@ -11,15 +11,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the stat entries in the data store.
     /// </summary>
-    public class StatsService : NamedApiResourceServiceBase<Stat, StatEntry>
+    public class StatService : NamedApiResourceServiceBase<Stat, StatEntry>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StatsService(
+        public StatService(
             IDataStoreSource<StatEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<StatsService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<StatService> logger) : base(dataStoreSource, pokeApi, logger)
         {
         }
 

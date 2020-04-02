@@ -34,7 +34,7 @@ namespace PokePlannerWeb.Tests
         public async Task TypesLoadingTest()
         {
             // load type data
-            var typesService = serviceProvider.GetService<TypesService>();
+            var typesService = serviceProvider.GetService<TypeService>();
             var entries = await typesService.UpsertAll();
 
             // verify it's all loaded

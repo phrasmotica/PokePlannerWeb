@@ -45,31 +45,31 @@ namespace PokePlannerWeb
             services.AddSingleton<EfficacyService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<EncountersEntry>(dataStoreSettings.EncountersCollectionName)
+                dataStoreSourceFactory.Create<EncountersEntry>(dataStoreSettings.EncounterCollectionName)
             );
             services.AddSingleton<EncountersService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationsCollectionName)
+                dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationCollectionName)
             );
-            services.AddSingleton<GenerationsService>();
+            services.AddSingleton<GenerationService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<LocationEntry>(dataStoreSettings.LocationsCollectionName)
+                dataStoreSourceFactory.Create<LocationEntry>(dataStoreSettings.LocationCollectionName)
             );
-            services.AddSingleton<LocationsService>();
+            services.AddSingleton<LocationService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<LocationAreaEntry>(dataStoreSettings.LocationAreasCollectionName)
+                dataStoreSourceFactory.Create<LocationAreaEntry>(dataStoreSettings.LocationAreaCollectionName)
             );
-            services.AddSingleton<LocationAreasService>();
+            services.AddSingleton<LocationAreaService>();
 
-            services.AddSingleton<MachinesService>();
+            services.AddSingleton<MachineService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexesCollectionName)
+                dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexCollectionName)
             );
-            services.AddSingleton<PokedexesService>();
+            services.AddSingleton<PokedexService>();
 
             services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<PokemonEntry>(dataStoreSettings.PokemonCollectionName)
@@ -77,9 +77,9 @@ namespace PokePlannerWeb
             services.AddSingleton<PokemonService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<PokemonFormEntry>(dataStoreSettings.PokemonFormsCollectionName)
+                dataStoreSourceFactory.Create<PokemonFormEntry>(dataStoreSettings.PokemonFormCollectionName)
             );
-            services.AddSingleton<PokemonFormsService>();
+            services.AddSingleton<PokemonFormService>();
 
             services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<PokemonSpeciesEntry>(dataStoreSettings.PokemonSpeciesCollectionName)
@@ -87,24 +87,24 @@ namespace PokePlannerWeb
             services.AddSingleton<PokemonSpeciesService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<StatEntry>(dataStoreSettings.StatsCollectionName)
+                dataStoreSourceFactory.Create<StatEntry>(dataStoreSettings.StatCollectionName)
             );
-            services.AddSingleton<StatsService>();
+            services.AddSingleton<StatService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<TypeEntry>(dataStoreSettings.TypesCollectionName)
+                dataStoreSourceFactory.Create<TypeEntry>(dataStoreSettings.TypeCollectionName)
             );
-            services.AddSingleton<TypesService>();
+            services.AddSingleton<TypeService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<VersionEntry>(dataStoreSettings.VersionsCollectionName)
+                dataStoreSourceFactory.Create<VersionEntry>(dataStoreSettings.VersionCollectionName)
             );
-            services.AddSingleton<VersionsService>();
+            services.AddSingleton<VersionService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupsCollectionName)
+                dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupCollectionName)
             );
-            services.AddSingleton<VersionGroupsService>();
+            services.AddSingleton<VersionGroupService>();
 
             services.AddCors();
 

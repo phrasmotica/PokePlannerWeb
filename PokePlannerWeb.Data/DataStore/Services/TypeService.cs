@@ -12,27 +12,27 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the type entries in the data store.
     /// </summary>
-    public class TypesService : NamedApiResourceServiceBase<Type, TypeEntry>
+    public class TypeService : NamedApiResourceServiceBase<Type, TypeEntry>
     {
         /// <summary>
         /// The generations service.
         /// </summary>
-        private readonly GenerationsService GenerationsService;
+        private readonly GenerationService GenerationsService;
 
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupsService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TypesService(
+        public TypeService(
             IDataStoreSource<TypeEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            GenerationsService generationsService,
-            VersionGroupsService versionGroupsService,
-            ILogger<TypesService> logger) : base(dataStoreSource, pokeApi, logger)
+            GenerationService generationsService,
+            VersionGroupService versionGroupsService,
+            ILogger<TypeService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             GenerationsService = generationsService;
             VersionGroupsService = versionGroupsService;

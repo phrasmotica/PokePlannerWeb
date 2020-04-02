@@ -38,7 +38,7 @@ namespace PokePlannerWeb.Tests
         public async Task VersionGroupsLoadingTest()
         {
             // load version groups
-            var versionGroupsService = serviceProvider.GetService<VersionGroupsService>();
+            var versionGroupsService = serviceProvider.GetService<VersionGroupService>();
             var versionGroups = await versionGroupsService.GetAll();
 
             // verify it's all loaded
@@ -53,7 +53,7 @@ namespace PokePlannerWeb.Tests
         public async Task StatsLoadingTest()
         {
             // load stats
-            var statsService = serviceProvider.GetService<StatsService>();
+            var statsService = serviceProvider.GetService<StatService>();
             var stats = await statsService.GetAll();
 
             // verify it's all loaded
@@ -237,7 +237,7 @@ namespace PokePlannerWeb.Tests
             var forms = await pokeApi.GetPage<PokemonForm>(316, 807);
 
             // filter to those with type names in their name
-            var typesService = serviceProvider.GetService<TypesService>();
+            var typesService = serviceProvider.GetService<TypeService>();
             var types = await typesService.GetAll();
             var typeNames = types.Select(t => t.Name);
             var regex = $"({string.Join("|", typeNames)})$";

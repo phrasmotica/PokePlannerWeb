@@ -16,17 +16,17 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// The stats service.
         /// </summary>
-        private readonly StatsService StatsService;
+        private readonly StatService StatsService;
 
         /// <summary>
         /// The logger.
         /// </summary>
-        private readonly ILogger<StatsService> Logger;
+        private readonly ILogger<StatService> Logger;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public StatController(StatsService statsService, ILogger<StatsService> logger)
+        public StatController(StatService statsService, ILogger<StatService> logger)
         {
             StatsService = statsService;
             Logger = logger;

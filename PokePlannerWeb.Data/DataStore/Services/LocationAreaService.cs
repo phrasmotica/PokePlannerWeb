@@ -11,21 +11,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing the location area entries in the data store.
     /// </summary>
-    public class LocationAreasService : NamedApiResourceServiceBase<LocationArea, LocationAreaEntry>
+    public class LocationAreaService : NamedApiResourceServiceBase<LocationArea, LocationAreaEntry>
     {
         /// <summary>
         /// The locations service.
         /// </summary>
-        private readonly LocationsService LocationsService;
+        private readonly LocationService LocationsService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public LocationAreasService(
+        public LocationAreaService(
             IDataStoreSource<LocationAreaEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            LocationsService locationsService,
-            ILogger<LocationAreasService> logger) : base(dataStoreSource, pokeApi, logger)
+            LocationService locationsService,
+            ILogger<LocationAreaService> logger) : base(dataStoreSource, pokeApi, logger)
         {
             LocationsService = locationsService;
         }

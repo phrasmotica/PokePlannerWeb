@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// The Types service.
         /// </summary>
-        private readonly TypesService TypesService;
+        private readonly TypeService TypesService;
 
         /// <summary>
         /// The logger.
@@ -27,7 +27,7 @@ namespace PokePlannerWeb.Controllers
         /// Constructor.
         /// </summary>
         public TypeController(
-            TypesService typesService,
+            TypeService typesService,
             ILogger<TypeController> logger)
         {
             TypesService = typesService;
