@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using PokeApiNet;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Cache;
 using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -38,6 +39,8 @@ namespace PokePlannerWeb.Tests
             services.AddSingleton<IPokeAPI, PokeAPI>();
 
             ConfigureDataStore(services);
+
+            ConfigureCache(services);
 
             return services.BuildServiceProvider();
         }
@@ -96,6 +99,22 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
             services.AddSingleton<TypeService>();
+        }
+
+        /// <summary>
+        /// Configures services for accessing the cache.
+        /// </summary>
+        private static void ConfigureCache(IServiceCollection services)
+        {
+            // bind cache settings
+            services.Configure<CacheSettings>(
+                Configuration.GetSection(nameof(CacheSettings))
+            );
+
+            // create singleton for cache settings
+            services.AddSingleton<ICacheSettings>(sp =>
+                sp.GetRequiredService<IOptions<CacheSettings>>().Value
+            );
         }
     }
 }

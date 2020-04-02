@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using PokeApiNet;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.Cache;
 using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -31,6 +32,8 @@ namespace PokePlannerWeb
             services.AddSingleton<IPokeAPI, PokeAPI>();
 
             ConfigureDataStore(services);
+
+            ConfigureCache(services);
 
             services.AddCors();
 
@@ -125,6 +128,22 @@ namespace PokePlannerWeb
                 dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupCollectionName)
             );
             services.AddSingleton<VersionGroupService>();
+        }
+
+        /// <summary>
+        /// Configures services for accessing the cache.
+        /// </summary>
+        private void ConfigureCache(IServiceCollection services)
+        {
+            // bind cache settings
+            services.Configure<CacheSettings>(
+                Configuration.GetSection(nameof(CacheSettings))
+            );
+
+            // create singleton for cache settings
+            services.AddSingleton<ICacheSettings>(sp =>
+                sp.GetRequiredService<IOptions<CacheSettings>>().Value
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
