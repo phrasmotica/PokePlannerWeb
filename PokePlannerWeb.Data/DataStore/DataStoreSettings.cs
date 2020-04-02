@@ -1,4 +1,4 @@
-﻿namespace PokePlannerWeb.Data.DataStore.Models
+﻿namespace PokePlannerWeb.Data.DataStore
 {
     /// <summary>
     /// Class for PokePlannerWeb data store settings.
@@ -77,7 +77,7 @@
     }
 
     /// <summary>
-    /// Interface for PokePlannerWeb database settings.
+    /// Interface for PokePlannerWeb data store settings.
     /// </summary>
     public interface IDataStoreSettings
     {

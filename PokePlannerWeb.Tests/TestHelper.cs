@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using PokeApiNet;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
@@ -26,12 +27,12 @@ namespace PokePlannerWeb.Tests
 
             IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.test.json").Build();
 
-            // bind database settings
+            // bind data store settings
             serviceCollection.Configure<DataStoreSettings>(
                 configuration.GetSection(nameof(DataStoreSettings))
             );
 
-            // create singleton for database settings
+            // create singleton for data store settings
             serviceCollection.AddSingleton<IDataStoreSettings>(sp =>
                 sp.GetRequiredService<IOptions<DataStoreSettings>>().Value
             );

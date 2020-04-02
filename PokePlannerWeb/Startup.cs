@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using PokeApiNet;
 using PokePlannerWeb.Data;
+using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
@@ -25,12 +26,12 @@ namespace PokePlannerWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // bind database settings
+            // bind data store settings
             services.Configure<DataStoreSettings>(
                 Configuration.GetSection(nameof(DataStoreSettings))
             );
 
-            // create singleton for database settings
+            // create singleton for data store settings
             services.AddSingleton<IDataStoreSettings>(sp =>
                 sp.GetRequiredService<IOptions<DataStoreSettings>>().Value
             );
