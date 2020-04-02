@@ -19,69 +19,83 @@ namespace PokePlannerWeb.Tests
     public class TestHelper
     {
         /// <summary>
+        /// The Configuration.
+        /// </summary>
+        private static IConfiguration Configuration;
+
+        /// <summary>
         /// Creates a service provider for tests.
         /// </summary>
         public static IServiceProvider BuildServiceProvider()
         {
-            var serviceCollection = new ServiceCollection();
+            var services = new ServiceCollection();
 
-            IConfiguration configuration = new ConfigurationBuilder().AddJsonFile("appsettings.test.json").Build();
+            Configuration = new ConfigurationBuilder().AddJsonFile("appsettings.test.json").Build();
 
+            // configure PokeAPI services
+            services.AddSingleton<PokeApiClient>();
+            services.AddSingleton<ILogger<PokeAPI>, NullLogger<PokeAPI>>();
+            services.AddSingleton<IPokeAPI, PokeAPI>();
+
+            ConfigureDataStore(services);
+
+            return services.BuildServiceProvider();
+        }
+
+        /// <summary>
+        /// Configures services for accessing the data store.
+        /// </summary>
+        private static void ConfigureDataStore(IServiceCollection services)
+        {
             // bind data store settings
-            serviceCollection.Configure<DataStoreSettings>(
-                configuration.GetSection(nameof(DataStoreSettings))
+            services.Configure<DataStoreSettings>(
+                Configuration.GetSection(nameof(DataStoreSettings))
             );
 
             // create singleton for data store settings
-            serviceCollection.AddSingleton<IDataStoreSettings>(sp =>
+            services.AddSingleton<IDataStoreSettings>(sp =>
                 sp.GetRequiredService<IOptions<DataStoreSettings>>().Value
             );
 
             // create data store services
-            var dataStoreSettings = configuration.GetSection(nameof(DataStoreSettings)).Get<DataStoreSettings>();
+            var dataStoreSettings = Configuration.GetSection(nameof(DataStoreSettings)).Get<DataStoreSettings>();
             var dataStoreSourceFactory = new DataStoreSourceFactory(dataStoreSettings.ConnectionString, dataStoreSettings.DatabaseName);
 
-            serviceCollection.AddSingleton<PokeApiClient>();
-            serviceCollection.AddSingleton<ILogger<PokeAPI>, NullLogger<PokeAPI>>();
-            serviceCollection.AddSingleton<IPokeAPI, PokeAPI>();
-
-            serviceCollection.AddSingleton(sp =>
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<StatEntry>(dataStoreSettings.StatCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<StatService>, NullLogger<StatService>>();
-            serviceCollection.AddSingleton<StatService>();
+            services.AddSingleton<ILogger<StatService>, NullLogger<StatService>>();
+            services.AddSingleton<StatService>();
 
-            serviceCollection.AddSingleton(sp =>
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<GenerationService>, NullLogger<GenerationService>>();
-            serviceCollection.AddSingleton<GenerationService>();
+            services.AddSingleton<ILogger<GenerationService>, NullLogger<GenerationService>>();
+            services.AddSingleton<GenerationService>();
 
-            serviceCollection.AddSingleton(sp =>
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<PokedexService>, NullLogger<PokedexService>>();
-            serviceCollection.AddSingleton<PokedexService>();
+            services.AddSingleton<ILogger<PokedexService>, NullLogger<PokedexService>>();
+            services.AddSingleton<PokedexService>();
 
-            serviceCollection.AddSingleton(sp =>
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<VersionEntry>(dataStoreSettings.VersionCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<VersionService>, NullLogger<VersionService>>();
-            serviceCollection.AddSingleton<VersionService>();
+            services.AddSingleton<ILogger<VersionService>, NullLogger<VersionService>>();
+            services.AddSingleton<VersionService>();
 
-            serviceCollection.AddSingleton(sp =>
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<VersionGroupService>, NullLogger<VersionGroupService>>();
-            serviceCollection.AddSingleton<VersionGroupService>();
+            services.AddSingleton<ILogger<VersionGroupService>, NullLogger<VersionGroupService>>();
+            services.AddSingleton<VersionGroupService>();
 
-            serviceCollection.AddSingleton(sp =>
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<TypeEntry>(dataStoreSettings.TypeCollectionName)
             );
-            serviceCollection.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
-            serviceCollection.AddSingleton<TypeService>();
-
-            return serviceCollection.BuildServiceProvider();
+            services.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
+            services.AddSingleton<TypeService>();
         }
     }
 }

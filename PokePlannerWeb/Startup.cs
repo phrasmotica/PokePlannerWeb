@@ -26,6 +26,28 @@ namespace PokePlannerWeb
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // configure PokeAPI services
+            services.AddSingleton<PokeApiClient>();
+            services.AddSingleton<IPokeAPI, PokeAPI>();
+
+            ConfigureDataStore(services);
+
+            services.AddCors();
+
+            services.AddControllersWithViews();
+
+            // In production, the React files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/build";
+            });
+        }
+
+        /// <summary>
+        /// Configures services for accessing the data store.
+        /// </summary>
+        private void ConfigureDataStore(IServiceCollection services)
+        {
             // bind data store settings
             services.Configure<DataStoreSettings>(
                 Configuration.GetSection(nameof(DataStoreSettings))
@@ -35,9 +57,6 @@ namespace PokePlannerWeb
             services.AddSingleton<IDataStoreSettings>(sp =>
                 sp.GetRequiredService<IOptions<DataStoreSettings>>().Value
             );
-
-            services.AddSingleton<PokeApiClient>();
-            services.AddSingleton<IPokeAPI, PokeAPI>();
 
             // create data store services
             var dataStoreSettings = Configuration.GetSection(nameof(DataStoreSettings)).Get<DataStoreSettings>();
@@ -106,16 +125,6 @@ namespace PokePlannerWeb
                 dataStoreSourceFactory.Create<VersionGroupEntry>(dataStoreSettings.VersionGroupCollectionName)
             );
             services.AddSingleton<VersionGroupService>();
-
-            services.AddCors();
-
-            services.AddControllersWithViews();
-
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
