@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using MongoDB.Driver;
 using PokePlannerWeb.Data.DataStore.Models;
 
@@ -29,34 +30,37 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         /// <summary>
         /// Returns all entries in the cache.
         /// </summary>
-        public IEnumerable<TEntry> GetAll()
+        public Task<IEnumerable<TEntry>> GetAll()
         {
-            return Collection.Find(_ => true).ToEnumerable();
+            var entries = Collection.Find(_ => true).ToEnumerable();
+            return Task.FromResult(entries);
         }
 
         /// <summary>
         /// Returns the first entry that matches the given predicate.
         /// </summary>
-        public TEntry GetOne(Expression<Func<TEntry, bool>> predicate)
+        public Task<TEntry> GetOne(Expression<Func<TEntry, bool>> predicate)
         {
-            return Collection.Find(predicate).FirstOrDefault();
+            var entry = Collection.Find(predicate).FirstOrDefault();
+            return Task.FromResult(entry);
         }
 
         /// <summary>
         /// Creates the given entry and returns it.
         /// </summary>
-        public TEntry Create(TEntry entry)
+        public Task<TEntry> Create(TEntry entry)
         {
             Collection.InsertOne(entry);
-            return entry;
+            return Task.FromResult(entry);
         }
 
         /// <summary>
         /// Deletes the first entry that matches the given predicate.
         /// </summary>
-        public void DeleteOne(Expression<Func<TEntry, bool>> predicate)
+        public Task DeleteOne(Expression<Func<TEntry, bool>> predicate)
         {
             Collection.DeleteOne(predicate);
+            return Task.CompletedTask;
         }
     }
 }

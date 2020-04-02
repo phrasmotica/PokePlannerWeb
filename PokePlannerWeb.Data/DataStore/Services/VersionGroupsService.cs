@@ -86,14 +86,22 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Public methods
 
         /// <summary>
-        /// Gets the index of the oldest version group.
+        /// Returns the index of the oldest version group.
         /// </summary>
-        public int OldestVersionGroupId => AllEntries.Select(vg => vg.VersionGroupId).Min();
+        public async Task<int> GetOldestVersionGroupId()
+        {
+            var entries = await GetAllEntries();
+            return entries.Select(vg => vg.VersionGroupId).Min();
+        }
 
         /// <summary>
-        /// Gets the index of the newest version group.
+        /// Returns the index of the newest version group.
         /// </summary>
-        public int NewestVersionGroupId => AllEntries.Select(vg => vg.VersionGroupId).Max();
+        public async Task<int> GetNewestVersionGroupId()
+        {
+            var entries = await GetAllEntries();
+            return entries.Select(vg => vg.VersionGroupId).Max();
+        }
 
         /// <summary>
         /// Returns all version groups.

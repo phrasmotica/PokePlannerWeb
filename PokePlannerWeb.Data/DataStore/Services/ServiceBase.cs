@@ -56,15 +56,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given key from the database.
         /// </summary>
-        protected TEntry Get(int key)
+        protected async Task<TEntry> Get(int key)
         {
-            return CacheSource.GetOne(t => t.Key == key);
+            return await CacheSource.GetOne(t => t.Key == key);
         }
 
         /// <summary>
         /// Returns all entries from the database.
         /// </summary>
-        protected IEnumerable<TEntry> AllEntries => CacheSource.GetAll();
+        protected async Task<IEnumerable<TEntry>> GetAllEntries()
+        {
+            return await CacheSource.GetAll();
+        }
 
         /// <summary>
         /// Creates a new entry in the database and returns it.
@@ -120,7 +123,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<TEntry> Upsert(int key)
         {
-            var entry = Get(key);
+            var entry = await Get(key);
             if (entry == null)
             {
                 var sourceType = typeof(TSource).Name;
@@ -166,8 +169,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var resourcesPage = await PokeApi.GetPage<TSource>();
 
-            var allEntries = AllEntries.ToList();
-            if (!allEntries.Any() || allEntries.Count != resourcesPage.Count)
+            var allEntries = await GetAllEntries();
+            if (!allEntries.Any() || allEntries.ToList().Count != resourcesPage.Count)
             {
                 const int pageSize = 20;
 
@@ -220,7 +223,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             foreach (var source in sources)
             {
                 var entry = await ConvertToEntry(source);
-                var existingEntry = Get(entry.Key);
+                var existingEntry = await Get(entry.Key);
                 if (existingEntry != null)
                 {
                     if (replace)
@@ -249,9 +252,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entries with the given keys from the database.
         /// </summary>
-        protected IEnumerable<TEntry> GetMany(IEnumerable<int> keys)
+        protected async Task<IEnumerable<TEntry>> GetMany(IEnumerable<int> keys)
         {
-            return AllEntries.Where(e => keys.Contains(e.Key));
+            var entries = new List<TEntry>();
+
+            foreach (var key in keys)
+            {
+                entries.Add(await Get(key));
+            }
+
+            return entries;
         }
 
         /// <summary>
@@ -277,7 +287,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             // update entry
             await UpdateEntry(key, source);
 
-            return Get(key);
+            return await Get(key);
         }
 
         /// <summary>
@@ -311,7 +321,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             // TODO: reduce number of calls to Upsert methods.
             // this method of upserting by key requires (expensive) entry conversions
             var entry = await ConvertToEntry(source);
-            var existingEntry = Get(entry.Key);
+            var existingEntry = await Get(entry.Key);
             if (existingEntry != null)
             {
                 if (replace)

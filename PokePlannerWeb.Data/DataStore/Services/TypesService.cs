@@ -179,7 +179,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<TypeRelations> GetDamageRelations(Type type, int versionGroupId)
         {
-            if (versionGroupId == VersionGroupsService.NewestVersionGroupId)
+            if (versionGroupId == await VersionGroupsService.GetNewestVersionGroupId())
             {
                 return type.DamageRelations;
             }

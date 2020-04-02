@@ -32,9 +32,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entry with the given name from the database.
         /// </summary>
-        protected TEntry GetByName(string name)
+        protected async Task<TEntry> GetByName(string name)
         {
-            return CacheSource.GetOne(e => e.Name == name);
+            return await CacheSource.GetOne(e => e.Name == name);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public override async Task<TEntry> Upsert(NamedApiResource<TSource> res)
         {
             // check for existing entry by name
-            var existingEntry = GetByName(res.Name);
+            var existingEntry = await GetByName(res.Name);
             if (existingEntry != null)
             {
                 return existingEntry;
@@ -79,8 +79,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
         {
             // check for existing entries by name
-            var existingEntries = GetManyByNames(resources.Select(r => r.Name)).ToList();
-            if (existingEntries.Count == resources.ToList().Count)
+            var existingEntries = await GetManyByNames(resources.Select(r => r.Name));
+            if (existingEntries.ToList().Count == resources.ToList().Count)
             {
                 return existingEntries;
             }
@@ -97,7 +97,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             foreach (var source in sources)
             {
-                var existingEntry = GetByName(source.Name);
+                var existingEntry = await GetByName(source.Name);
                 if (existingEntry != null)
                 {
                     if (replace)
@@ -137,9 +137,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the entries with the given names from the database.
         /// </summary>
-        protected IEnumerable<TEntry> GetManyByNames(IEnumerable<string> names)
+        protected async Task<IEnumerable<TEntry>> GetManyByNames(IEnumerable<string> names)
         {
-            return names.Select(n => GetByName(n));
+            var entries = new List<TEntry>();
+            
+            foreach (var name in names)
+            {
+                entries.Add(await GetByName(name));
+            }
+
+            return entries;
         }
 
         /// <summary>
@@ -147,7 +154,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<TEntry> Upsert(TSource source, bool replace = false)
         {
-            var existingEntry = GetByName(source.Name);
+            var existingEntry = await GetByName(source.Name);
             if (existingEntry != null)
             {
                 if (replace)

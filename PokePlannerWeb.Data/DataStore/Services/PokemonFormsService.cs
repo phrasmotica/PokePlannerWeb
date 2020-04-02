@@ -195,8 +195,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             // FUTURE: anticipating a generation-based types changelog
-            var newestIdWithoutData = VersionGroupsService.OldestVersionGroupId;
-            var newestId = VersionGroupsService.NewestVersionGroupId;
+            var newestIdWithoutData = await VersionGroupsService.GetOldestVersionGroupId();
+            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
             for (var id = newestIdWithoutData; id <= newestId; id++)
             {
                 typesList.Add(new WithId<Type[]>(id, newestTypeEntries.ToArray()));

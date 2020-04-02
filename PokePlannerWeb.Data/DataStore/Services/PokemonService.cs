@@ -169,7 +169,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var typesList = new List<WithId<Type[]>>();
 
-            var newestIdWithoutData = VersionGroupsService.OldestVersionGroupId;
+            var newestIdWithoutData = await VersionGroupsService.GetOldestVersionGroupId();
 
             if (pokemon.PastTypes.Any())
             {
@@ -190,7 +190,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             // always include the newest types
-            var newestId = VersionGroupsService.NewestVersionGroupId;
+            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
             var newestTypeEntries = await MinimiseTypes(pokemon.Types);
             for (var id = newestIdWithoutData; id <= newestId; id++)
             {
@@ -220,7 +220,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             // FUTURE: anticipating a generation-based base stats changelog
             // in which case this method will need to look like GetTypes()
-            var newestId = VersionGroupsService.NewestVersionGroupId;
+            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
             var currentBaseStats = pokemon.GetBaseStats(newestId);
 
             var versionGroups = await VersionGroupsService.GetAll();
