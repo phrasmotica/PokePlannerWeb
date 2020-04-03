@@ -27,6 +27,11 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         Task<CacheEntry<TResource>> GetCacheEntry(int id);
 
         /// <summary>
+        /// Returns the cache entry for the resource with the given name.
+        /// </summary>
+        Task<CacheEntry<TResource>> GetCacheEntry(string name);
+
+        /// <summary>
         /// Creates the given resource and returns it.
         /// </summary>
         Task<TResource> Create(TResource resource);

@@ -8,7 +8,7 @@ using PokePlannerWeb.Data.Cache.Abstractions;
 namespace PokePlannerWeb.Data.Cache.Services
 {
     /// <summary>
-    /// Service for managing a collection of resources in the cache.
+    /// Service for managing a collection of PokeAPI resources in the cache.
     /// </summary>
     public class CacheServiceBase<TResource> where TResource : NamedApiResource
     {
@@ -114,6 +114,35 @@ namespace PokePlannerWeb.Data.Cache.Services
                 Logger.LogInformation($"Cached {entryType} with ID {id} is stale - updating...");
 
                 var resource = await PokeApi.Get<TResource>(id);
+                await Update(resource);
+                return resource;
+            }
+
+            return entry.Resource;
+        }
+
+        /// <summary>
+        /// Returns the resource with the given ID, creating a cache entry if it doesn't exist.
+        /// </summary>
+        public async Task<TResource> Upsert(NamedApiResource<TResource> res)
+        {
+            var name = res.Name;
+            var entry = await CacheSource.GetCacheEntry(name);
+            if (entry == null)
+            {
+                var entryType = typeof(TResource).Name;
+                Logger.LogInformation($"Caching {entryType} with name {name}...");
+
+                var resource = await PokeApi.Get(res);
+                return await Create(resource);
+            }
+            else if (IsStale(entry))
+            {
+                // update cache entry if it's stale
+                var entryType = typeof(TResource).Name;
+                Logger.LogInformation($"Cached {entryType} with name {name} is stale - updating...");
+
+                var resource = await PokeApi.Get(res);
                 await Update(resource);
                 return resource;
             }

@@ -57,6 +57,15 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         }
 
         /// <summary>
+        /// Returns the cache entry for the resource with the given name.
+        /// </summary>
+        public Task<CacheEntry<TResource>> GetCacheEntry(string name)
+        {
+            var entry = Collection.Find(e => e.Resource.Name == name).FirstOrDefault();
+            return Task.FromResult(entry);
+        }
+
+        /// <summary>
         /// Creates the given entry and returns it.
         /// </summary>
         public Task<TResource> Create(TResource resource)
