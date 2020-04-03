@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Models;
 
 namespace PokePlannerWeb.Data.Cache.Abstractions
 {

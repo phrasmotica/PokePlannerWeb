@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Models;
 
 namespace PokePlannerWeb.Data.Cache.Abstractions
 {

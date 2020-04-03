@@ -1,7 +1,7 @@
 ﻿using System;
 using PokeApiNet;
 
-namespace PokePlannerWeb.Data.Cache
+namespace PokePlannerWeb.Data.Cache.Models
 {
     /// <summary>
     /// Model for a timestamped cache entry.

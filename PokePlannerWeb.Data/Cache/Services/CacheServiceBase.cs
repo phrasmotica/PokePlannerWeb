@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Cache.Abstractions;
+using PokePlannerWeb.Data.Cache.Models;
 
 namespace PokePlannerWeb.Data.Cache.Services
 {
