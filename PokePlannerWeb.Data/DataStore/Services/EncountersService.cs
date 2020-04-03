@@ -14,6 +14,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// </summary>
     public class EncountersService : ServiceBase<Pokemon, EncountersEntry>
     {
+        // TODO: create cache service
         /// <summary>
         /// The locations service.
         /// </summary>

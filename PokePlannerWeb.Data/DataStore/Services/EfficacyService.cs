@@ -11,6 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// </summary>
     public class EfficacyService
     {
+        // TODO: create cache service
         /// <summary>
         /// The PokeAPI data fetcher.
         /// </summary>

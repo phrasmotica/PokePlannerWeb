@@ -11,6 +11,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// </summary>
     public class MachineService
     {
+        // TODO: create cache service
         /// <summary>
         /// The number of HM items in the Pokemon series.
         /// </summary>
