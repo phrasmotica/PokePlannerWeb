@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
@@ -14,7 +15,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// </summary>
     public class EncountersService : ServiceBase<Pokemon, EncountersEntry>
     {
-        // TODO: create cache service
+        /// <summary>
+        /// The Pokemon cache service.
+        /// </summary>
+        private readonly PokemonCacheService PokemonCacheService;
+
         /// <summary>
         /// The locations service.
         /// </summary>
@@ -41,12 +46,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public EncountersService(
             IDataStoreSource<EncountersEntry> dataStoreSource,
             IPokeAPI pokeApi,
+            PokemonCacheService pokemonCacheService,
             LocationService locationsService,
             LocationAreaService locationAreasService,
             VersionService versionsService,
             VersionGroupService versionGroupsService,
             ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, logger)
         {
+            PokemonCacheService = pokemonCacheService;
             LocationsService = locationsService;
             LocationAreasService = locationAreasService;
             VersionsService = versionsService;
@@ -61,7 +68,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<Pokemon> FetchSource(int pokemonId)
         {
             Logger.LogInformation($"Fetching Pokemon source object with ID {pokemonId}...");
-            return await PokeApi.Get<Pokemon>(pokemonId);
+            return await PokemonCacheService.Upsert(pokemonId);
         }
 
         /// <summary>
@@ -102,6 +109,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var encounterEntriesList = new List<WithId<EncounterEntry[]>>();
 
             // enumerate version groups spanned by this Pokemon's encounters
+            // TODO: create encounters cache service
             var encounters = await PokeApi.GetEncounters(pokemon);
             var versions = await VersionsService.UpsertMany(encounters.GetDistinctVersions());
             var versionGroups = await VersionGroupsService.UpsertManyByVersionIds(versions.Select(v => v.VersionId));
