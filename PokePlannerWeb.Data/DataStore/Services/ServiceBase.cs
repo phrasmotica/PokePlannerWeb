@@ -164,28 +164,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Upserts many entries into the data store.
         /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources)
         {
             var sourceType = typeof(TSource).Name;
             var entryType = typeof(TEntry).Name;
             Logger.LogInformation($"Upserting {resources.Results.Count} {entryType} entries for {sourceType} in data store...");
 
-            var sourceList = await PokeApi.Get(resources.Results);
-
-            var entryList = new List<TEntry>();
-            foreach (var o in sourceList)
-            {
-                var entry = await Upsert(o, replace);
-                entryList.Add(entry);
-            }
-
-            return entryList;
+            return await UpsertMany(resources.Results);
         }
 
         /// <summary>
         /// Creates or updates the entry with the given ID for the source object as needed.
         /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources)
         {
             var entries = new List<TEntry>();
 
@@ -193,22 +184,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             {
                 var entry = await ConvertToEntry(source);
                 var existingEntry = await Get(entry.Key);
-                if (existingEntry != null)
-                {
-                    if (replace)
-                    {
-                        Update(entry.Key, entry);
-                        entries.Add(entry);
-                    }
-                    else
-                    {
-                        entries.Add(existingEntry);
-                    }
-                }
-                else
-                {
-                    entries.Add(Create(entry));
-                }
+                entries.Add(existingEntry ?? Create(entry));
             }
 
             return entries;
@@ -217,7 +193,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Upserts all entries into the data store.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> UpsertAll(bool replace = false)
+        public async Task<IEnumerable<TEntry>> UpsertAll()
         {
             var resourcesPage = await PokeApi.GetPage<TSource>();
 
@@ -233,7 +209,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 do
                 {
                     page = await PokeApi.GetPage<TSource>(pageSize, pageSize * pagesUsed++);
-                    var entries = await UpsertMany(page, replace);
+                    var entries = await UpsertMany(page);
                     entryList.AddRange(entries);
                 } while (!string.IsNullOrEmpty(page.Next));
 
@@ -266,24 +242,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates or updates the entry with the given ID for the source object as needed.
         /// </summary>
-        protected virtual async Task<TEntry> Upsert(TSource source, bool replace = false)
+        protected virtual async Task<TEntry> Upsert(TSource source)
         {
             // TODO: reduce number of calls to Upsert methods.
             // this method of upserting by key requires (expensive) entry conversions
             var entry = await ConvertToEntry(source);
             var existingEntry = await Get(entry.Key);
-            if (existingEntry != null)
-            {
-                if (replace)
-                {
-                    Update(entry.Key, entry);
-                    return entry;
-                }
-
-                return existingEntry;
-            }
-
-            return Create(entry);
+            return existingEntry ?? Create(entry);
         }
 
         /// <summary>

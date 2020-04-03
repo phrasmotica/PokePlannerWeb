@@ -107,30 +107,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates or updates the entry with the given ID for the source object as needed.
         /// </summary>
-        public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources, bool replace = false)
+        public override async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<TSource> sources)
         {
             var entries = new List<TEntry>();
 
             foreach (var source in sources)
             {
                 var existingEntry = await GetByName(source.Name);
-                if (existingEntry != null)
-                {
-                    if (replace)
-                    {
-                        var entry = await ConvertToEntry(source);
-                        UpdateByName(source.Name, entry);
-                        entries.Add(entry);
-                    }
-                    else
-                    {
-                        entries.Add(existingEntry);
-                    }
-                }
-                else
-                {
-                    entries.Add(await CreateEntry(source));
-                }
+                entries.Add(existingEntry ?? await CreateEntry(source));
             }
 
             return entries;
@@ -168,7 +152,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Upserts many entries into the data store, via the cache.
         /// </summary>
-        public override async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
+        public override async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources)
         {
             var sourceType = typeof(TSource).Name;
             var entryType = typeof(TEntry).Name;
@@ -180,22 +164,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Creates or updates the entry for the given source object as needed.
         /// </summary>
-        protected override async Task<TEntry> Upsert(TSource source, bool replace = false)
+        protected override async Task<TEntry> Upsert(TSource source)
         {
             var existingEntry = await GetByName(source.Name);
-            if (existingEntry != null)
-            {
-                if (replace)
-                {
-                    var entry = await ConvertToEntry(source);
-                    UpdateByName(source.Name, entry);
-                    return entry;
-                }
-
-                return existingEntry;
-            }
-
-            return await CreateEntry(source);
+            return existingEntry ?? await CreateEntry(source);
         }
 
         #endregion
