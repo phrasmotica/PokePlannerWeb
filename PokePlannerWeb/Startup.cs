@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using PokeApiNet;
 using PokePlannerWeb.Data;
 using PokePlannerWeb.Data.Cache;
+using PokePlannerWeb.Data.Cache.Abstractions;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -144,6 +146,65 @@ namespace PokePlannerWeb
             services.AddSingleton<ICacheSettings>(sp =>
                 sp.GetRequiredService<IOptions<CacheSettings>>().Value
             );
+
+            // create cache services
+            var cacheSettings = Configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
+            var cacheSourceFactory = new CacheSourceFactory(cacheSettings.ConnectionString, cacheSettings.DatabaseName);
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Generation>(cacheSettings.GenerationCollectionName)
+            );
+            services.AddSingleton<GenerationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<LocationArea>(cacheSettings.LocationAreaCollectionName)
+            );
+            services.AddSingleton<LocationAreaCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Location>(cacheSettings.LocationCollectionName)
+            );
+            services.AddSingleton<LocationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)
+            );
+            services.AddSingleton<PokedexCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Pokemon>(cacheSettings.PokemonCollectionName)
+            );
+            services.AddSingleton<PokemonCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<PokemonForm>(cacheSettings.PokemonFormCollectionName)
+            );
+            services.AddSingleton<PokemonFormCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<PokemonSpecies>(cacheSettings.PokemonSpeciesCollectionName)
+            );
+            services.AddSingleton<PokemonSpeciesCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Stat>(cacheSettings.StatCollectionName)
+            );
+            services.AddSingleton<StatCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Type>(cacheSettings.TypeCollectionName)
+            );
+            services.AddSingleton<TypeCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Version>(cacheSettings.VersionCollectionName)
+            );
+            services.AddSingleton<VersionCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<VersionGroup>(cacheSettings.VersionGroupCollectionName)
+            );
+            services.AddSingleton<VersionGroupCacheService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

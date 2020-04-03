@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 
@@ -34,10 +35,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public VersionGroupService(
             IDataStoreSource<VersionGroupEntry> dataStoreSource,
             IPokeAPI pokeApi,
+            VersionGroupCacheService versionGroupCacheService,
             GenerationService generationsService,
             PokedexService pokedexesService,
             VersionService versionsService,
-            ILogger<VersionGroupService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<VersionGroupService> logger) : base(dataStoreSource, pokeApi, versionGroupCacheService, logger)
         {
             GenerationsService = generationsService;
             PokedexesService = pokedexesService;

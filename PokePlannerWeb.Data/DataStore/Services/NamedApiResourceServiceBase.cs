@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 
@@ -16,13 +17,20 @@ namespace PokePlannerWeb.Data.DataStore.Services
         where TEntry : NamedApiResourceEntry
     {
         /// <summary>
+        /// The cache service for the resource type.
+        /// </summary>
+        protected readonly CacheServiceBase<TSource> CacheService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public NamedApiResourceServiceBase(
             IDataStoreSource<TEntry> dataStoreSource,
             IPokeAPI pokeApi,
+            CacheServiceBase<TSource> cacheService,
             ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(dataStoreSource, pokeApi, logger)
         {
+            CacheService = cacheService;
         }
 
         #region CRUD methods
@@ -68,7 +76,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 return existingEntry;
             }
 
-            return await base.Upsert(res);
+            var resource = await CacheService.Upsert(res);
+            return await CreateEntry(resource);
         }
 
         /// <summary>
@@ -84,7 +93,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 return existingEntries;
             }
 
-            return await base.UpsertMany(resources);
+            var entryList = new List<TEntry>();
+
+            foreach (var res in resources)
+            {
+                var entry = await Upsert(res);
+                entryList.Add(entry);
+            }
+
+            return entryList;
         }
 
         /// <summary>
@@ -130,7 +147,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var typeName = typeof(TSource).Name;
             Logger.LogInformation($"Fetching {typeName} source object with ID {key}...");
-            return await PokeApi.Get<TSource>(key);
+            return await CacheService.Upsert(key);
         }
 
         /// <summary>
@@ -146,6 +163,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return entries;
+        }
+
+        /// <summary>
+        /// Upserts many entries into the data store, via the cache.
+        /// </summary>
+        public override async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
+        {
+            var sourceType = typeof(TSource).Name;
+            var entryType = typeof(TEntry).Name;
+            Logger.LogInformation($"Upserting {resources.Results.Count} {entryType} entries for {sourceType} in data store...");
+
+            return await UpsertMany(resources.Results);
         }
 
         /// <summary>

@@ -100,24 +100,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Public methods
 
         /// <summary>
-        /// Creates a new entry for the given named API resource and returns it.
-        /// </summary>
-        public virtual async Task<TEntry> Upsert(NamedApiResource<TSource> res)
-        {
-            var source = await PokeApi.Get(res);
-            return await Upsert(source);
-        }
-
-        /// <summary>
-        /// Creates new entries for the given named API resources and returns them.
-        /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
-        {
-            var sources = await PokeApi.Get(resources);
-            return await UpsertMany(sources);
-        }
-
-        /// <summary>
         /// Returns the entry with the given ID, creating the entry if it doesn't exist.
         /// </summary>
         public async Task<TEntry> Upsert(int key)
@@ -146,6 +128,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Creates a new entry for the given named API resource and returns it.
+        /// </summary>
+        public virtual async Task<TEntry> Upsert(NamedApiResource<TSource> res)
+        {
+            var source = await PokeApi.Get(res);
+            return await Upsert(source);
+        }
+
+        /// <summary>
         /// Returns the entry with the given ID, creating the entry if it doesn't exist.
         /// </summary>
         public async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<int> keys)
@@ -162,39 +153,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Upserts all entries into the data store.
+        /// Creates new entries for the given named API resources and returns them.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> UpsertAll(bool replace = false)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
         {
-            var resourcesPage = await PokeApi.GetPage<TSource>();
-
-            var allEntries = await GetAllEntries();
-            if (!allEntries.Any() || allEntries.ToList().Count != resourcesPage.Count)
-            {
-                const int pageSize = 20;
-
-                var entryList = new List<TEntry>();
-
-                var pagesUsed = 0;
-                NamedApiResourceList<TSource> page;
-                do
-                {
-                    page = await PokeApi.GetPage<TSource>(pageSize, pageSize * pagesUsed++);
-                    var entries = await UpsertMany(page, replace);
-                    entryList.AddRange(entries);
-                } while (!string.IsNullOrEmpty(page.Next));
-
-                return entryList;
-            }
-
-            // if we have the right number of entries then we're probably good
-            return allEntries;
+            var sources = await PokeApi.Get(resources);
+            return await UpsertMany(sources);
         }
 
         /// <summary>
         /// Upserts many entries into the data store.
         /// </summary>
-        public async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources, bool replace = false)
         {
             var sourceType = typeof(TSource).Name;
             var entryType = typeof(TEntry).Name;
@@ -244,6 +214,36 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return entries;
         }
 
+        /// <summary>
+        /// Upserts all entries into the data store.
+        /// </summary>
+        public async Task<IEnumerable<TEntry>> UpsertAll(bool replace = false)
+        {
+            var resourcesPage = await PokeApi.GetPage<TSource>();
+
+            var allEntries = await GetAllEntries();
+            if (!allEntries.Any() || allEntries.ToList().Count != resourcesPage.Count)
+            {
+                const int pageSize = 20;
+
+                var entryList = new List<TEntry>();
+
+                var pagesUsed = 0;
+                NamedApiResourceList<TSource> page;
+                do
+                {
+                    page = await PokeApi.GetPage<TSource>(pageSize, pageSize * pagesUsed++);
+                    var entries = await UpsertMany(page, replace);
+                    entryList.AddRange(entries);
+                } while (!string.IsNullOrEmpty(page.Next));
+
+                return entryList;
+            }
+
+            // if we have the right number of entries then we're probably good
+            return allEntries;
+        }
+
         #endregion
 
         #region Helpers
@@ -261,6 +261,29 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return entries;
+        }
+
+        /// <summary>
+        /// Creates or updates the entry with the given ID for the source object as needed.
+        /// </summary>
+        protected virtual async Task<TEntry> Upsert(TSource source, bool replace = false)
+        {
+            // TODO: reduce number of calls to Upsert methods.
+            // this method of upserting by key requires (expensive) entry conversions
+            var entry = await ConvertToEntry(source);
+            var existingEntry = await Get(entry.Key);
+            if (existingEntry != null)
+            {
+                if (replace)
+                {
+                    Update(entry.Key, entry);
+                    return entry;
+                }
+
+                return existingEntry;
+            }
+
+            return Create(entry);
         }
 
         /// <summary>
@@ -310,29 +333,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var entry = await ConvertToEntry(source);
             Update(key, entry);
-        }
-
-        /// <summary>
-        /// Creates or updates the entry with the given ID for the source object as needed.
-        /// </summary>
-        protected virtual async Task<TEntry> Upsert(TSource source, bool replace = false)
-        {
-            // TODO: reduce number of calls to Upsert methods.
-            // this method of upserting by key requires (expensive) entry conversions
-            var entry = await ConvertToEntry(source);
-            var existingEntry = await Get(entry.Key);
-            if (existingEntry != null)
-            {
-                if (replace)
-                {
-                    Update(entry.Key, entry);
-                    return entry;
-                }
-
-                return existingEntry;
-            }
-
-            return Create(entry);
         }
 
         /// <summary>

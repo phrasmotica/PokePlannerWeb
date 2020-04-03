@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
@@ -31,9 +32,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public PokemonSpeciesService(
             IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
+            PokemonSpeciesCacheService pokemonSpeciesCacheService,
             PokemonService pokemonService,
             VersionGroupService versionGroupsService,
-            ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;

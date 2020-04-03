@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
@@ -19,7 +20,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public LocationService(
             IDataStoreSource<LocationEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            ILogger<LocationService> logger) : base(dataStoreSource, pokeApi, logger)
+            LocationCacheService locationCacheService,
+            ILogger<LocationService> logger) : base(dataStoreSource, pokeApi, locationCacheService, logger)
         {
         }
 

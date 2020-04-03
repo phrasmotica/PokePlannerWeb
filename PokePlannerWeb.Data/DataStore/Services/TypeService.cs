@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
@@ -30,9 +31,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public TypeService(
             IDataStoreSource<TypeEntry> dataStoreSource,
             IPokeAPI pokeApi,
+            TypeCacheService typeCacheService,
             GenerationService generationsService,
             VersionGroupService versionGroupsService,
-            ILogger<TypeService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<TypeService> logger) : base(dataStoreSource, pokeApi, typeCacheService, logger)
         {
             GenerationsService = generationsService;
             VersionGroupsService = versionGroupsService;
@@ -149,21 +151,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
                 foreach (var typeFrom in damageRelations.DoubleDamageFrom)
                 {
-                    // can't upsert due to infinite recursion...
-                    // TODO: come up with a sensible solution
-                    var o = await PokeApi.Get(typeFrom);
+                    var o = await CacheService.Upsert(typeFrom);
                     efficacySet.Add(o.Id, 2);
                 }
 
                 foreach (var typeFrom in damageRelations.HalfDamageFrom)
                 {
-                    var o = await PokeApi.Get(typeFrom);
+                    var o = await CacheService.Upsert(typeFrom);
                     efficacySet.Add(o.Id, 0.5);
                 }
 
                 foreach (var typeFrom in damageRelations.NoDamageFrom)
                 {
-                    var o = await PokeApi.Get(typeFrom);
+                    var o = await CacheService.Upsert(typeFrom);
                     efficacySet.Add(o.Id, 0);
                 }
 
