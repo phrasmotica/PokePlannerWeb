@@ -28,6 +28,11 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
     species: PokemonSpeciesEntry[]
 
     /**
+     * List of IDs of favourite species.
+     */
+    favouriteSpeciesIds: number[]
+
+    /**
      * The types presence map.
      */
     typesPresenceMap: TypesPresenceMap
@@ -36,6 +41,11 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
      * The base stat names.
      */
     baseStatNames: string[]
+
+    /**
+     * Handler for settings the favourite species in the parent component.
+     */
+    setFavouriteSpecies: (speciesIds: number[]) => void
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -85,6 +95,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
         const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
+        const setFavouriteSpecies = (speciesIds: number[]) => this.props.setFavouriteSpecies(speciesIds)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
@@ -94,12 +105,14 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         index={this.props.index}
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
+                        favouriteSpeciesIds={this.props.favouriteSpeciesIds}
                         ignoreValidity={this.props.ignoreValidity}
                         hideTooltips={this.props.hideTooltips}
                         clearPokemon={clearPokemon}
                         setSpecies={setSpecies}
                         setVariety={setVariety}
                         setForm={setForm}
+                        setFavouriteSpecies={setFavouriteSpecies}
                         toggleIgnoreValidity={toggleIgnoreValidity} />
 
                     {this.renderPokemonInfo()}

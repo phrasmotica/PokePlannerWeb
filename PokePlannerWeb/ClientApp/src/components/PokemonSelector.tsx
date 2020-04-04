@@ -20,6 +20,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     species: PokemonSpeciesEntry[]
 
     /**
+     * List of IDs of favourite species.
+     */
+    favouriteSpeciesIds: number[]
+
+    /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean
@@ -43,6 +48,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
      * Handler for setting the Pokemon form in the parent component.
      */
     setForm: (form: PokemonFormEntry) => void
+
+    /**
+     * Handler for settings the favourite species in the parent component.
+     */
+    setFavouriteSpecies: (speciesIds: number[]) => void
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -87,11 +97,6 @@ interface IPokemonSelectorState {
     loadingForms: boolean
 
     /**
-     * List of IDs of favourite species.
-     */
-    favouriteSpecies: number[]
-
-    /**
      * Whether the validity tooltip is open.
      */
     validityTooltipOpen: boolean
@@ -111,7 +116,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             formId: undefined,
             formsDict: [],
             loadingForms: false,
-            favouriteSpecies: [],
             validityTooltipOpen: false
         }
     }
@@ -673,16 +677,16 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return
         }
 
-        let favouriteSpecies = this.state.favouriteSpecies
-        let i = favouriteSpecies.indexOf(speciesId)
+        let favouriteSpeciesIds = this.props.favouriteSpeciesIds
+        let i = favouriteSpeciesIds.indexOf(speciesId)
         if (i < 0) {
-            favouriteSpecies.push(speciesId)
+            favouriteSpeciesIds.push(speciesId)
         }
         else {
-            favouriteSpecies.splice(i, 1)
+            favouriteSpeciesIds.splice(i, 1)
         }
 
-        this.setState({ favouriteSpecies: favouriteSpecies })
+        this.props.setFavouriteSpecies(favouriteSpeciesIds)
     }
 
     /**
@@ -694,7 +698,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return false
         }
 
-        return this.state.favouriteSpecies.includes(speciesId)
+        return this.props.favouriteSpeciesIds.includes(speciesId)
     }
 
     /**

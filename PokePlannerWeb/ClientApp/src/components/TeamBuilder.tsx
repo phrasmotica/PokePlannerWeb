@@ -33,6 +33,11 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     loadingSpecies: boolean
 
     /**
+     * List of IDs of favourite species.
+     */
+    favouriteSpeciesIds: number[]
+
+    /**
      * List of version groups.
      */
     versionGroups: VersionGroupEntry[]
@@ -77,6 +82,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.state = {
             species: [],
             loadingSpecies: true,
+            favouriteSpeciesIds: [],
             versionGroups: [],
             loadingVersionGroups: true,
             versionGroupId: undefined,
@@ -94,6 +100,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     componentDidMount() {
         this.getSpecies()
+        this.fetchFavouriteSpecies()
         this.getVersionGroups()
             .then(() => {
                 this.getBaseStatNames(this.state.versionGroupId)
@@ -195,6 +202,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         let rows = []
         let itemsPerRow = TEAM_SIZE / NUMBER_OF_ROWS
 
+        const setFavouriteSpecies = (speciesIds: number[]) => this.setFavouriteSpecies(speciesIds)
+
         for (let row = 0; row < NUMBER_OF_ROWS; row++) {
             let items = []
             for (let col = 0; col < itemsPerRow; col++) {
@@ -208,6 +217,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                         toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                         hideTooltips={this.state.hideTooltips}
                         species={this.state.species}
+                        favouriteSpeciesIds={this.state.favouriteSpeciesIds}
+                        setFavouriteSpecies={setFavouriteSpecies}
                         typesPresenceMap={this.state.typesPresenceMap}
                         baseStatNames={this.state.baseStatNames} />
                 )
@@ -286,6 +297,14 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .catch(error => console.error(error))
             .finally(() => this.setState({ loadingVersionGroups: false }))
+    }
+
+    /**
+     * Returns the user's favourite species.
+     */
+    fetchFavouriteSpecies() {
+        // TODO: get user's favourites from DB
+        this.setState({ favouriteSpeciesIds: [] })
     }
 
     // retrieves the types presence map for the given version group from TypeController
@@ -372,6 +391,14 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.setState(previousState => ({
             hideTooltips: !previousState.hideTooltips
         }))
+    }
+
+    /**
+     * Sets the user's favourite species.
+     */
+    setFavouriteSpecies(speciesIds: number[]) {
+        this.setState({ favouriteSpeciesIds: speciesIds })
+        // TODO: write user's new favourites to DB
     }
 
     /**
