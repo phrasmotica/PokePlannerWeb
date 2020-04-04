@@ -344,10 +344,17 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     // returns options for the species select
     createSpeciesOptions() {
         // TODO: allow filtering species by types and other properties
-        return this.props.species.map(species => ({
-            label: species.displayNames.filter(n => n.language === "en")[0].name,
-            value: species.speciesId
-        }))
+        return this.props.species.map(species => {
+            // needed to be able to call methods
+            // otherwise species remains an object that only looks like
+            // a species entry rather than an actually instance of the class
+            let s = PokemonSpeciesEntry.from(species)
+
+            return {
+                label: s.getDisplayName("en"),
+                value: s.speciesId
+            }
+        })
     }
 
     // returns options for the variety select
@@ -364,8 +371,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         return this.state.varieties.map(variety => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
-            let speciesNames = species.displayNames.filter(n => n.language === "en")
-            let label = speciesNames[0].name
+            let speciesName = species.getDisplayName("en")
+            if (speciesName === undefined) {
+                throw new Error(`Selector ${this.props.index}: no display name found for species ${species.speciesId}!`)
+            }
+
+            let label = speciesName
 
             let forms = this.getFormsOfVariety(variety.pokemonId)
             if (forms.length > 0) {
@@ -396,8 +407,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         return forms.map(form => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
-            let speciesNames = species.displayNames.filter(n => n.language === "en")
-            let label = speciesNames[0].name
+            let label = species.getDisplayName("en")
 
             let formNames = form.displayNames
             if (formNames.length > 0) {
@@ -558,8 +568,13 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     getSelectedSpecies() {
         let allSpecies = this.props.species
         let selectedSpeciesId = this.state.speciesId
-        let matchingSpecies = allSpecies.filter(s => s.speciesId === selectedSpeciesId)
-        return matchingSpecies[0]
+
+        let species = allSpecies.find(s => s.speciesId === selectedSpeciesId)
+        if (species === undefined) {
+            throw new Error(`Selector ${this.props.index}: no species found with ID ${selectedSpeciesId}!`)
+        }
+
+        return PokemonSpeciesEntry.from(species)
     }
 
     /**
