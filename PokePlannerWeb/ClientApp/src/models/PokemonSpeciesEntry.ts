@@ -65,6 +65,20 @@ export class PokemonSpeciesEntry {
      */
     getDisplayName(locale: string): string | undefined {
         let localName = this.displayNames.find(n => n.language === locale)
+        if (localName === undefined) {
+            // species should have display names in every locale so throw an error
+            throw new Error(
+                `Pokemon species ${this.speciesId} is missing display name in locale '${locale}'`
+            )
+        }
+
         return localName?.name
+    }
+
+    /**
+     * Returns whether the species is valid in the version group with the given ID.
+     */
+    isValid(versionGroupId: number): boolean {
+        return this.validity.includes(versionGroupId)
     }
 }

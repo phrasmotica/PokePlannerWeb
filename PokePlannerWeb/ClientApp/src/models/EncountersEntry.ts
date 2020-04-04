@@ -19,7 +19,7 @@ export interface EncountersEntry {
 /**
  * Represents an encounter in the data store.
  */
-export interface EncounterEntry {
+export class EncounterEntry {
     /**
      * The display names of the encounter.
      */
@@ -29,4 +29,37 @@ export interface EncounterEntry {
      * The encounter chances indexed by version ID.
      */
     chances: WithId<number>[]
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        displayNames: DisplayName[],
+        chances: WithId<number>[]
+    ) {
+        this.displayNames = displayNames
+        this.chances = chances
+    }
+
+    /**
+     * Returns a encounter entry created from the given entry.
+     */
+    static from(encounter: EncounterEntry) {
+        return new EncounterEntry(
+            encounter.displayNames,
+            encounter.chances
+        )
+    }
+
+    /**
+     * Returns the encounter's display name in the given locale.
+     */
+    getDisplayName(locale: string): string | undefined {
+        let localName = this.displayNames.find(n => n.language === locale)
+        if (localName === undefined) {
+            console.warn(`Encounter is missing display name in locale '${locale}'`)
+        }
+
+        return localName?.name
+    }
 }

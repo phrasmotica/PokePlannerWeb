@@ -141,12 +141,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     renderVersionGroupMenu() {
-        let options = this.state.versionGroups.map(vg => {
-            return {
-                label: vg.displayNames.filter(n => n.language === "en")[0].name,
-                value: vg.versionGroupId
-            }
-        })
+        let options = this.state.versionGroups.map(vg => ({
+            label: vg.getDisplayName("en") ?? `(versionGroup${vg.versionGroupId})`,
+            value: vg.versionGroupId
+        }))
 
         let defaultOption = options.filter(o => o.value === this.state.versionGroupId)
 
@@ -235,8 +233,11 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     getSpecies() {
         fetch(`${process.env.REACT_APP_API_URL}/species?limit=10&offset=0`)
             .then(response => response.json())
-            .then(species => this.setState({ species: species }))
-            .catch(error => console.log(error))
+            .then((species: PokemonSpeciesEntry[]) => {
+                let concreteSpecies = species.map(PokemonSpeciesEntry.from)
+                this.setState({ species: concreteSpecies })
+            })
+            .catch(error => console.error(error))
             .finally(() => this.setState({ loadingSpecies: false }))
     }
 
@@ -244,9 +245,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     async getVersionGroups() {
         await fetch(`${process.env.REACT_APP_API_URL}/versionGroup/all`)
             .then(response => response.json())
-            .then((groups: VersionGroupEntry[]) => this.setState({
-                versionGroups: groups
-            }))
+            .then((groups: VersionGroupEntry[]) => {
+                let concreteVersionGroups = groups.map(VersionGroupEntry.from)
+                this.setState({ versionGroups: concreteVersionGroups })
+            })
             .then(() => {
                 // try get version group ID from cookies
                 let versionGroupId = this.getNumberCookie("versionGroupId")
@@ -260,7 +262,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     versionGroupId: versionGroupId
                 })
             })
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .finally(() => this.setState({ loadingVersionGroups: false }))
     }
 
@@ -286,7 +288,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .then(response => response.json())
             .then(typesPresenceMap => this.setState({ typesPresenceMap: typesPresenceMap }))
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingTypesPresenceMap: false }))
     }
 
@@ -313,7 +315,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .then(response => response.json())
             .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingBaseStatNames: false }))
     }
 

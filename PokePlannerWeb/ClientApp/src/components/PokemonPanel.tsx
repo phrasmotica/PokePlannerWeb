@@ -153,7 +153,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     renderPokemonName() {
         let displayNameElement = "-"
         if (this.shouldShowPokemon()) {
-            displayNameElement = this.getEffectiveDisplayName()
+            displayNameElement = this.getEffectiveDisplayName() ?? "-"
         }
 
         return (
@@ -168,15 +168,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      */
     getEffectiveDisplayName() {
         // default to species display name
-        let matchingData = this.getSpecies().displayNames.filter(n => n.language === "en")
-        let displayName = matchingData[0].name
+        let displayName = this.getSpecies().getDisplayName("en")
 
         let form = this.state.form
-        if (form !== undefined) {
-            let matchingData = form.displayNames.filter(n => n.language === "en")
-            if (matchingData.length > 0) {
-                displayName = matchingData[0].name
-            }
+        if (form !== undefined && form.hasDisplayNames()) {
+            displayName = form.getDisplayName("en") ?? displayName
         }
 
         return displayName
@@ -220,22 +216,19 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             return []
         }
 
-        let types = variety.types.filter(
-            type => type.id === this.props.versionGroupId
-        )[0].data
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            return []
+        }
+
+        let types = variety.getTypes(versionGroupId)
 
         let form = this.state.form
         if (form !== undefined) {
-            let matchingTypes = form.types.filter(
-                type => type.id === this.props.versionGroupId
-            )
-
-            if (matchingTypes.length > 0) {
-                let formTypes = matchingTypes[0].data
-                if (formTypes.length > 0) {
-                    // use form-specific types if present
-                    types = formTypes
-                }
+            let formTypes = form.getTypes(versionGroupId)
+            if (formTypes.length > 0) {
+                // use form-specific types if present
+                types = formTypes
             }
         }
 
@@ -299,9 +292,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
         let variety = this.state.variety
         if (variety !== undefined) {
-            baseStats = variety.baseStats.filter(
-                bs => bs.id === this.props.versionGroupId
-            )[0].data
+            let versionGroupId = this.props.versionGroupId
+            if (versionGroupId === undefined) {
+                throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
+            }
+
+            baseStats = variety.getBaseStats(versionGroupId)
         }
 
         return (
@@ -351,9 +347,16 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns the data object for the selected species.
      */
     getSpecies() {
-        return this.props.species.filter(
-            s => s.speciesId === this.state.speciesId
-        )[0]
+        let speciesId = this.state.speciesId
+        let species = this.props.species.find(s => s.speciesId === speciesId)
+
+        if (species === undefined) {
+            throw new Error(
+                `Panel ${this.props.index}: no species found with ID ${speciesId}!`
+            )
+        }
+
+        return species
     }
 
     // returns whether we have a species
@@ -368,16 +371,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             return true
         }
 
-        let speciesValidity = this.getSpecies().validity
-        let pokemonIsValid = speciesValidity.includes(versionGroupId)
+        let pokemonIsValid = this.getSpecies().isValid(versionGroupId)
 
         let form = this.state.form
         if (form !== undefined) {
-            let formValidity = form.validity
-            if (formValidity.length > 0) {
-                // can only obtain form if base species is obtainable
-                pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
-            }
+            // can only obtain form if base species is obtainable
+            pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
         }
 
         return pokemonIsValid
