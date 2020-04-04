@@ -374,7 +374,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let pokemonIsValid = this.getSpecies().isValid(versionGroupId)
 
         let form = this.state.form
-        if (form !== undefined) {
+        if (form !== undefined && form.hasValidity()) {
             // can only obtain form if base species is obtainable
             pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
         }

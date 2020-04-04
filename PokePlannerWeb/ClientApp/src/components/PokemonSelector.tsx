@@ -491,7 +491,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let pokemonIsValid = this.getSelectedSpecies().isValid(versionGroupId)
 
         let form = this.getSelectedForm()
-        if (form !== undefined) {
+        if (form !== undefined && form.hasValidity()) {
             // can only obtain form if base species is obtainable
             pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
         }

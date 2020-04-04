@@ -131,6 +131,13 @@ export class PokemonFormEntry {
     }
 
     /**
+     * Returns whether the form has validity.
+     */
+    hasValidity() {
+        return this.validity.length > 0
+    }
+
+    /**
      * Returns whether the form is valid in the version group with the given ID.
      */
     isValid(versionGroupId: number): boolean {
