@@ -1,4 +1,5 @@
-﻿using PokeApiNet;
+﻿using System;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Cache.Abstractions
 {
@@ -10,21 +11,13 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         /// <summary>
         /// The connection string to the database instance.
         /// </summary>
-        private readonly string ConnectionString;
+        private readonly string ConnectionString = Environment.GetEnvironmentVariable(
+            "PokePlannerWebConnectionString", EnvironmentVariableTarget.Machine);
 
         /// <summary>
         /// The name of the database.
         /// </summary>
-        private readonly string DatabaseName;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public CacheSourceFactory(string connectionString, string databaseName)
-        {
-            ConnectionString = connectionString;
-            DatabaseName = databaseName;
-        }
+        private readonly string DatabaseName = "PokePlannerWebCache";
 
         /// <summary>
         /// Creates a cache source for the given named API resource type.
