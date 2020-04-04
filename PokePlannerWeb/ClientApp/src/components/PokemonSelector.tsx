@@ -338,7 +338,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 <Button
                     color="warning"
                     onMouseUp={() => this.setRandomSpecies()}>
-                    Random Pokemon
+                    Random
+                </Button>
+
+                <Button
+                    color="success">
+                    Favourite
                 </Button>
 
                 <Button
