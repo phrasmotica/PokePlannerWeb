@@ -563,18 +563,33 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     }
 
     /**
-     * Returns the data object for the selected species.
+     * Returns the data object for the species with the given ID.
      */
-    getSelectedSpecies() {
+    getSpecies(speciesId: number) {
         let allSpecies = this.props.species
-        let selectedSpeciesId = this.state.speciesId
 
-        let species = allSpecies.find(s => s.speciesId === selectedSpeciesId)
+        let species = allSpecies.find(s => s.speciesId === speciesId)
         if (species === undefined) {
-            throw new Error(`Selector ${this.props.index}: no species found with ID ${selectedSpeciesId}!`)
+            throw new Error(
+                `Selector ${this.props.index}: no species found with ID ${speciesId}!`
+            )
         }
 
         return PokemonSpeciesEntry.from(species)
+    }
+
+    /**
+     * Returns the data object for the selected species.
+     */
+    getSelectedSpecies() {
+        let speciesId = this.state.speciesId
+        if (speciesId === undefined) {
+            throw new Error(
+                `Selector ${this.props.index}: species ID is undefined!`
+            )
+        }
+
+        return this.getSpecies(speciesId)
     }
 
     /**
