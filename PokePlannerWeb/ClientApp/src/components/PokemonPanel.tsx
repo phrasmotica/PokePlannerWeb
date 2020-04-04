@@ -95,7 +95,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
                         ignoreValidity={this.props.ignoreValidity}
-                        hideTooltips={this.props.ignoreValidity}
+                        hideTooltips={this.props.hideTooltips}
                         clearPokemon={clearPokemon}
                         setSpecies={setSpecies}
                         setVariety={setVariety}
