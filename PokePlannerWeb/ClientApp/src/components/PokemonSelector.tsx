@@ -1,15 +1,17 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
 import Select from "react-select"
+import Cookies from "universal-cookie"
 
+import { PokemonEntry } from "../models/PokemonEntry"
+import { PokemonFormEntry } from "../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
+import { WithId } from "../models/WithId"
+
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 
 import "../styles/types.scss"
 import "./TeamBuilder.scss"
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
-import { PokemonEntry } from "../models/PokemonEntry"
-import { PokemonFormEntry } from "../models/PokemonFormEntry"
-import { WithId } from "../models/WithId"
 
 interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
@@ -108,6 +110,29 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
     }
 
+    /**
+     * Set species from cookie.
+     */
+    componentDidMount() {
+        let index = this.props.index
+
+        let speciesId = this.getNumberCookie(`speciesId${index}`)
+        if (speciesId !== undefined) {
+            let speciesIds = this.props.species.map(s => s.speciesId)
+            if (speciesIds.includes(speciesId)) {
+                // cascades to set variety and form
+                this.setSpecies(speciesId)
+            }
+            else {
+                // remove cookies for species that isn't available
+                let cookies = new Cookies()
+                cookies.remove(`speciesId${index}`)
+                cookies.remove(`varietyId${index}`)
+                cookies.remove(`formId${index}`)
+            }
+        }
+    }
+
     render() {
         // sub-components
         let speciesSelect = this.renderSpeciesSelect()
@@ -145,7 +170,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let selectedSpeciesOption = null
         let speciesId = this.state.speciesId
         if (speciesId !== undefined) {
-            selectedSpeciesOption = speciesOptions.filter(o => o.value === speciesId)[0]
+            selectedSpeciesOption = speciesOptions.find(o => o.value === speciesId)
         }
 
         // attach validity tooltip and red border if necessary
@@ -157,8 +182,14 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
         let customStyles = this.createCustomSelectStyles(hasNoVariants)
         const onChange = (speciesOption: any) => {
+            let speciesId = speciesOption.value
+
             // cascades to set first variety and form
-            this.setSpecies(speciesOption.value)
+            this.setSpecies(speciesId)
+
+            // set cookie
+            let cookies = new Cookies()
+            cookies.set(`speciesId${this.props.index}`, speciesId)
         }
 
         let searchBox = (
@@ -193,7 +224,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let validityTooltip = null
         if (hasVarieties) {
             let varietyId = this.state.varietyId
-            selectedVarietyOption = varietyOptions.filter(o => o.value === varietyId)[0]
+            selectedVarietyOption = varietyOptions.find(o => o.value === varietyId)
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
@@ -203,12 +234,20 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             let varietyId = option.value
             this.setState({ varietyId: varietyId })
 
+            // set variety cookie
+            let cookies = new Cookies()
+            cookies.set(`varietyId${this.props.index}`, varietyId)
+
             let variety = this.getVariety(varietyId)
             this.props.setVariety(variety)
 
             // set first form
             let forms = this.getFormsOfVariety(varietyId)
             let form = forms[0]
+
+            // set form cookie
+            cookies.set(`formId${this.props.index}`, form.formId)
+
             this.setForm(form)
         }
 
@@ -245,7 +284,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let validityTooltip = null
         if (hasForms) {
             let formId = this.state.formId
-            selectedFormOption = formOptions.filter(o => o.value === formId)[0]
+            selectedFormOption = formOptions.find(o => o.value === formId)
             validityTooltip = this.renderValidityTooltip(idPrefix)
         }
 
@@ -254,6 +293,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         const onChange = (option: any) => {
             let formId = option.value
             this.setState({ formId: formId })
+
+            // set cookie
+            let cookies = new Cookies()
+            cookies.set(`formId${this.props.index}`, formId)
 
             let form = this.getForm(formId)
             this.props.setForm(form)
@@ -302,7 +345,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     createSpeciesOptions() {
         // TODO: allow filtering species by types and other properties
         return this.props.species.map(species => ({
-            label: species.displayNames.filter(n => n.language === "en")[0].name,
+            label: species.getDisplayName("en"),
             value: species.speciesId
         }))
     }
@@ -318,21 +361,17 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return []
         }
 
-        return this.state.varieties.map((variety: PokemonEntry) => {
+        return this.state.varieties.map(variety => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
-            let speciesNames = species.displayNames.filter(n => n.language === "en")
-            let label = speciesNames[0].name
+            let label = species.getDisplayName("en")
 
             let forms = this.getFormsOfVariety(variety.pokemonId)
             if (forms.length > 0) {
+                // non-default forms have their own name
                 let form = forms[0]
-
-                let formNames = form.displayNames
-                if (formNames.length > 0) {
-                    // non-default forms have their own name
-                    let matchingNames = formNames.filter(n => n.language === "en")
-                    label = matchingNames[0].name
+                if (form.hasDisplayNames()) {
+                    label = form.getDisplayName("en") ?? label
                 }
             }
 
@@ -353,14 +392,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         return forms.map(form => {
             // default varieties derive name from their species
             let species = this.getSelectedSpecies()
-            let speciesNames = species.displayNames.filter(n => n.language === "en")
-            let label = speciesNames[0].name
+            let label = species.getDisplayName("en")
 
-            let formNames = form.displayNames
-            if (formNames.length > 0) {
-                // non-default forms have their own name
-                let matchingNames = formNames.filter(n => n.language === "en")
-                label = matchingNames[0].name
+            if (form.hasDisplayNames()) {
+                label = form.getDisplayName("en") ?? label
             }
 
             return {
@@ -378,8 +413,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return []
         }
 
-        let matchingForms = this.state.formsDict.filter(e => e.id === varietyId)
-        return matchingForms[0].data
+        let forms = this.state.formsDict.find(e => e.id === varietyId)
+        if (forms === undefined) {
+            return []
+        }
+
+        return forms.data
     }
 
     /**
@@ -449,16 +488,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             return false
         }
 
-        let speciesValidity = this.getSelectedSpecies().validity
-        let pokemonIsValid = speciesValidity.includes(versionGroupId)
+        let pokemonIsValid = this.getSelectedSpecies().isValid(versionGroupId)
 
         let form = this.getSelectedForm()
-        if (form !== undefined) {
-            let formValidity = form.validity
-            if (formValidity.length > 0) {
-                // can only obtain form if base species is obtainable
-                pokemonIsValid = pokemonIsValid && formValidity.includes(versionGroupId)
-            }
+        if (form !== undefined && form.hasValidity()) {
+            // can only obtain form if base species is obtainable
+            pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
         }
 
         return !this.props.ignoreValidity && !pokemonIsValid
@@ -470,7 +505,8 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     setSpecies(newSpeciesId: number) {
         // only fetch if we need to
         let selectedSpeciesId = this.state.speciesId
-        if (selectedSpeciesId === undefined || newSpeciesId !== selectedSpeciesId) {
+        let speciesChanged = newSpeciesId !== selectedSpeciesId
+        if (selectedSpeciesId === undefined || speciesChanged) {
             this.setState({
                 speciesId: newSpeciesId,
                 varietyId: undefined,
@@ -478,6 +514,14 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 formId: undefined,
                 formsDict: []
             })
+
+            if (selectedSpeciesId !== undefined && speciesChanged) {
+                // invalidate cookies from previous species
+                let index = this.props.index
+                let cookies = new Cookies()
+                cookies.remove(`varietyId${index}`)
+                cookies.remove(`formId${index}`)
+            }
 
             this.props.setSpecies(newSpeciesId)
             this.fetchVarieties(newSpeciesId)
@@ -501,13 +545,33 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     }
 
     /**
+     * Returns the data object for the species with the given ID.
+     */
+    getSpecies(speciesId: number) {
+        let allSpecies = this.props.species
+
+        let species = allSpecies.find(s => s.speciesId === speciesId)
+        if (species === undefined) {
+            throw new Error(
+                `Selector ${this.props.index}: no species found with ID ${speciesId}!`
+            )
+        }
+
+        return species
+    }
+
+    /**
      * Returns the data object for the selected species.
      */
     getSelectedSpecies() {
-        let allSpecies = this.props.species
-        let selectedSpeciesId = this.state.speciesId
-        let matchingSpecies = allSpecies.filter(s => s.speciesId === selectedSpeciesId)
-        return matchingSpecies[0]
+        let speciesId = this.state.speciesId
+        if (speciesId === undefined) {
+            throw new Error(
+                `Selector ${this.props.index}: species ID is undefined!`
+            )
+        }
+
+        return this.getSpecies(speciesId)
     }
 
     /**
@@ -515,8 +579,13 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     getVariety(varietyId: number) {
         let allVarieties = this.state.varieties
-        let matchingVarieties = allVarieties.filter(p => p.pokemonId === varietyId)
-        return matchingVarieties[0]
+
+        let variety = allVarieties.find(p => p.pokemonId === varietyId)
+        if (variety === undefined) {
+            throw new Error(`Selector ${this.props.index}: no variety found with ID ${varietyId}!`)
+        }
+
+        return variety
     }
 
     /**
@@ -524,8 +593,13 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     getForm(formId: number) {
         let allForms = this.getFormsOfSelectedVariety()
-        let matchingForms = allForms.filter(f => f.formId === formId)
-        return matchingForms[0]
+
+        let form = allForms.find(f => f.formId === formId)
+        if (form === undefined) {
+            throw new Error(`Selector ${this.props.index}: no form found with ID ${formId}!`)
+        }
+
+        return form
     }
 
     /**
@@ -554,6 +628,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let species = this.props.species[randomIndex]
 
         this.setSpecies(species.speciesId)
+
+        // set cookie
+        let cookies = new Cookies()
+        cookies.set(`speciesId${this.props.index}`, species.speciesId)
     }
 
     /**
@@ -567,6 +645,13 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      * Empty this selector.
      */
     clearPokemon() {
+        // clear cookies
+        let index = this.props.index
+        let cookies = new Cookies()
+        cookies.remove(`speciesId${index}`)
+        cookies.remove(`varietyId${index}`)
+        cookies.remove(`formId${index}`)
+
         this.setState({
             speciesId: undefined,
             varietyId: undefined,
@@ -597,14 +682,31 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 throw new Error(`Selector ${this.props.index}: tried to fetch varieties for Pokemon species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(varieties => {
-                this.setState({ varieties: varieties })
+            .then((varieties: PokemonEntry[]) => {
+                let concreteVarieties = varieties.map(PokemonEntry.from)
+                this.setState({ varieties: concreteVarieties })
 
-                // set first variety
-                let variety = varieties[0]
+                let variety = concreteVarieties[0]
+
+                // set variety from cookies if possible
+                let varietyId = this.getNumberCookie(`varietyId${this.props.index}`)
+                if (varietyId !== undefined) {
+                    let matchingVariety = concreteVarieties.find(p => p.pokemonId === varietyId)
+                    if (matchingVariety === undefined) {
+                        throw new Error(`Selector ${this.props.index}: no variety found with ID ${varietyId}!`)
+                    }
+
+                    variety = matchingVariety
+                }
+                else {
+                    // set cookie if unset
+                    let cookies = new Cookies()
+                    cookies.set(`varietyId${this.props.index}`, variety.pokemonId)
+                }
+
                 this.setVariety(variety)
             })
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingVarieties: false }))
             .then(() => {
                 let speciesId = this.state.speciesId
@@ -634,14 +736,59 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 throw new Error(`Selector ${this.props.index}: tried to fetch forms for varieties of Pokemon species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(forms => {
-                this.setState({ formsDict: forms })
+            .then((formsDict: WithId<PokemonFormEntry[]>[]) => {
+                // construct form objects
+                let concreteFormsDict = formsDict.map(fd => {
+                    return {
+                        id: fd.id,
+                        data: fd.data.map(PokemonFormEntry.from),
+                    }
+                })
 
-                // set first form
-                let form = forms[0].data[0]
+                this.setState({ formsDict: concreteFormsDict })
+
+                // set form of selected variety
+                let varietyId = this.state.varietyId
+                let matchingForm = concreteFormsDict.find(e => e.id === varietyId)
+                if (matchingForm === undefined) {
+                    throw new Error(`Selector ${this.props.index}: no matching form found for variety ${varietyId}!`)
+                }
+
+                let forms = matchingForm.data
+                let form = forms[0]
+
+                // set form from cookies if possible
+                let formId = this.getNumberCookie(`formId${this.props.index}`)
+                if (formId !== undefined) {
+                    let matchingForm = forms.find(f => f.formId === formId)
+                    if (matchingForm === undefined) {
+                        throw new Error(`Selector ${this.props.index}: no matching form found with ID ${formId}!`)
+                    }
+
+                    form = matchingForm
+                }
+                else {
+                    // set cookie if unset
+                    let cookies = new Cookies()
+                    cookies.set(`formId${this.props.index}`, form.formId)
+                }
+
                 this.setForm(form)
             })
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingForms: false }))
+    }
+
+    /**
+     * Returns the cookie with the given name as a number, or undefined if not found.
+     */
+    getNumberCookie(name: string): number | undefined {
+        let cookies = new Cookies()
+        let cookie = cookies.get(name)
+        if (cookie === undefined) {
+            return undefined
+        }
+
+        return Number(cookie)
     }
 }

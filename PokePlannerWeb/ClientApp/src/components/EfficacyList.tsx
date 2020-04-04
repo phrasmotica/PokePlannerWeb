@@ -125,11 +125,11 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 else {
                     let typeIsPresent = presenceMap[index].data
                     if (typeIsPresent) {
-                        let matchingData = efficacy.efficacyMultipliers.filter(m => m.id === typeId)
+                        let matchingData = efficacy.efficacyMultipliers.find(m => m.id === typeId)
 
                         let multiplier = 1
-                        if (matchingData.length > 0) {
-                            multiplier = matchingData[0].data
+                        if (matchingData !== undefined) {
+                            multiplier = matchingData.data
                         }
 
                         let multiplierElement = this.getElementFromMultiplier(multiplier)
@@ -274,7 +274,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 })
                 .then(response => response.json())
                 .then(efficacy => this.setState({ efficacy: efficacy }))
-                .catch(error => console.log(error))
+                .catch(error => console.error(error))
                 .then(() => this.setState({ loadingEfficacy: false }))
         }
     }

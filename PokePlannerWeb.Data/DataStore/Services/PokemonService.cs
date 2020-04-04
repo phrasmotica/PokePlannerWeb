@@ -107,8 +107,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var frontDefaultUrl = pokemon.Sprites.FrontDefault;
             if (frontDefaultUrl == null)
             {
-                Logger.LogInformation($"Front default sprite URL for Pokemon {pokemon.Id} missing from PokeAPI, creating URL manually");
-                return MakeSpriteUrl(pokemon.Id);
+                Logger.LogWarning($"Pokemon {pokemon.Id} is missing front default sprite");
             }
 
             return frontDefaultUrl;
@@ -122,25 +121,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var frontShinyUrl = pokemon.Sprites.FrontShiny;
             if (frontShinyUrl == null)
             {
-                Logger.LogInformation($"Front shiny sprite URL for Pokemon {pokemon.Id} missing from PokeAPI, creating URL manually");
-                return MakeSpriteUrl(pokemon.Id, true);
+                Logger.LogWarning($"Pokemon {pokemon.Id} is missing front default shiny sprite");
             }
 
             return frontShinyUrl;
-        }
-
-        /// <summary>
-        /// Creates and returns the URL of the sprite of the Pokemon with the given ID.
-        /// </summary>
-        private string MakeSpriteUrl(int pokemonId, bool shiny = false)
-        {
-            const string baseUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon";
-            if (shiny)
-            {
-                return $"{baseUrl}/shiny/{pokemonId}.png";
-            }
-
-            return $"{baseUrl}/{pokemonId}.png";
         }
 
         /// <summary>

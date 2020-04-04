@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react"
 
-import { EncountersEntry } from "../models/EncountersEntry"
+import { EncountersEntry, EncounterEntry } from "../models/EncountersEntry"
 
 import { IHasCommon } from "./CommonMembers"
 
@@ -90,12 +90,12 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             let locations = this.state.locations
             if (locations !== undefined) {
                 let encounters = locations.encounters
-                let matchingEncounters = encounters.filter(e => e.id === this.props.versionGroupId)
-                if (matchingEncounters.length <= 0) {
+                let matchingEncounter = encounters.find(e => e.id === this.props.versionGroupId)
+                if (matchingEncounter === undefined) {
                     return encountersElement
                 }
 
-                let encountersData = matchingEncounters[0].data
+                let encountersData = matchingEncounter.data
 
                 let items = []
                 for (let row = 0; row < encountersData.length; row++) {
@@ -103,12 +103,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     let id = `locations${this.props.index}row${row}`
                     let encounter = encountersData[row]
 
-                    let displayName = "encounter"
-
-                    let matchingNames = encounter.displayNames.filter(n => n.language === "en")
-                    if (matchingNames.length > 0) {
-                        displayName = matchingNames[0].name
-                    }
+                    let displayName = encounter.getDisplayName("en") ?? `(encounter)${row}`
 
                     items.push(
                         <div key={id}>
@@ -174,8 +169,18 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 throw new Error(`Capture locations ${this.props.index}: tried to get capture locations for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then(locations => this.setState({ locations: locations }))
-            .catch(error => console.log(error))
+            .then((locations: EncountersEntry) => {
+                let concreteLocations = {
+                    pokemonId: locations.pokemonId,
+                    encounters: locations.encounters.map(e => ({
+                        id: e.id,
+                        data: e.data.map(EncounterEntry.from)
+                    }))
+                }
+
+                this.setState({ locations: concreteLocations })
+            })
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingLocations: false }))
     }
 

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
+import Cookies from 'universal-cookie'
+
 import { PokemonPanel } from './PokemonPanel'
 
 import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
@@ -85,8 +87,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             loadingTypesPresenceMap: true,
             baseStatNames: [],
             loadingBaseStatNames: true,
-            ignoreValidity: true,
-            hideTooltips: false
+            ignoreValidity: this.getFlagCookie("ignoreValidity"),
+            hideTooltips: this.getFlagCookie("hideTooltips")
         }
     }
 
@@ -139,12 +141,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     renderVersionGroupMenu() {
-        let options = this.state.versionGroups.map(vg => {
-            return {
-                label: vg.displayNames.filter(n => n.language === "en")[0].name,
-                value: vg.versionGroupId
-            }
-        })
+        let options = this.state.versionGroups.map(vg => ({
+            label: vg.getDisplayName("en") ?? `(versionGroup${vg.versionGroupId})`,
+            value: vg.versionGroupId
+        }))
 
         let defaultOption = options.filter(o => o.value === this.state.versionGroupId)
 
@@ -231,22 +231,60 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // load all species
     getSpecies() {
-        fetch(`${process.env.REACT_APP_API_URL}/species?limit=10&offset=0`)
-            .then(response => response.json())
-            .then(species => this.setState({ species: species }))
-            .catch(error => console.log(error))
+        let endpoint = this.constructSpeciesEndpoint()
+        fetch(endpoint)
+            .then((response) => response.json())
+            .then((species: PokemonSpeciesEntry[]) => {
+                let concreteSpecies = species.map(PokemonSpeciesEntry.from)
+                this.setState({ species: concreteSpecies })
+            })
+            .catch(error => console.error(error))
             .finally(() => this.setState({ loadingSpecies: false }))
+    }
+
+    /**
+     * Constructs the endpoint for requesting species data.
+     */
+    constructSpeciesEndpoint() {
+        let apiUrl = process.env.REACT_APP_API_URL
+        let endpoint = `${apiUrl}/species`
+
+        let speciesLimit = process.env.REACT_APP_SPECIES_LIMIT
+        let speciesOffset = process.env.REACT_APP_SPECIES_OFFSET
+
+        if (speciesLimit !== undefined && speciesOffset !== undefined) {
+            let startId = Number(speciesOffset) + 1
+            let endId = Number(speciesOffset) + Number(speciesLimit)
+            console.log(`Fetching ${speciesLimit} species (${startId} - ${endId})`)
+
+            endpoint += `?limit=${speciesLimit}&offset=${speciesOffset}`
+        }
+
+        return endpoint
     }
 
     // load all version groups
     async getVersionGroups() {
         await fetch(`${process.env.REACT_APP_API_URL}/versionGroup/all`)
             .then(response => response.json())
-            .then((groups: VersionGroupEntry[]) => this.setState({
-                versionGroups: groups,
-                versionGroupId: groups[groups.length - 1].versionGroupId
-            }))
-            .catch(error => console.log(error))
+            .then((groups: VersionGroupEntry[]) => {
+                let concreteVersionGroups = groups.map(VersionGroupEntry.from)
+                this.setState({ versionGroups: concreteVersionGroups })
+            })
+            .then(() => {
+                // try get version group ID from cookies
+                let versionGroupId = this.getNumberCookie("versionGroupId")
+                if (versionGroupId === undefined) {
+                    // fall back to latest one
+                    let groups = this.state.versionGroups
+                    versionGroupId = groups[groups.length - 1].versionGroupId
+                }
+
+                this.setState({
+                    versionGroupId: versionGroupId
+                })
+            })
+            .catch(error => console.error(error))
             .finally(() => this.setState({ loadingVersionGroups: false }))
     }
 
@@ -272,7 +310,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .then(response => response.json())
             .then(typesPresenceMap => this.setState({ typesPresenceMap: typesPresenceMap }))
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingTypesPresenceMap: false }))
     }
 
@@ -299,13 +337,17 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .then(response => response.json())
             .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
-            .catch(error => console.log(error))
+            .catch(error => console.error(error))
             .then(() => this.setState({ loadingBaseStatNames: false }))
     }
 
     // set selected version group
     setVersionGroup(versionGroupId: number) {
         this.setState({ versionGroupId: versionGroupId })
+
+        // set cookie
+        let cookies = new Cookies()
+        cookies.set("versionGroupId", versionGroupId, { path: "/" })
 
         // reload types presence map and base stat names
         this.fetchTypesPresenceMap(versionGroupId)
@@ -314,14 +356,20 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // toggle validity check on Pokemon
     toggleIgnoreValidity() {
-        this.setState((previousState) => ({
+        let cookies = new Cookies()
+        cookies.set("ignoreValidity", !this.state.ignoreValidity, { path: "/" })
+
+        this.setState(previousState => ({
             ignoreValidity: !previousState.ignoreValidity
         }))
     }
 
     // toggle tooltip hiding
     toggleHideTooltips() {
-        this.setState((previousState) => ({
+        let cookies = new Cookies()
+        cookies.set("hideTooltips", !this.state.hideTooltips, { path: "/" })
+
+        this.setState(previousState => ({
             hideTooltips: !previousState.hideTooltips
         }))
     }
@@ -332,5 +380,31 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     pageIsLoading() {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
+    }
+
+    /**
+     * Returns the cookie with the given name as a boolean, or false if not found.
+     */
+    getFlagCookie(name: string): boolean {
+        let cookies = new Cookies()
+        let cookie = cookies.get(name)
+        if (cookie === undefined) {
+            return false
+        }
+
+        return Boolean(JSON.parse(cookie))
+    }
+
+    /**
+     * Returns the cookie with the given name as a number, or undefined if not found.
+     */
+    getNumberCookie(name: string): number | undefined {
+        let cookies = new Cookies()
+        let cookie = cookies.get(name)
+        if (cookie === undefined) {
+            return undefined
+        }
+
+        return Number(cookie)
     }
 }
