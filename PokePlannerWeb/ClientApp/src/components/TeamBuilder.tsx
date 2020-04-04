@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
+import Cookies from 'universal-cookie'
+
 import { PokemonPanel } from './PokemonPanel'
 
 import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
@@ -243,9 +245,21 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         await fetch(`${process.env.REACT_APP_API_URL}/versionGroup/all`)
             .then(response => response.json())
             .then((groups: VersionGroupEntry[]) => this.setState({
-                versionGroups: groups,
-                versionGroupId: groups[groups.length - 1].versionGroupId
+                versionGroups: groups
             }))
+            .then(() => {
+                // try get version group ID from cookies
+                let versionGroupId = this.getNumberCookie("versionGroupId")
+                if (versionGroupId === undefined) {
+                    // fall back to latest one
+                    let groups = this.state.versionGroups
+                    versionGroupId = groups[groups.length - 1].versionGroupId
+                }
+
+                this.setState({
+                    versionGroupId: versionGroupId
+                })
+            })
             .catch(error => console.log(error))
             .finally(() => this.setState({ loadingVersionGroups: false }))
     }
@@ -307,6 +321,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     setVersionGroup(versionGroupId: number) {
         this.setState({ versionGroupId: versionGroupId })
 
+        // set cookie
+        let cookies = new Cookies()
+        cookies.set("versionGroupId", versionGroupId, { path: "/" })
+
         // reload types presence map and base stat names
         this.fetchTypesPresenceMap(versionGroupId)
         this.getBaseStatNames(versionGroupId)
@@ -332,5 +350,18 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     pageIsLoading() {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
+    }
+
+    /**
+     * Returns the cookie with the given name as a number, or undefined if not found.
+     */
+    getNumberCookie(name: string): number | undefined {
+        let cookies = new Cookies()
+        let cookie = cookies.get(name)
+        if (cookie === undefined) {
+            return undefined
+        }
+
+        return Number(cookie)
     }
 }
