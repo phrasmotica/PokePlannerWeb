@@ -87,6 +87,11 @@ interface IPokemonSelectorState {
     loadingForms: boolean
 
     /**
+     * List of IDs of favourite species.
+     */
+    favouriteSpecies: number[]
+
+    /**
      * Whether the validity tooltip is open.
      */
     validityTooltipOpen: boolean
@@ -106,6 +111,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             formId: undefined,
             formsDict: [],
             loadingForms: false,
+            favouriteSpecies: [],
             validityTooltipOpen: false
         }
     }
@@ -333,6 +339,8 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      * Renders the buttons.
      */
     renderButtons() {
+        let isFavouriteSpecies = this.isFavouriteSpecies()
+
         return (
             <div className="flex-space-between margin-bottom-small">
                 <Button
@@ -342,8 +350,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 </Button>
 
                 <Button
-                    color="success">
-                    Favourite
+                    color={isFavouriteSpecies ? "success" : "info"}
+                    onMouseUp={() => this.toggleFavouriteSpecies()}>
+                    {isFavouriteSpecies ? "Favourited" : "Favourite"}
                 </Button>
 
                 <Button
@@ -653,6 +662,39 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     randomInt(min: number, max: number) {
         return Math.floor(Math.random() * (max - min) + min)
+    }
+
+    /**
+     * Favourites/unfavourites the species in this selector.
+     */
+    toggleFavouriteSpecies() {
+        let speciesId = this.state.speciesId
+        if (speciesId === undefined) {
+            return
+        }
+
+        let favouriteSpecies = this.state.favouriteSpecies
+        let i = favouriteSpecies.indexOf(speciesId)
+        if (i < 0) {
+            favouriteSpecies.push(speciesId)
+        }
+        else {
+            favouriteSpecies.splice(i, 1)
+        }
+
+        this.setState({ favouriteSpecies: favouriteSpecies })
+    }
+
+    /**
+     * Returns whether the species in this selector is a favourite.
+     */
+    isFavouriteSpecies() {
+        let speciesId = this.state.speciesId
+        if (speciesId === undefined) {
+            return false
+        }
+
+        return this.state.favouriteSpecies.includes(speciesId)
     }
 
     /**
