@@ -246,6 +246,20 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                             ? dataObject.shinySpriteUrl
                             : dataObject.spriteUrl
             }
+
+            if (spriteUrl === null || spriteUrl === "") {
+                return (
+                    <div
+                        className="sprite margin-auto-horiz"
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+                        (no sprite)
+                    </div>
+                )
+            }
         }
 
         return (
