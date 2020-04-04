@@ -714,7 +714,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
 
                 // set form of selected variety
                 let varietyId = this.state.varietyId
-                let matchingForms = formsDict.filter(e => e.id == varietyId)
+                let matchingForms = formsDict.filter(e => e.id === varietyId)
                 let forms = matchingForms[0].data
                 let form = forms[0]
 
