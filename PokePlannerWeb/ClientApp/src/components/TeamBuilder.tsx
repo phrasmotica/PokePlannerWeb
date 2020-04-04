@@ -87,8 +87,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             loadingTypesPresenceMap: true,
             baseStatNames: [],
             loadingBaseStatNames: true,
-            ignoreValidity: true,
-            hideTooltips: false
+            ignoreValidity: this.getFlagCookie("ignoreValidity"),
+            hideTooltips: this.getFlagCookie("hideTooltips")
         }
     }
 
@@ -334,6 +334,9 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // toggle validity check on Pokemon
     toggleIgnoreValidity() {
+        let cookies = new Cookies()
+        cookies.set("ignoreValidity", !this.state.ignoreValidity, { path: "/" })
+
         this.setState((previousState) => ({
             ignoreValidity: !previousState.ignoreValidity
         }))
@@ -341,6 +344,9 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // toggle tooltip hiding
     toggleHideTooltips() {
+        let cookies = new Cookies()
+        cookies.set("hideTooltips", !this.state.hideTooltips, { path: "/" })
+
         this.setState((previousState) => ({
             hideTooltips: !previousState.hideTooltips
         }))
@@ -352,6 +358,19 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     pageIsLoading() {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
+    }
+
+    /**
+     * Returns the cookie with the given name as a boolean, or false if not found.
+     */
+    getFlagCookie(name: string): boolean {
+        let cookies = new Cookies()
+        let cookie = cookies.get(name)
+        if (cookie === undefined) {
+            return false
+        }
+
+        return Boolean(JSON.parse(cookie))
     }
 
     /**
