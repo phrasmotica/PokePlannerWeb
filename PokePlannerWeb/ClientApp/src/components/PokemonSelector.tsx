@@ -138,26 +138,14 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let speciesSelect = this.renderSpeciesSelect()
         let varietySelect = this.renderVarietySelect()
         let formSelect = this.renderFormSelect()
+        let buttons = this.renderButtons()
 
         return (
             <div className="margin-right">
                 {speciesSelect}
                 {varietySelect}
                 {formSelect}
-
-                <div className="flex-space-between margin-bottom-small">
-                    <Button
-                        color="warning"
-                        onMouseUp={() => this.setRandomSpecies()}>
-                        Random Pokemon
-                    </Button>
-
-                    <Button
-                        color="danger"
-                        onMouseUp={() => this.clearPokemon()}>
-                        Clear
-                    </Button>
-                </div>
+                {buttons}
             </div>
         )
     }
@@ -339,6 +327,27 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
 
         return null
+    }
+
+    /**
+     * Renders the buttons.
+     */
+    renderButtons() {
+        return (
+            <div className="flex-space-between margin-bottom-small">
+                <Button
+                    color="warning"
+                    onMouseUp={() => this.setRandomSpecies()}>
+                    Random Pokemon
+                </Button>
+
+                <Button
+                    color="danger"
+                    onMouseUp={() => this.clearPokemon()}>
+                    Clear
+                </Button>
+            </div>
+        )
     }
 
     // returns options for the species select
