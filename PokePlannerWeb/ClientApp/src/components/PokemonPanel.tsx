@@ -218,7 +218,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
         let versionGroupId = this.props.versionGroupId
         if (versionGroupId === undefined) {
-            return []
+            throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
         }
 
         let types = variety.getTypes(versionGroupId)
@@ -368,7 +368,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     pokemonIsValid() {
         let versionGroupId = this.props.versionGroupId
         if (versionGroupId === undefined) {
-            return true
+            throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
         }
 
         let pokemonIsValid = this.getSpecies().isValid(versionGroupId)
