@@ -231,14 +231,36 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // load all species
     getSpecies() {
-        fetch(`${process.env.REACT_APP_API_URL}/species?limit=10&offset=0`)
-            .then(response => response.json())
+        let endpoint = this.constructSpeciesEndpoint()
+        fetch(endpoint)
+            .then((response) => response.json())
             .then((species: PokemonSpeciesEntry[]) => {
                 let concreteSpecies = species.map(PokemonSpeciesEntry.from)
                 this.setState({ species: concreteSpecies })
             })
             .catch(error => console.error(error))
             .finally(() => this.setState({ loadingSpecies: false }))
+    }
+
+    /**
+     * Constructs the endpoint for requesting species data.
+     */
+    constructSpeciesEndpoint() {
+        let apiUrl = process.env.REACT_APP_API_URL
+        let endpoint = `${apiUrl}/species`
+
+        let speciesLimit = process.env.REACT_APP_SPECIES_LIMIT
+        let speciesOffset = process.env.REACT_APP_SPECIES_OFFSET
+
+        if (speciesLimit !== undefined && speciesOffset !== undefined) {
+            let startId = Number(speciesOffset) + 1
+            let endId = Number(speciesOffset) + Number(speciesLimit)
+            console.log(`Fetching ${speciesLimit} species (${startId} - ${endId})`)
+
+            endpoint += `?limit=${speciesLimit}&offset=${speciesOffset}`
+        }
+
+        return endpoint
     }
 
     // load all version groups
@@ -337,7 +359,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         let cookies = new Cookies()
         cookies.set("ignoreValidity", !this.state.ignoreValidity, { path: "/" })
 
-        this.setState((previousState) => ({
+        this.setState(previousState => ({
             ignoreValidity: !previousState.ignoreValidity
         }))
     }
@@ -347,7 +369,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         let cookies = new Cookies()
         cookies.set("hideTooltips", !this.state.hideTooltips, { path: "/" })
 
-        this.setState((previousState) => ({
+        this.setState(previousState => ({
             hideTooltips: !previousState.hideTooltips
         }))
     }
