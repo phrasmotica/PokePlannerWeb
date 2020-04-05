@@ -88,7 +88,11 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     }
 
     render() {
-        return this.renderTypeEfficacy()
+        return (
+            <div style={{ marginTop: 4 }}>
+                {this.renderTypeEfficacy()}
+            </div>
+        )
     }
 
     renderTypeEfficacy() {

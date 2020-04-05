@@ -65,7 +65,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     render() {
-        return this.renderMoves()
+        return (
+            <div style={{ marginTop: 4 }}>
+                {this.renderMoves()}
+            </div>
+        )
     }
 
     /**

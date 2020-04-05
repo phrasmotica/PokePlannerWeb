@@ -66,7 +66,11 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     render() {
-        return this.renderCaptureLocations()
+        return (
+            <div style={{ marginTop: 4 }}>
+                {this.renderCaptureLocations()}
+            </div>
+        )
     }
 
     renderCaptureLocations() {
