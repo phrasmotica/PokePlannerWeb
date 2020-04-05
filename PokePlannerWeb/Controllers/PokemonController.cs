@@ -50,7 +50,7 @@ namespace PokePlannerWeb.Controllers
         [HttpGet("{pokemonId:int}/forms/{versionGroupId:int}")]
         public async Task<PokemonFormEntry[]> GetPokemonFormsById(int pokemonId, int versionGroupId)
         {
-            Logger.LogInformation($"Getting IDs of forms of Pokemon {pokemonId} in version group {versionGroupId}...");
+            Logger.LogInformation($"Getting forms of Pokemon {pokemonId} in version group {versionGroupId}...");
             return await PokemonService.GetPokemonForms(pokemonId, versionGroupId);
         }
     }
