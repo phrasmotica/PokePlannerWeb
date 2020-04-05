@@ -1,20 +1,22 @@
 ﻿import React, { Component } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 import { Tabs, Tab } from "react-bootstrap"
+import { CaptureLocations } from "./CaptureLocations"
 import { EfficacyList } from "./EfficacyList"
+import { MoveList } from "./MoveList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
-import { CaptureLocations } from "./CaptureLocations"
 
 import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
-import "../styles/types.scss"
-import "./PokemonPanel.scss"
-import "./TeamBuilder.scss"
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
+
+import "./PokemonPanel.scss"
+import "./TeamBuilder.scss"
+import "../styles/types.scss"
 
 interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
@@ -119,6 +121,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
                         <Tab eventKey="efficacy" title="Efficacy">
                             {this.renderEfficacyList()}
+                        </Tab>
+
+                        <Tab eventKey="moves" title="Moves">
+                            {this.renderMoveList()}
                         </Tab>
 
                         <Tab eventKey="locations" title="Capture Locations">
@@ -334,6 +340,20 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 typesPresenceMap={this.props.typesPresenceMap}
                 versionGroupId={this.props.versionGroupId}
                 showMultipliers={this.shouldShowPokemon()}
+                hideTooltips={this.props.hideTooltips} />
+        )
+    }
+
+    /**
+     * Renders the move list.
+     */
+    renderMoveList() {
+        return (
+            <MoveList
+                index={this.props.index}
+                pokemonId={this.state.variety?.pokemonId}
+                versionGroupId={this.props.versionGroupId}
+                showMoves={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
         )
     }

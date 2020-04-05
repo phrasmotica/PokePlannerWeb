@@ -1,3 +1,4 @@
+import { Move } from "./Move"
 import { PokemonForm } from "./PokemonForm"
 import { Type } from "./Type"
 import { WithId } from "./WithId"
@@ -42,6 +43,11 @@ export class PokemonEntry {
     baseStats: WithId<number[]>[]
 
     /**
+     * The Pokemon's moves indexed by version group ID.
+     */
+    moves: WithId<Move[]>[]
+
+    /**
      * Constructor.
      */
     constructor(
@@ -51,7 +57,8 @@ export class PokemonEntry {
         shinySpriteUrl: string,
         forms: PokemonForm[],
         types: WithId<Type[]>[],
-        baseStats: WithId<number[]>[]
+        baseStats: WithId<number[]>[],
+        moves: WithId<Move[]>[]
     ) {
         this.pokemonId = pokemonId
         this.name = name
@@ -60,6 +67,7 @@ export class PokemonEntry {
         this.forms = forms
         this.types = types
         this.baseStats = baseStats
+        this.moves = moves
     }
 
     /**
@@ -73,7 +81,8 @@ export class PokemonEntry {
             pokemon.shinySpriteUrl,
             pokemon.forms,
             pokemon.types,
-            pokemon.baseStats
+            pokemon.baseStats,
+            pokemon.moves
         )
     }
 
