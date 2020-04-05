@@ -8,3 +8,9 @@
     font-size: unset;
     padding: unset;
 }
+
+$size: 40px;
+.damage-class-medium {
+    height: $size;
+    width: $size;
+}

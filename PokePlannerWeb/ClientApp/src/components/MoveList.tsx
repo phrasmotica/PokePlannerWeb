@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
 import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
+import { TiStarburstOutline, TiSpiral, TiWavesOutline } from "react-icons/ti"
 
 import { IHasCommon } from "./CommonMembers"
 import { MoveEntry } from "../models/MoveEntry"
@@ -112,19 +113,18 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let headerId = `movelist${this.props.index}move${move.moveId}type${typeId}`
                 let typeIcon = <img
                                 id={headerId}
-                                className="type-icon-small padded"
+                                className="type-icon-medium padded"
                                 alt={`type${typeId}`}
                                 src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
-                // TODO: show icon representing damage class
-                let damageClass = move.damageClass.name
+                let damageClassIcon = this.getDamageClassIcon(move.damageClass.id)
 
                 let isOpen = this.state.movesAreOpen[row]
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
                         <div>
                             {typeIcon}
-                            {damageClass}
+                            {damageClassIcon}
                         </div>
                     </Collapse>
                 )
@@ -166,6 +166,24 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         })
 
         this.setState({ movesAreOpen: newMovesAreOpen })
+    }
+
+    /**
+     * Returns an icon for the damage class with the given ID.
+     */
+    getDamageClassIcon(damageClassId: number) {
+        switch (damageClassId) {
+            case 1:
+                return <TiWavesOutline className="damage-class-medium" />
+            case 2:
+                return <TiStarburstOutline className="damage-class-medium" />
+            case 3:
+                return <TiSpiral className="damage-class-medium" />
+            default:
+                throw new Error(
+                    `Move list ${this.props.index}: no move damage class with ID ${damageClassId} exists!`
+                )
+        }
     }
 
     /**
