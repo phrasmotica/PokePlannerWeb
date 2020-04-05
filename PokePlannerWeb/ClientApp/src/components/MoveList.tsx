@@ -116,11 +116,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                                 alt={`type${typeId}`}
                                 src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
+                // TODO: show icon representing damage class
+                let damageClass = move.damageClass.name
+
                 let isOpen = this.state.movesAreOpen[row]
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
                         <div>
                             {typeIcon}
+                            {damageClass}
                         </div>
                     </Collapse>
                 )

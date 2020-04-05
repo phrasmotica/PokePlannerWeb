@@ -1,5 +1,6 @@
 import { DisplayName } from "./DisplayName"
 import { Type } from "./Type"
+import { MoveDamageClass } from "./MoveDamageClass"
 
 /**
  * Represents a move in the data store.
@@ -26,18 +27,25 @@ export class MoveEntry {
     type: Type
 
     /**
+     * The damage class of the move.
+     */
+    damageClass: MoveDamageClass
+
+    /**
      * Constructor.
      */
     constructor(
         moveId: number,
         name: string,
         displayNames: DisplayName[],
-        type: Type
+        type: Type,
+        damageClass: MoveDamageClass
     ) {
         this.moveId = moveId
         this.name = name
         this.displayNames = displayNames
         this.type = type
+        this.damageClass = damageClass
     }
 
     /**
@@ -48,7 +56,8 @@ export class MoveEntry {
             move.moveId,
             move.name,
             move.displayNames,
-            move.type
+            move.type,
+            move.damageClass
         )
     }
 
