@@ -81,6 +81,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
     }
 
+    // TODO: set cookie for the selected tab
+
     render() {
         // handlers
         const clearPokemon = () => this.clearPokemon()
