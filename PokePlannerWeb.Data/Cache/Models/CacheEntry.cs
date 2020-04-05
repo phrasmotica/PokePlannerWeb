@@ -1,4 +1,6 @@
 ﻿using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
 using PokeApiNet;
 
@@ -12,6 +14,7 @@ namespace PokePlannerWeb.Data.Cache.Models
         /// <summary>
         /// Gets or sets the ID.
         /// </summary>
+        [BsonRepresentation(BsonType.ObjectId)]
         [JsonProperty("id")]
         public string Id { get; set; }
 
