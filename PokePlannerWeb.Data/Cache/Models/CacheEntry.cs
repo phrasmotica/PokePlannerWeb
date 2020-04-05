@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Cache.Models
@@ -8,6 +9,12 @@ namespace PokePlannerWeb.Data.Cache.Models
     /// </summary>
     public class CacheEntry<T> where T : NamedApiResource
     {
+        /// <summary>
+        /// Gets or sets the ID.
+        /// </summary>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
         /// <summary>
         /// Gets or sets the creation time.
         /// </summary>

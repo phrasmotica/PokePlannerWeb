@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Cache.Abstractions
@@ -15,6 +16,12 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
             "PokePlannerWebConnectionString", EnvironmentVariableTarget.Machine);
 
         /// <summary>
+        /// The private key of the database.
+        /// </summary>
+        private readonly string PrivateKey = Environment.GetEnvironmentVariable(
+            "PokePlannerWebPrivateKey", EnvironmentVariableTarget.Machine);
+
+        /// <summary>
         /// The name of the database.
         /// </summary>
         private readonly string DatabaseName = "PokePlannerWebCache";
@@ -24,6 +31,12 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         /// </summary>
         public ICacheSource<TEntry> Create<TEntry>(string collectionName) where TEntry : NamedApiResource
         {
+            var isCosmosDb = Regex.IsMatch(ConnectionString, @"https:\/\/[\w-]+\.documents\.azure\.com");
+            if (isCosmosDb)
+            {
+                return new CosmosDbCacheSource<TEntry>(ConnectionString, PrivateKey, DatabaseName, collectionName);
+            }
+
             return new MongoDbCacheSource<TEntry>(ConnectionString, DatabaseName, collectionName);
         }
     }

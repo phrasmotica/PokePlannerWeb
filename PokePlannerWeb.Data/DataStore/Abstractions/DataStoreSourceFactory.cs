@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 using MongoDB.Bson.Serialization.Conventions;
 using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
@@ -32,6 +33,12 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
             "PokePlannerWebConnectionString", System.EnvironmentVariableTarget.Machine);
 
         /// <summary>
+        /// The private key of the database.
+        /// </summary>
+        private readonly string PrivateKey = Environment.GetEnvironmentVariable(
+            "PokePlannerWebPrivateKey", System.EnvironmentVariableTarget.Machine);
+
+        /// <summary>
         /// The name of the database.
         /// </summary>
         private readonly string DatabaseName = "PokePlannerWebDataStore";
@@ -41,6 +48,12 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         /// </summary>
         public IDataStoreSource<TEntry> Create<TEntry>(string collectionName) where TEntry : EntryBase
         {
+            var isCosmosDb = Regex.IsMatch(ConnectionString, @"https:\/\/[\w-]+\.documents\.azure\.com");
+            if (isCosmosDb)
+            {
+                return new CosmosDbDataStoreSource<TEntry>(ConnectionString, PrivateKey, DatabaseName, collectionName);
+            }
+
             ConfigureMongoDb();
             return new MongoDbDataStoreSource<TEntry>(ConnectionString, DatabaseName, collectionName);
         }
