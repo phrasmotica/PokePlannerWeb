@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react"
 import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
-import { TiStarburstOutline, TiSpiral, TiWavesOutline } from "react-icons/ti"
+import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 
 import { IHasCommon } from "./CommonMembers"
 import { MoveEntry } from "../models/MoveEntry"
@@ -183,10 +183,13 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     getDamageClassIcon(damageClassId: number) {
         switch (damageClassId) {
             case 1:
-                return <TiWavesOutline className="damage-class-small" />
+                // status
+                return <TiWaves className="damage-class-small" />
             case 2:
+                // physical
                 return <TiStarburstOutline className="damage-class-small" />
             case 3:
+                // special
                 return <TiSpiral className="damage-class-small" />
             default:
                 throw new Error(
