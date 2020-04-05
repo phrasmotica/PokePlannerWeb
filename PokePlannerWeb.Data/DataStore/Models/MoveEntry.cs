@@ -47,5 +47,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the move's priority.
         /// </summary>
         public int Priority { get; set; }
+
+        /// <summary>
+        /// Gets or sets the move's target.
+        /// </summary>
+        public MoveTarget Target { get; set; }
     }
 }

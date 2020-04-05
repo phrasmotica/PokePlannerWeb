@@ -36,6 +36,11 @@
         public string MoveDamageClassCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of move targets.
+        /// </summary>
+        public string MoveTargetCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of pokedexes.
         /// </summary>
         public string PokedexCollectionName { get; set; }
@@ -110,6 +115,11 @@
         /// The name of the collection of move damage classes.
         /// </summary>
         string MoveDamageClassCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of move targets.
+        /// </summary>
+        string MoveTargetCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of pokedexes.

@@ -1,5 +1,6 @@
 import { DisplayName } from "./DisplayName"
 import { MoveDamageClass } from "./MoveDamageClass"
+import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
 
 /**
@@ -52,6 +53,11 @@ export class MoveEntry {
     priority: number
 
     /**
+     * The move's target.
+     */
+    target: MoveTarget
+
+    /**
      * Constructor.
      */
     constructor(
@@ -63,7 +69,8 @@ export class MoveEntry {
         damageClass: MoveDamageClass,
         accuracy: number | undefined,
         pp: number | undefined,
-        priority: number
+        priority: number,
+        target: MoveTarget
     ) {
         this.moveId = moveId
         this.name = name
@@ -74,6 +81,7 @@ export class MoveEntry {
         this.accuracy = accuracy
         this.pp = pp
         this.priority = priority
+        this.target = target
     }
 
     /**
@@ -89,7 +97,8 @@ export class MoveEntry {
             move.damageClass,
             move.accuracy,
             move.pp,
-            move.priority
+            move.priority,
+            move.target
         )
     }
 
