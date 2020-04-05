@@ -124,6 +124,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 entry = await FetchSourceAndUpdateEntry(key);
             }
 
+            // TODO: a way of recreating the entry if it's different from the newly-computed candidate entry
+            // might be able to compare hashes of their JSON representations
+            // does require computing the entry every time but might not be so bad now that we have the cache
+
             return entry;
         }
 
