@@ -19,7 +19,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The data store source.
         /// </summary>
-        // TODO: try out Azure Cosmos DB!
         protected IDataStoreSource<TEntry> DataStoreSource;
 
         /// <summary>
@@ -248,7 +247,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected virtual async Task<TEntry> Upsert(TSource source)
         {
-            // TODO: reduce number of calls to Upsert methods.
             // this method of upserting by key requires (expensive) entry conversions
             var entry = await ConvertToEntry(source);
             var existingEntry = await Get(entry.Key);
