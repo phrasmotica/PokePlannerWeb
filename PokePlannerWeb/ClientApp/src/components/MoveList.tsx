@@ -1,8 +1,10 @@
 ﻿import React, { Component } from "react"
+import { ListGroup, ListGroupItem } from "reactstrap"
 
 import { IHasCommon } from "./CommonMembers"
 import { MoveEntry } from "../models/MoveEntry"
 
+import "./MoveList.scss"
 import "./TeamBuilder.scss"
 import "../styles/types.scss"
 
@@ -72,9 +74,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     renderMoves() {
         if (this.state.loadingMoves) {
             return (
-                <div className="overflow-y">
-                    Loading...
-                </div>
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        Loading...
+                    </ListGroupItem>
+                </ListGroup>
             )
         }
 
@@ -94,24 +98,26 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                                 src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
                 rows.push(
-                    <div key={row}>
+                    <ListGroupItem key={row}>
                         {moveName}
                         {typeIcon}
-                    </div>
+                    </ListGroupItem>
                 )
             }
 
             return (
-                <div className="overflow-y">
+                <ListGroup className="overflow-y">
                     {rows}
-                </div>
+                </ListGroup>
             )
         }
 
         return (
-            <div className="overflow-y">
-                -
-            </div>
+            <ListGroup className="overflow-y">
+                <ListGroupItem>
+                    -
+                </ListGroupItem>
+            </ListGroup>
         )
     }
 

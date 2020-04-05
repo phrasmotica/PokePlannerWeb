@@ -1,9 +1,11 @@
 ﻿import React, { Component } from "react"
+import { ListGroup, ListGroupItem } from "reactstrap"
 
 import { EncountersEntry, EncounterEntry } from "../models/EncountersEntry"
 
 import { IHasCommon } from "./CommonMembers"
 
+import "./CaptureLocations.scss"
 import "./TeamBuilder.scss"
 
 interface ICaptureLocationsProps extends IHasCommon {
@@ -70,23 +72,29 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     renderCaptureLocations() {
         if (this.state.loadingLocations) {
             return (
-                <div className="overflow-y">
-                    Loading...
-                </div>
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        Loading...
+                    </ListGroupItem>
+                </ListGroup>
             )
         }
 
         let encountersElement = (
-            <div className="overflow-y">
-                -
-            </div>
+            <ListGroup className="overflow-y">
+                <ListGroupItem>
+                    -
+                </ListGroupItem>
+            </ListGroup>
         )
 
         if (this.props.showLocations && this.hasPokemon()) {
             encountersElement = (
-                <div className="overflow-y">
-                    No capture locations in this version group
-                </div>
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        No capture locations in this version group
+                    </ListGroupItem>
+                </ListGroup>
             )
 
             let locations = this.state.locations
@@ -108,16 +116,16 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     let displayName = encounter.getDisplayName("en") ?? `(encounter)${row}`
 
                     items.push(
-                        <div key={id}>
+                        <ListGroupItem key={id}>
                             {displayName}
-                        </div>
+                        </ListGroupItem>
                     )
                 }
 
                 return (
-                    <div className="overflow-y">
+                    <ListGroup className="overflow-y">
                         {items}
-                    </div>
+                    </ListGroup>
                 )
             }
         }
