@@ -4,6 +4,8 @@ import { EncountersEntry, EncounterEntry } from "../models/EncountersEntry"
 
 import { IHasCommon } from "./CommonMembers"
 
+import "./TeamBuilder.scss"
+
 interface ICaptureLocationsProps extends IHasCommon {
     /**
      * The ID of the Pokemon to show capture locations for.
@@ -68,21 +70,21 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     renderCaptureLocations() {
         if (this.state.loadingLocations) {
             return (
-                <div>
+                <div className="overflow-y">
                     Loading...
                 </div>
             )
         }
 
         let encountersElement = (
-            <div>
+            <div className="overflow-y">
                 -
             </div>
         )
 
         if (this.props.showLocations && this.hasPokemon()) {
             encountersElement = (
-                <div>
+                <div className="overflow-y">
                     No capture locations in this version group
                 </div>
             )
@@ -113,7 +115,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 }
 
                 return (
-                    <div>
+                    <div className="overflow-y">
                         {items}
                     </div>
                 )
