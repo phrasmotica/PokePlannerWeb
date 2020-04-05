@@ -85,11 +85,18 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
+                let typeId = move.type.id
+                let headerId = `movelist${this.props.index}move${move.moveId}type${typeId}`
+                let typeIcon = <img
+                                id={headerId}
+                                className="type-icon-small padded"
+                                alt={`type${typeId}`}
+                                src={require(`../images/typeIcons/${typeId}-small.png`)} />
+
                 rows.push(
-                    <div
-                        key={row}
-                        className="flex-space-between">
+                    <div key={row}>
                         {moveName}
+                        {typeIcon}
                     </div>
                 )
             }
