@@ -35,7 +35,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The version groups service.
         /// </summary>
-        private readonly VersionGroupService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupService;
 
         /// <summary>
         /// Constructor.
@@ -53,7 +53,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             MoveService = moveService;
             PokemonFormsService = pokemonFormsService;
             TypesService = typesService;
-            VersionGroupsService = versionGroupsService;
+            VersionGroupService = versionGroupsService;
         }
 
         #region Entry conversion methods
@@ -77,7 +77,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Forms = forms.ToList(),
                 Types = types,
                 BaseStats = baseStats,
-                Moves = moves
+                Moves = moves.ToList()
             };
         }
 
@@ -175,11 +175,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var typesList = new List<WithId<Type[]>>();
 
-            var newestIdWithoutData = await VersionGroupsService.GetOldestVersionGroupId();
+            var newestIdWithoutData = await VersionGroupService.GetOldestVersionGroupId();
 
             if (pokemon.PastTypes.Any())
             {
-                foreach (var vg in await VersionGroupsService.GetAll())
+                foreach (var vg in await VersionGroupService.GetAll())
                 {
                     var types = pokemon.PastTypes.FirstOrDefault(t => t.Generation.Name == vg.Generation.Name);
                     if (types != null)
@@ -196,7 +196,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             // always include the newest types
-            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
+            var newestId = await VersionGroupService.GetNewestVersionGroupId();
             var newestTypeEntries = await MinimiseTypes(pokemon.Types);
             for (var id = newestIdWithoutData; id <= newestId; id++)
             {
@@ -226,10 +226,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             // FUTURE: anticipating a generation-based base stats changelog
             // in which case this method will need to look like GetTypes()
-            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
+            var newestId = await VersionGroupService.GetNewestVersionGroupId();
             var currentBaseStats = pokemon.GetBaseStats(newestId);
 
-            var versionGroups = await VersionGroupsService.GetAll();
+            var versionGroups = await VersionGroupService.GetAll();
             var statsList = versionGroups.Select(
                 vg => new WithId<int[]>(vg.VersionGroupId, currentBaseStats)
             );
@@ -240,27 +240,35 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the moves of the given Pokemon.
         /// </summary>
-        private async Task<List<WithId<Move[]>>> GetMoves(Pokemon pokemon)
+        private async Task<IEnumerable<WithId<Move[]>>> GetMoves(Pokemon pokemon)
         {
-            // TODO: group moves by version group ID
-            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
-            var currentMoves = await GetMoves(pokemon, newestId);
+            var movesList = new List<WithId<Move[]>>();
 
-            var versionGroups = await VersionGroupsService.GetAll();
-            var movesList = versionGroups.Select(
-                vg => new WithId<Move[]>(vg.VersionGroupId, currentMoves.ToArray())
-            );
+            var versionGroups = await VersionGroupService.GetAll();
+            foreach (var vg in versionGroups)
+            {
+                var moves = await GetMoves(pokemon, vg);
+                var movesEntry = new WithId<Move[]>(vg.VersionGroupId, moves.ToArray());
+                movesList.Add(movesEntry);
+            }
 
-            return movesList.ToList();
+            return movesList;
         }
 
         /// <summary>
         /// Returns the given Pokemon's moves in the version group with the given ID.
         /// </summary>
-        private async Task<IEnumerable<Move>> GetMoves(Pokemon pokemon, int versionGroupId)
+        private async Task<IEnumerable<Move>> GetMoves(Pokemon pokemon, VersionGroupEntry versionGroup)
         {
-            var newestMoves = await MoveService.UpsertMany(pokemon.Moves.Select(m => m.Move));
-            return newestMoves.Select(m => new Move
+            var allMoves = pokemon.Moves;
+            var relevantMoves = allMoves.Where(m =>
+            {
+                var versionGroupNames = m.VersionGroupDetails.Select(vgd => vgd.VersionGroup.Name);
+                return versionGroupNames.Contains(versionGroup.Name);
+            });
+
+            var moveEntries = await MoveService.UpsertMany(relevantMoves.Select(m => m.Move));
+            return moveEntries.Select(m => new Move
             {
                 Id = m.MoveId,
                 Name = m.Name
