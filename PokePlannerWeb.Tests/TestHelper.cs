@@ -105,8 +105,14 @@ namespace PokePlannerWeb.Tests
             services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
             );
-            services.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
+            services.AddSingleton<ILogger<MoveService>, NullLogger<MoveService>>();
             services.AddSingleton<MoveService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveDamageClassEntry>(dataStoreSettings.MoveDamageClassCollectionName)
+            );
+            services.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
+            services.AddSingleton<MoveDamageClassService>();
         }
 
         /// <summary>
@@ -147,6 +153,11 @@ namespace PokePlannerWeb.Tests
                 cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
             );
             services.AddSingleton<MoveCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
+            );
+            services.AddSingleton<MoveDamageClassCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)
