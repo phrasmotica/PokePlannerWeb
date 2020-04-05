@@ -104,6 +104,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return formEntries.OrderBy(f => f.FormId).ToArray();
         }
 
+        /// <summary>
+        /// Returns the moves of the Pokemon with the given ID in the version group with the
+        /// given ID from the data store.
+        /// </summary>
+        public async Task<MoveEntry[]> GetPokemonMoves(int pokemonId, int versionGroupId)
+        {
+            var entry = await Upsert(pokemonId);
+            var relevantMoves = entry.Moves.Single(m => m.Id == versionGroupId);
+            var moveEntries = await MoveService.UpsertMany(relevantMoves.Data.Select(m => m.Id));
+            return moveEntries.OrderBy(m => m.MoveId).ToArray();
+        }
+
         #endregion
 
         #region Helpers
