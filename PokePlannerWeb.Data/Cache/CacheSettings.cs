@@ -6,16 +6,6 @@
     public class CacheSettings : ICacheSettings
     {
         /// <summary>
-        /// The database connection string.
-        /// </summary>
-        public string ConnectionString { get; set; }
-
-        /// <summary>
-        /// The name of the database.
-        /// </summary>
-        public string DatabaseName { get; set; }
-
-        /// <summary>
         /// The name of the collection of generations.
         /// </summary>
         public string GenerationCollectionName { get; set; }
@@ -76,16 +66,6 @@
     /// </summary>
     public interface ICacheSettings
     {
-        /// <summary>
-        /// The database connection string.
-        /// </summary>
-        string ConnectionString { get; set; }
-
-        /// <summary>
-        /// The name of the database.
-        /// </summary>
-        string DatabaseName { get; set; }
-
         /// <summary>
         /// The name of the collection of generations.
         /// </summary>

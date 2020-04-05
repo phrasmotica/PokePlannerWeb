@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 using MongoDB.Bson.Serialization.Conventions;
 using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
+using Environment = System.Environment;
 
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
@@ -27,21 +29,40 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         /// <summary>
         /// The connection string to the database instance.
         /// </summary>
-        private readonly string ConnectionString;
+        private readonly string ConnectionString = Environment.GetEnvironmentVariable(
+            "PokePlannerWebConnectionString", System.EnvironmentVariableTarget.Machine);
+
+        /// <summary>
+        /// The private key of the database.
+        /// </summary>
+        private readonly string PrivateKey = Environment.GetEnvironmentVariable(
+            "PokePlannerWebPrivateKey", System.EnvironmentVariableTarget.Machine);
 
         /// <summary>
         /// The name of the database.
         /// </summary>
-        private readonly string DatabaseName;
+        private readonly string DatabaseName = "PokePlannerWebDataStore";
 
         /// <summary>
-        /// Constructor.
+        /// Creates an entry source for the given entry type.
         /// </summary>
-        public DataStoreSourceFactory(string connectionString, string databaseName)
+        public IDataStoreSource<TEntry> Create<TEntry>(string collectionName) where TEntry : EntryBase
         {
-            ConnectionString = connectionString;
-            DatabaseName = databaseName;
+            var isCosmosDb = Regex.IsMatch(ConnectionString, @"https:\/\/[\w-]+\.documents\.azure\.com");
+            if (isCosmosDb)
+            {
+                return new CosmosDbDataStoreSource<TEntry>(ConnectionString, PrivateKey, DatabaseName, collectionName);
+            }
 
+            ConfigureMongoDb();
+            return new MongoDbDataStoreSource<TEntry>(ConnectionString, DatabaseName, collectionName);
+        }
+
+        /// <summary>
+        /// Configures settings for Mongo DB.
+        /// </summary>
+        private void ConfigureMongoDb()
+        {
             // ignore null values of certain types
             ConventionRegistry.Register(
                 "IgnoreIfDefault",
@@ -61,14 +82,6 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
                 },
                 t => true
             );
-        }
-
-        /// <summary>
-        /// Creates an entry source for the given entry type.
-        /// </summary>
-        public IDataStoreSource<TEntry> Create<TEntry>(string collectionName) where TEntry : EntryBase
-        {
-            return new MongoDbDataStoreSource<TEntry>(ConnectionString, DatabaseName, collectionName);
         }
     }
 }

@@ -6,16 +6,6 @@
     public class DataStoreSettings : IDataStoreSettings
     {
         /// <summary>
-        /// The database connection string.
-        /// </summary>
-        public string ConnectionString { get; set; }
-
-        /// <summary>
-        /// The name of the database.
-        /// </summary>
-        public string DatabaseName { get; set; }
-
-        /// <summary>
         /// The name of the collection of encounters.
         /// </summary>
         public string EncounterCollectionName { get; set; }
@@ -81,16 +71,6 @@
     /// </summary>
     public interface IDataStoreSettings
     {
-        /// <summary>
-        /// The database connection string.
-        /// </summary>
-        string ConnectionString { get; set; }
-
-        /// <summary>
-        /// The name of the database.
-        /// </summary>
-        string DatabaseName { get; set; }
-
         /// <summary>
         /// The name of the collection of encounters.
         /// </summary>
