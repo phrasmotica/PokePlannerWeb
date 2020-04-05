@@ -88,6 +88,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             for (let row = 0; row < moves.length; row++) {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
+                let moveNameElement = (
+                    <span className="margin-right-small">
+                        {moveName}
+                    </span>
+                )
 
                 let typeId = move.type.id
                 let headerId = `movelist${this.props.index}move${move.moveId}type${typeId}`
@@ -99,7 +104,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 rows.push(
                     <ListGroupItem key={row}>
-                        {moveName}
+                        {moveNameElement}
                         {typeIcon}
                     </ListGroupItem>
                 )
