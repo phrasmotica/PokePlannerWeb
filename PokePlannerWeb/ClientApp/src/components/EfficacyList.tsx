@@ -1,12 +1,13 @@
 ﻿import React, { Component } from "react"
 import { Tooltip } from "reactstrap"
 
+import { IHasCommon } from "./CommonMembers"
 import { EfficacySet } from "../models/EfficacyMap"
 import { TypesPresenceMap } from "../models/TypesPresenceMap"
+import "../util/Extensions"
 
 import "../styles/types.scss"
 import "./EfficacyList.scss"
-import { IHasCommon } from "./CommonMembers"
 
 /**
  * The number of rows to split the types across.
@@ -74,7 +75,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
         // ...or if the types changed
         let previousTypeIds = previousProps.typeIds
         let typeIds = this.props.typeIds
-        let typesChanged = !this.arraysEqual(typeIds, previousTypeIds)
+        let typesChanged = !typeIds.equals(previousTypeIds)
 
         if (versionGroupChanged || typesChanged) {
             this.getEfficacy()
@@ -291,28 +292,5 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
         }
 
         return endpointUrl
-    }
-
-    // returns true if the two arrays are componentwise equal
-    arraysEqual(arr1: any[], arr2: any[]) {
-        if (arr1 === arr2) {
-            return true
-        }
-
-        if (arr1 == null || arr2 == null) {
-            return false
-        }
-
-        if (arr1.length !== arr2.length) {
-            return false
-        }
-
-        for (var i = 0; i < arr1.length; i++) {
-            if (arr1[i] !== arr2[i]) {
-                return false
-            }
-        }
-
-        return true
     }
 }
