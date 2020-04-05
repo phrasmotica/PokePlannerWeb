@@ -15,7 +15,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class MoveService : NamedApiResourceServiceBase<Move, MoveEntry>
     {
         /// <summary>
-        /// The type cache service.
+        /// The move damage class service.
+        /// </summary>
+        private readonly MoveDamageClassService MoveDamageClassService;
+
+        /// <summary>
+        /// The type service.
         /// </summary>
         private readonly TypeService TypeService;
 
@@ -26,9 +31,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<MoveEntry> dataStoreSource,
             IPokeAPI pokeApi,
             MoveCacheService moveCacheService,
+            MoveDamageClassService moveDamageClassService,
             TypeService typeService,
             ILogger<MoveService> logger) : base(dataStoreSource, pokeApi, moveCacheService, logger)
         {
+            MoveDamageClassService = moveDamageClassService;
             TypeService = typeService;
         }
 
@@ -41,6 +48,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var displayNames = move.Names.ToDisplayNames();
             var type = await TypeService.Upsert(move.Type);
+            var damageClass = await MoveDamageClassService.Upsert(move.DamageClass);
 
             return new MoveEntry
             {
@@ -51,6 +59,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 {
                     Id = type.TypeId,
                     Name = type.Name
+                },
+                DamageClass = new MoveDamageClass
+                {
+                    Id = damageClass.MoveDamageClassId,
+                    Name = damageClass.Name
                 }
             };
         }

@@ -22,5 +22,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the type of the move.
         /// </summary>
         public Type Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the damage class of the move.
+        /// </summary>
+        public MoveDamageClass DamageClass { get; set; }
     }
 }
