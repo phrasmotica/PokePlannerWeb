@@ -167,6 +167,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 <Button
                     color="danger"
                     className="margin-right-small"
+                    disabled={this.state.speciesId === undefined || this.isLoading()}
                     onMouseUp={() => this.clearPokemon()}>
                     <FaTimesCircle />
                 </Button>
@@ -472,6 +473,13 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setState(previousState => ({
             validityTooltipOpen: !previousState.validityTooltipOpen
         }))
+    }
+
+    /**
+     * Returns whether the component is loading.
+     */
+    isLoading() {
+        return this.state.loadingForms || this.state.loadingVarieties
     }
 
     // returns true if the species has secondary varieties
