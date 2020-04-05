@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
-import { FaRandom, FaTimesCircle } from "react-icons/fa"
+import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 import Select from "react-select"
 import Cookies from "universal-cookie"
 
@@ -12,6 +12,7 @@ import { WithId } from "../models/WithId"
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 
 import "../styles/types.scss"
+import "./PokemonSelector.scss"
 import "./TeamBuilder.scss"
 
 interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
@@ -159,17 +160,17 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             <div className="margin-bottom-small">
                 <Button
                     color="warning"
-                    className="margin-right-small"
+                    className="selector-button margin-right-small"
                     onMouseUp={() => this.setRandomSpecies()}>
-                    <FaRandom />
+                    <TiArrowShuffle className="selector-button-icon" />
                 </Button>
 
                 <Button
                     color="danger"
-                    className="margin-right-small"
+                    className="selector-button margin-right-small"
                     disabled={this.state.speciesId === undefined || this.isLoading()}
                     onMouseUp={() => this.clearPokemon()}>
-                    <FaTimesCircle />
+                    <TiDelete className="selector-button-icon" />
                 </Button>
             </div>
         )

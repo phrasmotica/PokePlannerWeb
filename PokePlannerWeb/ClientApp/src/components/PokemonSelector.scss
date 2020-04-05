@@ -1,0 +1,12 @@
+﻿$buttonSize: 40px;
+.selector-button {
+    height: $buttonSize;
+    width: $buttonSize;
+    padding: 0.375rem;
+}
+
+$iconSize: 1.5rem;
+.selector-button-icon {
+    height: $iconSize;
+    width: $iconSize;
+}
