@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem } from "reactstrap"
+import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
 
 import { IHasCommon } from "./CommonMembers"
 import { MoveEntry } from "../models/MoveEntry"
@@ -30,6 +30,11 @@ interface IMoveListState {
      * Whether we're loading the moves.
      */
     loadingMoves: boolean
+
+    /**
+     * Whether each move's info pane is open.
+     */
+    movesAreOpen: boolean[]
 }
 
 /**
@@ -40,7 +45,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         super(props)
         this.state = {
             moves: [],
-            loadingMoves: false
+            loadingMoves: false,
+            movesAreOpen: []
         }
     }
 
@@ -92,10 +98,14 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             for (let row = 0; row < moves.length; row++) {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
+
+                const openInfoPane = () => this.toggleMoveOpen(row)
                 let moveNameElement = (
-                    <span className="margin-right-small">
+                    <Button
+                        color="link"
+                        onMouseUp={openInfoPane}>
                         {moveName}
-                    </span>
+                    </Button>
                 )
 
                 let typeId = move.type.id
@@ -106,10 +116,19 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                                 alt={`type${typeId}`}
                                 src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
+                let isOpen = this.state.movesAreOpen[row]
+                let infoPane = (
+                    <Collapse isOpen={isOpen}>
+                        <div>
+                            {typeIcon}
+                        </div>
+                    </Collapse>
+                )
+
                 rows.push(
                     <ListGroupItem key={row}>
                         {moveNameElement}
-                        {typeIcon}
+                        {infoPane}
                     </ListGroupItem>
                 )
             }
@@ -128,6 +147,21 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 </ListGroupItem>
             </ListGroup>
         )
+    }
+
+    /**
+     * Toggles the move info pane with the given index.
+     */
+    toggleMoveOpen(index: number) {
+        let newMovesAreOpen = this.state.movesAreOpen.map((item, j) => {
+            if (j === index) {
+                return !item
+            }
+
+            return item
+        })
+
+        this.setState({ movesAreOpen: newMovesAreOpen })
     }
 
     /**
@@ -161,7 +195,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 .then(response => response.json())
                 .then((moves: MoveEntry[]) => {
                     let concreteMoves = moves.map(MoveEntry.from)
-                    this.setState({ moves: concreteMoves })
+                    this.setState({
+                        moves: concreteMoves,
+                        movesAreOpen: concreteMoves.map(_ => false)
+                    })
                 })
                 .catch(error => console.error(error))
                 .then(() => this.setState({ loadingMoves: false }))
