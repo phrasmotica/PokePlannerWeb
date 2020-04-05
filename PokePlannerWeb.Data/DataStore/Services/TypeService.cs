@@ -98,7 +98,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
             var types = await GetConcrete();
 
-            var presenceMap = types.Select(type =>
+            var presenceMap = types.OrderBy(t => t.TypeId).Select(type =>
             {
                 var typeIsPresent = HasType(versionGroup.Generation, type);
                 return new WithId<bool>(type.Key, typeIsPresent);
