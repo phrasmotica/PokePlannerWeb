@@ -29,6 +29,10 @@
 $margin: 10px;
 .margin-right {
     margin-right: $margin;
+
+    &-small {
+        margin-right: $margin / 2;
+    }
 }
 
 .margin-bottom {

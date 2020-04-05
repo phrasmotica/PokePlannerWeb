@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
+import { FaRandom, FaTimesCircle } from "react-icons/fa"
 import Select from "react-select"
 import Cookies from "universal-cookie"
 
@@ -155,17 +156,19 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     renderButtons() {
         return (
-            <div className="flex-space-between margin-bottom-small">
+            <div className="margin-bottom-small">
                 <Button
                     color="warning"
+                    className="margin-right-small"
                     onMouseUp={() => this.setRandomSpecies()}>
-                    Random Pokemon
+                    <FaRandom />
                 </Button>
 
                 <Button
                     color="danger"
+                    className="margin-right-small"
                     onMouseUp={() => this.clearPokemon()}>
-                    Clear
+                    <FaTimesCircle />
                 </Button>
             </div>
         )
