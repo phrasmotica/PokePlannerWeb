@@ -92,6 +92,11 @@ namespace PokePlannerWeb
             services.AddSingleton<MachineService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
+            );
+            services.AddSingleton<MoveService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexCollectionName)
             );
             services.AddSingleton<PokedexService>();
@@ -165,6 +170,11 @@ namespace PokePlannerWeb
                 cacheSourceFactory.Create<Location>(cacheSettings.LocationCollectionName)
             );
             services.AddSingleton<LocationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
+            );
+            services.AddSingleton<MoveCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)

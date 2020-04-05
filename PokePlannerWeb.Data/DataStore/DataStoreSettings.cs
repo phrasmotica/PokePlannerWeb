@@ -26,6 +26,11 @@
         public string LocationAreaCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of moves.
+        /// </summary>
+        public string MoveCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of pokedexes.
         /// </summary>
         public string PokedexCollectionName { get; set; }
@@ -90,6 +95,11 @@
         /// The name of the collection of location areas.
         /// </summary>
         string LocationAreaCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of moves.
+        /// </summary>
+        string MoveCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of pokedexes.

@@ -101,6 +101,12 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
             services.AddSingleton<TypeService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
+            );
+            services.AddSingleton<ILogger<TypeService>, NullLogger<TypeService>>();
+            services.AddSingleton<MoveService>();
         }
 
         /// <summary>
@@ -136,6 +142,11 @@ namespace PokePlannerWeb.Tests
                 cacheSourceFactory.Create<Location>(cacheSettings.LocationCollectionName)
             );
             services.AddSingleton<LocationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
+            );
+            services.AddSingleton<MoveCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)
