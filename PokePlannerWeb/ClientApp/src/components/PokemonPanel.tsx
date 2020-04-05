@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 import { Tabs, Tab } from "react-bootstrap"
+
 import { CaptureLocations } from "./CaptureLocations"
 import { EfficacyList } from "./EfficacyList"
 import { MoveList } from "./MoveList"
@@ -13,6 +14,7 @@ import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
+import { CookieHelper } from "../util/CookieHelper"
 
 import "./PokemonPanel.scss"
 import "./TeamBuilder.scss"
@@ -65,6 +67,11 @@ interface IPokemonPanelState {
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
+
+    /**
+     * The key of the active tab.
+     */
+    activeKey: string | undefined
 }
 
 /**
@@ -77,11 +84,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            showShinySprite: false
+            showShinySprite: false,
+            activeKey: CookieHelper.get(`panel${this.props.index}activeKey`)
         }
     }
-
-    // TODO: set cookie for the selected tab
 
     render() {
         // handlers
@@ -115,7 +121,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                     <Tabs
                         transition={false}
                         className="tabpane-small"
+                        activeKey={this.state.activeKey}
                         defaultActiveKey="stats"
+                        onSelect={(k: string) => this.setActiveKey(k)}
                         id="infoTabs">
                         <Tab eventKey="stats" title="Base Stats">
                             {this.renderStatsGraph()}
@@ -447,5 +455,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     // set the Pokemon form
     setForm(form: PokemonFormEntry) {
         this.setState({ form: form })
+    }
+
+    /**
+     * Sets the key of the active tab.
+     */
+    setActiveKey(key: string) {
+        CookieHelper.set(`panel${this.props.index}activeKey`, key)
+        this.setState({ activeKey: key })
     }
 }

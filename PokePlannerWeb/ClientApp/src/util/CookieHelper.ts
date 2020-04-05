@@ -39,6 +39,19 @@ export class CookieHelper {
     }
 
     /**
+     * Returns the cookie with the given name as a number, or undefined if not found.
+     */
+    static get(name: string): string | undefined {
+        let cookies = new Cookies()
+        let cookie = cookies.get(name)
+        if (cookie === undefined) {
+            return undefined
+        }
+
+        return String(cookie)
+    }
+
+    /**
      * Removes the cookie with the given name.
      */
     static remove(name: string): void {
