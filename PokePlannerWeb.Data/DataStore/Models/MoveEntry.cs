@@ -24,8 +24,28 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public Type Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the move's base power.
+        /// </summary>
+        public int? Power { get; set; }
+
+        /// <summary>
         /// Gets or sets the damage class of the move.
         /// </summary>
         public MoveDamageClass DamageClass { get; set; }
+
+        /// <summary>
+        /// Gets or sets the move's accuracy.
+        /// </summary>
+        public int? Accuracy { get; set; }
+
+        /// <summary>
+        /// Gets or sets the move's max number of power points.
+        /// </summary>
+        public int? PP { get; set; }
+
+        /// <summary>
+        /// Gets or sets the move's priority.
+        /// </summary>
+        public int Priority { get; set; }
     }
 }

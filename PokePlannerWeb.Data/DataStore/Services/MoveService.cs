@@ -60,10 +60,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     Id = type.TypeId,
                     Name = type.Name
                 },
+                Power = move.Power,
                 DamageClass = new MoveDamageClass
                 {
                     Id = damageClass.MoveDamageClassId,
                     Name = damageClass.Name
+                },
+                Accuracy = move.Accuracy,
+                PP = move.Pp,
+                Priority = move.Priority
                 }
             };
         }

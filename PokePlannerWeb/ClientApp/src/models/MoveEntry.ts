@@ -1,6 +1,6 @@
 import { DisplayName } from "./DisplayName"
-import { Type } from "./Type"
 import { MoveDamageClass } from "./MoveDamageClass"
+import { Type } from "./Type"
 
 /**
  * Represents a move in the data store.
@@ -27,9 +27,29 @@ export class MoveEntry {
     type: Type
 
     /**
+     * The move's base power.
+     */
+    power: number | undefined
+
+    /**
      * The damage class of the move.
      */
     damageClass: MoveDamageClass
+
+    /**
+     * The move's power.
+     */
+    accuracy: number | undefined
+
+    /**
+     * The move's maximum number of power points.
+     */
+    pp: number | undefined
+
+    /**
+     * The move's priority.
+     */
+    priority: number
 
     /**
      * Constructor.
@@ -39,13 +59,21 @@ export class MoveEntry {
         name: string,
         displayNames: DisplayName[],
         type: Type,
-        damageClass: MoveDamageClass
+        power: number | undefined,
+        damageClass: MoveDamageClass,
+        accuracy: number | undefined,
+        pp: number | undefined,
+        priority: number
     ) {
         this.moveId = moveId
         this.name = name
         this.displayNames = displayNames
         this.type = type
+        this.power = power
         this.damageClass = damageClass
+        this.accuracy = accuracy
+        this.pp = pp
+        this.priority = priority
     }
 
     /**
@@ -57,7 +85,11 @@ export class MoveEntry {
             move.name,
             move.displayNames,
             move.type,
-            move.damageClass
+            move.power,
+            move.damageClass,
+            move.accuracy,
+            move.pp,
+            move.priority
         )
     }
 
