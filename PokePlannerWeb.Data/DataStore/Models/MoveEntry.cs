@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -16,5 +17,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the display names of the move.
         /// </summary>
         public List<DisplayName> DisplayNames { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the move.
+        /// </summary>
+        public Type Type { get; set; }
     }
 }
