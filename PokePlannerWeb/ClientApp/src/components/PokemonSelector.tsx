@@ -2,12 +2,12 @@
 import { Button, Tooltip } from "reactstrap"
 import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 import Select from "react-select"
-import Cookies from "universal-cookie"
 
 import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import { WithId } from "../models/WithId"
+import { CookieHelper } from "../util/CookieHelper"
 
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 
@@ -118,7 +118,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     componentDidMount() {
         let index = this.props.index
 
-        let speciesId = this.getNumberCookie(`speciesId${index}`)
+        let speciesId = CookieHelper.getNumber(`speciesId${index}`)
         if (speciesId !== undefined) {
             let speciesIds = this.props.species.map(s => s.speciesId)
             if (speciesIds.includes(speciesId)) {
@@ -127,10 +127,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             }
             else {
                 // remove cookies for species that isn't available
-                let cookies = new Cookies()
-                cookies.remove(`speciesId${index}`)
-                cookies.remove(`varietyId${index}`)
-                cookies.remove(`formId${index}`)
+                CookieHelper.remove(`speciesId${index}`)
+                CookieHelper.remove(`varietyId${index}`)
+                CookieHelper.remove(`formId${index}`)
             }
         }
     }
@@ -202,8 +201,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.setSpecies(speciesId)
 
             // set cookie
-            let cookies = new Cookies()
-            cookies.set(`speciesId${this.props.index}`, speciesId)
+            CookieHelper.set(`speciesId${this.props.index}`, speciesId)
         }
 
         let searchBox = (
@@ -249,8 +247,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.setState({ varietyId: varietyId })
 
             // set variety cookie
-            let cookies = new Cookies()
-            cookies.set(`varietyId${this.props.index}`, varietyId)
+            CookieHelper.set(`varietyId${this.props.index}`, varietyId)
 
             let variety = this.getVariety(varietyId)
             this.props.setVariety(variety)
@@ -260,7 +257,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             let form = forms[0]
 
             // set form cookie
-            cookies.set(`formId${this.props.index}`, form.formId)
+            CookieHelper.set(`formId${this.props.index}`, form.formId)
 
             this.setForm(form)
         }
@@ -309,8 +306,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.setState({ formId: formId })
 
             // set cookie
-            let cookies = new Cookies()
-            cookies.set(`formId${this.props.index}`, formId)
+            CookieHelper.set(`formId${this.props.index}`, formId)
 
             let form = this.getForm(formId)
             this.props.setForm(form)
@@ -539,9 +535,8 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             if (selectedSpeciesId !== undefined && speciesChanged) {
                 // invalidate cookies from previous species
                 let index = this.props.index
-                let cookies = new Cookies()
-                cookies.remove(`varietyId${index}`)
-                cookies.remove(`formId${index}`)
+                CookieHelper.remove(`varietyId${index}`)
+                CookieHelper.remove(`formId${index}`)
             }
 
             this.props.setSpecies(newSpeciesId)
@@ -651,8 +646,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.setSpecies(species.speciesId)
 
         // set cookie
-        let cookies = new Cookies()
-        cookies.set(`speciesId${this.props.index}`, species.speciesId)
+        CookieHelper.set(`speciesId${this.props.index}`, species.speciesId)
     }
 
     /**
@@ -668,10 +662,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     clearPokemon() {
         // clear cookies
         let index = this.props.index
-        let cookies = new Cookies()
-        cookies.remove(`speciesId${index}`)
-        cookies.remove(`varietyId${index}`)
-        cookies.remove(`formId${index}`)
+        CookieHelper.remove(`speciesId${index}`)
+        CookieHelper.remove(`varietyId${index}`)
+        CookieHelper.remove(`formId${index}`)
 
         this.setState({
             speciesId: undefined,
@@ -710,7 +703,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 let variety = concreteVarieties[0]
 
                 // set variety from cookies if possible
-                let varietyId = this.getNumberCookie(`varietyId${this.props.index}`)
+                let varietyId = CookieHelper.getNumber(`varietyId${this.props.index}`)
                 if (varietyId !== undefined) {
                     let matchingVariety = concreteVarieties.find(p => p.pokemonId === varietyId)
                     if (matchingVariety === undefined) {
@@ -721,8 +714,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 }
                 else {
                     // set cookie if unset
-                    let cookies = new Cookies()
-                    cookies.set(`varietyId${this.props.index}`, variety.pokemonId)
+                    CookieHelper.set(`varietyId${this.props.index}`, variety.pokemonId)
                 }
 
                 this.setVariety(variety)
@@ -779,7 +771,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 let form = forms[0]
 
                 // set form from cookies if possible
-                let formId = this.getNumberCookie(`formId${this.props.index}`)
+                let formId = CookieHelper.getNumber(`formId${this.props.index}`)
                 if (formId !== undefined) {
                     let matchingForm = forms.find(f => f.formId === formId)
                     if (matchingForm === undefined) {
@@ -790,26 +782,12 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 }
                 else {
                     // set cookie if unset
-                    let cookies = new Cookies()
-                    cookies.set(`formId${this.props.index}`, form.formId)
+                    CookieHelper.set(`formId${this.props.index}`, form.formId)
                 }
 
                 this.setForm(form)
             })
             .catch(error => console.error(error))
             .then(() => this.setState({ loadingForms: false }))
-    }
-
-    /**
-     * Returns the cookie with the given name as a number, or undefined if not found.
-     */
-    getNumberCookie(name: string): number | undefined {
-        let cookies = new Cookies()
-        let cookie = cookies.get(name)
-        if (cookie === undefined) {
-            return undefined
-        }
-
-        return Number(cookie)
     }
 }

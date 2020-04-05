@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
-import Cookies from 'universal-cookie'
 
 import { PokemonPanel } from './PokemonPanel'
 
 import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
 import { TypesPresenceMap } from '../models/TypesPresenceMap'
 import { VersionGroupEntry } from '../models/VersionGroupEntry'
+import { CookieHelper } from '../util/CookieHelper'
 
 import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
 
@@ -87,8 +87,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             loadingTypesPresenceMap: true,
             baseStatNames: [],
             loadingBaseStatNames: true,
-            ignoreValidity: this.getFlagCookie("ignoreValidity"),
-            hideTooltips: this.getFlagCookie("hideTooltips")
+            ignoreValidity: CookieHelper.getFlag("ignoreValidity"),
+            hideTooltips: CookieHelper.getFlag("hideTooltips")
         }
     }
 
@@ -273,7 +273,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .then(() => {
                 // try get version group ID from cookies
-                let versionGroupId = this.getNumberCookie("versionGroupId")
+                let versionGroupId = CookieHelper.getNumber("versionGroupId")
                 if (versionGroupId === undefined) {
                     // fall back to latest one
                     let groups = this.state.versionGroups
@@ -346,8 +346,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.setState({ versionGroupId: versionGroupId })
 
         // set cookie
-        let cookies = new Cookies()
-        cookies.set("versionGroupId", versionGroupId, { path: "/" })
+        CookieHelper.set("versionGroupId", versionGroupId)
 
         // reload types presence map and base stat names
         this.fetchTypesPresenceMap(versionGroupId)
@@ -356,8 +355,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // toggle validity check on Pokemon
     toggleIgnoreValidity() {
-        let cookies = new Cookies()
-        cookies.set("ignoreValidity", !this.state.ignoreValidity, { path: "/" })
+        CookieHelper.set("ignoreValidity", !this.state.ignoreValidity)
 
         this.setState(previousState => ({
             ignoreValidity: !previousState.ignoreValidity
@@ -366,8 +364,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // toggle tooltip hiding
     toggleHideTooltips() {
-        let cookies = new Cookies()
-        cookies.set("hideTooltips", !this.state.hideTooltips, { path: "/" })
+        CookieHelper.set("hideTooltips", !this.state.hideTooltips)
 
         this.setState(previousState => ({
             hideTooltips: !previousState.hideTooltips
@@ -380,31 +377,5 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     pageIsLoading() {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
-    }
-
-    /**
-     * Returns the cookie with the given name as a boolean, or false if not found.
-     */
-    getFlagCookie(name: string): boolean {
-        let cookies = new Cookies()
-        let cookie = cookies.get(name)
-        if (cookie === undefined) {
-            return false
-        }
-
-        return Boolean(JSON.parse(cookie))
-    }
-
-    /**
-     * Returns the cookie with the given name as a number, or undefined if not found.
-     */
-    getNumberCookie(name: string): number | undefined {
-        let cookies = new Cookies()
-        let cookie = cookies.get(name)
-        if (cookie === undefined) {
-            return undefined
-        }
-
-        return Number(cookie)
     }
 }
