@@ -40,7 +40,14 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         /// </summary>
         public CosmosDbCacheSource(string connectionString, string privateKey, string databaseName, string collectionName)
         {
-            CosmosClient = new CosmosClient(connectionString, privateKey);
+            CosmosClient = new CosmosClient(connectionString, privateKey, new CosmosClientOptions
+            {
+                SerializerOptions = new CosmosSerializationOptions
+                {
+                    IgnoreNullValues = true
+                }
+            });
+
             DatabaseName = databaseName;
             ContainerName = collectionName;
         }
