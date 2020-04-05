@@ -10,7 +10,20 @@
 }
 
 $size: 40px;
-.damage-class-medium {
+.damage-class {
     height: $size;
     width: $size;
+
+    &-small {
+        height: 2 * $size / 3;
+        width: 2 * $size / 3;
+    }
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.text-align-center {
+    text-align: center;
 }

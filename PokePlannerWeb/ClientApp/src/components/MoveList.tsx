@@ -113,7 +113,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let headerId = `movelist${this.props.index}move${move.moveId}type${typeId}`
                 let typeIcon = <img
                                 id={headerId}
-                                className="type-icon-medium padded"
+                                className="type-icon padded"
                                 alt={`type${typeId}`}
                                 src={require(`../images/typeIcons/${typeId}-small.png`)} />
 
@@ -122,9 +122,18 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let isOpen = this.state.movesAreOpen[row]
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
-                        <div>
-                            {typeIcon}
-                            {damageClassIcon}
+                        <div style={{ display: "flex" }}>
+                            <div className="text-align-right margin-right-small">
+                                <div>Power: {move.power ?? "-"}</div>
+                                <div>Accuracy: {move.accuracy ?? "-"}</div>
+                                <div>PP: {move.pp ?? "-"}</div>
+                            </div>
+
+                            <div className="text-align-center margin-right-small">
+                                <div>{typeIcon}</div>
+
+                                <div>{damageClassIcon}</div>
+                            </div>
                         </div>
                     </Collapse>
                 )
@@ -174,11 +183,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     getDamageClassIcon(damageClassId: number) {
         switch (damageClassId) {
             case 1:
-                return <TiWavesOutline className="damage-class-medium" />
+                return <TiWavesOutline className="damage-class-small" />
             case 2:
-                return <TiStarburstOutline className="damage-class-medium" />
+                return <TiStarburstOutline className="damage-class-small" />
             case 3:
-                return <TiSpiral className="damage-class-medium" />
+                return <TiSpiral className="damage-class-small" />
             default:
                 throw new Error(
                     `Move list ${this.props.index}: no move damage class with ID ${damageClassId} exists!`
