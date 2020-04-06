@@ -57,6 +57,8 @@ export class PokemonSpeciesFilter
             let isPresent = this.props.isPresent[index]
             let label = this.props.filterLabels[index]
 
+            // TODO: use a reactstrap Dropdown with DropdownItems
+
             return (
                 <ListGroupItem
                     key={`filter${this.props.index}item${index}`}

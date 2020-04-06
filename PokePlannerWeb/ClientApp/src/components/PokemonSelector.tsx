@@ -109,6 +109,7 @@ interface IPokemonSelectorState {
 
 /**
  * Component for selecting a Pokemon.
+ * TODO: refactor into species select, variety select and form select components
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: IPokemonSelectorProps) {
