@@ -185,7 +185,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                         onChange={() => this.toggleHideTooltips()} />
                     <Label for="hideTooltipsCheckbox" check>
                         Hide tooltips
-                </Label>
+                    </Label>
                 </FormGroup>
             </div>
         )

@@ -1,7 +1,10 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
+import { FaFilter } from "react-icons/fa"
 import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 import Select from "react-select"
+
+import { PokemonSpeciesFilter } from "./Filter"
 
 import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
@@ -59,6 +62,11 @@ interface IPokemonSelectorState {
     speciesId: number | undefined
 
     /**
+     * The IDs of the generations to filter species for.
+     */
+    speciesFilterIds: number[]
+
+    /**
      * The ID of the selected species variety.
      */
     varietyId: number | undefined
@@ -89,6 +97,11 @@ interface IPokemonSelectorState {
     loadingForms: boolean
 
     /**
+     * Whether the species filter is open.
+     */
+    speciesFilterOpen: boolean
+
+    /**
      * Whether the validity tooltip is open.
      */
     validityTooltipOpen: boolean
@@ -102,12 +115,14 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         super(props)
         this.state = {
             speciesId: undefined,
+            speciesFilterIds: [],
             varietyId: undefined,
             varieties: [],
             loadingVarieties: false,
             formId: undefined,
             formsDict: [],
             loadingForms: false,
+            speciesFilterOpen: false,
             validityTooltipOpen: false
         }
     }
@@ -209,6 +224,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 isSearchable
                 blurInputOnSelect
                 width="230px"
+                className="margin-right-small"
                 id={idPrefix + this.props.index}
                 styles={customStyles}
                 placeholder="Select a species!"
@@ -217,9 +233,45 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 options={speciesOptions} />
         )
 
+        let index = this.props.index
+        let buttonId = `selector${index}speciesFilterButton`
+        let filterButton = (
+            <Button
+                id={buttonId}
+                color="primary"
+                className="filter-button"
+                onMouseUp={() => {this.toggleSpeciesFilter()}}>
+                <FaFilter className="selector-button-icon" />
+            </Button>
+        )
+
+        let species = this.props.species
+        let speciesIds = species.map(s => s.speciesId)
+        let filteredSpeciesIds = species.filter(s => this.isPresent(s)).map(s => s.speciesId)
+        let speciesLabels = species.map(s => s.getDisplayName("en") ?? "-")
+        let speciesPresenceList = species.map(s => this.isPresent(s))
+
+        let filter = (
+            <Tooltip
+                className="filter-tooltip"
+                placement="bottom"
+                isOpen={this.state.speciesFilterOpen}
+                target={buttonId}>
+                <PokemonSpeciesFilter
+                    index={this.props.index}
+                    allIds={speciesIds}
+                    filterIds={filteredSpeciesIds}
+                    filterLabels={speciesLabels}
+                    isPresent={speciesPresenceList}
+                    setFilterIds={(filterIds: number[]) => this.setSpeciesFilterIds(filterIds)} />
+            </Tooltip>
+        )
+
         return (
-            <div className="margin-bottom-small">
+            <div className="flex-space-between margin-bottom-small">
                 {searchBox}
+                {filterButton}
+                {filter}
                 {validityTooltip}
             </div>
         )
@@ -351,10 +403,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         return null
     }
 
-    // returns options for the species select
+    /**
+     * Returns options for the species select.
+     */
     createSpeciesOptions() {
-        // TODO: allow filtering species by types and other properties
-        return this.props.species.map(species => ({
+        return this.getFilteredSpecies().map(species => ({
             label: species.getDisplayName("en"),
             value: species.speciesId
         }))
@@ -465,6 +518,15 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
     }
 
+    /**
+     * Toggles the species filter.
+     */
+    toggleSpeciesFilter() {
+        this.setState(previousState => ({
+            speciesFilterOpen: !previousState.speciesFilterOpen
+        }))
+    }
+
     // toggle the validity tooltip
     toggleValidityTooltip() {
         this.setState(previousState => ({
@@ -542,6 +604,28 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.props.setSpecies(newSpeciesId)
             this.fetchVarieties(newSpeciesId)
         }
+    }
+
+    /**
+     * Returns the species that match the species filter.
+     */
+    getFilteredSpecies() {
+        return this.props.species.filter(s => this.isPresent(s))
+    }
+
+    /**
+     * Returns whether the species passes the filter.
+     */
+    isPresent(species: PokemonSpeciesEntry) {
+        let filters = this.state.speciesFilterIds
+        return filters.length <= 0 || filters.includes(species.speciesId)
+    }
+
+    /**
+     * Sets the species ID filter.
+     */
+    setSpeciesFilterIds(filterIds: number[]) {
+        this.setState({ speciesFilterIds: filterIds })
     }
 
     /**
