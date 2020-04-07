@@ -4,6 +4,7 @@ import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 import Select from "react-select"
 
 import { SpeciesSelector } from "./PokemonSelector/SpeciesSelector"
+import { VarietySelector } from "./PokemonSelector/VarietySelector"
 
 import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
@@ -98,7 +99,7 @@ interface IPokemonSelectorState {
 
 /**
  * Component for selecting a Pokemon.
- * TODO: render species select, variety select and form select in their own components
+ * TODO: render form select in its own component
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: IPokemonSelectorProps) {
@@ -165,66 +166,32 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 species={this.props.species}
                 speciesId={this.state.speciesId}
                 setSpecies={(id: number) => this.setSpecies(id)}
-                shouldMarkInvalid={hasNoVariants} />
+                shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
         )
     }
 
     // returns a box for selecting a variety of the selected species
     renderVarietySelect() {
-        let varietyOptions = this.createVarietyOptions()
-        let hasVarieties = varietyOptions.length > 0
-        let selectedVarietyOption = null
-
-        // attach validity tooltip and red border if necessary
-        let idPrefix = "varietySelect"
-        let validityTooltip = null
-        if (hasVarieties) {
-            let varietyId = this.state.varietyId
-            selectedVarietyOption = varietyOptions.find(o => o.value === varietyId)
-            validityTooltip = this.renderValidityTooltip(idPrefix)
+        let species = undefined
+        if (this.state.speciesId !== undefined) {
+            species = this.getSelectedSpecies()
         }
 
-        let placeholder = hasVarieties ? "Select a variety!" : "-"
-        let customStyles = this.createCustomSelectStyles(hasVarieties)
-        const onChange = (option: any) => {
-            let varietyId = option.value
-            this.setState({ varietyId: varietyId })
-
-            // set variety cookie
-            CookieHelper.set(`varietyId${this.props.index}`, varietyId)
-
-            let variety = this.getVariety(varietyId)
-            this.props.setVariety(variety)
-
-            // set first form
-            let forms = this.getFormsOfVariety(varietyId)
-            let form = forms[0]
-
-            // set form cookie
-            CookieHelper.set(`formId${this.props.index}`, form.formId)
-
-            this.setForm(form)
-        }
-
-        let searchBox = (
-            <Select
-                blurInputOnSelect
-                width="230px"
-                isLoading={this.state.loadingVarieties}
-                isDisabled={!hasVarieties}
-                id={idPrefix + this.props.index}
-                placeholder={placeholder}
-                styles={customStyles}
-                onChange={onChange}
-                value={selectedVarietyOption}
-                options={varietyOptions} />
-        )
+        let varieties = this.state.varieties
 
         return (
-            <div className="margin-bottom-small">
-                {searchBox}
-                {validityTooltip}
-            </div>
+            <VarietySelector
+                index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
+                varieties={varieties}
+                varietyId={this.state.varietyId}
+                species={species}
+                formsDict={this.state.formsDict}
+                formId={this.state.formId}
+                setVariety={(variety: PokemonEntry) => this.setVariety(variety)}
+                setForm={(form: PokemonFormEntry) => this.setForm(form)}
+                loading={this.state.loadingVarieties}
+                shouldMarkInvalid={!this.props.ignoreValidity && varieties.length > 1} />
         )
     }
 
@@ -317,38 +284,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 </Button>
             </div>
         )
-    }
-
-    // returns options for the variety select
-    createVarietyOptions() {
-        if (!this.hasSecondaryVarieties()) {
-            return []
-        }
-
-        // variety display names come from their forms
-        if (this.state.formId === undefined) {
-            return []
-        }
-
-        return this.state.varieties.map(variety => {
-            // default varieties derive name from their species
-            let species = this.getSelectedSpecies()
-            let label = species.getDisplayName("en")
-
-            let forms = this.getFormsOfVariety(variety.pokemonId)
-            if (forms.length > 0) {
-                // non-default forms have their own name
-                let form = forms[0]
-                if (form.hasDisplayNames()) {
-                    label = form.getDisplayName("en") ?? label
-                }
-            }
-
-            return {
-                label: label,
-                value: variety.pokemonId
-            }
-        })
     }
 
     // returns options for the form select
@@ -547,20 +482,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
 
         return this.getSpecies(speciesId)
-    }
-
-    /**
-     * Returns the data object for the species variety with the given ID.
-     */
-    getVariety(varietyId: number) {
-        let allVarieties = this.state.varieties
-
-        let variety = allVarieties.find(p => p.pokemonId === varietyId)
-        if (variety === undefined) {
-            throw new Error(`Selector ${this.props.index}: no variety found with ID ${varietyId}!`)
-        }
-
-        return variety
     }
 
     /**

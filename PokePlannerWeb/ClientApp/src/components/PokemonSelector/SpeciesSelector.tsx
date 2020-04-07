@@ -61,13 +61,7 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
      * Renders the component.
      */
     render() {
-        let speciesSelect = this.renderSpeciesSelect()
-
-        return (
-            <div className="margin-right">
-                {speciesSelect}
-            </div>
-        )
+        return this.renderSpeciesSelect()
     }
 
     /**
@@ -84,10 +78,11 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
 
         const onChange = (option: any) => {
             let speciesId = option.value
-            this.props.setSpecies(speciesId)
 
             // set cookie
             CookieHelper.set(`speciesId${this.props.index}`, speciesId)
+
+            this.props.setSpecies(speciesId)
         }
 
         // attach validity tooltip and red border if necessary
@@ -199,7 +194,9 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
         }
     }
 
-    // returns true if the Pokemon should be marked as invalid
+    /**
+     * Returns whether the species is valid in the selected version group.
+     */
     speciesIsValid() {
         if (this.props.speciesId === undefined) {
             return true
