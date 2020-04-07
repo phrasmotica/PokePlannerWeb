@@ -49,15 +49,15 @@ export class PokemonSpeciesFilter
     }
 
     /**
-     * Renders the filter.
-     */
+ * Renders the filter.
+ */
     renderFilter() {
         let items = this.props.allIds.map((id, index) => {
             let inputId = `filterCheckbox${index}`
             let isPresent = this.props.isPresent[index]
             let label = this.props.filterLabels[index]
 
-            // TODO: use a reactstrap Dropdown with DropdownItems
+            // TODO: use a react-select multiselect
 
             return (
                 <ListGroupItem
@@ -80,6 +80,18 @@ export class PokemonSpeciesFilter
                 {items}
             </ListGroup>
         )
+    }
+
+    /**
+     * Returns options for the filter.
+     */
+    createFilterOptions() {
+        return this.props.allIds.map((id, index) => {
+            return {
+                label: this.props.filterLabels[index],
+                value: id
+            }
+        })
     }
 
     /**

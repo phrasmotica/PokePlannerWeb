@@ -1,10 +1,9 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
-import { FaFilter } from "react-icons/fa"
 import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 import Select from "react-select"
 
-import { PokemonSpeciesFilter } from "./Filter"
+import { SpeciesSelector } from "./PokemonSelector/SpeciesSelector"
 
 import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
@@ -62,11 +61,6 @@ interface IPokemonSelectorState {
     speciesId: number | undefined
 
     /**
-     * The IDs of the generations to filter species for.
-     */
-    speciesFilterIds: number[]
-
-    /**
      * The ID of the selected species variety.
      */
     varietyId: number | undefined
@@ -97,11 +91,6 @@ interface IPokemonSelectorState {
     loadingForms: boolean
 
     /**
-     * Whether the species filter is open.
-     */
-    speciesFilterOpen: boolean
-
-    /**
      * Whether the validity tooltip is open.
      */
     validityTooltipOpen: boolean
@@ -109,21 +98,19 @@ interface IPokemonSelectorState {
 
 /**
  * Component for selecting a Pokemon.
- * TODO: refactor into species select, variety select and form select components
+ * TODO: render species select, variety select and form select in their own components
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: IPokemonSelectorProps) {
         super(props)
         this.state = {
             speciesId: undefined,
-            speciesFilterIds: [],
             varietyId: undefined,
             varieties: [],
             loadingVarieties: false,
             formId: undefined,
             formsDict: [],
             loadingForms: false,
-            speciesFilterOpen: false,
             validityTooltipOpen: false
         }
     }
@@ -167,114 +154,18 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         )
     }
 
-    /**
-     * Renders the buttons.
-     */
-    renderButtons() {
-        return (
-            <div className="margin-bottom-small">
-                <Button
-                    color="warning"
-                    className="selector-button margin-right-small"
-                    onMouseUp={() => this.setRandomSpecies()}>
-                    <TiArrowShuffle className="selector-button-icon" />
-                </Button>
-
-                <Button
-                    color="danger"
-                    className="selector-button margin-right-small"
-                    disabled={this.state.speciesId === undefined || this.isLoading()}
-                    onMouseUp={() => this.clearPokemon()}>
-                    <TiDelete className="selector-button-icon" />
-                </Button>
-            </div>
-        )
-    }
-
     // returns a box for selecting a species
     renderSpeciesSelect() {
-        let speciesOptions = this.createSpeciesOptions()
         let hasNoVariants = !this.hasSecondaryForms() && !this.hasSecondaryVarieties()
 
-        let selectedSpeciesOption = null
-        let speciesId = this.state.speciesId
-        if (speciesId !== undefined) {
-            selectedSpeciesOption = speciesOptions.find(o => o.value === speciesId)
-        }
-
-        // attach validity tooltip and red border if necessary
-        let idPrefix = "speciesSelect"
-        let validityTooltip = null
-        if (hasNoVariants) {
-            validityTooltip = this.renderValidityTooltip(idPrefix)
-        }
-
-        let customStyles = this.createCustomSelectStyles(hasNoVariants)
-        const onChange = (speciesOption: any) => {
-            let speciesId = speciesOption.value
-
-            // cascades to set first variety and form
-            this.setSpecies(speciesId)
-
-            // set cookie
-            CookieHelper.set(`speciesId${this.props.index}`, speciesId)
-        }
-
-        let searchBox = (
-            <Select
-                isSearchable
-                blurInputOnSelect
-                width="230px"
-                className="margin-right-small"
-                id={idPrefix + this.props.index}
-                styles={customStyles}
-                placeholder="Select a species!"
-                onChange={onChange}
-                value={selectedSpeciesOption}
-                options={speciesOptions} />
-        )
-
-        let index = this.props.index
-        let buttonId = `selector${index}speciesFilterButton`
-        let filterButton = (
-            <Button
-                id={buttonId}
-                color="primary"
-                className="filter-button"
-                onMouseUp={() => {this.toggleSpeciesFilter()}}>
-                <FaFilter className="selector-button-icon" />
-            </Button>
-        )
-
-        let species = this.props.species
-        let speciesIds = species.map(s => s.speciesId)
-        let filteredSpeciesIds = species.filter(s => this.isPresent(s)).map(s => s.speciesId)
-        let speciesLabels = species.map(s => s.getDisplayName("en") ?? "-")
-        let speciesPresenceList = species.map(s => this.isPresent(s))
-
-        let filter = (
-            <Tooltip
-                className="filter-tooltip"
-                placement="bottom"
-                isOpen={this.state.speciesFilterOpen}
-                target={buttonId}>
-                <PokemonSpeciesFilter
-                    index={this.props.index}
-                    allIds={speciesIds}
-                    filterIds={filteredSpeciesIds}
-                    filterLabels={speciesLabels}
-                    isPresent={speciesPresenceList}
-                    setFilterIds={(filterIds: number[]) => this.setSpeciesFilterIds(filterIds)} />
-            </Tooltip>
-        )
-
         return (
-            <div className="flex-space-between margin-bottom-small">
-                {searchBox}
-                {filterButton}
-                {filter}
-                {validityTooltip}
-            </div>
+            <SpeciesSelector
+                index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
+                species={this.props.species}
+                speciesId={this.state.speciesId}
+                setSpecies={(id: number) => this.setSpecies(id)}
+                shouldMarkInvalid={hasNoVariants} />
         )
     }
 
@@ -405,13 +296,27 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     }
 
     /**
-     * Returns options for the species select.
+     * Renders the buttons.
      */
-    createSpeciesOptions() {
-        return this.getFilteredSpecies().map(species => ({
-            label: species.getDisplayName("en"),
-            value: species.speciesId
-        }))
+    renderButtons() {
+        return (
+            <div className="margin-bottom-small">
+                <Button
+                    color="warning"
+                    className="selector-button margin-right-small"
+                    onMouseUp={() => this.setRandomSpecies()}>
+                    <TiArrowShuffle className="selector-button-icon" />
+                </Button>
+
+                <Button
+                    color="danger"
+                    className="selector-button margin-right-small"
+                    disabled={this.state.speciesId === undefined || this.isLoading()}
+                    onMouseUp={() => this.clearPokemon()}>
+                    <TiDelete className="selector-button-icon" />
+                </Button>
+            </div>
+        )
     }
 
     // returns options for the variety select
@@ -519,15 +424,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
     }
 
-    /**
-     * Toggles the species filter.
-     */
-    toggleSpeciesFilter() {
-        this.setState(previousState => ({
-            speciesFilterOpen: !previousState.speciesFilterOpen
-        }))
-    }
-
     // toggle the validity tooltip
     toggleValidityTooltip() {
         this.setState(previousState => ({
@@ -605,28 +501,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.props.setSpecies(newSpeciesId)
             this.fetchVarieties(newSpeciesId)
         }
-    }
-
-    /**
-     * Returns the species that match the species filter.
-     */
-    getFilteredSpecies() {
-        return this.props.species.filter(s => this.isPresent(s))
-    }
-
-    /**
-     * Returns whether the species passes the filter.
-     */
-    isPresent(species: PokemonSpeciesEntry) {
-        let filters = this.state.speciesFilterIds
-        return filters.length <= 0 || filters.includes(species.speciesId)
-    }
-
-    /**
-     * Sets the species ID filter.
-     */
-    setSpeciesFilterIds(filterIds: number[]) {
-        this.setState({ speciesFilterIds: filterIds })
     }
 
     /**
