@@ -1,4 +1,5 @@
 import { DisplayName } from "./DisplayName"
+import { Generation } from "./Generation"
 import { Pokemon } from "./Pokemon"
 
 /**
@@ -26,6 +27,11 @@ export class PokemonSpeciesEntry {
     varieties: Pokemon[]
 
     /**
+     * The generation in which this species was introduced.
+     */
+    generation: Generation
+
+    /**
      * The IDs of the version groups where this species is valid.
      */
     validity: number[]
@@ -38,12 +44,14 @@ export class PokemonSpeciesEntry {
         name: string,
         displayNames: DisplayName[],
         varieties: Pokemon[],
+        generation: Generation,
         validity: number[]
     ) {
         this.speciesId = speciesId
         this.name = name
         this.displayNames = displayNames
         this.varieties = varieties
+        this.generation = generation
         this.validity = validity
     }
 
@@ -56,6 +64,7 @@ export class PokemonSpeciesEntry {
             species.name,
             species.displayNames,
             species.varieties,
+            species.generation,
             species.validity
         )
     }

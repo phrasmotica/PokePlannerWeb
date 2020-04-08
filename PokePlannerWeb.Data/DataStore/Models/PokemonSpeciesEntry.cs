@@ -24,6 +24,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<Pokemon> Varieties { get; set; }
 
         /// <summary>
+        /// Gets or sets the generation in which this species was introduced.
+        /// </summary>
+        public Generation Generation { get; set; }
+
+        /// <summary>
         /// Gets or sets the IDs of the version groups where this Pokemon species is valid.
         /// </summary>
         public List<int> Validity { get; set; }

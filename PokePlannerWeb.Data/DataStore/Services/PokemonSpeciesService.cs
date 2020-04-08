@@ -7,7 +7,6 @@ using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
-using PokemonSpeciesEntry = PokePlannerWeb.Data.DataStore.Models.PokemonSpeciesEntry;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
@@ -16,6 +15,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// </summary>
     public class PokemonSpeciesService : NamedApiResourceServiceBase<PokemonSpecies, PokemonSpeciesEntry>
     {
+        /// <summary>
+        /// The generation service.
+        /// </summary>
+        private readonly GenerationService GenerationService;
+
         /// <summary>
         /// The Pokemon service.
         /// </summary>
@@ -33,10 +37,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
+            GenerationService generationService,
             PokemonService pokemonService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
+            GenerationService = generationService;
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;
         }
@@ -49,6 +55,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<PokemonSpeciesEntry> ConvertToEntry(PokemonSpecies species)
         {
             var varieties = await GetVarieties(species);
+            var generation = await GetGeneration(species);
             var validity = await GetValidity(species);
 
             return new PokemonSpeciesEntry
@@ -57,6 +64,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Name = species.Name,
                 DisplayNames = GetDisplayNames(species).ToList(),
                 Varieties = varieties.ToList(),
+                Generation = new Generation
+                {
+                    Id = generation.GenerationId,
+                    Name = generation.Name
+                },
                 Validity = validity.ToList()
             };
         }
@@ -145,6 +157,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return varietiesList;
+        }
+
+        /// <summary>
+        /// Returns the generation in which the given Pokemon species was introduced.
+        /// </summary>
+        private async Task<GenerationEntry> GetGeneration(PokemonSpecies species)
+        {
+            return await GenerationService.Upsert(species.Generation);
         }
 
         /// <summary>
