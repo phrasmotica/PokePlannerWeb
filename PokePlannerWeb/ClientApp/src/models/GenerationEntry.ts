@@ -56,4 +56,27 @@ export class GenerationEntry {
 
         return localName?.name
     }
+
+    /**
+     * Returns the generation's short display name in the given locale.
+     */
+    getShortDisplayName(locale: string): string | undefined {
+        let localName = this.displayNames.find(n => n.language === locale)
+        if (localName === undefined) {
+            console.warn(
+                `Generation ${this.generationId} is missing display name in locale '${locale}'`
+            )
+        }
+
+        if (locale === "en") {
+            let shortName = localName?.name.replace("Generation ", "")
+            return shortName
+        }
+
+        console.warn(
+            `Message to the developer: figure out generation short names in locale '${locale}'`
+        )
+
+        return localName?.name
+    }
 }

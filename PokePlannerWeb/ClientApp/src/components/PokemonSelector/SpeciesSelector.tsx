@@ -85,7 +85,7 @@ export class SpeciesSelector
 
         let generations = this.props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
-                                          .map(g => g.getDisplayName("en") ?? "-")
+                                          .map(g => g.getShortDisplayName("en") ?? "-")
 
         return (
             <Tooltip
