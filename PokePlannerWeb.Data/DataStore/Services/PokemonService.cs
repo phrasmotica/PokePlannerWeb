@@ -63,6 +63,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonEntry> ConvertToEntry(Pokemon pokemon)
         {
+            var displayNames = await GetDisplayNames(pokemon);
             var forms = await GetForms(pokemon);
             var types = await GetTypes(pokemon);
             var baseStats = await GetBaseStats(pokemon);
@@ -74,6 +75,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Name = pokemon.Name,
                 SpriteUrl = GetSpriteUrl(pokemon),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemon),
+                DisplayNames = displayNames.ToList(),
                 Forms = forms.ToList(),
                 Types = types,
                 BaseStats = baseStats,
@@ -119,6 +121,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Returns the display names of the given Pokemon.
+        /// </summary>
+        private async Task<IEnumerable<DisplayName>> GetDisplayNames(Pokemon pokemon)
+        {
+            // take display names from primary form, if any
+            var primaryForm = await PokemonFormsService.Upsert(pokemon.Forms[0]);
+            return primaryForm.DisplayNames;
+        }
 
         /// <summary>
         /// Returns the URL of the shiny sprite of this Pokemon.

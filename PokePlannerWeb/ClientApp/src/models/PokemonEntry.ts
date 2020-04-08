@@ -1,3 +1,4 @@
+import { DisplayName } from "./DisplayName"
 import { Move } from "./Move"
 import { PokemonForm } from "./PokemonForm"
 import { Type } from "./Type"
@@ -16,6 +17,11 @@ export class PokemonEntry {
      * The name of the Pokemon.
      */
     name: string
+
+    /**
+     * The display names of the Pokemon's primary form.
+     */
+    displayNames: DisplayName[]
 
     /**
      * The URL of the Pokemon's front default sprite.
@@ -53,6 +59,7 @@ export class PokemonEntry {
     constructor(
         pokemonId: number,
         name: string,
+        displayNames: DisplayName[],
         spriteUrl: string,
         shinySpriteUrl: string,
         forms: PokemonForm[],
@@ -62,6 +69,7 @@ export class PokemonEntry {
     ) {
         this.pokemonId = pokemonId
         this.name = name
+        this.displayNames = displayNames
         this.spriteUrl = spriteUrl
         this.shinySpriteUrl = shinySpriteUrl
         this.forms = forms
@@ -77,6 +85,7 @@ export class PokemonEntry {
         return new PokemonEntry(
             pokemon.pokemonId,
             pokemon.name,
+            pokemon.displayNames,
             pokemon.spriteUrl,
             pokemon.shinySpriteUrl,
             pokemon.forms,
@@ -84,6 +93,27 @@ export class PokemonEntry {
             pokemon.baseStats,
             pokemon.moves
         )
+    }
+
+    /**
+     * Returns whether the Pokemon has display names.
+     */
+    hasDisplayNames() {
+        return this.displayNames.length > 0
+    }
+
+    /**
+     * Returns the Pokemon's display name in the given locale.
+     */
+    getDisplayName(locale: string): string | undefined {
+        let localName = this.displayNames.find(n => n.language === locale)
+        if (localName === undefined) {
+            console.warn(
+                `Pokemon ${this.pokemonId} is missing display name in locale '${locale}'`
+            )
+        }
+
+        return localName?.name
     }
 
     /**

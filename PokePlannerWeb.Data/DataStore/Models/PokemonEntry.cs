@@ -24,6 +24,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public string ShinySpriteUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the display names of this Pokemon's primary form.
+        /// </summary>
+        public List<DisplayName> DisplayNames { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon's forms.
         /// </summary>
         public List<PokemonForm> Forms { get; set; }
