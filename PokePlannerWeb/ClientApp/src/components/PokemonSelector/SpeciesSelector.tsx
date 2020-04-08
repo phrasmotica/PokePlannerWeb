@@ -27,11 +27,6 @@ interface ISpeciesSelectorState extends ISelectorBaseState {
      * The IDs of the generations to filter species for.
      */
     generationFilterIds: number[]
-
-    /**
-     * Whether the species filter is open.
-     */
-    filterOpen: boolean
 }
 
 /**
@@ -54,13 +49,11 @@ export class SpeciesSelector
      * Renders the filter button.
      */
     renderFilterButton(): any {
-        let index = this.props.index
-        let buttonId = `selector${index}speciesFilterButton`
+        let filterOpen = this.state.filterOpen
 
         return (
             <Button
-                id={buttonId}
-                color="primary"
+                color={filterOpen ? "success" : "primary"}
                 className="filter-button"
                 onMouseUp={() => {this.toggleSpeciesFilter()}}>
                 <FaFilter className="selector-button-icon" />
@@ -72,9 +65,6 @@ export class SpeciesSelector
      * Renders the filter.
      */
     renderFilter(): any {
-        let index = this.props.index
-        let buttonId = `selector${index}speciesFilterButton`
-
         let species = this.props.entries
         let generationIds = species.map(s => s.generation.id)
                                    .distinct()
@@ -88,18 +78,13 @@ export class SpeciesSelector
                                           .map(g => g.getShortDisplayName("en") ?? "-")
 
         return (
-            <Tooltip
-                className="filter-tooltip"
-                placement="bottom"
-                isOpen={this.state.filterOpen}
-                target={buttonId}>
-                <Filter
-                    index={this.props.index}
-                    allIds={generationIds}
-                    allLabels={generationLabels}
-                    filteredIds={filteredGenerationIds}
-                    setFilterIds={(filterIds: number[]) => this.setGenerationFilterIds(filterIds)} />
-            </Tooltip>
+            <Filter
+                index={this.props.index}
+                allIds={generationIds}
+                allLabels={generationLabels}
+                filteredIds={filteredGenerationIds}
+                placeholder="Filter by generation"
+                setFilterIds={(filterIds: number[]) => this.setGenerationFilterIds(filterIds)} />
         )
     }
 

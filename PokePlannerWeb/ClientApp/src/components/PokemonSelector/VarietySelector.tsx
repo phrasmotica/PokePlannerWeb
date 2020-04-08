@@ -58,7 +58,8 @@ export class VarietySelector
      */
     initState(): IVarietySelectorState {
         return {
-            validityTooltipOpen: false
+            validityTooltipOpen: false,
+            filterOpen: false
         }
     }
 

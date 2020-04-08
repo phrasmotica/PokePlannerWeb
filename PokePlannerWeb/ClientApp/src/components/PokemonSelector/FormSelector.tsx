@@ -36,7 +36,8 @@ export class FormSelector
      */
     initState(): IFormSelectorState {
         return {
-            validityTooltipOpen: false
+            validityTooltipOpen: false,
+            filterOpen: false
         }
     }
 

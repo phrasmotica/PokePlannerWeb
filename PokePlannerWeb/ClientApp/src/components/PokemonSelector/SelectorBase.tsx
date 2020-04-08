@@ -31,6 +31,11 @@ export interface ISelectorBaseState {
      * Whether the validity tooltip is open.
      */
     validityTooltipOpen: boolean
+
+    /**
+     * Whether the filter is open.
+     */
+    filterOpen: boolean
 }
 
 /**
@@ -95,14 +100,15 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         let validityTooltip = this.renderValidityTooltip(selectId)
 
         let filterButton = this.renderFilterButton()
-        let filter = this.renderFilter()
+        if (this.state.filterOpen) {
+            searchBox = this.renderFilter()
+        }
 
         return (
             <div className="flex-space-between margin-bottom-small">
                 {searchBox}
                 {validityTooltip}
                 {filterButton}
-                {filter}
             </div>
         )
     }
