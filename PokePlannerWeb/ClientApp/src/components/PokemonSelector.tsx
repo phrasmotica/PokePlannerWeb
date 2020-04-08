@@ -1,8 +1,8 @@
 ﻿import React, { Component } from "react"
 import { Button, Tooltip } from "reactstrap"
 import { TiArrowShuffle, TiDelete } from "react-icons/ti"
-import Select from "react-select"
 
+import { FormSelector } from "./PokemonSelector/FormSelector"
 import { SpeciesSelector } from "./PokemonSelector/SpeciesSelector"
 import { VarietySelector } from "./PokemonSelector/VarietySelector"
 
@@ -99,7 +99,7 @@ interface IPokemonSelectorState {
 
 /**
  * Component for selecting a Pokemon.
- * TODO: render form select in its own component
+ * TODO: render validity tooltip on appropriate selector
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: IPokemonSelectorProps) {
@@ -191,57 +191,29 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 setVariety={(variety: PokemonEntry) => this.setVariety(variety)}
                 setForm={(form: PokemonFormEntry) => this.setForm(form)}
                 loading={this.state.loadingVarieties}
-                shouldMarkInvalid={!this.props.ignoreValidity && varieties.length > 1} />
+                shouldMarkInvalid={!this.props.ignoreValidity && varieties.length >= 2} />
         )
     }
 
     // returns a box for selecting a form of the selected Pokemon
     renderFormSelect() {
-        let formOptions = this.createFormOptions()
-        let hasForms = formOptions.length > 0
-        let selectedFormOption = null
-
-        // attach validity tooltip and red border if necessary
-        let idPrefix = "formSelect"
-        let validityTooltip = null
-        if (hasForms) {
-            let formId = this.state.formId
-            selectedFormOption = formOptions.find(o => o.value === formId)
-            validityTooltip = this.renderValidityTooltip(idPrefix)
+        let species = undefined
+        if (this.state.speciesId !== undefined) {
+            species = this.getSelectedSpecies()
         }
 
-        let placeholder = hasForms ? "Select a form!" : "-"
-        let customStyles = this.createCustomSelectStyles(hasForms)
-        const onChange = (option: any) => {
-            let formId = option.value
-            this.setState({ formId: formId })
-
-            // set cookie
-            CookieHelper.set(`formId${this.props.index}`, formId)
-
-            let form = this.getForm(formId)
-            this.props.setForm(form)
-        }
-
-        let searchBox = (
-            <Select
-                blurInputOnSelect
-                width="230px"
-                isLoading={this.state.loadingForms}
-                isDisabled={!hasForms}
-                id={idPrefix + this.props.index}
-                placeholder={placeholder}
-                styles={customStyles}
-                onChange={onChange}
-                value={selectedFormOption}
-                options={formOptions} />
-        )
+        let forms = this.getFormsOfSelectedVariety()
 
         return (
-            <div className="margin-bottom-small">
-                {searchBox}
-                {validityTooltip}
-            </div>
+            <FormSelector
+                index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
+                forms={forms}
+                formId={this.state.formId}
+                species={species}
+                setForm={(form: PokemonFormEntry) => this.setForm(form)}
+                loading={this.state.loadingForms}
+                shouldMarkInvalid={!this.props.ignoreValidity && forms.length >= 2} />
         )
     }
 
@@ -286,29 +258,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         )
     }
 
-    // returns options for the form select
-    createFormOptions() {
-        if (!this.hasSecondaryForms()) {
-            return []
-        }
-
-        let forms = this.getFormsOfSelectedVariety()
-        return forms.map(form => {
-            // default varieties derive name from their species
-            let species = this.getSelectedSpecies()
-            let label = species.getDisplayName("en")
-
-            if (form.hasDisplayNames()) {
-                label = form.getDisplayName("en") ?? label
-            }
-
-            return {
-                label: label,
-                value: form.formId
-            }
-        })
-    }
-
     /**
      * Returns the forms of the selected variety.
      */
@@ -335,28 +284,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
 
         return this.getFormsOfVariety(varietyId)
-    }
-
-    // returns a custom style for the select boxes
-    createCustomSelectStyles(markAsInvalid: boolean) {
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                marginLeft: "auto"
-            }),
-
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                border: markAsInvalid && this.shouldMarkPokemonInvalid() ? "1px solid #dc3545" : ""
-            }),
-
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
-        }
     }
 
     // toggle the validity tooltip
