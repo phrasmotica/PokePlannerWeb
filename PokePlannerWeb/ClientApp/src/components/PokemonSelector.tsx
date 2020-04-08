@@ -233,22 +233,29 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      * Renders the buttons.
      */
     renderButtons() {
+        let clearDisabled = this.state.speciesId === undefined || this.isLoading()
+
         return (
             <div className="margin-bottom-small">
-                <Button
-                    color="warning"
-                    className="selector-button margin-right-small"
-                    onMouseUp={() => this.setRandomSpecies()}>
-                    <TiArrowShuffle className="selector-button-icon" />
-                </Button>
+                <span title="Random species">
+                    <Button
+                        color="warning"
+                        className="selector-button margin-right-small"
+                        onMouseUp={() => this.setRandomSpecies()}>
+                        <TiArrowShuffle className="selector-button-icon" />
+                    </Button>
+                </span>
 
-                <Button
-                    color="danger"
-                    className="selector-button margin-right-small"
-                    disabled={this.state.speciesId === undefined || this.isLoading()}
-                    onMouseUp={() => this.clearPokemon()}>
-                    <TiDelete className="selector-button-icon" />
-                </Button>
+                <span title={clearDisabled ? undefined : "Clear"}>
+                    <Button
+                        color="danger"
+                        style={{ cursor: clearDisabled ? "default" : "pointer" }}
+                        className="selector-button margin-right-small"
+                        disabled={clearDisabled}
+                        onMouseUp={() => this.clearPokemon()}>
+                        <TiDelete className="selector-button-icon" />
+                    </Button>
+                </span>
             </div>
         )
     }
