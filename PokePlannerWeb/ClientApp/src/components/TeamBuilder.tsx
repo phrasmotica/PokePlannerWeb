@@ -4,12 +4,15 @@ import Select from 'react-select'
 
 import { PokemonPanel } from './PokemonPanel'
 
+import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
+
+import { GenerationEntry } from '../models/GenerationEntry'
 import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
 import { TypesPresenceMap } from '../models/TypesPresenceMap'
 import { VersionGroupEntry } from '../models/VersionGroupEntry'
+
 import { CookieHelper } from '../util/CookieHelper'
 
-import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
 
 /**
  * The number of Pokemon panels to show.
@@ -31,6 +34,11 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
      * Whether the Pokemon species are loading.
      */
     loadingSpecies: boolean
+
+    /**
+     * List of generations.
+     */
+    generations: GenerationEntry[]
 
     /**
      * List of version groups.
@@ -77,6 +85,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.state = {
             species: [],
             loadingSpecies: true,
+            generations: [],
             versionGroups: [],
             loadingVersionGroups: true,
             versionGroupId: undefined,
@@ -94,6 +103,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     componentDidMount() {
         this.getSpecies()
+        this.fetchGenerations()
         this.getVersionGroups()
             .then(() => {
                 this.getBaseStatNames(this.state.versionGroupId)
@@ -261,6 +271,19 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         }
 
         return endpoint
+    }
+
+    /**
+     * Fetches all generations.
+     */
+    fetchGenerations() {
+        fetch(`${process.env.REACT_APP_API_URL}/generation`)
+            .then(response => response.json())
+            .then((groups: GenerationEntry[]) => {
+                let concreteGenerations = groups.map(GenerationEntry.from)
+                this.setState({ generations: concreteGenerations })
+            })
+            .catch(error => console.error(error))
     }
 
     // load all version groups
