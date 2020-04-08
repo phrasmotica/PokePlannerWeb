@@ -242,6 +242,7 @@ export class VarietySelector
      * Returns the forms of the selected variety.
      */
     getFormsOfVariety(varietyId: number) {
+        // TODO: remove formsDict and formId from this component's props
         let formsDict = this.props.formsDict
         if (formsDict.length <= 0) {
             return []
