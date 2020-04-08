@@ -52,7 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<GenerationEntry[]> GetAll()
         {
             var allGenerations = await UpsertAll();
-            return allGenerations.ToArray();
+            return allGenerations.OrderBy(g => g.Id).ToArray();
         }
 
         /// <summary>
