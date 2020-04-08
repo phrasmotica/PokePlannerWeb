@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import Select from "react-select"
+import { Button, ButtonGroup } from "reactstrap"
 
 import { IHasIndex } from "../CommonMembers"
 
@@ -22,7 +22,7 @@ interface IFilterProps extends IHasIndex {
     filteredIds: number[]
 
     /**
-     * The placeholder text for the select boxc.
+     * The placeholder text for the select box.
      */
     placeholder: string
 
@@ -48,65 +48,45 @@ export class Filter extends Component<IFilterProps, IFilterState> {
      * Renders the filter.
      */
     renderFilter() {
-        let options = this.createFilterOptions()
-        let defaultOptions = options.filter((o: any) => this.props.filteredIds.includes(o.value))
+        let items = this.props.allIds.map((id, index) => {
+            let label = this.props.allLabels[index]
+            let isPresent = this.props.filteredIds.includes(id)
 
-        const onChange = (options: any) => {
-            let values = []
-            if (options !== null) {
-                values = options.map((o: any) => o.value)
-            }
-
-            this.props.setFilterIds(values)
-        }
+            return (
+                <Button
+                    color={isPresent ? "success" : "secondary"}
+                    onMouseUp={() => this.toggleFilterId(id)}>
+                    {label}
+                </Button>
+            )
+        })
 
         return (
-            <Select
-                isMulti
-                hideSelectedOptions
-                isClearable={false}
-                width="230px"
-                styles={this.createSelectStyles()}
-                className="margin-right-small"
-                closeMenuOnSelect={false}
-                placeholder={this.props.placeholder}
-                defaultValue={defaultOptions}
-                options={options}
-                onChange={onChange} />
+            <ButtonGroup className="generation-button-group margin-right-small">
+                {items}
+            </ButtonGroup>
         )
     }
 
     /**
-     * Returns options for the filter.
+     * Toggles the given ID in the filter.
      */
-    createFilterOptions() {
-        return this.props.allIds.map((id, index) => {
-            return {
-                label: this.props.allLabels[index],
-                value: id
-            }
-        })
-    }
+    toggleFilterId(id: number) {
+        let filterIds = this.props.filteredIds
+        let i = filterIds.indexOf(id)
 
-    /**
-     * Returns a custom style for the select box.
-     */
-    createSelectStyles() {
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            }),
-
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            }),
-
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
+        if (i >= 0 && filterIds.length <= 1) {
+            // can't filter out everything
+            return
         }
+
+        if (i < 0) {
+            filterIds.push(id)
+        }
+        else {
+            filterIds.splice(i, 1)
+        }
+
+        this.props.setFilterIds(filterIds)
     }
 }
