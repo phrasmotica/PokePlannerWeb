@@ -85,18 +85,15 @@ export class VarietySelector
             return []
         }
 
+        // TODO: sometimes names of varieties of the previously-selected species are rendered
+        // repro: select darkrai -> shaymin -> sky shaymin -> arceus
+        // "Sky Shaymin" is shown despite Arceus clearly being selected
+        // Clear button works as expected
         return this.props.entries.map(variety => {
-            console.log(`Variety selector ${this.props.index}: variety ${variety.pokemonId}`)
-
             let label = species?.getDisplayName("en") ?? "-"
 
-            let forms = this.getFormsOfVariety(variety.pokemonId)
-            if (forms.length > 0) {
-                // non-default forms have their own name
-                let form = forms[0]
-                if (form.hasDisplayNames()) {
-                    label = form.getDisplayName("en") ?? label
-                }
+            if (variety.hasDisplayNames()) {
+                label = variety.getDisplayName("en") ?? label
             }
 
             return {
