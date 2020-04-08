@@ -1,24 +1,11 @@
-import React, { Component } from "react"
-import Select from "react-select"
-
-import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
+import { SelectorBase, ISelectorBaseProps, ISelectorBaseState, Option } from "./SelectorBase"
 
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
-interface IFormSelectorProps extends IHasIndex, IHasVersionGroup {
-    /**
-     * List of forms.
-     */
-    forms: PokemonFormEntry[]
-
-    /**
-     * The ID of the selected form.
-     */
-    formId: number | undefined
-
+interface IFormSelectorProps extends ISelectorBaseProps<PokemonFormEntry> {
     /**
      * The species of the selected variety.
      */
@@ -33,93 +20,47 @@ interface IFormSelectorProps extends IHasIndex, IHasVersionGroup {
      * Whether the parent component is loading data to be passed to this component.
      */
     loading: boolean
-
-    /**
-     * Whether the variety should be marked as invalid.
-     */
-    shouldMarkInvalid: boolean
 }
 
-interface IFormSelectorState {
+interface IFormSelectorState extends ISelectorBaseState {
 
 }
 
 /**
  * Component for selecting a Pokemon form.
  */
-export class FormSelector extends Component<IFormSelectorProps, IFormSelectorState> {
+export class FormSelector
+    extends SelectorBase<PokemonFormEntry, IFormSelectorProps, IFormSelectorState> {
     /**
-     * Renders the component.
+     * Initialises the component's state.
      */
-    render() {
-        return this.renderFormSelect()
+    initState(): IFormSelectorState {
+        return {
+            validityTooltipOpen: false
+        }
     }
 
     /**
-     * Renders the form select.
+     * Returns options for the select box.
      */
-    renderFormSelect() {
-        let options = this.createOptions()
-        let hasForms = options.length > 1
-        let selectedOption = null
-
-        // attach validity tooltip and red border if necessary
-        let idPrefix = "formSelect"
-        let validityTooltip = null
-        if (hasForms) {
-            let formId = this.props.formId
-            selectedOption = options.find(o => o.value === formId)
+    createOptions(): Option[] {
+        if (this.props.entryId === undefined) {
+            return []
         }
 
-        let placeholder = hasForms ? "Select a form!" : "-"
-        let customStyles = this.createSelectStyles()
-        const onChange = (option: any) => {
-            let formId = option.value
-
-            // set cookie
-            CookieHelper.set(`formId${this.props.index}`, formId)
-
-            let form = this.getForm(formId)
-            this.props.setForm(form)
-        }
-
-        let searchBox = (
-            <Select
-                blurInputOnSelect
-                width="230px"
-                isLoading={this.props.loading}
-                isDisabled={!hasForms}
-                id={idPrefix + this.props.index}
-                placeholder={placeholder}
-                styles={customStyles}
-                onChange={onChange}
-                value={selectedOption}
-                options={options} />
-        )
-
-        return (
-            <div className="margin-bottom-small">
-                {searchBox}
-                {validityTooltip}
-            </div>
-        )
-    }
-
-    // returns options for the form select
-    createOptions() {
         let species = this.props.species
         if (species === undefined) {
             return []
         }
 
-        if (this.props.formId === undefined) {
+        if (this.isDisabled()) {
             return []
         }
 
-        let forms = this.props.forms
+        let forms = this.props.entries
         return forms.map(form => {
             // default varieties derive name from their species
-            let label = species?.getDisplayName("en")
+            let label = species?.getDisplayName("en") ?? "-"
 
             if (form.hasDisplayNames()) {
                 label = form.getDisplayName("en") ?? label
@@ -133,41 +74,49 @@ export class FormSelector extends Component<IFormSelectorProps, IFormSelectorSta
     }
 
     /**
-     * Returns a custom style for the variety select.
+     * Returns a string describing the type of entry being displayed.
      */
-    createSelectStyles() {
-        let shouldMarkInvalid = this.props.shouldMarkInvalid
+    getEntryType(): string {
+        return "form"
+    }
 
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                marginLeft: "auto"
-            }),
+    /**
+     * Returns whether the select box should be disabled.
+     */
+    isDisabled(): boolean {
+        return this.props.entries.length <= 1
+    }
 
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                border: shouldMarkInvalid && !this.formIsValid() ? "1px solid #dc3545" : ""
-            }),
+    /**
+     * Returns the placeholder for the select box.
+     */
+    getPlaceholder(): string {
+        return "Select a form!"
+    }
 
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
-        }
+    /**
+     * Handler for when the selected form changes.
+     */
+    onChange(option: any): void {
+        let formId = option.value
+
+        // set cookie
+        CookieHelper.set(`formId${this.props.index}`, formId)
+
+        let form = this.getEntry(formId)
+        this.props.setForm(form)
     }
 
     /**
      * Returns whether the form is valid in the selected version group.
      */
-    formIsValid() {
+    entryIsValid(): boolean {
         let species = this.props.species
         if (species === undefined) {
             return true
         }
 
-        if (this.props.formId === undefined) {
+        if (this.props.entryId === undefined) {
             return true
         }
 
@@ -180,7 +129,7 @@ export class FormSelector extends Component<IFormSelectorProps, IFormSelectorSta
 
         let pokemonIsValid = species.isValid(versionGroupId)
 
-        let form = this.getSelectedForm()
+        let form = this.getSelectedEntry()
         if (form !== undefined && form.hasValidity()) {
             // can only obtain form if base species is obtainable
             pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
@@ -190,28 +139,23 @@ export class FormSelector extends Component<IFormSelectorProps, IFormSelectorSta
     }
 
     /**
-     * Returns the data object for the Pokemon form with the given ID.
+     * Returns a message indicating the form ID is undefined.
      */
-    getForm(formId: number) {
-        let allForms = this.props.forms
-
-        let form = allForms.find(f => f.formId === formId)
-        if (form === undefined) {
-            throw new Error(`Form selector ${this.props.index}: no form found with ID ${formId}!`)
-        }
-
-        return form
+    getEntryIdUndefinedMessage(): string {
+        return `Form selector ${this.props.index}: form ID is undefined!`
     }
 
     /**
-     * Returns the data object for the selected Pokemon form.
+     * Returns whether the given form has the given ID.
      */
-    getSelectedForm() {
-        let selectedFormId = this.props.formId
-        if (selectedFormId === undefined) {
-            return undefined
-        }
+    entryMatches(entry: PokemonFormEntry, id: number): boolean {
+        return entry.formId === id
+    }
 
-        return this.getForm(selectedFormId)
+    /**
+     * Returns a message indicating the form with the given ID is missing.
+     */
+    getEntryMissingMessage(id: number): string {
+        return `Form selector ${this.props.index}: no form found with ID ${id}!`
     }
 }

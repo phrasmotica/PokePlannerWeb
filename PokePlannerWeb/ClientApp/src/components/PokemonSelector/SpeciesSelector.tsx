@@ -1,39 +1,22 @@
-import React, { Component } from "react"
+import React from "react"
 import { Button, Tooltip } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
-import Select from "react-select"
 
 import { PokemonSpeciesFilter } from "./Filter"
-
-import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
+import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
-interface ISpeciesSelectorProps extends IHasIndex, IHasVersionGroup {
-    /**
-     * List of Pokemon species.
-     */
-    species: PokemonSpeciesEntry[]
-
-    /**
-     * The ID of the selected species.
-     */
-    speciesId: number | undefined
-
+interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> {
     /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number) => void
-
-    /**
-     * Whether the species should be marked as invalid.
-     */
-    shouldMarkInvalid: boolean
 }
 
-interface ISpeciesSelectorState {
+interface ISpeciesSelectorState extends ISelectorBaseState {
     /**
      * The IDs of the generations to filter species for.
      */
@@ -48,60 +31,23 @@ interface ISpeciesSelectorState {
 /**
  * Component for selecting a Pokemon species.
  */
-export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSelectorState> {
-    constructor(props: ISpeciesSelectorProps) {
-        super(props)
-        this.state = {
+export class SpeciesSelector
+    extends SelectorBase<PokemonSpeciesEntry, ISpeciesSelectorProps, ISpeciesSelectorState> {
+    /**
+     * Initialises the component's state.
+     */
+    initState(): ISpeciesSelectorState {
+        return {
             speciesFilterIds: [],
-            speciesFilterOpen: false
+            speciesFilterOpen: false,
+            validityTooltipOpen: false
         }
     }
 
     /**
-     * Renders the component.
+     * Renders the filter.
      */
-    render() {
-        return this.renderSpeciesSelect()
-    }
-
-    /**
-     * Renders the species select.
-     */
-    renderSpeciesSelect() {
-        let options = this.createOptions()
-
-        let selectedOption = null
-        let speciesId = this.props.speciesId
-        if (speciesId !== undefined) {
-            selectedOption = options.find(o => o.value === speciesId)
-        }
-
-        const onChange = (option: any) => {
-            let speciesId = option.value
-
-            // set cookie
-            CookieHelper.set(`speciesId${this.props.index}`, speciesId)
-
-            this.props.setSpecies(speciesId)
-        }
-
-        // attach validity tooltip and red border if necessary
-        let customStyles = this.createSelectStyles()
-
-        let searchBox = (
-            <Select
-                isSearchable
-                blurInputOnSelect
-                width="230px"
-                className="margin-right-small"
-                id={"speciesSelect" + this.props.index}
-                styles={customStyles}
-                placeholder="Select a species!"
-                onChange={onChange}
-                value={selectedOption}
-                options={options} />
-        )
-
+    renderFilter() {
         let index = this.props.index
         let buttonId = `selector${index}speciesFilterButton`
         let filterButton = (
@@ -114,7 +60,7 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
             </Button>
         )
 
-        let species = this.props.species
+        let species = this.props.entries
         let speciesIds = species.map(s => s.speciesId)
         let filteredSpeciesIds = species.filter(s => this.isPresent(s)).map(s => s.speciesId)
         let speciesLabels = species.map(s => s.getDisplayName("en") ?? "-")
@@ -138,7 +84,6 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
 
         return (
             <div className="flex-space-between margin-bottom-small">
-                {searchBox}
                 {filterButton}
                 {filter}
             </div>
@@ -148,18 +93,51 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
     /**
      * Returns options for the species select.
      */
-    createOptions() {
+    createOptions(): Option[] {
         return this.getFilteredSpecies().map(species => ({
-            label: species.getDisplayName("en"),
+            label: species.getDisplayName("en") ?? "-",
             value: species.speciesId
         }))
+    }
+
+    /**
+     * Returns a string describing the type of entry being displayed.
+     */
+    getEntryType(): string {
+        return "species"
+    }
+
+    /**
+     * Returns whether the select box should be disabled.
+     */
+    isDisabled(): boolean {
+        return false
+    }
+
+    /**
+     * Returns the placeholder for the select box.
+     */
+    getPlaceholder(): string {
+        return "Select a species!"
+    }
+
+    /**
+     * Handler for when the selected species changes.
+     */
+    onChange(option: any): void {
+        let speciesId = option.value
+
+        // set cookie
+        CookieHelper.set(`speciesId${this.props.index}`, speciesId)
+
+        this.props.setSpecies(speciesId)
     }
 
     /**
      * Returns the species that match the species filter.
      */
     getFilteredSpecies() {
-        return this.props.species.filter(s => this.isPresent(s))
+        return this.props.entries.filter(s => this.isPresent(s))
     }
 
     /**
@@ -170,35 +148,11 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
         return filters.length <= 0 || filters.includes(species.speciesId)
     }
 
-    // returns a custom style for the select boxes
-    createSelectStyles() {
-        let shouldMarkInvalid = this.props.shouldMarkInvalid
-
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                marginLeft: "auto"
-            }),
-
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                border: shouldMarkInvalid && !this.speciesIsValid() ? "1px solid #dc3545" : ""
-            }),
-
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
-        }
-    }
-
     /**
      * Returns whether the species is valid in the selected version group.
      */
-    speciesIsValid() {
-        if (this.props.speciesId === undefined) {
+    entryIsValid(): boolean {
+        if (this.props.entryId === undefined) {
             return true
         }
 
@@ -209,37 +163,28 @@ export class SpeciesSelector extends Component<ISpeciesSelectorProps, ISpeciesSe
             )
         }
 
-        return this.getSelectedSpecies().isValid(versionGroupId)
+        return this.getSelectedEntry().isValid(versionGroupId)
     }
 
     /**
-     * Returns the data object for the selected species.
+     * Returns a message indicating the species ID is undefined.
      */
-    getSelectedSpecies() {
-        let speciesId = this.props.speciesId
-        if (speciesId === undefined) {
-            throw new Error(
-                `Selector ${this.props.index}: species ID is undefined!`
-            )
-        }
-
-        return this.getSpecies(speciesId)
+    getEntryIdUndefinedMessage(): string {
+        return `Species selector ${this.props.index}: species ID is undefined!`
     }
 
     /**
-     * Returns the data object for the species with the given ID.
+     * Returns whether the given species has the given ID.
      */
-    getSpecies(speciesId: number) {
-        let allSpecies = this.props.species
+    entryMatches(entry: PokemonSpeciesEntry, id: number): boolean {
+        return entry.speciesId === id
+    }
 
-        let species = allSpecies.find(s => s.speciesId === speciesId)
-        if (species === undefined) {
-            throw new Error(
-                `Species selector ${this.props.index}: no species found with ID ${speciesId}!`
-            )
-        }
-
-        return species
+    /**
+     * Returns a message indicating the species with the given ID is missing.
+     */
+    getEntryMissingMessage(id: number): string {
+        return `Species selector ${this.props.index}: no species found with ID ${id}!`
     }
 
     /**

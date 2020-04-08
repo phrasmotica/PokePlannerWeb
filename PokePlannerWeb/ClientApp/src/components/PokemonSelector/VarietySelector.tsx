@@ -1,7 +1,4 @@
-import React, { Component } from "react"
-import Select from "react-select"
-
-import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
+import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
@@ -10,17 +7,7 @@ import { WithId } from "../../models/WithId"
 import { CookieHelper } from "../../util/CookieHelper"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
-interface IVarietySelectorProps extends IHasIndex, IHasVersionGroup {
-    /**
-     * List of varieties.
-     */
-    varieties: PokemonEntry[]
-
-    /**
-     * The ID of the selected variety.
-     */
-    varietyId: number | undefined
-
+interface IVarietySelectorProps extends ISelectorBaseProps<PokemonEntry> {
     /**
      * The species of the selected variety.
      */
@@ -57,85 +44,28 @@ interface IVarietySelectorProps extends IHasIndex, IHasVersionGroup {
     shouldMarkInvalid: boolean
 }
 
-interface IVarietySelectorState {
+interface IVarietySelectorState extends ISelectorBaseState {
 
 }
 
 /**
  * Component for selecting a species variety.
  */
-export class VarietySelector extends Component<IVarietySelectorProps, IVarietySelectorState> {
+export class VarietySelector
+    extends SelectorBase<PokemonEntry, IVarietySelectorProps, IVarietySelectorState> {
     /**
-     * Renders the component.
+     * Initialises the component's state.
      */
-    render() {
-        return this.renderVarietySelect()
-    }
-
-    /**
-     * Renders the variety select.
-     */
-    renderVarietySelect() {
-        let options = this.createOptions()
-        let hasVarieties = options.length > 1
-        let selectedOption = null
-
-        const onChange = (option: any) => {
-            let varietyId = option.value
-
-            // set variety cookie and remove old form cookie
-            CookieHelper.set(`varietyId${this.props.index}`, varietyId)
-            CookieHelper.remove(`formId${this.props.index}`)
-
-            let variety = this.getVariety(varietyId)
-            this.props.setVariety(variety)
-
-            // set first form
-            let forms = this.getFormsOfVariety(varietyId)
-            let form = forms[0]
-
-            // set form cookie
-            CookieHelper.set(`formId${this.props.index}`, form.formId)
-
-            this.props.setForm(form)
+    initState(): IVarietySelectorState {
+        return {
+            validityTooltipOpen: false
         }
-
-        // attach validity tooltip and red border if necessary
-        let validityTooltip = null
-        if (hasVarieties) {
-            let varietyId = this.props.varietyId
-            selectedOption = options.find(o => o.value === varietyId)
-        }
-
-        let placeholder = hasVarieties ? "Select a variety!" : "-"
-        let customStyles = this.createSelectStyles()
-
-        let searchBox = (
-            <Select
-                blurInputOnSelect
-                width="230px"
-                isLoading={this.props.loading}
-                isDisabled={!hasVarieties}
-                id={"varietySelect" + this.props.index}
-                placeholder={placeholder}
-                styles={customStyles}
-                onChange={onChange}
-                value={selectedOption}
-                options={options} />
-        )
-
-        return (
-            <div className="margin-bottom-small">
-                {searchBox}
-                {validityTooltip}
-            </div>
-        )
     }
 
     /**
      * Returns options for the variety select.
      */
-    createOptions() {
+    createOptions(): Option[] {
         let species = this.props.species
         if (species === undefined) {
             return []
@@ -145,13 +75,19 @@ export class VarietySelector extends Component<IVarietySelectorProps, IVarietySe
             return []
         }
 
-        let varietyId = this.props.varietyId
+        let varietyId = this.props.entryId
         if (varietyId === undefined) {
             return []
         }
 
-        return this.props.varieties.map(variety => {
-            let label = species?.getDisplayName("en")
+        if (this.isDisabled()) {
+            return []
+        }
+
+        return this.props.entries.map(variety => {
+            console.log(`Variety selector ${this.props.index}: variety ${variety.pokemonId}`)
+
+            let label = species?.getDisplayName("en") ?? "-"
 
             let forms = this.getFormsOfVariety(variety.pokemonId)
             if (forms.length > 0) {
@@ -170,35 +106,53 @@ export class VarietySelector extends Component<IVarietySelectorProps, IVarietySe
     }
 
     /**
-     * Returns a custom style for the variety select.
+     * Returns a string describing the type of entry being displayed.
      */
-    createSelectStyles() {
-        let shouldMarkInvalid = this.props.shouldMarkInvalid
+    getEntryType(): string {
+        return "form"
+    }
 
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                marginLeft: "auto"
-            }),
+    /**
+     * Returns whether the select box should be disabled.
+     */
+    isDisabled(): boolean {
+        return this.props.entries.length <= 1
+    }
 
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                border: shouldMarkInvalid && !this.varietyIsValid() ? "1px solid #dc3545" : ""
-            }),
+    /**
+     * Returns the placeholder for the select box.
+     */
+    getPlaceholder(): string {
+        return "Select a variety!"
+    }
 
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
-        }
+    /**
+     * Handler for when the selected variety changes.
+     */
+    onChange(option: any): void {
+        let varietyId = option.value
+
+        // set variety cookie and remove old form cookie
+        CookieHelper.set(`varietyId${this.props.index}`, varietyId)
+        CookieHelper.remove(`formId${this.props.index}`)
+
+        let variety = this.getEntry(varietyId)
+        this.props.setVariety(variety)
+
+        // set first form
+        let forms = this.getFormsOfVariety(varietyId)
+        let form = forms[0]
+
+        // set form cookie
+        CookieHelper.set(`formId${this.props.index}`, form.formId)
+
+        this.props.setForm(form)
     }
 
     /**
      * Returns whether the variety is valid in the selected version group.
      */
-    varietyIsValid() {
+    entryIsValid(): boolean {
         if (this.props.species === undefined) {
             return true
         }
@@ -226,17 +180,24 @@ export class VarietySelector extends Component<IVarietySelectorProps, IVarietySe
     }
 
     /**
-     * Returns the data object for the species variety with the given ID.
+     * Returns a message indicating the variety ID is undefined.
      */
-    getVariety(varietyId: number) {
-        let allVarieties = this.props.varieties
+    getEntryIdUndefinedMessage(): string {
+        return `Variety selector ${this.props.index}: variety ID is undefined!`
+    }
 
-        let variety = allVarieties.find(p => p.pokemonId === varietyId)
-        if (variety === undefined) {
-            throw new Error(`Variety selector ${this.props.index}: no variety found with ID ${varietyId}!`)
-        }
+    /**
+     * Returns whether the given variety has the given ID.
+     */
+    entryMatches(entry: PokemonEntry, id: number): boolean {
+        return entry.pokemonId === id
+    }
 
-        return variety
+    /**
+     * Returns a message indicating the variety with the given ID is missing.
+     */
+    getEntryMissingMessage(id: number): string {
+        return `Variety selector ${this.props.index}: no variety found with ID ${id}!`
     }
 
     /**
@@ -286,7 +247,7 @@ export class VarietySelector extends Component<IVarietySelectorProps, IVarietySe
      * Returns the forms of the selected variety.
      */
     getFormsOfSelectedVariety() {
-        let varietyId = this.props.varietyId
+        let varietyId = this.props.entryId
         if (varietyId === undefined) {
             return []
         }

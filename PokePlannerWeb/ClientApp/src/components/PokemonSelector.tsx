@@ -1,6 +1,8 @@
 ﻿import React, { Component } from "react"
-import { Button, Tooltip } from "reactstrap"
+import { Button } from "reactstrap"
 import { TiArrowShuffle, TiDelete } from "react-icons/ti"
+
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
 
 import { FormSelector } from "./PokemonSelector/FormSelector"
 import { SpeciesSelector } from "./PokemonSelector/SpeciesSelector"
@@ -10,9 +12,8 @@ import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import { WithId } from "../models/WithId"
-import { CookieHelper } from "../util/CookieHelper"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
+import { CookieHelper } from "../util/CookieHelper"
 
 import "../styles/types.scss"
 import "./PokemonSelector.scss"
@@ -99,7 +100,7 @@ interface IPokemonSelectorState {
 
 /**
  * Component for selecting a Pokemon.
- * TODO: render validity tooltip on appropriate selector
+ * TODO: add filter rendering to SelectorBase
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: IPokemonSelectorProps) {
@@ -163,8 +164,10 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             <SpeciesSelector
                 index={this.props.index}
                 versionGroupId={this.props.versionGroupId}
-                species={this.props.species}
-                speciesId={this.state.speciesId}
+                hideTooltips={this.props.hideTooltips}
+                entries={this.props.species}
+                entryId={this.state.speciesId}
+                loading={false}
                 setSpecies={(id: number) => this.setSpecies(id)}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
         )
@@ -183,8 +186,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             <VarietySelector
                 index={this.props.index}
                 versionGroupId={this.props.versionGroupId}
-                varieties={varieties}
-                varietyId={this.state.varietyId}
+                hideTooltips={this.props.hideTooltips}
+                entries={varieties}
+                entryId={this.state.varietyId}
                 species={species}
                 formsDict={this.state.formsDict}
                 formId={this.state.formId}
@@ -208,30 +212,14 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             <FormSelector
                 index={this.props.index}
                 versionGroupId={this.props.versionGroupId}
-                forms={forms}
-                formId={this.state.formId}
+                hideTooltips={this.props.hideTooltips}
+                entries={forms}
+                entryId={this.state.formId}
                 species={species}
                 setForm={(form: PokemonFormEntry) => this.setForm(form)}
                 loading={this.state.loadingForms}
                 shouldMarkInvalid={!this.props.ignoreValidity && forms.length >= 2} />
         )
-    }
-
-    // returns a tooltip indicating the validity of the Pokemon
-    renderValidityTooltip(idPrefix: string) {
-        if (!this.props.hideTooltips && this.shouldMarkPokemonInvalid()) {
-            return (
-                <Tooltip
-                    isOpen={this.state.validityTooltipOpen}
-                    toggle={() => this.toggleValidityTooltip()}
-                    placement="bottom"
-                    target={idPrefix + this.props.index}>
-                    Cannot be obtained in this game version!
-                </Tooltip>
-            )
-        }
-
-        return null
     }
 
     /**
@@ -286,13 +274,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         return this.getFormsOfVariety(varietyId)
     }
 
-    // toggle the validity tooltip
-    toggleValidityTooltip() {
-        this.setState(previousState => ({
-            validityTooltipOpen: !previousState.validityTooltipOpen
-        }))
-    }
-
     /**
      * Returns whether the component is loading.
      */
@@ -300,41 +281,19 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         return this.state.loadingForms || this.state.loadingVarieties
     }
 
-    // returns true if the species has secondary varieties
+    /**
+     * Returns whether the species has secondary varieties.
+     */
     hasSecondaryVarieties() {
         return this.state.varieties.length >= 2
     }
 
-    // returns true if the Pokemon has secondary forms
+    /**
+     * Returns whether the variety has secondary forms.
+     */
     hasSecondaryForms() {
         let forms = this.getFormsOfSelectedVariety()
         return forms.length >= 2
-    }
-
-    // returns true if the Pokemon should be marked as invalid
-    shouldMarkPokemonInvalid() {
-        let versionGroupId = this.props.versionGroupId
-        if (versionGroupId === undefined) {
-            return true
-        }
-
-        if (this.state.formId === undefined) {
-            return false
-        }
-
-        if (this.state.speciesId === undefined) {
-            return false
-        }
-
-        let pokemonIsValid = this.getSelectedSpecies().isValid(versionGroupId)
-
-        let form = this.getSelectedForm()
-        if (form !== undefined && form.hasValidity()) {
-            // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
-        }
-
-        return !this.props.ignoreValidity && !pokemonIsValid
     }
 
     /**
@@ -423,18 +382,6 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
 
         return form
-    }
-
-    /**
-     * Returns the data object for the selected Pokemon form.
-     */
-    getSelectedForm() {
-        let selectedFormId = this.state.formId
-        if (selectedFormId === undefined) {
-            return undefined
-        }
-
-        return this.getForm(selectedFormId)
     }
 
     /**
