@@ -45,12 +45,13 @@ export class SpeciesSelector
     }
 
     /**
-     * Renders the filter.
+     * Renders the filter button.
      */
-    renderFilter() {
+    renderFilterButton(): any {
         let index = this.props.index
         let buttonId = `selector${index}speciesFilterButton`
-        let filterButton = (
+
+        return (
             <Button
                 id={buttonId}
                 color="primary"
@@ -59,6 +60,14 @@ export class SpeciesSelector
                 <FaFilter className="selector-button-icon" />
             </Button>
         )
+    }
+
+    /**
+     * Renders the filter.
+     */
+    renderFilter(): any {
+        let index = this.props.index
+        let buttonId = `selector${index}speciesFilterButton`
 
         let species = this.props.entries
         let speciesIds = species.map(s => s.speciesId)
@@ -66,7 +75,7 @@ export class SpeciesSelector
         let speciesLabels = species.map(s => s.getDisplayName("en") ?? "-")
         let speciesPresenceList = species.map(s => this.isPresent(s))
 
-        let filter = (
+        return (
             <Tooltip
                 className="filter-tooltip"
                 placement="bottom"
@@ -80,13 +89,6 @@ export class SpeciesSelector
                     isPresent={speciesPresenceList}
                     setFilterIds={(filterIds: number[]) => this.setSpeciesFilterIds(filterIds)} />
             </Tooltip>
-        )
-
-        return (
-            <div className="flex-space-between margin-bottom-small">
-                {filterButton}
-                {filter}
-            </div>
         )
     }
 

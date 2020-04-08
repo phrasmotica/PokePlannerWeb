@@ -94,10 +94,15 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         // attach validity tooltip if necessary
         let validityTooltip = this.renderValidityTooltip(selectId)
 
+        let filterButton = this.renderFilterButton()
+        let filter = this.renderFilter()
+
         return (
             <div className="flex-space-between margin-bottom-small">
                 {searchBox}
                 {validityTooltip}
+                {filterButton}
+                {filter}
             </div>
         )
     }
@@ -116,8 +121,7 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         return {
             container: (provided: any, state: any) => ({
                 ...provided,
-                minWidth: state.selectProps.width,
-                marginLeft: "auto"
+                minWidth: state.selectProps.width
             }),
 
             control: (provided: any, state: any) => ({
@@ -181,6 +185,16 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
 
         return null
     }
+
+    /**
+     * Renders the filter button.
+     */
+    abstract renderFilterButton(): any
+
+    /**
+     * Renders the filter.
+     */
+    abstract renderFilter(): any
 
     /**
      * Returns the selected entry.
