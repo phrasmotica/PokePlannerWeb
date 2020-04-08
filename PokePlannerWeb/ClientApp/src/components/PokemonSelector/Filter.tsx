@@ -54,6 +54,7 @@ export class Filter extends Component<IFilterProps, IFilterState> {
 
             return (
                 <Button
+                    key={id}
                     color={isPresent ? "success" : "secondary"}
                     onMouseUp={() => this.toggleFilterId(id)}>
                     {label}

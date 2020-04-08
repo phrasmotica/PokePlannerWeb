@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Tooltip } from "reactstrap"
+import { Button } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
 
 import { Filter } from "./Filter"
@@ -204,8 +204,11 @@ export class SpeciesSelector
 
         // no longer have a valid species
         let speciesId = this.props.entryId
-        if (speciesId !== undefined && !filterIds.includes(speciesId)) {
-            this.props.setSpecies(undefined)
+        if (speciesId !== undefined) {
+            let species = this.getSelectedEntry()
+            if (!filterIds.includes(species.generation.id)) {
+                this.props.setSpecies(undefined)
+            }
         }
     }
 }
