@@ -52,12 +52,14 @@ export class SpeciesSelector
         let filterOpen = this.state.filterOpen
 
         return (
-            <Button
-                color={filterOpen ? "success" : "primary"}
-                className="filter-button"
-                onMouseUp={() => {this.toggleSpeciesFilter()}}>
-                <FaFilter className="selector-button-icon" />
-            </Button>
+            <span title="Filter by generation">
+                <Button
+                    color={filterOpen ? "success" : "secondary"}
+                    className="filter-button"
+                    onMouseUp={() => {this.toggleSpeciesFilter()}}>
+                    <FaFilter className="selector-button-icon" />
+                </Button>
+            </span>
         )
     }
 
