@@ -2,7 +2,7 @@ import React from "react"
 import { Button, Tooltip } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
 
-import { PokemonSpeciesFilter } from "./Filter"
+import { Filter } from "./Filter"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
@@ -20,12 +20,12 @@ interface ISpeciesSelectorState extends ISelectorBaseState {
     /**
      * The IDs of the generations to filter species for.
      */
-    speciesFilterIds: number[]
+    generationFilterIds: number[]
 
     /**
      * Whether the species filter is open.
      */
-    speciesFilterOpen: boolean
+    filterOpen: boolean
 }
 
 /**
@@ -38,8 +38,8 @@ export class SpeciesSelector
      */
     initState(): ISpeciesSelectorState {
         return {
-            speciesFilterIds: [],
-            speciesFilterOpen: false,
+            generationFilterIds: [],
+            filterOpen: false,
             validityTooltipOpen: false
         }
     }
@@ -70,22 +70,28 @@ export class SpeciesSelector
         let buttonId = `selector${index}speciesFilterButton`
 
         let species = this.props.entries
-        let speciesIds = species.map(s => s.speciesId)
-        let filteredSpeciesIds = species.filter(s => this.isPresent(s)).map(s => s.speciesId)
-        let speciesLabels = species.map(s => s.getDisplayName("en") ?? "-")
+        let generationIds = species.map(s => s.generation.id)
+                                   .distinct()
+
+        let generationLabels = species.map(s => s.generation.name)
+                                      .distinct()
+
+        let filteredGenerationIds = species.filter(s => this.isPresent(s))
+                                           .map(s => s.generation.id)
+                                           .distinct()
 
         return (
             <Tooltip
                 className="filter-tooltip"
                 placement="bottom"
-                isOpen={this.state.speciesFilterOpen}
+                isOpen={this.state.filterOpen}
                 target={buttonId}>
-                <PokemonSpeciesFilter
+                <Filter
                     index={this.props.index}
-                    allIds={speciesIds}
-                    filterIds={filteredSpeciesIds}
-                    filterLabels={speciesLabels}
-                    setFilterIds={(filterIds: number[]) => this.setSpeciesFilterIds(filterIds)} />
+                    allIds={generationIds}
+                    filterIds={filteredGenerationIds}
+                    filterLabels={generationLabels}
+                    setFilterIds={(filterIds: number[]) => this.setGenerationFilterIds(filterIds)} />
             </Tooltip>
         )
     }
@@ -144,8 +150,8 @@ export class SpeciesSelector
      * Returns whether the species passes the filter.
      */
     isPresent(species: PokemonSpeciesEntry) {
-        let filters = this.state.speciesFilterIds
-        return filters.length <= 0 || filters.includes(species.speciesId)
+        let filters = this.state.generationFilterIds
+        return filters.length <= 0 || filters.includes(species.generation.id)
     }
 
     /**
@@ -192,15 +198,15 @@ export class SpeciesSelector
      */
     toggleSpeciesFilter() {
         this.setState(previousState => ({
-            speciesFilterOpen: !previousState.speciesFilterOpen
+            filterOpen: !previousState.filterOpen
         }))
     }
 
     /**
      * Sets the species ID filter.
      */
-    setSpeciesFilterIds(filterIds: number[]) {
-        this.setState({ speciesFilterIds: filterIds })
+    setGenerationFilterIds(filterIds: number[]) {
+        this.setState({ generationFilterIds: filterIds })
 
         // no longer have a valid species
         let speciesId = this.props.entryId

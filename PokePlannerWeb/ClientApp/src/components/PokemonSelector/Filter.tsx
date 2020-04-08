@@ -3,7 +3,7 @@ import { ListGroupItem, ListGroup, Input, Label } from "reactstrap"
 
 import "./Filter.scss"
 
-interface IPokemonSpeciesFilterProps {
+interface IFilterProps {
     /**
      * The index.
      */
@@ -30,22 +30,21 @@ interface IPokemonSpeciesFilterProps {
     setFilterIds: (filterIds: number[]) => void
 }
 
-interface IPokemonSpeciesFilterState {
+interface IFilterState {
 
 }
 
 /**
- * Component for filtering a list of Pokemon species.
+ * Component for filtering a list of entries stored in the parent component.
  */
-export class PokemonSpeciesFilter
-    extends Component<IPokemonSpeciesFilterProps, IPokemonSpeciesFilterState> {
+export class Filter extends Component<IFilterProps, IFilterState> {
     render() {
         return this.renderFilter()
     }
 
     /**
- * Renders the filter.
- */
+     * Renders the filter.
+     */
     renderFilter() {
         let items = this.props.allIds.map((id, index) => {
             let inputId = `filterCheckbox${index}`
@@ -95,6 +94,12 @@ export class PokemonSpeciesFilter
     toggleFilterId(id: number) {
         let filterIds = this.props.filterIds
         let i = filterIds.indexOf(id)
+
+        if (i >= 0 && filterIds.length <= 1) {
+            // can't filter out everything
+            return
+        }
+
         if (i < 0) {
             filterIds.push(id)
         }
