@@ -25,11 +25,6 @@ interface IPokemonSpeciesFilterProps {
     filterLabels: string[]
 
     /**
-     * Whether the filter items are present.
-     */
-    isPresent: boolean[]
-
-    /**
      * Handler for setting the filter in the parent component.
      */
     setFilterIds: (filterIds: number[]) => void
@@ -54,7 +49,7 @@ export class PokemonSpeciesFilter
     renderFilter() {
         let items = this.props.allIds.map((id, index) => {
             let inputId = `filterCheckbox${index}`
-            let isPresent = this.props.isPresent[index]
+            let isPresent = this.props.filterIds.includes(id)
             let label = this.props.filterLabels[index]
 
             // TODO: use a react-select multiselect

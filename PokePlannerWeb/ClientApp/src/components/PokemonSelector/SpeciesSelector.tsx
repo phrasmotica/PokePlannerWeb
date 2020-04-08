@@ -73,7 +73,6 @@ export class SpeciesSelector
         let speciesIds = species.map(s => s.speciesId)
         let filteredSpeciesIds = species.filter(s => this.isPresent(s)).map(s => s.speciesId)
         let speciesLabels = species.map(s => s.getDisplayName("en") ?? "-")
-        let speciesPresenceList = species.map(s => this.isPresent(s))
 
         return (
             <Tooltip
@@ -86,7 +85,6 @@ export class SpeciesSelector
                     allIds={speciesIds}
                     filterIds={filteredSpeciesIds}
                     filterLabels={speciesLabels}
-                    isPresent={speciesPresenceList}
                     setFilterIds={(filterIds: number[]) => this.setSpeciesFilterIds(filterIds)} />
             </Tooltip>
         )
