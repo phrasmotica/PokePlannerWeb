@@ -8,12 +8,14 @@ import { MoveList } from "./MoveList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
 
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
+
+import { GenerationEntry } from "../models/GenerationEntry"
 import { PokemonEntry } from "../models/PokemonEntry"
+import { PokemonFormEntry } from "../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 import { TypesPresenceMap } from "../models/TypesPresenceMap"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
-import { PokemonFormEntry } from "../models/PokemonFormEntry"
 import { CookieHelper } from "../util/CookieHelper"
 
 import "./PokemonPanel.scss"
@@ -30,6 +32,11 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
      * List of Pokemon species.
      */
     species: PokemonSpeciesEntry[]
+
+    /**
+     * List of generations.
+     */
+    generations: GenerationEntry[]
 
     /**
      * The types presence map.
@@ -105,6 +112,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
                         ignoreValidity={this.props.ignoreValidity}
+                        generations={this.props.generations}
                         hideTooltips={this.props.hideTooltips}
                         clearPokemon={clearPokemon}
                         setSpecies={setSpecies}

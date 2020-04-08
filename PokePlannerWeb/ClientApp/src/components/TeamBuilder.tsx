@@ -218,6 +218,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                         toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                         hideTooltips={this.state.hideTooltips}
                         species={this.state.species}
+                        generations={this.state.generations}
                         typesPresenceMap={this.state.typesPresenceMap}
                         baseStatNames={this.state.baseStatNames} />
                 )

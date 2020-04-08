@@ -8,6 +8,7 @@ import { FormSelector } from "./PokemonSelector/FormSelector"
 import { SpeciesSelector } from "./PokemonSelector/SpeciesSelector"
 import { VarietySelector } from "./PokemonSelector/VarietySelector"
 
+import { GenerationEntry } from "../models/GenerationEntry"
 import { PokemonEntry } from "../models/PokemonEntry"
 import { PokemonFormEntry } from "../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
@@ -29,6 +30,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean
+
+    /**
+     * List of generations.
+     */
+    generations: GenerationEntry[]
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -168,6 +174,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 entries={this.props.species}
                 entryId={this.state.speciesId}
                 loading={false}
+                generations={this.props.generations}
                 setSpecies={id => this.setSpecies(id)}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
         )

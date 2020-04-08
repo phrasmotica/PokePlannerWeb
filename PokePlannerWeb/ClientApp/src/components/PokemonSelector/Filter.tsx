@@ -1,28 +1,25 @@
 import React, { Component } from "react"
 import { ListGroupItem, ListGroup, Input, Label } from "reactstrap"
 
+import { IHasIndex } from "../CommonMembers"
+
 import "./Filter.scss"
 
-interface IFilterProps {
-    /**
-     * The index.
-     */
-    index: number
-
+interface IFilterProps extends IHasIndex {
     /**
      * The IDs of the items to filter.
      */
     allIds: number[]
 
     /**
-     * The IDs of the items that pass the filter.
-     */
-    filterIds: number[]
-
-    /**
      * The labels of the items to filter.
      */
-    filterLabels: string[]
+    allLabels: string[]
+
+    /**
+     * The IDs of the items that pass the filter.
+     */
+    filteredIds: number[]
 
     /**
      * Handler for setting the filter in the parent component.
@@ -48,8 +45,8 @@ export class Filter extends Component<IFilterProps, IFilterState> {
     renderFilter() {
         let items = this.props.allIds.map((id, index) => {
             let inputId = `filterCheckbox${index}`
-            let isPresent = this.props.filterIds.includes(id)
-            let label = this.props.filterLabels[index]
+            let isPresent = this.props.filteredIds.includes(id)
+            let label = this.props.allLabels[index]
 
             // TODO: use a react-select multiselect
 
@@ -82,7 +79,7 @@ export class Filter extends Component<IFilterProps, IFilterState> {
     createFilterOptions() {
         return this.props.allIds.map((id, index) => {
             return {
-                label: this.props.filterLabels[index],
+                label: this.props.allLabels[index],
                 value: id
             }
         })
@@ -92,7 +89,7 @@ export class Filter extends Component<IFilterProps, IFilterState> {
      * Toggles the given ID in the filter.
      */
     toggleFilterId(id: number) {
-        let filterIds = this.props.filterIds
+        let filterIds = this.props.filteredIds
         let i = filterIds.indexOf(id)
 
         if (i >= 0 && filterIds.length <= 1) {

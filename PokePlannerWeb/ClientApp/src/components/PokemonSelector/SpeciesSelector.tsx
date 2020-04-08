@@ -5,11 +5,17 @@ import { FaFilter } from "react-icons/fa"
 import { Filter } from "./Filter"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
+import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
 interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> {
+    /**
+     * List of generations.
+     */
+    generations: GenerationEntry[]
+
     /**
      * Handler for setting the species ID in the parent component.
      */
@@ -73,12 +79,13 @@ export class SpeciesSelector
         let generationIds = species.map(s => s.generation.id)
                                    .distinct()
 
-        let generationLabels = species.map(s => s.generation.name)
-                                      .distinct()
-
         let filteredGenerationIds = species.filter(s => this.isPresent(s))
                                            .map(s => s.generation.id)
                                            .distinct()
+
+        let generations = this.props.generations
+        let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
+                                          .map(g => g.getDisplayName("en") ?? "-")
 
         return (
             <Tooltip
@@ -89,8 +96,8 @@ export class SpeciesSelector
                 <Filter
                     index={this.props.index}
                     allIds={generationIds}
-                    filterIds={filteredGenerationIds}
-                    filterLabels={generationLabels}
+                    allLabels={generationLabels}
+                    filteredIds={filteredGenerationIds}
                     setFilterIds={(filterIds: number[]) => this.setGenerationFilterIds(filterIds)} />
             </Tooltip>
         )
