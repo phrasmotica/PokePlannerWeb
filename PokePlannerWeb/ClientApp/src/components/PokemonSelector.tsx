@@ -33,7 +33,7 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     /**
      * Handler for setting the species ID in the parent component.
      */
-    setSpecies: (speciesId: number) => void
+    setSpecies: (speciesId: number | undefined) => void
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
@@ -168,7 +168,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 entries={this.props.species}
                 entryId={this.state.speciesId}
                 loading={false}
-                setSpecies={(id: number) => this.setSpecies(id)}
+                setSpecies={id => this.setSpecies(id)}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
         )
     }
@@ -299,7 +299,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     /**
      * Set this selector to the species with the given ID.
      */
-    setSpecies(newSpeciesId: number) {
+    setSpecies(newSpeciesId: number | undefined) {
         // only fetch if we need to
         let selectedSpeciesId = this.state.speciesId
         let speciesChanged = newSpeciesId !== selectedSpeciesId
@@ -432,8 +432,8 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     }
 
     // fetches the species varieties from SpeciesController
-    async fetchVarieties(speciesId: number) {
-        if (speciesId <= 0) {
+    async fetchVarieties(speciesId: number | undefined) {
+        if (speciesId === undefined) {
             return
         }
 

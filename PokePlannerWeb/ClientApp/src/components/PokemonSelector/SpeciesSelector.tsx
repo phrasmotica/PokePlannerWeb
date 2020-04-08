@@ -13,7 +13,7 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     /**
      * Handler for setting the species ID in the parent component.
      */
-    setSpecies: (speciesId: number) => void
+    setSpecies: (speciesId: number | undefined) => void
 }
 
 interface ISpeciesSelectorState extends ISelectorBaseState {
@@ -201,5 +201,11 @@ export class SpeciesSelector
      */
     setSpeciesFilterIds(filterIds: number[]) {
         this.setState({ speciesFilterIds: filterIds })
+
+        // no longer have a valid species
+        let speciesId = this.props.entryId
+        if (speciesId !== undefined && !filterIds.includes(speciesId)) {
+            this.props.setSpecies(undefined)
+        }
     }
 }

@@ -92,7 +92,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     render() {
         // handlers
         const clearPokemon = () => this.clearPokemon()
-        const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
+        const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
         const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
@@ -434,7 +434,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     // set the species ID
-    setSpecies(speciesId: number) {
+    setSpecies(speciesId: number | undefined) {
         this.setState({ speciesId: speciesId })
     }
 
