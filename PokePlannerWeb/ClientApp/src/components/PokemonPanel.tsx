@@ -441,9 +441,16 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             && (this.props.ignoreValidity || this.pokemonIsValid())
     }
 
-    // set the species ID
+    /**
+     * Sets the species ID.
+     */
     setSpecies(speciesId: number | undefined) {
-        this.setState({ speciesId: speciesId })
+        if (speciesId === undefined) {
+            this.clearPokemon()
+        }
+        else {
+            this.setState({ speciesId: speciesId })
+        }
     }
 
     // remove all Pokemon data from this panel
