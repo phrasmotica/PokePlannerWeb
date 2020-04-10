@@ -15,7 +15,7 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [x] 'Random species' button
     * [x] 'Clear species' button
     * [x] Save selected species in cookies
-    * [ ] Filter by generation
+    * [x] Filter by generation
     * [ ] Filter by base stats of default variety
     * [ ] Filter by types of default variety
     * [ ] Favourite/unfavourite species (requires login)
@@ -37,7 +37,7 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
   * [x] Show move learnset
     * [x] Show move type/damage class
     * [x] Show move power/accuracy/PP
-    * [ ] Filter by type
+    * [x] Filter by same type
     * [ ] Filter by learn method
     * [ ] Open move in MoveDex
   * [x] Show encounter locations
