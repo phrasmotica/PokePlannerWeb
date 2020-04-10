@@ -15,6 +15,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class MoveService : NamedApiResourceServiceBase<Move, MoveEntry>
     {
         /// <summary>
+        /// The move category service.
+        /// </summary>
+        private readonly MoveCategoryService MoveCategoryService;
+
+        /// <summary>
         /// The move damage class service.
         /// </summary>
         private readonly MoveDamageClassService MoveDamageClassService;
@@ -36,11 +41,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<MoveEntry> dataStoreSource,
             IPokeAPI pokeApi,
             MoveCacheService moveCacheService,
+            MoveCategoryService moveCategoryService,
             MoveDamageClassService moveDamageClassService,
             MoveTargetService moveTargetService,
             TypeService typeService,
             ILogger<MoveService> logger) : base(dataStoreSource, pokeApi, moveCacheService, logger)
         {
+            MoveCategoryService = moveCategoryService;
             MoveDamageClassService = moveDamageClassService;
             MoveTargetService = moveTargetService;
             TypeService = typeService;
@@ -55,6 +62,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var displayNames = move.Names.ToDisplayNames();
             var type = await TypeService.Upsert(move.Type);
+            var category = await MoveCategoryService.Upsert(move.Meta.Category);
             var damageClass = await MoveDamageClassService.Upsert(move.DamageClass);
             var target = await MoveTargetService.Upsert(move.Target);
 
@@ -67,6 +75,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 {
                     Id = type.TypeId,
                     Name = type.Name
+                },
+                Category = new MoveCategory
+                {
+                    Id = category.MoveCategoryId,
+                    Name = category.Name
                 },
                 Power = move.Power,
                 DamageClass = new MoveDamageClass

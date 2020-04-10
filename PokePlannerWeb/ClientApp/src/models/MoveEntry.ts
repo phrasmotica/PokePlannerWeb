@@ -2,6 +2,7 @@ import { DisplayName } from "./DisplayName"
 import { MoveDamageClass } from "./MoveDamageClass"
 import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
+import { MoveCategory } from "./MoveCategory"
 
 /**
  * Represents a move in the data store.
@@ -26,6 +27,11 @@ export class MoveEntry {
      * The type of the move.
      */
     type: Type
+
+    /**
+     * The category of the move.
+     */
+    category: MoveCategory
 
     /**
      * The move's base power.
@@ -65,6 +71,7 @@ export class MoveEntry {
         name: string,
         displayNames: DisplayName[],
         type: Type,
+        category: MoveCategory,
         power: number | null,
         damageClass: MoveDamageClass,
         accuracy: number | null,
@@ -76,6 +83,7 @@ export class MoveEntry {
         this.name = name
         this.displayNames = displayNames
         this.type = type
+        this.category = category
         this.power = power
         this.damageClass = damageClass
         this.accuracy = accuracy
@@ -93,6 +101,7 @@ export class MoveEntry {
             move.name,
             move.displayNames,
             move.type,
+            move.category,
             move.power,
             move.damageClass,
             move.accuracy,

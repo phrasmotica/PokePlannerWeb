@@ -92,14 +92,19 @@ namespace PokePlannerWeb
             services.AddSingleton<MachineService>();
 
             services.AddSingleton(sp =>
-                dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
+                dataStoreSourceFactory.Create<MoveCategoryEntry>(dataStoreSettings.MoveCategoryCollectionName)
             );
-            services.AddSingleton<MoveService>();
+            services.AddSingleton<MoveCategoryService>();
 
             services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<MoveDamageClassEntry>(dataStoreSettings.MoveDamageClassCollectionName)
             );
             services.AddSingleton<MoveDamageClassService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
+            );
+            services.AddSingleton<MoveService>();
 
             services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<MoveTargetEntry>(dataStoreSettings.MoveTargetCollectionName)
@@ -185,6 +190,11 @@ namespace PokePlannerWeb
                 cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
             );
             services.AddSingleton<MoveCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
+            );
+            services.AddSingleton<MoveCategoryCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)

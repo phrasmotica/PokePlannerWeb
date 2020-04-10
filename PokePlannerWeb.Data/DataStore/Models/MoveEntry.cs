@@ -24,6 +24,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public Type Type { get; set; }
 
         /// <summary>
+        /// Gets or sets the category of the move.
+        /// </summary>
+        public MoveCategory Category { get; set; }
+
+        /// <summary>
         /// Gets or sets the move's base power.
         /// </summary>
         public int? Power { get; set; }
