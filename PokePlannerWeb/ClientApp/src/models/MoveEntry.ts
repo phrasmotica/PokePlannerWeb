@@ -1,8 +1,9 @@
 import { LocalString } from "./LocalString"
+import { MoveCategory } from "./MoveCategory"
 import { MoveDamageClass } from "./MoveDamageClass"
 import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
-import { MoveCategory } from "./MoveCategory"
+import { WithId } from "./WithId"
 
 /**
  * Represents a move in the data store.
@@ -22,6 +23,11 @@ export class MoveEntry {
      * The display names of the move.
      */
     displayNames: LocalString[]
+
+    /**
+     * The flavour text entries of the move, indexed by version group ID.
+     */
+    flavourTextEntries: WithId<LocalString[]>[]
 
     /**
      * The type of the move.
@@ -70,6 +76,7 @@ export class MoveEntry {
         moveId: number,
         name: string,
         displayNames: LocalString[],
+        flavourTextEntries: WithId<LocalString[]>[],
         type: Type,
         category: MoveCategory,
         power: number | null,
@@ -82,6 +89,7 @@ export class MoveEntry {
         this.moveId = moveId
         this.name = name
         this.displayNames = displayNames
+        this.flavourTextEntries = flavourTextEntries
         this.type = type
         this.category = category
         this.power = power
@@ -100,6 +108,7 @@ export class MoveEntry {
             move.moveId,
             move.name,
             move.displayNames,
+            move.flavourTextEntries,
             move.type,
             move.category,
             move.power,
@@ -139,5 +148,41 @@ export class MoveEntry {
         }
 
         return localName?.value
+    }
+
+    /**
+     * Returns the move's flavour text in the version group with the given ID in the given locale.
+     */
+    getFlavourText(versionGroupId: number, locale: string): string | undefined {
+        if (this.flavourTextEntries.length <= 0) {
+            console.warn(
+                `Move ${this.moveId} has no flavour text entries`
+            )
+
+            return undefined
+        }
+
+        // find most recent flavour text entry
+        let searchId = versionGroupId
+        let matchingEntry: WithId<LocalString[]> | undefined = undefined
+        while (matchingEntry === undefined && searchId > 0) {
+            matchingEntry = this.flavourTextEntries.find(e => e.id === searchId)
+            searchId--
+        }
+
+        if (matchingEntry === undefined) {
+            // older version group than the earliest one with flavour text...
+            // fall back to that one
+            matchingEntry = this.flavourTextEntries[0]
+        }
+
+        let localFlavourText = matchingEntry!.data.find(n => n.language === locale)
+        if (localFlavourText === undefined) {
+            console.warn(
+                `Move ${this.moveId} is missing flavour text in locale '${locale}'`
+            )
+        }
+
+        return localFlavourText?.value
     }
 }

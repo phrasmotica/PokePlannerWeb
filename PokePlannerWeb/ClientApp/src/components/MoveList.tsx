@@ -251,9 +251,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 // some moves damage but don't have a constant base power, e.g. Low Kick
                 if (isStab && move.power !== null) {
                     let sameTypeElement = (
-                        <span title="same-type attack bonus">
+                        <abbr title="same-type attack bonus">
                             <b>{move.power * 1.5}</b>
-                        </span>
+                        </abbr>
                     )
 
                     powerElement = (
@@ -265,17 +265,21 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
-                        <div style={{ display: "flex" }}>
-                            <div className="text-align-right margin-right-small">
+                        <div className="flex">
+                            <div className="margin-right-small">
+                                <div className="flex-center">
+                                    {typeIcon}
+                                    {damageClassIcon}
+                                </div>
+
                                 {powerElement}
+
                                 <div>Accuracy: {move.accuracy ?? "-"}</div>
                                 <div>PP: {move.pp ?? "-"}</div>
                             </div>
 
                             <div className="text-align-center margin-right-small">
-                                <div>{typeIcon}</div>
-
-                                <div>{damageClassIcon}</div>
+                                {move.getFlavourText(this.props.versionGroupId!, "en")}
                             </div>
                         </div>
                     </Collapse>
@@ -382,13 +386,25 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         switch (damageClassId) {
             case 1:
                 // status
-                return <TiWaves className="damage-class-small" />
+                return (
+                    <span title="Status">
+                        <TiWaves className="damage-class-small" />
+                    </span>
+                )
             case 2:
                 // physical
-                return <TiStarburstOutline className="damage-class-small" />
+                return (
+                    <span title="Physical">
+                        <TiStarburstOutline className="damage-class-small" />
+                    </span>
+                )
             case 3:
                 // special
-                return <TiSpiral className="damage-class-small" />
+                return (
+                    <span title="Special">
+                        <TiSpiral className="damage-class-small" />
+                    </span>
+                )
             default:
                 throw new Error(
                     `Move list ${this.props.index}: no move damage class with ID ${damageClassId} exists!`
