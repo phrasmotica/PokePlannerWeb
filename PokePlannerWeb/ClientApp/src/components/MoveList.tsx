@@ -295,10 +295,21 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             )
         }
 
+        // no moves to show...
+        if (this.hasFilters()) {
+            return (
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        All moves have been filtered
+                    </ListGroupItem>
+                </ListGroup>
+            )
+        }
+
         return (
             <ListGroup className="overflow-y">
                 <ListGroupItem>
-                    -
+                    No moves in this game version
                 </ListGroupItem>
             </ListGroup>
         )
@@ -337,6 +348,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     isStab(move: MoveEntry) {
         return move.isDamaging() && this.isSameType(move)
+    }
+
+    /**
+     * Returns whether any filters are active.
+     */
+    hasFilters() {
+        return this.state.damagingOnly
+            || this.state.nonDamagingOnly
+            || this.state.sameTypeOnly
     }
 
     /**
