@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react"
 import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
+import key from "weak-key"
 
 import { IHasCommon } from "./CommonMembers"
 import { MoveEntry } from "../models/MoveEntry"
@@ -139,7 +140,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 )
 
                 rows.push(
-                    <ListGroupItem key={row}>
+                    <ListGroupItem key={key(move)}>
                         {moveNameElement}
                         {infoPane}
                     </ListGroupItem>

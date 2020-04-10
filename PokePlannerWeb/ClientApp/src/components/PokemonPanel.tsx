@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 import { Tabs, Tab } from "react-bootstrap"
+import key from "weak-key"
 
 import { CaptureLocations } from "./CaptureLocations"
 import { EfficacyList } from "./EfficacyList"
@@ -212,10 +213,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             typesElement = types.map(type => {
                 return (
                     <div
-                        key={type.id}
+                        key={key(type)}
                         className="flex-center fill-parent">
                         <img
-                            key={type.id}
+                            key={key(type)}
                             className={"type-icon padded" + (shouldShowPokemon ? "" : " hidden")}
                             alt={`type${type.id}`}
                             src={require(`../images/typeIcons/${type.id}-small.png`)} />

@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
 import { ListGroup, ListGroupItem } from "reactstrap"
+import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../models/EncountersEntry"
 
@@ -113,14 +114,11 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
                 let items = []
                 for (let row = 0; row < encountersData.length; row++) {
-                    // ensure each headers have unique IDs between all instances
-                    let id = `locations${this.props.index}row${row}`
                     let encounter = encountersData[row]
-
                     let displayName = encounter.getDisplayName("en") ?? `(encounter)${row}`
 
                     items.push(
-                        <ListGroupItem key={id}>
+                        <ListGroupItem key={key(encounter)}>
                             {displayName}
                         </ListGroupItem>
                     )
