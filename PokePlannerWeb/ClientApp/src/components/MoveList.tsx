@@ -34,9 +34,9 @@ interface IMoveListState {
     damagingOnly: boolean
 
     /**
-     * Whether to only show moves with STAB.
+     * Whether to only show moves with one of the current Pokemon's types.
      */
-    stabOnly: boolean
+    sameTypeOnly: boolean
 
     /**
      * The moves to show.
@@ -62,7 +62,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         super(props)
         this.state = {
             damagingOnly: false,
-            stabOnly: false,
+            sameTypeOnly: false,
             moves: [],
             loadingMoves: false,
             movesAreOpen: []
@@ -90,7 +90,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     render() {
-        // TODO: add filter by type/STAB/(non-)damaging/power/etc
+        // TODO: add filter by type/(non-)damaging/power/etc
         return (
             <div>
                 <div style={{ marginTop: 4 }}>
@@ -109,7 +109,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     renderFilters() {
         let damagingId = "damagingCheckbox" + this.props.index
-        let stabId = "stabCheckbox" + this.props.index
+        let sameTypeId = "sameTypeCheckbox" + this.props.index
 
         return (
             <div className="flex">
@@ -132,13 +132,13 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 <FormGroup check>
                     <Input
                         type="checkbox"
-                        id={stabId}
-                        checked={this.state.stabOnly}
-                        onChange={() => this.toggleStabOnly()} />
+                        id={sameTypeId}
+                        checked={this.state.sameTypeOnly}
+                        onChange={() => this.toggleSameTypeOnly()} />
 
-                    <Label for={stabId} check>
-                        <span title="Only show moves with STAB (same-type attack bonus)">
-                            STAB only
+                    <Label for={sameTypeId} check>
+                        <span title="Only show moves of the Pokemon's type">
+                            same type only
                         </span>
                     </Label>
                 </FormGroup>
@@ -156,11 +156,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     /**
-     * Toggles the STAB only filter.
+     * Toggles the same type only filter.
      */
-    toggleStabOnly() {
+    toggleSameTypeOnly() {
         this.setState(previousState => ({
-            stabOnly: !previousState.stabOnly
+            sameTypeOnly: !previousState.sameTypeOnly
         }))
     }
 
@@ -215,7 +215,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
                 if (isStab) {
                     // exclamation mark indicates the value is non-null
-                    let stabElement = (
+                    let sameTypeElement = (
                         <span title="same-type attack bonus">
                             <b>{move.power! * 1.5}</b>
                         </span>
@@ -223,7 +223,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                     powerElement = (
                         <div>
-                            Power: {move.power!} ({stabElement})
+                            Power: {move.power!} ({sameTypeElement})
                         </div>
                     )
                 }
@@ -280,18 +280,25 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             moves = moves.filter(m => m.isDamaging())
         }
 
-        if (this.state.stabOnly) {
-            moves = moves.filter(m => this.isStab(m))
+        if (this.state.sameTypeOnly) {
+            moves = moves.filter(m => this.isSameType(m))
         }
 
         return moves
     }
 
     /**
+     * Returns whether the given move has a type that the current Pokemon has.
+     */
+    isSameType(move: MoveEntry) {
+        return this.props.typeIds.includes(move.type.id)
+    }
+
+    /**
      * Returns whether the given move has STAB.
      */
     isStab(move: MoveEntry) {
-        return move.isDamaging() && this.props.typeIds.includes(move.type.id)
+        return move.isDamaging() && this.isSameType(move)
     }
 
     /**
