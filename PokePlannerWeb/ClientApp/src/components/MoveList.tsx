@@ -34,6 +34,11 @@ interface IMoveListState {
     damagingOnly: boolean
 
     /**
+     * Whether to only show moves with that don't deal damage.
+     */
+    nonDamagingOnly: boolean
+
+    /**
      * Whether to only show moves with one of the current Pokemon's types.
      */
     sameTypeOnly: boolean
@@ -62,6 +67,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         super(props)
         this.state = {
             damagingOnly: false,
+            nonDamagingOnly: false,
             sameTypeOnly: false,
             moves: [],
             loadingMoves: false,
@@ -109,6 +115,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     renderFilters() {
         let damagingId = "damagingCheckbox" + this.props.index
+        let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
 
         return (
@@ -125,6 +132,22 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     <Label for={damagingId} check>
                         <span title="Only show moves that deal damage">
                             damaging only
+                        </span>
+                    </Label>
+                </FormGroup>
+
+                <FormGroup
+                    check
+                    className="margin-right-small">
+                    <Input
+                        type="checkbox"
+                        id={nonDamagingId}
+                        checked={this.state.nonDamagingOnly}
+                        onChange={() => this.toggleNonDamagingOnly()} />
+
+                    <Label for={nonDamagingId} check>
+                        <span title="Only show moves that don't deal damage">
+                            non-damaging only
                         </span>
                     </Label>
                 </FormGroup>
@@ -151,7 +174,18 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     toggleDamagingOnly() {
         this.setState(previousState => ({
-            damagingOnly: !previousState.damagingOnly
+            damagingOnly: !previousState.damagingOnly,
+            nonDamagingOnly: false
+        }))
+    }
+
+    /**
+     * Toggles the non-damaging only filter.
+     */
+    toggleNonDamagingOnly() {
+        this.setState(previousState => ({
+            damagingOnly: false,
+            nonDamagingOnly: !previousState.nonDamagingOnly
         }))
     }
 
@@ -278,6 +312,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         if (this.state.damagingOnly) {
             moves = moves.filter(m => m.isDamaging())
+        }
+
+        if (this.state.nonDamagingOnly) {
+            moves = moves.filter(m => !m.isDamaging())
         }
 
         if (this.state.sameTypeOnly) {
