@@ -11,7 +11,7 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing a collection of PokeAPI resources in the cache.
     /// </summary>
-    public class CacheServiceBase<TResource> where TResource : NamedApiResource
+    public class CacheServiceBase<TResource> where TResource : ResourceBase
     {
         /// <summary>
         /// The cache source.
@@ -125,30 +125,10 @@ namespace PokePlannerWeb.Data.Cache.Services
         /// <summary>
         /// Returns the resource with the given ID, creating a cache entry if it doesn't exist.
         /// </summary>
-        public async Task<TResource> Upsert(NamedApiResource<TResource> res)
+        public virtual async Task<TResource> Upsert(UrlNavigation<TResource> res)
         {
-            var name = res.Name;
-            var entry = await CacheSource.GetCacheEntry(name);
-            if (entry == null)
-            {
-                var entryType = typeof(TResource).Name;
-                Logger.LogInformation($"Caching {entryType} with name {name}...");
-
-                var resource = await PokeApi.Get(res);
-                return await Create(resource);
-            }
-            else if (IsStale(entry))
-            {
-                // update cache entry if it's stale
-                var entryType = typeof(TResource).Name;
-                Logger.LogInformation($"Cached {entryType} with name {name} is stale - updating...");
-
-                var resource = await PokeApi.Get(res);
-                await Update(resource);
-                return resource;
-            }
-
-            return entry.Resource;
+            var resource = await PokeApi.Get(res);
+            return await Upsert(resource.Id);
         }
 
         #endregion

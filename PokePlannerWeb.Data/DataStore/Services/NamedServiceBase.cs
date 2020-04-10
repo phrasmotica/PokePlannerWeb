@@ -11,17 +11,12 @@ using PokePlannerWeb.Data.DataStore.Models;
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for managing a collection of entries in the data store.
+    /// Service for managing a collection of named entries in the data store.
     /// </summary>
-    public abstract class ServiceBase<TSource, TEntry>
-        where TSource : ApiResource
+    public abstract class NamedServiceBase<TSource, TEntry>
+        where TSource : NamedApiResource
         where TEntry : EntryBase
     {
-        /// <summary>
-        /// The cache service for the resource type.
-        /// </summary>
-        protected readonly CacheServiceBase<TSource> CacheService;
-
         /// <summary>
         /// The data store source.
         /// </summary>
@@ -33,22 +28,27 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected IPokeAPI PokeApi;
 
         /// <summary>
+        /// The cache service for the resource type.
+        /// </summary>
+        protected CacheServiceBase<TSource> CacheService;
+
+        /// <summary>
         /// The logger.
         /// </summary>
-        protected readonly ILogger<ServiceBase<TSource, TEntry>> Logger;
+        protected readonly ILogger<NamedServiceBase<TSource, TEntry>> Logger;
 
         /// <summary>
         /// Connect to data store and initialise logger.
         /// </summary>
-        public ServiceBase(
+        public NamedServiceBase(
             IDataStoreSource<TEntry> dataStoreSource,
             IPokeAPI pokeApi,
             CacheServiceBase<TSource> cacheService,
-            ILogger<ServiceBase<TSource, TEntry>> logger)
+            ILogger<NamedServiceBase<TSource, TEntry>> logger)
         {
-            CacheService = cacheService;
             DataStoreSource = dataStoreSource;
             PokeApi = pokeApi;
+            CacheService = cacheService;
             Logger = logger;
         }
 
@@ -139,9 +139,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates a new entry for the given API resource and returns it.
+        /// Creates a new entry for the given named API resource and returns it.
         /// </summary>
-        public virtual async Task<TEntry> Upsert(UrlNavigation<TSource> res)
+        public virtual async Task<TEntry> Upsert(NamedApiResource<TSource> res)
         {
             var source = await PokeApi.Get(res);
             return await Upsert(source);
@@ -164,9 +164,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates new entries for the given API resources and returns them.
+        /// Creates new entries for the given named API resources and returns them.
         /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<UrlNavigation<TSource>> resources)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
         {
             var sources = await PokeApi.Get(resources);
             return await UpsertMany(sources);
@@ -175,7 +175,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Upserts many entries into the data store.
         /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(ApiResourceList<TSource> resources)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources)
         {
             var sourceType = typeof(TSource).Name;
             var entryType = typeof(TEntry).Name;
@@ -206,7 +206,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<IEnumerable<TEntry>> UpsertAll()
         {
-            var resourcesPage = await PokeApi.GetPage<TSource>();
+            var resourcesPage = await PokeApi.GetNamedPage<TSource>();
 
             var allEntries = await GetAllEntries();
             if (!allEntries.Any() || allEntries.ToList().Count != resourcesPage.Count)
@@ -216,10 +216,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var entryList = new List<TEntry>();
 
                 var pagesUsed = 0;
-                ApiResourceList<TSource> page;
+                NamedApiResourceList<TSource> page;
                 do
                 {
-                    page = await PokeApi.GetPage<TSource>(pageSize, pageSize * pagesUsed++);
+                    page = await PokeApi.GetNamedPage<TSource>(pageSize, pageSize * pagesUsed++);
                     var entries = await UpsertMany(page);
                     entryList.AddRange(entries);
                 } while (!string.IsNullOrEmpty(page.Next));

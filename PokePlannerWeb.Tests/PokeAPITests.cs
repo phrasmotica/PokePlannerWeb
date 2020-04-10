@@ -69,7 +69,7 @@ namespace PokePlannerWeb.Tests
         {
             // load all Pokemon names
             var pokeApi = serviceProvider.GetService<IPokeAPI>();
-            var speciesPage = await pokeApi.GetFullPage<PokemonSpecies>();
+            var speciesPage = await pokeApi.GetNamedFullPage<PokemonSpecies>();
 
             // verify they're all there
             Assert.AreEqual(807, speciesPage.Count);
@@ -234,7 +234,7 @@ namespace PokePlannerWeb.Tests
         {
             // get secondary forms
             var pokeApi = serviceProvider.GetService<IPokeAPI>();
-            var forms = await pokeApi.GetPage<PokemonForm>(316, 807);
+            var forms = await pokeApi.GetNamedPage<PokemonForm>(316, 807);
 
             // filter to those with type names in their name
             var typesService = serviceProvider.GetService<TypeService>();

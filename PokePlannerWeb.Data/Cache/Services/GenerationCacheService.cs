@@ -7,15 +7,15 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing the collection of generation resources in the cache.
     /// </summary>
-    public class GenerationCacheService : CacheServiceBase<Generation>
+    public class GenerationCacheService : NamedCacheServiceBase<Generation>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public GenerationCacheService(
-            ICacheSource<Generation> cacheSource,
+            INamedCacheSource<Generation> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<CacheServiceBase<Generation>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<NamedCacheServiceBase<Generation>> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

@@ -13,13 +13,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for accessing encounters data.
     /// </summary>
-    public class EncountersService : ServiceBase<Pokemon, EncountersEntry>
+    public class EncountersService : NamedServiceBase<Pokemon, EncountersEntry>
     {
-        /// <summary>
-        /// The Pokemon cache service.
-        /// </summary>
-        private readonly PokemonCacheService PokemonCacheService;
-
         /// <summary>
         /// The locations service.
         /// </summary>
@@ -51,9 +46,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
             LocationAreaService locationAreasService,
             VersionService versionsService,
             VersionGroupService versionGroupsService,
-            ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, logger)
+            ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, pokemonCacheService, logger)
         {
-            PokemonCacheService = pokemonCacheService;
             LocationsService = locationsService;
             LocationAreasService = locationAreasService;
             VersionsService = versionsService;
@@ -68,7 +62,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<Pokemon> FetchSource(int pokemonId)
         {
             Logger.LogInformation($"Fetching Pokemon source object with ID {pokemonId}...");
-            return await PokemonCacheService.Upsert(pokemonId);
+            return await CacheService.Upsert(pokemonId);
         }
 
         /// <summary>

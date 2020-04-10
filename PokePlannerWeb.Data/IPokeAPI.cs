@@ -15,11 +15,6 @@ namespace PokePlannerWeb.Data
         Task<T> Get<T>(int id) where T : ResourceBase;
 
         /// <summary>
-        /// Returns the named API resource of the given type with the given name.
-        /// </summary>
-        Task<T> Get<T>(string name) where T : NamedApiResource;
-
-        /// <summary>
         /// Returns the resource of the given type from the given navigation property.
         /// </summary>
         Task<T> Get<T>(UrlNavigation<T> nav) where T : ResourceBase;
@@ -34,29 +29,57 @@ namespace PokePlannerWeb.Data
         /// </summary>
         Task<IEnumerable<LocationAreaEncounter>> GetEncounters(Pokemon pokemon);
 
+        #region API resources
+
         /// <summary>
         /// Returns a page with all resources of the given type.
         /// </summary>
-        Task<NamedApiResourceList<T>> GetFullPage<T>() where T : NamedApiResource;
+        Task<ApiResourceList<T>> GetFullPage<T>() where T : ApiResource;
 
         /// <summary>
         /// Returns a page with resources of the given type.
         /// </summary>
-        Task<NamedApiResourceList<T>> GetPage<T>() where T : NamedApiResource;
+        Task<ApiResourceList<T>> GetPage<T>() where T : ApiResource;
 
         /// <summary>
         /// Returns a page of the given size and offset with resources of the given type.
         /// </summary>
-        Task<NamedApiResourceList<T>> GetPage<T>(int limit = 20, int offset = 0) where T : NamedApiResource;
+        Task<ApiResourceList<T>> GetPage<T>(int limit = 20, int offset = 0) where T : ApiResource;
 
         /// <summary>
         /// Returns a list of the given size and offset with resources of the given type.
         /// </summary>
-        Task<IEnumerable<T>> GetMany<T>(int limit = 20, int offset = 0) where T : NamedApiResource;
+        Task<IEnumerable<T>> GetMany<T>(int limit = 20, int offset = 0) where T : ApiResource;
 
         /// <summary>
         /// Returns the last named API resource of the given type.
         /// </summary>
-        Task<T> GetLast<T>() where T : NamedApiResource;
+        Task<T> GetLast<T>() where T : ApiResource;
+
+        #endregion
+
+        #region Named API resources
+
+        /// <summary>
+        /// Returns the named API resource of the given type with the given name.
+        /// </summary>
+        Task<T> Get<T>(string name) where T : NamedApiResource;
+
+        /// <summary>
+        /// Returns a page with all resources of the given named type.
+        /// </summary>
+        Task<NamedApiResourceList<T>> GetNamedFullPage<T>() where T : NamedApiResource;
+
+        /// <summary>
+        /// Returns a page with resources of the given named type.
+        /// </summary>
+        Task<NamedApiResourceList<T>> GetNamedPage<T>() where T : NamedApiResource;
+
+        /// <summary>
+        /// Returns a page of the given size and offset with resources of the given named type.
+        /// </summary>
+        Task<NamedApiResourceList<T>> GetNamedPage<T>(int limit = 20, int offset = 0) where T : NamedApiResource;
+
+        #endregion
     }
 }

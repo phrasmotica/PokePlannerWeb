@@ -10,9 +10,9 @@ using PokePlannerWeb.Data.Cache.Models;
 namespace PokePlannerWeb.Data.Cache.Abstractions
 {
     /// <summary>
-    /// Cache source for Mongo DB.
+    /// Cache source for API resources in Mongo DB.
     /// </summary>
-    public class MongoDbCacheSource<TResource> : ICacheSource<TResource> where TResource : NamedApiResource
+    public class MongoDbCacheSource<TResource> : ICacheSource<TResource> where TResource : ResourceBase
     {
         /// <summary>
         /// The collection of entries.
@@ -54,15 +54,6 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         public Task<CacheEntry<TResource>> GetCacheEntry(int id)
         {
             var entry = Collection.Find(e => e.Resource.Id == id).FirstOrDefault();
-            return Task.FromResult(entry);
-        }
-
-        /// <summary>
-        /// Returns the cache entry for the resource with the given name.
-        /// </summary>
-        public Task<CacheEntry<TResource>> GetCacheEntry(string name)
-        {
-            var entry = Collection.Find(e => e.Resource.Name == name).FirstOrDefault();
             return Task.FromResult(entry);
         }
 

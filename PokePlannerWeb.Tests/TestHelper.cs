@@ -147,77 +147,77 @@ namespace PokePlannerWeb.Tests
             var cacheSettings = Configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Generation>(cacheSettings.GenerationCollectionName)
+                cacheSourceFactory.CreateNamed<Generation>(cacheSettings.GenerationCollectionName)
             );
             services.AddSingleton<GenerationCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<LocationArea>(cacheSettings.LocationAreaCollectionName)
+                cacheSourceFactory.CreateNamed<LocationArea>(cacheSettings.LocationAreaCollectionName)
             );
             services.AddSingleton<LocationAreaCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Location>(cacheSettings.LocationCollectionName)
+                cacheSourceFactory.CreateNamed<Location>(cacheSettings.LocationCollectionName)
             );
             services.AddSingleton<LocationCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
+                cacheSourceFactory.CreateNamed<Move>(cacheSettings.MoveCollectionName)
             );
             services.AddSingleton<MoveCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
+                cacheSourceFactory.CreateNamed<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
             );
             services.AddSingleton<MoveCategoryCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
+                cacheSourceFactory.CreateNamed<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
             );
             services.AddSingleton<MoveDamageClassCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<MoveTarget>(cacheSettings.MoveTargetCollectionName)
+                cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)
             );
             services.AddSingleton<MoveTargetCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)
+                cacheSourceFactory.CreateNamed<Pokedex>(cacheSettings.PokedexCollectionName)
             );
             services.AddSingleton<PokedexCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Pokemon>(cacheSettings.PokemonCollectionName)
+                cacheSourceFactory.CreateNamed<Pokemon>(cacheSettings.PokemonCollectionName)
             );
             services.AddSingleton<PokemonCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<PokemonForm>(cacheSettings.PokemonFormCollectionName)
+                cacheSourceFactory.CreateNamed<PokemonForm>(cacheSettings.PokemonFormCollectionName)
             );
             services.AddSingleton<PokemonFormCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<PokemonSpecies>(cacheSettings.PokemonSpeciesCollectionName)
+                cacheSourceFactory.CreateNamed<PokemonSpecies>(cacheSettings.PokemonSpeciesCollectionName)
             );
             services.AddSingleton<PokemonSpeciesCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Stat>(cacheSettings.StatCollectionName)
+                cacheSourceFactory.CreateNamed<Stat>(cacheSettings.StatCollectionName)
             );
             services.AddSingleton<StatCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<PokeApiNet.Type>(cacheSettings.TypeCollectionName)
+                cacheSourceFactory.CreateNamed<PokeApiNet.Type>(cacheSettings.TypeCollectionName)
             );
             services.AddSingleton<TypeCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<PokeApiNet.Version>(cacheSettings.VersionCollectionName)
+                cacheSourceFactory.CreateNamed<PokeApiNet.Version>(cacheSettings.VersionCollectionName)
             );
             services.AddSingleton<VersionCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<VersionGroup>(cacheSettings.VersionGroupCollectionName)
+                cacheSourceFactory.CreateNamed<VersionGroup>(cacheSettings.VersionGroupCollectionName)
             );
             services.AddSingleton<VersionGroupCacheService>();
         }

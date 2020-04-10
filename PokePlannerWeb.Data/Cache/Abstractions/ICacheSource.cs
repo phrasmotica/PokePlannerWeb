@@ -8,9 +8,9 @@ using PokePlannerWeb.Data.Cache.Models;
 namespace PokePlannerWeb.Data.Cache.Abstractions
 {
     /// <summary>
-    /// Interface for data sources that cache named PokeAPI resources.
+    /// Interface for data sources that cache PokeAPI resources.
     /// </summary>
-    public interface ICacheSource<TResource> where TResource : NamedApiResource
+    public interface ICacheSource<TResource> where TResource : ResourceBase
     {
         /// <summary>
         /// Returns all resources.
@@ -26,11 +26,6 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         /// Returns the cache entry for the resource with the given ID.
         /// </summary>
         Task<CacheEntry<TResource>> GetCacheEntry(int id);
-
-        /// <summary>
-        /// Returns the cache entry for the resource with the given name.
-        /// </summary>
-        Task<CacheEntry<TResource>> GetCacheEntry(string name);
 
         /// <summary>
         /// Creates the given resource and returns it.

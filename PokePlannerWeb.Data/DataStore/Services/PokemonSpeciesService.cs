@@ -91,7 +91,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies(int limit, int offset)
         {
-            var resources = await PokeApi.GetPage<PokemonSpecies>(limit, offset);
+            var resources = await PokeApi.GetNamedPage<PokemonSpecies>(limit, offset);
             var species = await UpsertMany(resources);
             return species.OrderBy(s => s.SpeciesId).ToArray();
         }

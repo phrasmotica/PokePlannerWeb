@@ -7,15 +7,15 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing the collection of type resources in the cache.
     /// </summary>
-    public class TypeCacheService : CacheServiceBase<Type>
+    public class TypeCacheService : NamedCacheServiceBase<Type>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public TypeCacheService(
-            ICacheSource<Type> cacheSource,
+            INamedCacheSource<Type> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<CacheServiceBase<Type>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<NamedCacheServiceBase<Type>> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }
