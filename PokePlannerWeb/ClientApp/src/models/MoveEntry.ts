@@ -115,7 +115,16 @@ export class MoveEntry {
      * Returns whether the move is damaging.
      */
     isDamaging(): boolean {
-        return this.power !== null
+        let damagingCategoryIds = [
+            0, // damage
+            4, // damage+ailment
+            6, // damage+lower
+            7, // damage+raise
+            8, // damage+heal
+            9, // one-hit KO
+        ]
+
+        return damagingCategoryIds.includes(this.category.id)
     }
 
     /**

@@ -247,17 +247,18 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let isOpen = this.state.movesAreOpen[row]
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
-                if (isStab) {
-                    // exclamation mark indicates the value is non-null
+
+                // some moves damage but don't have a constant base power, e.g. Low Kick
+                if (isStab && move.power !== null) {
                     let sameTypeElement = (
                         <span title="same-type attack bonus">
-                            <b>{move.power! * 1.5}</b>
+                            <b>{move.power * 1.5}</b>
                         </span>
                     )
 
                     powerElement = (
                         <div>
-                            Power: {move.power!} ({sameTypeElement})
+                            Power: {move.power} ({sameTypeElement})
                         </div>
                     )
                 }
