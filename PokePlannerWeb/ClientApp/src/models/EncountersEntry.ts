@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 import { WithId } from "./WithId"
 
 /**
@@ -23,7 +23,7 @@ export class EncounterEntry {
     /**
      * The display names of the encounter.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The encounter chances indexed by version ID.
@@ -34,7 +34,7 @@ export class EncounterEntry {
      * Constructor.
      */
     constructor(
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         chances: WithId<number>[]
     ) {
         this.displayNames = displayNames

@@ -3,7 +3,7 @@
     /// <summary>
     /// Represents a display name for a given language.
     /// </summary>
-    public class DisplayName
+    public class LocalString
     {
         /// <summary>
         /// The language of the display name.

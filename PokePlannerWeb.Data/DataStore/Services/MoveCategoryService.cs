@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override Task<MoveCategoryEntry> ConvertToEntry(MoveCategory moveCategory)
         {
-            var displayDescriptions = moveCategory.Descriptions.ToDisplayNames();
+            var displayDescriptions = moveCategory.Descriptions.Localise();
 
             return Task.FromResult(new MoveCategoryEntry
             {

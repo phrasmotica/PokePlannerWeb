@@ -60,7 +60,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<MoveEntry> ConvertToEntry(Move move)
         {
-            var displayNames = move.Names.ToDisplayNames();
+            var displayNames = move.Names.Localise();
             var type = await TypeService.Upsert(move.Type);
             var category = await MoveCategoryService.Upsert(move.Meta.Category);
             var damageClass = await MoveDamageClassService.Upsert(move.DamageClass);

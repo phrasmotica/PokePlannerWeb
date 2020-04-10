@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets this Pokemon species' display names.
         /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
+        public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
         /// Gets or sets the Pokemon this species represents.

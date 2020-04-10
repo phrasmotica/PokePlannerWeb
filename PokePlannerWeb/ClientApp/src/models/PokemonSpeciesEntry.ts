@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 import { Generation } from "./Generation"
 import { Pokemon } from "./Pokemon"
 
@@ -19,7 +19,7 @@ export class PokemonSpeciesEntry {
     /**
      * The display names of the species.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The Pokemon this species represents.
@@ -42,7 +42,7 @@ export class PokemonSpeciesEntry {
     constructor(
         speciesId: number,
         name: string,
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         varieties: Pokemon[],
         generation: Generation,
         validity: number[]

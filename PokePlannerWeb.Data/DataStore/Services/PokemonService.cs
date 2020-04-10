@@ -125,7 +125,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the display names of the given Pokemon.
         /// </summary>
-        private async Task<IEnumerable<DisplayName>> GetDisplayNames(Pokemon pokemon)
+        private async Task<IEnumerable<LocalString>> GetDisplayNames(Pokemon pokemon)
         {
             // take display names from primary form, if any
             var primaryForm = await PokemonFormsService.Upsert(pokemon.Forms[0]);

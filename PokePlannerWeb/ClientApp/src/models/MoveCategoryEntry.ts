@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 
 /**
  * Represents a move category in the data store.
@@ -17,7 +17,7 @@ export class MoveCategoryEntry {
     /**
      * The descriptions of the move category.
      */
-    descriptions: DisplayName[]
+    descriptions: LocalString[]
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ export class MoveCategoryEntry {
     constructor(
         moveTargetId: number,
         name: string,
-        descriptions: DisplayName[]
+        descriptions: LocalString[]
     ) {
         this.moveTargetId = moveTargetId
         this.name = name

@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets this stat's display names.
         /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
+        public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
         /// Gets or sets whether this stat is a battle-only stat.

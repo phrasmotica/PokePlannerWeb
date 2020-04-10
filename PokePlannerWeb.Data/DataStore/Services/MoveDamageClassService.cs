@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override Task<MoveDamageClassEntry> ConvertToEntry(MoveDamageClass damageClass)
         {
-            var displayNames = damageClass.Names.ToDisplayNames();
+            var displayNames = damageClass.Names.Localise();
 
             return Task.FromResult(new MoveDamageClassEntry
             {

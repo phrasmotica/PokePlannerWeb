@@ -134,9 +134,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns this Pokemon species's display names.
         /// </summary>
-        private IEnumerable<DisplayName> GetDisplayNames(PokemonSpecies species)
+        private IEnumerable<LocalString> GetDisplayNames(PokemonSpecies species)
         {
-            return species.Names.ToDisplayNames().ToList();
+            return species.Names.Localise().ToList();
         }
 
         /// <summary>

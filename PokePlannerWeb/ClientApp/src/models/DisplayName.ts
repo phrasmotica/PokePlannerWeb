@@ -1,7 +1,7 @@
 /**
- * Represents a display name for a given language.
+ * Represents a localised string.
  */
-export interface DisplayName {
+export interface LocalString {
     /**
      * The language of the display name.
      */

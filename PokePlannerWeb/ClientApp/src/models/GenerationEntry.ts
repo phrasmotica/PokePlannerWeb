@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 
 /**
  * Represents a generation in the data store.
@@ -17,7 +17,7 @@ export class GenerationEntry {
     /**
      * The display names of the generation.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ export class GenerationEntry {
     constructor(
         generationId: number,
         name: string,
-        displayNames: DisplayName[]
+        displayNames: LocalString[]
     ) {
         this.generationId = generationId
         this.name = name

@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 import { Move } from "./Move"
 import { PokemonForm } from "./PokemonForm"
 import { Type } from "./Type"
@@ -21,7 +21,7 @@ export class PokemonEntry {
     /**
      * The display names of the Pokemon's primary form.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The URL of the Pokemon's front default sprite.
@@ -59,7 +59,7 @@ export class PokemonEntry {
     constructor(
         pokemonId: number,
         name: string,
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         spriteUrl: string,
         shinySpriteUrl: string,
         forms: PokemonForm[],

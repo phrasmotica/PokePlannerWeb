@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 import { MoveDamageClass } from "./MoveDamageClass"
 import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
@@ -21,7 +21,7 @@ export class MoveEntry {
     /**
      * The display names of the move.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The type of the move.
@@ -69,7 +69,7 @@ export class MoveEntry {
     constructor(
         moveId: number,
         name: string,
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         type: Type,
         category: MoveCategory,
         power: number | null,

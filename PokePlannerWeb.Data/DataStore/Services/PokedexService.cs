@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override Task<PokedexEntry> ConvertToEntry(Pokedex pokedex)
         {
-            var displayNames = pokedex.Names.ToDisplayNames();
+            var displayNames = pokedex.Names.Localise();
 
             return Task.FromResult(new PokedexEntry
             {

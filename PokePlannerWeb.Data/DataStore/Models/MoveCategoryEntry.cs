@@ -15,6 +15,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the descriptions of the move category.
         /// </summary>
-        public List<DisplayName> Descriptions { get; set; }
+        public List<LocalString> Descriptions { get; set; }
     }
 }

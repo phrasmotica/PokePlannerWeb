@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override Task<GenerationEntry> ConvertToEntry(Generation generation)
         {
-            var displayNames = generation.Names.ToDisplayNames();
+            var displayNames = generation.Names.Localise();
 
             return Task.FromResult(new GenerationEntry
             {

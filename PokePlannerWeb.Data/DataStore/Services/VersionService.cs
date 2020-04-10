@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override Task<VersionEntry> ConvertToEntry(Version version)
         {
-            var displayNames = version.Names.ToDisplayNames();
+            var displayNames = version.Names.Localise();
 
             return Task.FromResult(new VersionEntry
             {

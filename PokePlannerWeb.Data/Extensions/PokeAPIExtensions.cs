@@ -11,14 +11,6 @@ namespace PokePlannerWeb.Data.Extensions
     public static class PokeAPIExtensions
     {
         /// <summary>
-        /// Returns the display names of this Pokemon form.
-        /// </summary>
-        public static IEnumerable<DisplayName> GetDisplayNames(this PokemonForm pokemonForm)
-        {
-            return pokemonForm.Names.ToDisplayNames();
-        }
-
-        /// <summary>
         /// Returns the name from the given list of names in the given locale.
         /// </summary>
         public static string GetName(this List<Names> names, string locale = "en")
@@ -27,19 +19,19 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
-        /// Returns this collection of names as a collection of DisplayNames.
+        /// Returns this collection of names as a collection of localised strings.
         /// </summary>
-        public static IEnumerable<DisplayName> ToDisplayNames(this IEnumerable<Names> names)
+        public static IEnumerable<LocalString> Localise(this IEnumerable<Names> names)
         {
-            return names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Name });
+            return names.Select(n => new LocalString { Language = n.Language.Name, Name = n.Name });
         }
 
         /// <summary>
-        /// Returns this collection of descriptions as a collection of DisplayNames.
+        /// Returns this collection of descriptions as a collection of localised strings.
         /// </summary>
-        public static IEnumerable<DisplayName> ToDisplayNames(this IEnumerable<Descriptions> names)
+        public static IEnumerable<LocalString> Localise(this IEnumerable<Descriptions> names)
         {
-            return names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Description });
+            return names.Select(n => new LocalString { Language = n.Language.Name, Name = n.Description });
         }
 
         /// <summary>

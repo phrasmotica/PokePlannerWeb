@@ -32,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override Task<StatEntry> ConvertToEntry(Stat stat)
         {
-            var displayNames = stat.Names.ToDisplayNames();
+            var displayNames = stat.Names.Localise();
 
             return Task.FromResult(new StatEntry
             {

@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./DisplayName"
 
 /**
  * Represents a move damage class in the data store.
@@ -17,7 +17,7 @@ export class MoveDamageClassEntry {
     /**
      * The display names of the move damage class.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ export class MoveDamageClassEntry {
     constructor(
         moveDamageClassId: number,
         name: string,
-        displayNames: DisplayName[]
+        displayNames: LocalString[]
     ) {
         this.moveDamageClassId = moveDamageClassId
         this.name = name

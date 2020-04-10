@@ -62,7 +62,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     Id = versionGroup.VersionGroupId,
                     Name = versionGroup.Name
                 },
-                DisplayNames = pokemonForm.GetDisplayNames().ToList(),
+                DisplayNames = pokemonForm.Names.Localise().ToList(),
                 SpriteUrl = GetSpriteUrl(pokemonForm),
                 ShinySpriteUrl = GetShinySpriteUrl(pokemonForm),
                 Types = types.ToList(),

@@ -164,7 +164,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the display names of the given encounter.
         /// </summary>
-        private async Task<IEnumerable<DisplayName>> GetDisplayNames(LocationAreaEncounter encounter)
+        private async Task<IEnumerable<LocalString>> GetDisplayNames(LocationAreaEncounter encounter)
         {
             var locationArea = await LocationAreasService.Upsert(encounter.LocationArea);
             var locationAreaNames = locationArea.DisplayNames;
@@ -186,7 +186,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     name += $" ({locationAreaName})";
                 }
 
-                return new DisplayName
+                return new LocalString
                 {
                     Language = l,
                     Name = name
