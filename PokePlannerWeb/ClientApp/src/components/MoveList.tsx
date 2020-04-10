@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
+import { ListGroup, ListGroupItem, Button, Collapse, FormGroup, Input, Label } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
@@ -29,6 +29,11 @@ interface IMoveListProps extends IHasCommon {
 
 interface IMoveListState {
     /**
+     * Whether to only show moves with STAB.
+     */
+    stabOnly: boolean
+
+    /**
      * The moves to show.
      */
     moves: MoveEntry[]
@@ -51,6 +56,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     constructor(props: IMoveListProps) {
         super(props)
         this.state = {
+            stabOnly: false,
             moves: [],
             loadingMoves: false,
             movesAreOpen: []
@@ -78,11 +84,53 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     render() {
+        // TODO: add filter by type/STAB/(non-)damaging/power/etc
         return (
-            <div style={{ marginTop: 4 }}>
-                {this.renderMoves()}
+            <div>
+                <div style={{ marginTop: 4 }}>
+                    {this.renderFilters()}
+                </div>
+
+                <div style={{ marginTop: 4 }}>
+                    {this.renderMoves()}
+                </div>
             </div>
         )
+    }
+
+    /**
+     * Renders the filters.
+     */
+    renderFilters() {
+        let stabId = "stabCheckbox" + this.props.index
+
+        return (
+            <div className="flex">
+                <FormGroup check>
+                    <Input
+                        type="checkbox"
+                        id={stabId}
+                        checked={this.state.stabOnly}
+                        onChange={() => this.toggleStabOnly()} />
+
+                    <Label for={stabId} check>
+                        <span title="Only show moves with STAB (same-type attack bonus)">
+                            STAB only
+                        </span>
+                    </Label>
+                </FormGroup>
+            </div>
+        )
+    }
+
+
+    /**
+     * Toggles the STAB only filter.
+     */
+    toggleStabOnly() {
+        this.setState(previousState => ({
+            stabOnly: !previousState.stabOnly
+        }))
     }
 
     /**
@@ -99,7 +147,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             )
         }
 
-        let moves = this.state.moves
+        let moves = this.getMovesToShow()
         if (this.props.showMoves && moves.length > 0) {
             let rows = []
             for (let row = 0; row < moves.length; row++) {
@@ -108,7 +156,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let moveNameElement = <span>{moveName}</span>
 
-                let isStab = move.isDamaging() && this.props.typeIds.includes(move.type.id)
+                let isStab = this.isStab(move)
                 if (isStab) {
                     moveNameElement = <span><b>{moveName}</b></span>
                 }
@@ -189,6 +237,26 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 </ListGroupItem>
             </ListGroup>
         )
+    }
+
+    /**
+     * Returns the moves to display.
+     */
+    getMovesToShow() {
+        let moves = this.state.moves
+
+        if (this.state.stabOnly) {
+            moves = moves.filter(m => this.isStab(m))
+        }
+
+        return moves
+    }
+
+    /**
+     * Returns whether the given move has STAB.
+     */
+    isStab(move: MoveEntry) {
+        return move.isDamaging() && this.props.typeIds.includes(move.type.id)
     }
 
     /**
