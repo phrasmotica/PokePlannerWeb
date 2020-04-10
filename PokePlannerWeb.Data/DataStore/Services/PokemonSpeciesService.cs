@@ -50,7 +50,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a Pokemon species entry for the given Pokemon.
+        /// Returns a Pokemon species entry for the given Pokemon species.
         /// </summary>
         protected override async Task<PokemonSpeciesEntry> ConvertToEntry(PokemonSpecies species)
         {

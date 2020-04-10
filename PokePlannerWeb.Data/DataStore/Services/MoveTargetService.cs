@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a version entry for the given version.
+        /// Returns a move target entry for the given move target.
         /// </summary>
         protected override Task<MoveTargetEntry> ConvertToEntry(MoveTarget target)
         {

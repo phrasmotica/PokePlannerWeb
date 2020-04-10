@@ -43,7 +43,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a Pokemon forms entry for the given Pokemon.
+        /// Returns a Pokemon form entry for the given Pokemon form.
         /// </summary>
         protected override async Task<PokemonFormEntry> ConvertToEntry(PokemonForm pokemonForm)
         {

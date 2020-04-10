@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a Type entry for the given Type.
+        /// Returns a generation entry for the given generation.
         /// </summary>
         protected override Task<GenerationEntry> ConvertToEntry(Generation generation)
         {

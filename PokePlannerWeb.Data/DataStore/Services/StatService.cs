@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a Type entry for the given Type.
+        /// Returns a stat entry for the given stat.
         /// </summary>
         protected override Task<StatEntry> ConvertToEntry(Stat stat)
         {

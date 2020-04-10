@@ -49,7 +49,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a version group entry for the given Pokemon.
+        /// Returns a version group entry for the given version group.
         /// </summary>
         protected override async Task<VersionGroupEntry> ConvertToEntry(VersionGroup versionGroup)
         {
