@@ -30,7 +30,7 @@ export class MoveEntry {
     /**
      * The move's base power.
      */
-    power: number | undefined
+    power: number | null
 
     /**
      * The damage class of the move.
@@ -40,12 +40,12 @@ export class MoveEntry {
     /**
      * The move's power.
      */
-    accuracy: number | undefined
+    accuracy: number | null
 
     /**
      * The move's maximum number of power points.
      */
-    pp: number | undefined
+    pp: number | null
 
     /**
      * The move's priority.
@@ -65,10 +65,10 @@ export class MoveEntry {
         name: string,
         displayNames: DisplayName[],
         type: Type,
-        power: number | undefined,
+        power: number | null,
         damageClass: MoveDamageClass,
-        accuracy: number | undefined,
-        pp: number | undefined,
+        accuracy: number | null,
+        pp: number | null,
         priority: number,
         target: MoveTarget
     ) {
