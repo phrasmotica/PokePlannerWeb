@@ -75,6 +75,11 @@ namespace PokePlannerWeb
             services.AddSingleton<EncountersService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EvolutionChainEntry>(dataStoreSettings.EvolutionChainCollectionName)
+            );
+            services.AddSingleton<EvolutionChainService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationCollectionName)
             );
             services.AddSingleton<GenerationService>();
@@ -170,6 +175,11 @@ namespace PokePlannerWeb
             // create cache services
             var cacheSourceFactory = new CacheSourceFactory();
             var cacheSettings = Configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<EvolutionChain>(cacheSettings.EvolutionChainCollectionName)
+            );
+            services.AddSingleton<EvolutionChainCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Generation>(cacheSettings.GenerationCollectionName)

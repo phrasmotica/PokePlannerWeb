@@ -143,7 +143,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public virtual async Task<TEntry> Upsert(UrlNavigation<TSource> res)
         {
-            var source = await PokeApi.Get(res);
+            var source = await CacheService.Upsert(res);
             return await Upsert(source);
         }
 
@@ -168,7 +168,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<UrlNavigation<TSource>> resources)
         {
-            var sources = await PokeApi.Get(resources);
+            var sources = await CacheService.UpsertMany(resources);
             return await UpsertMany(sources);
         }
 

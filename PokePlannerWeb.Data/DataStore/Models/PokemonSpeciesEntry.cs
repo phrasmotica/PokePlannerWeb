@@ -29,6 +29,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public Generation Generation { get; set; }
 
         /// <summary>
+        /// Gets or sets the species' evolution chain.
+        /// </summary>
+        public EvolutionChain EvolutionChain { get; set; }
+
+        /// <summary>
         /// Gets or sets the IDs of the version groups where this Pokemon species is valid.
         /// </summary>
         public List<int> Validity { get; set; }

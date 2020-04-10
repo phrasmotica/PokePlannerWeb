@@ -11,6 +11,11 @@
         public string EncounterCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of evolution chains.
+        /// </summary>
+        public string EvolutionChainCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of generations.
         /// </summary>
         public string GenerationCollectionName { get; set; }
@@ -95,6 +100,11 @@
         /// The name of the collection of encounters.
         /// </summary>
         string EncounterCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of evolution chains.
+        /// </summary>
+        string EvolutionChainCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of generations.

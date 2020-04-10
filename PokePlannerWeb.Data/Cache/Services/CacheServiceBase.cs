@@ -131,6 +131,22 @@ namespace PokePlannerWeb.Data.Cache.Services
             return await Upsert(resource.Id);
         }
 
+        /// <summary>
+        /// Creates new entries for the given API resources and returns them.
+        /// </summary>
+        public virtual async Task<IEnumerable<TResource>> UpsertMany(IEnumerable<UrlNavigation<TResource>> resources)
+        {
+            var entryList = new List<TResource>();
+
+            foreach (var res in resources)
+            {
+                var entry = await Upsert(res);
+                entryList.Add(entry);
+            }
+
+            return entryList;
+        }
+
         #endregion
 
         #region Helpers
