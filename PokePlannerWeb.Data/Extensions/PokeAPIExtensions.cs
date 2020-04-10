@@ -35,6 +35,14 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
+        /// Returns this collection of descriptions as a collection of DisplayNames.
+        /// </summary>
+        public static IEnumerable<DisplayName> ToDisplayNames(this IEnumerable<Descriptions> names)
+        {
+            return names.Select(n => new DisplayName { Language = n.Language.Name, Name = n.Description });
+        }
+
+        /// <summary>
         /// Returns resources for all the versions spanned by this list of encounters.
         /// </summary>
         public static IEnumerable<NamedApiResource<Version>> GetDistinctVersions(this IEnumerable<LocationAreaEncounter> encounters)

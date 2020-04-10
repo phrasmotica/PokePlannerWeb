@@ -26,6 +26,11 @@
         public string LocationAreaCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of move categories.
+        /// </summary>
+        public string MoveCategoryCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of moves.
         /// </summary>
         public string MoveCollectionName { get; set; }
@@ -105,6 +110,11 @@
         /// The name of the collection of location areas.
         /// </summary>
         string LocationAreaCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of move categories.
+        /// </summary>
+        string MoveCategoryCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of moves.
