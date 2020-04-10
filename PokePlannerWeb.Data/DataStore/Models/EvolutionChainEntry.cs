@@ -10,6 +10,6 @@
         /// </summary>
         public int EvolutionChainId => Key;
 
-        // TODO: make this useful
+        // TODO: make this useful now that EvolutionTrigger is being stored
     }
 }

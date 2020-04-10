@@ -131,6 +131,12 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<EvolutionChainService>, NullLogger<EvolutionChainService>>();
             services.AddSingleton<EvolutionChainService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EvolutionTriggerEntry>(dataStoreSettings.EvolutionTriggerCollectionName)
+            );
+            services.AddSingleton<ILogger<EvolutionTriggerService>, NullLogger<EvolutionTriggerService>>();
+            services.AddSingleton<EvolutionTriggerService>();
         }
 
         /// <summary>
@@ -157,6 +163,12 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<EvolutionChainCacheService>, NullLogger<EvolutionChainCacheService>>();
             services.AddSingleton<EvolutionChainCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EvolutionTrigger>(cacheSettings.EvolutionTriggerCollectionName)
+            );
+            services.AddSingleton<ILogger<EvolutionTriggerCacheService>, NullLogger<EvolutionTriggerCacheService>>();
+            services.AddSingleton<EvolutionTriggerCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Generation>(cacheSettings.GenerationCollectionName)

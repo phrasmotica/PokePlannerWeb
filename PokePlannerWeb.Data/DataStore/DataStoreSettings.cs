@@ -16,6 +16,11 @@
         public string EvolutionChainCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of evolution triggers.
+        /// </summary>
+        public string EvolutionTriggerCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of generations.
         /// </summary>
         public string GenerationCollectionName { get; set; }
@@ -105,6 +110,11 @@
         /// The name of the collection of evolution chains.
         /// </summary>
         string EvolutionChainCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of evolution triggers.
+        /// </summary>
+        string EvolutionTriggerCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of generations.
