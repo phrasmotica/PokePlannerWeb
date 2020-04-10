@@ -23,7 +23,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static IEnumerable<LocalString> Localise(this IEnumerable<Names> names)
         {
-            return names.Select(n => new LocalString { Language = n.Language.Name, Name = n.Name });
+            return names.Select(n => new LocalString { Language = n.Language.Name, Value = n.Name });
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace PokePlannerWeb.Data.Extensions
         /// </summary>
         public static IEnumerable<LocalString> Localise(this IEnumerable<Descriptions> names)
         {
-            return names.Select(n => new LocalString { Language = n.Language.Name, Name = n.Description });
+            return names.Select(n => new LocalString { Language = n.Language.Name, Value = n.Description });
         }
 
         /// <summary>

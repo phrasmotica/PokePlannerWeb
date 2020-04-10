@@ -178,9 +178,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             var displayNames = availableLocales.Select(l =>
             {
-                var name = locationNames.Single(n => n.Language == l).Name;
+                var name = locationNames.Single(n => n.Language == l).Value;
 
-                var locationAreaName = locationAreaNames.Single(n => n.Language == l).Name;
+                var locationAreaName = locationAreaNames.Single(n => n.Language == l).Value;
                 if (!string.IsNullOrEmpty(locationAreaName))
                 {
                     name += $" ({locationAreaName})";
@@ -189,7 +189,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 return new LocalString
                 {
                     Language = l,
-                    Name = name
+                    Value = name
                 };
             });
 

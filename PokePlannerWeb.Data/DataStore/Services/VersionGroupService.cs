@@ -144,7 +144,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     nv2, (n1, n2) => new LocalString
                     {
                         Language = n1.Language,
-                        Name = n1.Name + "/" + n2.Name
+                        Value = n1.Value + "/" + n2.Value
                     }
                 ).ToList()
             );

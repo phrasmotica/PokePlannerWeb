@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { Move } from "./Move"
 import { PokemonForm } from "./PokemonForm"
 import { Type } from "./Type"
@@ -113,7 +113,7 @@ export class PokemonEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 
     /**

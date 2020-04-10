@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { MoveDamageClass } from "./MoveDamageClass"
 import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
@@ -138,6 +138,6 @@ export class MoveEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 }

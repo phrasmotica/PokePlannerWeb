@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { Generation } from "./Generation"
 import { Pokemon } from "./Pokemon"
 
@@ -81,7 +81,7 @@ export class PokemonSpeciesEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 
     /**

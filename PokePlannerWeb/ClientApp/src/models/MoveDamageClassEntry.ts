@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 
 /**
  * Represents a move damage class in the data store.
@@ -54,6 +54,6 @@ export class MoveDamageClassEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 }

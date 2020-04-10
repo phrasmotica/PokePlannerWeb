@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { Generation } from "./Generation"
 import { Pokedex } from "./Pokedex"
 import { Version } from "./Version"
@@ -89,6 +89,6 @@ export class VersionGroupEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 }

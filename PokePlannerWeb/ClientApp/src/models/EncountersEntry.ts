@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { WithId } from "./WithId"
 
 /**
@@ -60,6 +60,6 @@ export class EncounterEntry {
             console.warn(`Encounter is missing display name in locale '${locale}'`)
         }
 
-        return localName?.name
+        return localName?.value
     }
 }

@@ -3,12 +3,12 @@
  */
 export interface LocalString {
     /**
-     * The language of the display name.
+     * The language of the string.
      */
     language: string
 
     /**
-     * The display name.
+     * The string to display.
      */
-    name: string
+    value: string
 }

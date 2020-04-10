@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 
 /**
  * Represents a generation in the data store.
@@ -54,7 +54,7 @@ export class GenerationEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 
     /**
@@ -69,7 +69,7 @@ export class GenerationEntry {
         }
 
         if (locale === "en") {
-            let shortName = localName?.name.replace("Generation ", "")
+            let shortName = localName?.value.replace("Generation ", "")
             return shortName
         }
 
@@ -77,6 +77,6 @@ export class GenerationEntry {
             `Message to the developer: figure out generation short names in locale '${locale}'`
         )
 
-        return localName?.name
+        return localName?.value
     }
 }

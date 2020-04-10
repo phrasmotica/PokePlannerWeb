@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { EfficacyMap } from "./EfficacyMap"
 import { Generation } from "./Generation"
 

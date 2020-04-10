@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public string GetDisplayName(string locale = "en")
         {
-            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Name;
+            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Value;
         }
     }
 }

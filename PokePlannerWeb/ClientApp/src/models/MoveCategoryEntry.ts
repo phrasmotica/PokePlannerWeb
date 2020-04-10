@@ -1,4 +1,4 @@
-import { LocalString } from "./DisplayName"
+import { LocalString } from "./LocalString"
 
 /**
  * Represents a move category in the data store.
@@ -54,6 +54,6 @@ export class MoveCategoryEntry {
             )
         }
 
-        return localDesc?.name
+        return localDesc?.value
     }
 }
