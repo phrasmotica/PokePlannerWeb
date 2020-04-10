@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
@@ -35,6 +36,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly TypeService TypeService;
 
         /// <summary>
+        /// The version group service.
+        /// </summary>
+        private readonly VersionGroupService VersionGroupService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public MoveService(
@@ -45,12 +51,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
             MoveDamageClassService moveDamageClassService,
             MoveTargetService moveTargetService,
             TypeService typeService,
+            VersionGroupService versionGroupService,
             ILogger<MoveService> logger) : base(dataStoreSource, pokeApi, moveCacheService, logger)
         {
             MoveCategoryService = moveCategoryService;
             MoveDamageClassService = moveDamageClassService;
             MoveTargetService = moveTargetService;
             TypeService = typeService;
+            VersionGroupService = versionGroupService;
         }
 
         #region Entry conversion methods
@@ -61,6 +69,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<MoveEntry> ConvertToEntry(Move move)
         {
             var displayNames = move.Names.Localise();
+            var flavourTextEntries = await GetFlavourTextEntries(move);
             var type = await TypeService.Upsert(move.Type);
             var category = await MoveCategoryService.Upsert(move.Meta.Category);
             var damageClass = await MoveDamageClassService.Upsert(move.DamageClass);
@@ -71,6 +80,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Key = move.Id,
                 Name = move.Name,
                 DisplayNames = displayNames.ToList(),
+                FlavourTextEntries = flavourTextEntries.ToList(),
                 Type = new Type
                 {
                     Id = type.TypeId,
@@ -96,6 +106,38 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     Name = target.Name
                 }
             };
+        }
+
+        #endregion
+
+        #region Helper methods
+
+        /// <summary>
+        /// Returns flavour text entries for the given move, indexed by version group ID.
+        /// </summary>
+        private async Task<IEnumerable<WithId<LocalString[]>>> GetFlavourTextEntries(Move move)
+        {
+            var descriptionsList = new List<WithId<LocalString[]>>();
+
+            if (move.FlavorTextEntries.Any())
+            {
+                foreach (var vg in await VersionGroupService.GetAll())
+                {
+                    var relevantDescriptions = move.FlavorTextEntries.Where(f => f.VersionGroup.Name == vg.Name);
+                    if (relevantDescriptions.Any())
+                    {
+                        var descriptions = relevantDescriptions.Select(d => new LocalString
+                        {
+                            Language = d.Language.Name,
+                            Value = d.FlavorText
+                        });
+
+                        descriptionsList.Add(new WithId<LocalString[]>(vg.VersionGroupId, descriptions.ToArray()));
+                    }
+                }
+            }
+
+            return descriptionsList;
         }
 
         #endregion

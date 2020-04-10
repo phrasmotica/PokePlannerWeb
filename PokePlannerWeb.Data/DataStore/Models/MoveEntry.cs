@@ -19,6 +19,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
+        /// Gets or sets the flavour text entries of the move, indexed by version group ID.
+        /// </summary>
+        public List<WithId<LocalString[]>> FlavourTextEntries { get; set; }
+
+        /// <summary>
         /// Gets or sets the type of the move.
         /// </summary>
         public Type Type { get; set; }
