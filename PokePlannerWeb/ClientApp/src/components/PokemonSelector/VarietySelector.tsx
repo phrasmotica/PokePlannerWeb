@@ -85,10 +85,6 @@ export class VarietySelector
             return []
         }
 
-        // TODO: sometimes names of varieties of the previously-selected species are rendered
-        // repro: select darkrai -> shaymin -> sky shaymin -> arceus
-        // "Sky Shaymin" is shown despite Arceus clearly being selected
-        // Clear button works as expected
         return this.props.entries.map(variety => {
             let label = species?.getDisplayName("en") ?? "-"
 
@@ -107,7 +103,7 @@ export class VarietySelector
      * Returns a string describing the type of entry being displayed.
      */
     getEntryType(): string {
-        return "form"
+        return "variety"
     }
 
     /**
