@@ -1,9 +1,7 @@
-﻿using System.Linq;
+﻿using System;
 using System.Text.RegularExpressions;
 using MongoDB.Bson.Serialization.Conventions;
-using PokeApiNet;
 using PokePlannerWeb.Data.DataStore.Models;
-using Environment = System.Environment;
 
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
@@ -13,30 +11,16 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
     public class DataStoreSourceFactory
     {
         /// <summary>
-        /// Types whose fields should not be serialised if they have default values assigned.
-        /// </summary>
-        private static readonly System.Type[] IgnoreDefaultValuesTypes =
-        {
-            typeof(Generation),
-            typeof(Pokedex),
-            typeof(Pokemon),
-            typeof(PokemonForm),
-            typeof(Type),
-            typeof(Version),
-            typeof(VersionGroup)
-        };
-
-        /// <summary>
         /// The connection string to the database instance.
         /// </summary>
         private readonly string ConnectionString = Environment.GetEnvironmentVariable(
-            "PokePlannerWebConnectionString", System.EnvironmentVariableTarget.Machine);
+            "PokePlannerWebConnectionString", EnvironmentVariableTarget.Machine);
 
         /// <summary>
         /// The private key of the database.
         /// </summary>
         private readonly string PrivateKey = Environment.GetEnvironmentVariable(
-            "PokePlannerWebPrivateKey", System.EnvironmentVariableTarget.Machine);
+            "PokePlannerWebPrivateKey", EnvironmentVariableTarget.Machine);
 
         /// <summary>
         /// The name of the database.
@@ -70,10 +54,10 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
                 {
                     new IgnoreIfDefaultConvention(true)
                 },
-                t => IgnoreDefaultValuesTypes.Contains(t)
+                t => true
             );
 
-            // ignore extra values for all types
+            // ignore extra values of certain types
             ConventionRegistry.Register(
                 "IgnoreExtra",
                 new ConventionPack

@@ -49,7 +49,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a version group entry for the given Pokemon.
+        /// Returns a version group entry for the given version group.
         /// </summary>
         protected override async Task<VersionGroupEntry> ConvertToEntry(VersionGroup versionGroup)
         {
@@ -135,16 +135,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the display names of the given version group in all locales.
         /// </summary>
-        private async Task<IEnumerable<DisplayName>> GetDisplayNames(VersionGroup versionGroup)
+        private async Task<IEnumerable<LocalString>> GetDisplayNames(VersionGroup versionGroup)
         {
             var versions = await VersionsService.UpsertMany(versionGroup.Versions);
             var versionsNames = versions.Select(v => v.DisplayNames.OrderBy(n => n.Language).ToList());
             var namesList = versionsNames.Aggregate(
                 (nv1, nv2) => nv1.Zip(
-                    nv2, (n1, n2) => new DisplayName
+                    nv2, (n1, n2) => new LocalString
                     {
                         Language = n1.Language,
-                        Name = n1.Name + "/" + n2.Name
+                        Value = n1.Value + "/" + n2.Value
                     }
                 ).ToList()
             );

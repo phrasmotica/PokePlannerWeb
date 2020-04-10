@@ -26,7 +26,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the display names of the encounter.
         /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
+        public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
         /// Gets or sets the encounter chances indexed by version ID.

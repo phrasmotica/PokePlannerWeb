@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { WithId } from "./WithId"
 
 /**
@@ -23,7 +23,7 @@ export class EncounterEntry {
     /**
      * The display names of the encounter.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The encounter chances indexed by version ID.
@@ -34,7 +34,7 @@ export class EncounterEntry {
      * Constructor.
      */
     constructor(
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         chances: WithId<number>[]
     ) {
         this.displayNames = displayNames
@@ -60,6 +60,6 @@ export class EncounterEntry {
             console.warn(`Encounter is missing display name in locale '${locale}'`)
         }
 
-        return localName?.name
+        return localName?.value
     }
 }

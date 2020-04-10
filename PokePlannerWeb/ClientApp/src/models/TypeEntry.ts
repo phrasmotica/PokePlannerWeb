@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { EfficacyMap } from "./EfficacyMap"
 import { Generation } from "./Generation"
 
@@ -19,7 +19,7 @@ export interface TypeEntry {
     /**
      * The display names of the type.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * Whether the type is concrete.

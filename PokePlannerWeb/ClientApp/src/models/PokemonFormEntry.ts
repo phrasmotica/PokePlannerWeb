@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { Type } from "./Type"
 import { VersionGroup } from "./VersionGroup"
 import { WithId } from "./WithId"
@@ -25,7 +25,7 @@ export class PokemonFormEntry {
     /**
      * The display names of the Pokemon form.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The version group in which the Pokemon form was introduced.
@@ -59,7 +59,7 @@ export class PokemonFormEntry {
         formId: number,
         name: string,
         isMega: boolean,
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         versionGroup: VersionGroup,
         spriteUrl: string,
         shinySpriteUrl: string,
@@ -112,7 +112,7 @@ export class PokemonFormEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 
     /**

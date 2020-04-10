@@ -1,0 +1,23 @@
+﻿$buttonSize: 40px;
+.selector-button {
+    height: $buttonSize;
+    width: $buttonSize;
+    padding: 0.375rem;
+}
+
+$filterButtonSize: 38px;
+.filter-button {
+    height: $filterButtonSize;
+    width: $filterButtonSize;
+    padding: 0.375rem;
+}
+
+.filter-tooltip > .tooltip > .tooltip-inner {
+    padding: 0.25rem;
+}
+
+$iconSize: 1.5rem;
+.selector-button-icon {
+    height: $iconSize;
+    width: $iconSize;
+}

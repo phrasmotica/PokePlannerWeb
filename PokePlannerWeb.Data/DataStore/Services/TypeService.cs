@@ -47,7 +47,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<TypeEntry> ConvertToEntry(Type type)
         {
-            var displayNames = type.Names.ToDisplayNames();
+            var displayNames = type.Names.Localise();
             var efficacyMap = await GetEfficacyMap(type);
             var generation = await GenerationsService.Upsert(type.Generation);
 

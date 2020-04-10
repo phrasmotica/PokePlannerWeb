@@ -28,11 +28,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a Type entry for the given Type.
+        /// Returns a generation entry for the given generation.
         /// </summary>
         protected override Task<GenerationEntry> ConvertToEntry(Generation generation)
         {
-            var displayNames = generation.Names.ToDisplayNames();
+            var displayNames = generation.Names.Localise();
 
             return Task.FromResult(new GenerationEntry
             {
@@ -52,7 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<GenerationEntry[]> GetAll()
         {
             var allGenerations = await UpsertAll();
-            return allGenerations.ToArray();
+            return allGenerations.OrderBy(g => g.Id).ToArray();
         }
 
         /// <summary>

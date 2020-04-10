@@ -92,6 +92,26 @@ namespace PokePlannerWeb
             services.AddSingleton<MachineService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveCategoryEntry>(dataStoreSettings.MoveCategoryCollectionName)
+            );
+            services.AddSingleton<MoveCategoryService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveDamageClassEntry>(dataStoreSettings.MoveDamageClassCollectionName)
+            );
+            services.AddSingleton<MoveDamageClassService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
+            );
+            services.AddSingleton<MoveService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveTargetEntry>(dataStoreSettings.MoveTargetCollectionName)
+            );
+            services.AddSingleton<MoveTargetService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<PokedexEntry>(dataStoreSettings.PokedexCollectionName)
             );
             services.AddSingleton<PokedexService>();
@@ -165,6 +185,26 @@ namespace PokePlannerWeb
                 cacheSourceFactory.Create<Location>(cacheSettings.LocationCollectionName)
             );
             services.AddSingleton<LocationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
+            );
+            services.AddSingleton<MoveCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
+            );
+            services.AddSingleton<MoveCategoryCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
+            );
+            services.AddSingleton<MoveDamageClassCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<MoveTarget>(cacheSettings.MoveTargetCollectionName)
+            );
+            services.AddSingleton<MoveTargetCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)

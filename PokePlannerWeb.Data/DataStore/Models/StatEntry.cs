@@ -16,7 +16,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets this stat's display names.
         /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
+        public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
         /// Gets or sets whether this stat is a battle-only stat.
@@ -28,7 +28,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public string GetDisplayName(string locale = "en")
         {
-            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Name;
+            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Value;
         }
     }
 }

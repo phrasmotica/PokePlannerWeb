@@ -15,6 +15,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the display names of the pokedex.
         /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
+        public List<LocalString> DisplayNames { get; set; }
     }
 }

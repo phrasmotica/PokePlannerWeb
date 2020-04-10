@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using MongoDB.Bson.Serialization.Conventions;
 using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Cache.Abstractions
@@ -37,7 +38,34 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
                 return new CosmosDbCacheSource<TEntry>(ConnectionString, PrivateKey, DatabaseName, collectionName);
             }
 
+            ConfigureMongoDb();
             return new MongoDbCacheSource<TEntry>(ConnectionString, DatabaseName, collectionName);
+        }
+
+        /// <summary>
+        /// Configures settings for Mongo DB.
+        /// </summary>
+        private void ConfigureMongoDb()
+        {
+            // ignore null values of all types
+            ConventionRegistry.Register(
+                "IgnoreIfDefault",
+                new ConventionPack
+                {
+                    new IgnoreIfDefaultConvention(true)
+                },
+                t => true
+            );
+
+            // ignore extra values of all types
+            ConventionRegistry.Register(
+                "IgnoreExtra",
+                new ConventionPack
+                {
+                    new IgnoreExtraElementsConvention(true)
+                },
+                t => true
+            );
         }
     }
 }

@@ -1,8 +1,13 @@
 ﻿import React, { Component } from "react"
+import { ListGroup, ListGroupItem } from "reactstrap"
+import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../models/EncountersEntry"
 
 import { IHasCommon } from "./CommonMembers"
+
+import "./CaptureLocations.scss"
+import "./TeamBuilder.scss"
 
 interface ICaptureLocationsProps extends IHasCommon {
     /**
@@ -62,29 +67,39 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     render() {
-        return this.renderCaptureLocations()
+        return (
+            <div style={{ marginTop: 4 }}>
+                {this.renderCaptureLocations()}
+            </div>
+        )
     }
 
     renderCaptureLocations() {
         if (this.state.loadingLocations) {
             return (
-                <div>
-                    Loading...
-                </div>
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        Loading...
+                    </ListGroupItem>
+                </ListGroup>
             )
         }
 
         let encountersElement = (
-            <div>
-                -
-            </div>
+            <ListGroup className="overflow-y">
+                <ListGroupItem>
+                    -
+                </ListGroupItem>
+            </ListGroup>
         )
 
         if (this.props.showLocations && this.hasPokemon()) {
             encountersElement = (
-                <div>
-                    No capture locations in this version group
-                </div>
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        No capture locations in this version group
+                    </ListGroupItem>
+                </ListGroup>
             )
 
             let locations = this.state.locations
@@ -99,23 +114,20 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
                 let items = []
                 for (let row = 0; row < encountersData.length; row++) {
-                    // ensure each headers have unique IDs between all instances
-                    let id = `locations${this.props.index}row${row}`
                     let encounter = encountersData[row]
-
                     let displayName = encounter.getDisplayName("en") ?? `(encounter)${row}`
 
                     items.push(
-                        <div key={id}>
+                        <ListGroupItem key={key(encounter)}>
                             {displayName}
-                        </div>
+                        </ListGroupItem>
                     )
                 }
 
                 return (
-                    <div>
+                    <ListGroup className="overflow-y">
                         {items}
-                    </div>
+                    </ListGroup>
                 )
             }
         }

@@ -1,4 +1,4 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./LocalString"
 import { Generation } from "./Generation"
 import { Pokedex } from "./Pokedex"
 import { Version } from "./Version"
@@ -25,7 +25,7 @@ export class VersionGroupEntry {
     /**
      * The display names of the version group.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The generation the version group belongs to.
@@ -49,7 +49,7 @@ export class VersionGroupEntry {
         versionGroupId: number,
         name: string,
         order: number,
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         generation: Generation,
         versions: Version[],
         pokedexes: Pokedex[]
@@ -89,6 +89,6 @@ export class VersionGroupEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 }

@@ -21,7 +21,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the display names of the version group.
         /// </summary>
-        public List<DisplayName> DisplayNames { get; set; }
+        public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
         /// Gets or set the generation the version group belongs to.

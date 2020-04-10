@@ -1,18 +1,18 @@
 ﻿namespace PokePlannerWeb.Data.DataStore
 {
     /// <summary>
-    /// Represents a display name for a given language.
+    /// Represents a localised string.
     /// </summary>
-    public class DisplayName
+    public class LocalString
     {
         /// <summary>
-        /// The language of the display name.
+        /// The language of the string.
         /// </summary>
         public string Language { get; set; }
 
         /// <summary>
-        /// The display name.
+        /// The string to display.
         /// </summary>
-        public string Name { get; set; }
+        public string Value { get; set; }
     }
 }

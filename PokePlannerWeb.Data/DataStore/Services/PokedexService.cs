@@ -28,11 +28,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #region Entry conversion methods
 
         /// <summary>
-        /// Returns a version entry for the given version.
+        /// Returns a pokedex entry for the given pokedex.
         /// </summary>
         protected override Task<PokedexEntry> ConvertToEntry(Pokedex pokedex)
         {
-            var displayNames = pokedex.Names.ToDisplayNames();
+            var displayNames = pokedex.Names.Localise();
 
             return Task.FromResult(new PokedexEntry
             {

@@ -24,6 +24,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public string ShinySpriteUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the display names of this Pokemon's primary form.
+        /// </summary>
+        public List<LocalString> DisplayNames { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon's forms.
         /// </summary>
         public List<PokemonForm> Forms { get; set; }
@@ -37,5 +42,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets this Pokemon's base stats indexed by version group ID.
         /// </summary>
         public List<WithId<int[]>> BaseStats { get; set; }
+
+        /// <summary>
+        /// Gets or sets this Pokemon's moves indexed by version group ID.
+        /// </summary>
+        public List<WithId<Move[]>> Moves { get; set; }
     }
 }

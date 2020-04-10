@@ -39,7 +39,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<LocationAreaEntry> ConvertToEntry(LocationArea locationArea)
         {
-            var displayNames = locationArea.Names.ToDisplayNames();
+            var displayNames = locationArea.Names.Localise();
             var location = await GetLocation(locationArea);
 
             return new LocationAreaEntry

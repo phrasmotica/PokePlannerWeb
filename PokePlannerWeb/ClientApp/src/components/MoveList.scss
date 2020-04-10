@@ -1,0 +1,29 @@
+﻿.list-group-item {
+    display: block;
+    padding: 0.25rem 0.5rem;
+}
+
+.list-group-item > .btn {
+    font-weight: unset;
+    font-size: unset;
+    padding: unset;
+}
+
+$size: 40px;
+.damage-class {
+    height: $size;
+    width: $size;
+
+    &-small {
+        height: 2 * $size / 3;
+        width: 2 * $size / 3;
+    }
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.text-align-center {
+    text-align: center;
+}

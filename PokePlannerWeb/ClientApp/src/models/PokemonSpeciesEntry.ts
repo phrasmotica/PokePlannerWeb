@@ -1,4 +1,5 @@
-import { DisplayName } from "./DisplayName"
+import { LocalString } from "./LocalString"
+import { Generation } from "./Generation"
 import { Pokemon } from "./Pokemon"
 
 /**
@@ -18,12 +19,17 @@ export class PokemonSpeciesEntry {
     /**
      * The display names of the species.
      */
-    displayNames: DisplayName[]
+    displayNames: LocalString[]
 
     /**
      * The Pokemon this species represents.
      */
     varieties: Pokemon[]
+
+    /**
+     * The generation in which this species was introduced.
+     */
+    generation: Generation
 
     /**
      * The IDs of the version groups where this species is valid.
@@ -36,14 +42,16 @@ export class PokemonSpeciesEntry {
     constructor(
         speciesId: number,
         name: string,
-        displayNames: DisplayName[],
+        displayNames: LocalString[],
         varieties: Pokemon[],
+        generation: Generation,
         validity: number[]
     ) {
         this.speciesId = speciesId
         this.name = name
         this.displayNames = displayNames
         this.varieties = varieties
+        this.generation = generation
         this.validity = validity
     }
 
@@ -56,6 +64,7 @@ export class PokemonSpeciesEntry {
             species.name,
             species.displayNames,
             species.varieties,
+            species.generation,
             species.validity
         )
     }
@@ -72,7 +81,7 @@ export class PokemonSpeciesEntry {
             )
         }
 
-        return localName?.name
+        return localName?.value
     }
 
     /**
