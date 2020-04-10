@@ -33,15 +33,19 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
   * [x] Show sprite
     * [x] Toggle between default and shiny
   * [x] Show base stats
+  * [ ] Show abilities
   * [x] Show defensive type efficacy
   * [x] Show move learnset
     * [x] Show move type/damage class
     * [x] Show move power/accuracy/PP
+    * [ ] Show move learn method
     * [x] Filter by same type
     * [ ] Filter by learn method
     * [ ] Open move in MoveDex
   * [x] Show encounter locations
     * [ ] Open route in RouteDex
+  * [ ] Show evolution chain
+    * [ ] Open chain members in selector
 * [x] Toggle tooltips on/off
   * [x] Save toggle in cookies
 * [ ] Save/unsave team (requires login)
