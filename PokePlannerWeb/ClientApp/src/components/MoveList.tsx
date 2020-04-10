@@ -214,6 +214,16 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Renders the moves.
      */
     renderMoves() {
+        if (this.props.pokemonId === undefined) {
+            return (
+                <ListGroup className="overflow-y">
+                    <ListGroupItem>
+                        -
+                    </ListGroupItem>
+                </ListGroup>
+            )
+        }
+
         if (this.state.loadingMoves) {
             return (
                 <ListGroup className="overflow-y">
