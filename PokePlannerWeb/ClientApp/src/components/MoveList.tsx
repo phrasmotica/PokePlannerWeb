@@ -29,6 +29,11 @@ interface IMoveListProps extends IHasCommon {
 
 interface IMoveListState {
     /**
+     * Whether to only show moves with that deal damage.
+     */
+    damagingOnly: boolean
+
+    /**
      * Whether to only show moves with STAB.
      */
     stabOnly: boolean
@@ -56,6 +61,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     constructor(props: IMoveListProps) {
         super(props)
         this.state = {
+            damagingOnly: false,
             stabOnly: false,
             moves: [],
             loadingMoves: false,
@@ -102,10 +108,27 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Renders the filters.
      */
     renderFilters() {
+        let damagingId = "damagingCheckbox" + this.props.index
         let stabId = "stabCheckbox" + this.props.index
 
         return (
             <div className="flex">
+                <FormGroup
+                    check
+                    className="margin-right-small">
+                    <Input
+                        type="checkbox"
+                        id={damagingId}
+                        checked={this.state.damagingOnly}
+                        onChange={() => this.toggleDamagingOnly()} />
+
+                    <Label for={damagingId} check>
+                        <span title="Only show moves that deal damage">
+                            damaging only
+                        </span>
+                    </Label>
+                </FormGroup>
+
                 <FormGroup check>
                     <Input
                         type="checkbox"
@@ -123,6 +146,14 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         )
     }
 
+    /**
+     * Toggles the damaging only filter.
+     */
+    toggleDamagingOnly() {
+        this.setState(previousState => ({
+            damagingOnly: !previousState.damagingOnly
+        }))
+    }
 
     /**
      * Toggles the STAB only filter.
@@ -244,6 +275,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     getMovesToShow() {
         let moves = this.state.moves
+
+        if (this.state.damagingOnly) {
+            moves = moves.filter(m => m.isDamaging())
+        }
 
         if (this.state.stabOnly) {
             moves = moves.filter(m => this.isStab(m))
