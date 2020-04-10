@@ -17,6 +17,11 @@ interface IMoveListProps extends IHasCommon {
     pokemonId: number | undefined
 
     /**
+     * The IDs of types of the Pokemon to show moves for.
+     */
+    typeIds: number[]
+
+    /**
      * Whether to show the moves.
      */
     showMoves: boolean
@@ -101,12 +106,19 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
+                let moveNameElement = <span>{moveName}</span>
+
+                let isStab = move.isDamaging() && this.props.typeIds.includes(move.type.id)
+                if (isStab) {
+                    moveNameElement = <span><b>{moveName}</b></span>
+                }
+
                 const openInfoPane = () => this.toggleMoveOpen(row)
-                let moveNameElement = (
+                let moveNameButton = (
                     <Button
                         color="link"
                         onMouseUp={openInfoPane}>
-                        {moveName}
+                        {moveNameElement}
                     </Button>
                 )
 
@@ -121,11 +133,27 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let damageClassIcon = this.getDamageClassIcon(move.damageClass.id)
 
                 let isOpen = this.state.movesAreOpen[row]
+                let powerElement = <div>Power: {move.power ?? "-"}</div>
+                if (isStab) {
+                    // exclamation mark indicates the value is non-null
+                    let stabElement = (
+                        <span title="same-type attack bonus">
+                            <b>{move.power! * 1.5}</b>
+                        </span>
+                    )
+
+                    powerElement = (
+                        <div>
+                            Power: {move.power!} ({stabElement})
+                        </div>
+                    )
+                }
+
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
                         <div style={{ display: "flex" }}>
                             <div className="text-align-right margin-right-small">
-                                <div>Power: {move.power ?? "-"}</div>
+                                {powerElement}
                                 <div>Accuracy: {move.accuracy ?? "-"}</div>
                                 <div>PP: {move.pp ?? "-"}</div>
                             </div>
@@ -141,7 +169,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 rows.push(
                     <ListGroupItem key={key(move)}>
-                        {moveNameElement}
+                        {moveNameButton}
                         {infoPane}
                     </ListGroupItem>
                 )

@@ -103,6 +103,13 @@ export class MoveEntry {
     }
 
     /**
+     * Returns whether the move is damaging.
+     */
+    isDamaging(): boolean {
+        return this.power !== null
+    }
+
+    /**
      * Returns the move's display name in the given locale.
      */
     getDisplayName(locale: string): string | undefined {

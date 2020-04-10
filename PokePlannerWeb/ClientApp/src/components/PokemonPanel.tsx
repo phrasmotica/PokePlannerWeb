@@ -367,11 +367,19 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Renders the move list.
      */
     renderMoveList() {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
+        }
+
+        let typeIds = this.getEffectiveTypes().map(t => t.id)
+
         return (
             <MoveList
                 index={this.props.index}
-                pokemonId={this.state.variety?.pokemonId}
                 versionGroupId={this.props.versionGroupId}
+                pokemonId={this.state.variety?.pokemonId}
+                typeIds={typeIds}
                 showMoves={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
         )
