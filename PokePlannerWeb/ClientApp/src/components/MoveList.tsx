@@ -4,7 +4,10 @@ import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
 import { IHasCommon } from "./CommonMembers"
+
 import { MoveEntry } from "../models/MoveEntry"
+
+import { CookieHelper } from "../util/CookieHelper"
 
 import "./MoveList.scss"
 import "./TeamBuilder.scss"
@@ -66,9 +69,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     constructor(props: IMoveListProps) {
         super(props)
         this.state = {
-            damagingOnly: false,
-            nonDamagingOnly: false,
-            sameTypeOnly: false,
+            damagingOnly: CookieHelper.getFlag(`damagingOnly${this.props.index}`),
+            nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${this.props.index}`),
+            sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${this.props.index}`),
             moves: [],
             loadingMoves: false,
             movesAreOpen: []
@@ -96,7 +99,6 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     render() {
-        // TODO: add filter by type/(non-)damaging/power/etc
         return (
             <div>
                 <div style={{ marginTop: 4 }}>
@@ -114,6 +116,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Renders the filters.
      */
     renderFilters() {
+        // TODO: filter by power and other metrics
+
         let damagingId = "damagingCheckbox" + this.props.index
         let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
@@ -173,6 +177,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Toggles the damaging only filter.
      */
     toggleDamagingOnly() {
+        CookieHelper.set(`damagingOnly${this.props.index}`, !this.state.damagingOnly)
+        CookieHelper.set(`nonDamagingOnly${this.props.index}`, false)
+
         this.setState(previousState => ({
             damagingOnly: !previousState.damagingOnly,
             nonDamagingOnly: false
@@ -183,6 +190,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Toggles the non-damaging only filter.
      */
     toggleNonDamagingOnly() {
+        CookieHelper.set(`damagingOnly${this.props.index}`, false)
+        CookieHelper.set(`nonDamagingOnly${this.props.index}`, !this.state.nonDamagingOnly)
+
         this.setState(previousState => ({
             damagingOnly: false,
             nonDamagingOnly: !previousState.nonDamagingOnly
@@ -193,6 +203,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Toggles the same type only filter.
      */
     toggleSameTypeOnly() {
+        CookieHelper.set(`sameTypeOnly${this.props.index}`, !this.state.sameTypeOnly)
+
         this.setState(previousState => ({
             sameTypeOnly: !previousState.sameTypeOnly
         }))
