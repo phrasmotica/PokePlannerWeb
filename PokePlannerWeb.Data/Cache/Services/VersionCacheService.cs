@@ -15,7 +15,7 @@ namespace PokePlannerWeb.Data.Cache.Services
         public VersionCacheService(
             INamedCacheSource<Version> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedCacheServiceBase<Version>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<VersionCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

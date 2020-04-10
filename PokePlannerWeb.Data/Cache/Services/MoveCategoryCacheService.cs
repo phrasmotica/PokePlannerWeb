@@ -15,7 +15,7 @@ namespace PokePlannerWeb.Data.Cache.Services
         public MoveCategoryCacheService(
             INamedCacheSource<MoveCategory> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedCacheServiceBase<MoveCategory>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<MoveCategoryCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

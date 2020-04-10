@@ -15,7 +15,7 @@ namespace PokePlannerWeb.Data.Cache.Services
         public MoveDamageClassCacheService(
             INamedCacheSource<MoveDamageClass> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedCacheServiceBase<MoveDamageClass>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<MoveDamageClassCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

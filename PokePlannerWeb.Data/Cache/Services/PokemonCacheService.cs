@@ -15,7 +15,7 @@ namespace PokePlannerWeb.Data.Cache.Services
         public PokemonCacheService(
             INamedCacheSource<Pokemon> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedCacheServiceBase<Pokemon>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<PokemonCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

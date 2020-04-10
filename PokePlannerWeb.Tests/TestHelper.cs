@@ -149,76 +149,91 @@ namespace PokePlannerWeb.Tests
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Generation>(cacheSettings.GenerationCollectionName)
             );
+            services.AddSingleton<ILogger<GenerationCacheService>, NullLogger<GenerationCacheService>>();
             services.AddSingleton<GenerationCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<LocationArea>(cacheSettings.LocationAreaCollectionName)
             );
+            services.AddSingleton<ILogger<LocationAreaCacheService>, NullLogger<LocationAreaCacheService>>();
             services.AddSingleton<LocationAreaCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Location>(cacheSettings.LocationCollectionName)
             );
+            services.AddSingleton<ILogger<LocationCacheService>, NullLogger<LocationCacheService>>();
             services.AddSingleton<LocationCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Move>(cacheSettings.MoveCollectionName)
             );
+            services.AddSingleton<ILogger<MoveCacheService>, NullLogger<MoveCacheService>>();
             services.AddSingleton<MoveCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
             );
+            services.AddSingleton<ILogger<MoveCategoryCacheService>, NullLogger<MoveCategoryCacheService>>();
             services.AddSingleton<MoveCategoryCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
             );
+            services.AddSingleton<ILogger<MoveDamageClassCacheService>, NullLogger<MoveDamageClassCacheService>>();
             services.AddSingleton<MoveDamageClassCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)
             );
+            services.AddSingleton<ILogger<MoveTargetCacheService>, NullLogger<MoveTargetCacheService>>();
             services.AddSingleton<MoveTargetCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Pokedex>(cacheSettings.PokedexCollectionName)
             );
+            services.AddSingleton<ILogger<PokedexCacheService>, NullLogger<PokedexCacheService>>();
             services.AddSingleton<PokedexCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Pokemon>(cacheSettings.PokemonCollectionName)
             );
+            services.AddSingleton<ILogger<PokemonCacheService>, NullLogger<PokemonCacheService>>();
             services.AddSingleton<PokemonCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<PokemonForm>(cacheSettings.PokemonFormCollectionName)
             );
+            services.AddSingleton<ILogger<PokemonFormCacheService>, NullLogger<PokemonFormCacheService>>();
             services.AddSingleton<PokemonFormCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<PokemonSpecies>(cacheSettings.PokemonSpeciesCollectionName)
             );
+            services.AddSingleton<ILogger<PokemonSpeciesCacheService>, NullLogger<PokemonSpeciesCacheService>>();
             services.AddSingleton<PokemonSpeciesCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Stat>(cacheSettings.StatCollectionName)
             );
+            services.AddSingleton<ILogger<StatCacheService>, NullLogger<StatCacheService>>();
             services.AddSingleton<StatCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<PokeApiNet.Type>(cacheSettings.TypeCollectionName)
             );
+            services.AddSingleton<ILogger<TypeCacheService>, NullLogger<TypeCacheService>>();
             services.AddSingleton<TypeCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<PokeApiNet.Version>(cacheSettings.VersionCollectionName)
             );
+            services.AddSingleton<ILogger<VersionCacheService>, NullLogger<VersionCacheService>>();
             services.AddSingleton<VersionCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<VersionGroup>(cacheSettings.VersionGroupCollectionName)
             );
+            services.AddSingleton<ILogger<VersionGroupCacheService>, NullLogger<VersionGroupCacheService>>();
             services.AddSingleton<VersionGroupCacheService>();
         }
     }

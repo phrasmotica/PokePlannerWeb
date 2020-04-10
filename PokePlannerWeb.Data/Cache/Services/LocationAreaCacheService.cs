@@ -15,7 +15,7 @@ namespace PokePlannerWeb.Data.Cache.Services
         public LocationAreaCacheService(
             INamedCacheSource<LocationArea> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedCacheServiceBase<LocationArea>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<LocationAreaCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

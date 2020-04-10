@@ -15,7 +15,7 @@ namespace PokePlannerWeb.Data.Cache.Services
         public StatCacheService(
             INamedCacheSource<Stat> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<NamedCacheServiceBase<Stat>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<StatCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }
