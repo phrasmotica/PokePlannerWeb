@@ -153,12 +153,23 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      * Set species from props if necessary.
      */
     componentDidUpdate(previousProps: IPokemonSelectorProps) {
+        let index = this.props.index
+
         let defaultSpeciesId = this.props.defaultSpeciesId
         if (defaultSpeciesId !== undefined) {
             if (previousProps.defaultSpeciesId !== defaultSpeciesId) {
                 let speciesIds = this.props.species.map(s => s.speciesId)
                 if (speciesIds.includes(defaultSpeciesId)) {
                     this.setSpecies(defaultSpeciesId)
+
+                    // set cookie
+                    CookieHelper.set(`speciesId${this.props.index}`, defaultSpeciesId)
+                }
+                else {
+                    // remove cookies for species that isn't available
+                    CookieHelper.remove(`speciesId${index}`)
+                    CookieHelper.remove(`varietyId${index}`)
+                    CookieHelper.remove(`formId${index}`)
                 }
             }
         }
