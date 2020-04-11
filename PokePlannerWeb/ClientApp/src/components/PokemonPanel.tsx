@@ -99,8 +99,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     render() {
-        console.log(`Panel ${this.props.index}: render(${this.state.speciesId})`)
-
         // handlers
         const clearPokemon = () => this.clearPokemon()
         const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
