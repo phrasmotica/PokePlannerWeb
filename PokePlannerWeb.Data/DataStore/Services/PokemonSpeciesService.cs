@@ -18,7 +18,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The evolution chain service.
         /// </summary>
-        private readonly EvolutionChainCacheService EvolutionChainCacheService;
+        private readonly EvolutionChainService EvolutionChainService;
 
         /// <summary>
         /// The generation service.
@@ -42,13 +42,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
-            EvolutionChainCacheService evolutionChainCacheService,
+            EvolutionChainService evolutionChainService,
             GenerationService generationService,
             PokemonService pokemonService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
-            EvolutionChainCacheService = evolutionChainCacheService;
+            EvolutionChainService = evolutionChainService;
             GenerationService = generationService;
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;
@@ -181,8 +181,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<EvolutionChain> GetEvolutionChain(PokemonSpecies species)
         {
-            var evolutionChain = await EvolutionChainCacheService.Upsert(species.EvolutionChain);
-            return evolutionChain.Compress();
+            var entry = await EvolutionChainService.Upsert(species.EvolutionChain);
+            if (entry == null)
+            {
+                return null;
+            }
+
+            return new EvolutionChain
+            {
+                Id = entry.EvolutionChainId
+            };
         }
 
         /// <summary>

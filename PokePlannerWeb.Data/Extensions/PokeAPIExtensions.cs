@@ -11,16 +11,23 @@ namespace PokePlannerWeb.Data.Extensions
     public static class PokeAPIExtensions
     {
         /// <summary>
-        /// Returns null if this evolution chain has only one stage, else returns the whole chain.
+        /// Returns whether this evolution chain has only one stage.
         /// </summary>
-        public static EvolutionChain Compress(this EvolutionChain evolutionChain)
+        public static bool IsEmpty(this EvolutionChain evolutionChain)
         {
-            if (!evolutionChain.Chain.EvolvesTo.Any())
-            {
-                return null;
-            }
+            return !evolutionChain.Chain.EvolvesTo.Any();
+        }
 
-            return evolutionChain;
+        /// <summary>
+        /// Returns a minimal copy of this named API resource.
+        /// </summary>
+        public static T Minimise<T>(this T resource) where T : NamedApiResource, new()
+        {
+            return new T
+            {
+                Id = resource.Id,
+                Name = resource.Name
+            };
         }
 
         /// <summary>
