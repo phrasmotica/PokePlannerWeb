@@ -1,10 +1,12 @@
 ﻿import React, { Component } from "react"
+import { Button } from "reactstrap"
 
 import { IHasIndex } from "./CommonMembers"
 
-import { EvolutionChainEntry } from "../models/EvolutionChainEntry"
+import { EvolutionChainEntry, ChainLinkEntry } from "../models/EvolutionChainEntry"
 
 import "./EvolutionChain.scss"
+import key from "weak-key"
 
 interface IEvolutionChainProps extends IHasIndex {
     /**
@@ -16,6 +18,11 @@ interface IEvolutionChainProps extends IHasIndex {
      * Whether to show the evolution chain.
      */
     shouldShowChain: boolean
+
+    /**
+     * Handler for setting the species in the parent component.
+     */
+    setSpecies: (speciesId: number) => void
 }
 
 interface IEvolutionChainState {
@@ -74,6 +81,16 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
      * Renders the evolution chain.
      */
     renderEvolutionChain() {
+        if (!this.props.shouldShowChain) {
+            return (
+                <div
+                    className="flex-center evolution-chain"
+                    style={{ marginTop: 4 }}>
+                    -
+                </div>
+            )
+        }
+
         if (this.state.loadingChain) {
             return (
                 <div
@@ -95,26 +112,18 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             )
         }
 
-        let chainLinks = []
-        chainLinks.push(
-            <span>
-                {chain.species.name}
-            </span>
-        )
+        // base link
+        let chainLinks = [this.renderChainLink(chain)]
 
         while (chain.evolvesTo.length > 0) {
             chainLinks.push(
-                <span>
+                <span key={key(chain.species)}>
                     ->
                 </span>
             )
 
-            for (let s of chain.evolvesTo) {
-                chainLinks.push(
-                    <span>
-                        {s.species.name}
-                    </span>
-                )
+            for (let c of chain.evolvesTo) {
+                chainLinks.push(this.renderChainLink(c))
             }
 
             // TODO: recursively push for all items in chain.evolvesTo
@@ -127,6 +136,29 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
                 style={{ marginTop: 4 }}>
                 {chainLinks}
             </div>
+        )
+    }
+
+    /**
+     * Renders the chain link.
+     */
+    renderChainLink(link: ChainLinkEntry) {
+        let speciesId = link.species.id
+        let isCurrentSpecies = speciesId === this.props.speciesId
+        let speciesName = link.species.name
+
+        let nameElement = <span>{speciesName}</span>
+        if (isCurrentSpecies) {
+            nameElement = <span><b>{speciesName}</b></span>
+        }
+
+        return (
+            <Button
+                key={key(link)}
+                color="link"
+                onMouseUp={() => this.props.setSpecies(speciesId)}>
+                {nameElement}
+            </Button>
         )
     }
 

@@ -99,6 +99,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     render() {
+        console.log(`Panel ${this.props.index}: render(${this.state.speciesId})`)
+
         // handlers
         const clearPokemon = () => this.clearPokemon()
         const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
@@ -113,6 +115,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         index={this.props.index}
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
+                        defaultSpeciesId={this.state.speciesId}
                         ignoreValidity={this.props.ignoreValidity}
                         generations={this.props.generations}
                         hideTooltips={this.props.hideTooltips}
@@ -406,11 +409,14 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Renders the evolution chain.
      */
     renderEvolutionChain() {
+        const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
+
         return (
             <EvolutionChain
                 index={this.props.index}
                 speciesId={this.state.speciesId!}
-                shouldShowChain={this.shouldShowPokemon()} />
+                shouldShowChain={this.shouldShowPokemon()}
+                setSpecies={setSpecies} />
         )
     }
 

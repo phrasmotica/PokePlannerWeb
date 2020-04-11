@@ -27,6 +27,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     species: PokemonSpeciesEntry[]
 
     /**
+     * The ID of the species to be selected by default.
+     */
+    defaultSpeciesId: number | undefined
+
+    /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean
@@ -106,7 +111,6 @@ interface IPokemonSelectorState {
 
 /**
  * Component for selecting a Pokemon.
- * TODO: add filter rendering to SelectorBase
  */
 export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSelectorState> {
     constructor(props: IPokemonSelectorProps) {
@@ -145,6 +149,24 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         }
     }
 
+    /**
+     * Set species from props if necessary.
+     */
+    componentDidUpdate(previousProps: IPokemonSelectorProps) {
+        let defaultSpeciesId = this.props.defaultSpeciesId
+        if (defaultSpeciesId !== undefined) {
+            if (previousProps.defaultSpeciesId !== defaultSpeciesId) {
+                let speciesIds = this.props.species.map(s => s.speciesId)
+                if (speciesIds.includes(defaultSpeciesId)) {
+                    this.setSpecies(defaultSpeciesId)
+                }
+            }
+        }
+    }
+
+    /**
+     * Renders the component.
+     */
     render() {
         // sub-components
         let speciesSelect = this.renderSpeciesSelect()
@@ -162,7 +184,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         )
     }
 
-    // returns a box for selecting a species
+    /**
+     * Renders the species select box.
+     */
     renderSpeciesSelect() {
         let hasNoVariants = !this.hasSecondaryForms() && !this.hasSecondaryVarieties()
 
@@ -180,7 +204,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         )
     }
 
-    // returns a box for selecting a variety of the selected species
+    /**
+     * Renders the variety select box.
+     */
     renderVarietySelect() {
         let species = undefined
         if (this.state.speciesId !== undefined) {
@@ -206,7 +232,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         )
     }
 
-    // returns a box for selecting a form of the selected Pokemon
+    /**
+     * Renders the form select box.
+     */
     renderFormSelect() {
         let species = undefined
         if (this.state.speciesId !== undefined) {
@@ -445,7 +473,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         this.props.clearPokemon()
     }
 
-    // fetches the species varieties from SpeciesController
+    /**
+     * Fetches the species varieties from SpeciesController.
+     */
     async fetchVarieties(speciesId: number | undefined) {
         if (speciesId === undefined) {
             return
@@ -497,7 +527,9 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             })
     }
 
-    // fetches the forms of the varieties of the species with the given ID
+    /**
+     * Fetches the forms of the varieties of the species with the given ID.
+     */
     async fetchForms(speciesId: number) {
         if (speciesId <= 0) {
             return
