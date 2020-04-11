@@ -5,6 +5,7 @@ import key from "weak-key"
 
 import { CaptureLocations } from "./CaptureLocations"
 import { EfficacyList } from "./EfficacyList"
+import { EvolutionChain } from "./EvolutionChain"
 import { MoveList } from "./MoveList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
@@ -148,6 +149,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
                         <Tab eventKey="locations" title="Capture Locations">
                             {this.renderCaptureLocations()}
+                        </Tab>
+
+                        <Tab eventKey="evolution" title="Evolution">
+                            {this.renderEvolutionChain()}
                         </Tab>
                     </Tabs>
                 </div>
@@ -394,6 +399,18 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 versionGroupId={this.props.versionGroupId}
                 showLocations={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
+        )
+    }
+
+    /**
+     * Renders the evolution chain.
+     */
+    renderEvolutionChain() {
+        return (
+            <EvolutionChain
+                index={this.props.index}
+                speciesId={this.state.speciesId!}
+                shouldShowChain={this.shouldShowPokemon()} />
         )
     }
 
