@@ -412,7 +412,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return (
             <EvolutionChain
                 index={this.props.index}
-                speciesId={this.state.speciesId!}
+                speciesId={this.state.speciesId}
                 shouldShowChain={this.shouldShowPokemon()}
                 setSpecies={setSpecies} />
         )

@@ -12,7 +12,7 @@ interface IEvolutionChainProps extends IHasIndex {
     /**
      * The ID of the species this chain is being shown for.
      */
-    speciesId: number
+    speciesId: number | undefined
 
     /**
      * Whether to show the evolution chain.
@@ -53,31 +53,47 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
     }
 
     /**
-     * Fetch the evolution chain.
+     * Fetch the evolution chain if necessary.
      */
     componentDidUpdate(previousProps: IEvolutionChainProps) {
+        // don't fetch if we're loading
         if (this.state.loadingChain) {
             return
         }
 
-        // fetch chain if species has changed
         let previousSpeciesId = previousProps.speciesId
         let speciesId = this.props.speciesId
         let speciesChanged = previousSpeciesId !== speciesId
 
+        // species is the same, don't fetch
+        if (!speciesChanged) {
+            return
+        }
+
+        // species has changed, fetch chain if we don't have one
         let chain = this.state.evolutionChain
-        if (speciesChanged && chain === undefined) {
+        if (chain === undefined) {
             this.fetchEvolutionChain()
             return
         }
 
-        if (chain === undefined) {
+        // if we've got a new species, fetch chain
+        if (previousSpeciesId === undefined && speciesId !== undefined) {
+            this.fetchEvolutionChain()
             return
         }
 
-        // fetch chain if new species has a different chain
+        // if we've now got no species, clear chain
+        if (previousSpeciesId !== undefined && speciesId === undefined) {
+            this.fetchEvolutionChain()
+            return
+        }
+
+        // species has changed - only fetch if new one is in a different chain
         let chainSpeciesIds = chain.getSpeciesIds()
-        let chainChanged = chainSpeciesIds.includes(previousSpeciesId) !== chainSpeciesIds.includes(speciesId)
+        let previousSpeciesInChain = chainSpeciesIds.includes(previousSpeciesId!)
+        let speciesInChain = chainSpeciesIds.includes(speciesId!)
+        let chainChanged = previousSpeciesInChain !== speciesInChain
 
         if (chainChanged) {
             this.fetchEvolutionChain()
@@ -342,6 +358,9 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
                     this.setState({ evolutionChain: undefined })
                 })
                 .finally(() => this.setState({ loadingChain: false }))
+        }
+        else {
+            this.setState({ evolutionChain: undefined })
         }
     }
 
