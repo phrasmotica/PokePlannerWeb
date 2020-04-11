@@ -1,12 +1,12 @@
 ﻿import React, { Component } from "react"
 import { Button } from "reactstrap"
+import key from "weak-key"
 
 import { IHasIndex } from "./CommonMembers"
 
 import { EvolutionChainEntry, ChainLinkEntry, EvolutionDetailEntry } from "../models/EvolutionChainEntry"
 
 import "./EvolutionChain.scss"
-import key from "weak-key"
 
 interface IEvolutionChainProps extends IHasIndex {
     /**
@@ -55,18 +55,31 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
     /**
      * Fetch the evolution chain.
      */
-    componentDidUpdate() {
+    componentDidUpdate(previousProps: IEvolutionChainProps) {
         if (this.state.loadingChain) {
             return
         }
 
-        // fetch chain if new species has a different chain
-        let chain = this.state.evolutionChain
+        // fetch chain if species has changed
+        let previousSpeciesId = previousProps.speciesId
         let speciesId = this.props.speciesId
-        let chainChanged = chain === undefined || !chain.getSpeciesIds().includes(speciesId)
+        let speciesChanged = previousSpeciesId !== speciesId
+
+        let chain = this.state.evolutionChain
+        if (speciesChanged && chain === undefined) {
+            this.fetchEvolutionChain()
+            return
+        }
+
+        if (chain === undefined) {
+            return
+        }
+
+        // fetch chain if new species has a different chain
+        let chainSpeciesIds = chain.getSpeciesIds()
+        let chainChanged = chainSpeciesIds.includes(previousSpeciesId) !== chainSpeciesIds.includes(speciesId)
 
         if (chainChanged) {
-            // TODO: species that don't evolve cause infinite loops. find out why
             this.fetchEvolutionChain()
         }
     }
@@ -324,8 +337,11 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
                     let concreteChain = EvolutionChainEntry.from(chain)
                     this.setState({ evolutionChain: concreteChain })
                 })
-                .catch(error => console.error(error))
-                .then(() => this.setState({ loadingChain: false }))
+                .catch(error => {
+                    console.error(error)
+                    this.setState({ evolutionChain: undefined })
+                })
+                .finally(() => this.setState({ loadingChain: false }))
         }
     }
 
