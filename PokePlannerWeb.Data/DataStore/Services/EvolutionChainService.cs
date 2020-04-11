@@ -21,6 +21,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly EvolutionTriggerCacheService EvolutionTriggerCacheService;
 
         /// <summary>
+        /// The item cache service.
+        /// </summary>
+        private readonly ItemCacheService ItemCacheService;
+
+        /// <summary>
         /// The location cache service.
         /// </summary>
         private readonly LocationCacheService LocationCacheService;
@@ -48,6 +53,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IPokeAPI pokeApi,
             EvolutionChainCacheService cacheService,
             EvolutionTriggerCacheService evolutionTriggerCacheService,
+            ItemCacheService itemCacheService,
             LocationCacheService locationCacheService,
             MoveCacheService moveCacheService,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
@@ -55,6 +61,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             ILogger<EvolutionChainService> logger) : base(dataStoreSource, pokeApi, cacheService, logger)
         {
             EvolutionTriggerCacheService = evolutionTriggerCacheService;
+            ItemCacheService = itemCacheService;
             LocationCacheService = locationCacheService;
             MoveCacheService = moveCacheService;
             PokemonSpeciesCacheService = pokemonSpeciesCacheService;
@@ -165,7 +172,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<EvolutionDetailEntry> CreateEvolutionDetailEntry(EvolutionDetail evolutionDetail)
         {
+            var item = await ItemCacheService.GetMinimal(evolutionDetail.Item);
             var trigger = await EvolutionTriggerCacheService.GetMinimal(evolutionDetail.Trigger);
+            var heldItem = await ItemCacheService.GetMinimal(evolutionDetail.HeldItem);
             var knownMove = await MoveCacheService.GetMinimal(evolutionDetail.KnownMove);
             var knownMoveType = await TypeCacheService.GetMinimal(evolutionDetail.KnownMoveType);
             var location = await LocationCacheService.GetMinimal(evolutionDetail.Location);
@@ -175,11 +184,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             return new EvolutionDetailEntry
             {
-                // TODO: create DB services for items
-                Item = null,
+                Item = item,
                 Trigger = trigger,
                 Gender = evolutionDetail.Gender,
-                HeldItem = null,
+                HeldItem = heldItem,
                 KnownMove = knownMove,
                 KnownMoveType = knownMoveType,
                 Location = location,
