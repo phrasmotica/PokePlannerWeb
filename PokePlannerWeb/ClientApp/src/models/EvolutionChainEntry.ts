@@ -1,6 +1,7 @@
 import { EvolutionTrigger } from "./EvolutionTrigger"
 import { Item } from "./Item"
 import { Move } from "./Move"
+import { Location } from "./Location"
 import { PokemonSpecies } from "./PokemonSpecies"
 import { Type } from "./Type"
 
@@ -202,7 +203,7 @@ export interface EvolutionDetailEntry {
     /**
      * The required time of day: day or night.
      */
-    timeOfDay: string
+    timeOfDay: string | null
 
     /**
      * The species for which this one must be traded.
