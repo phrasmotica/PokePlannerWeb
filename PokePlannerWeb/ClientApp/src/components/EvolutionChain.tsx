@@ -66,6 +66,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
         let chainChanged = chain === undefined || !chain.getSpeciesIds().includes(speciesId)
 
         if (chainChanged) {
+            // TODO: species that don't evolve cause infinite loops. find out why
             this.fetchEvolutionChain()
         }
     }
