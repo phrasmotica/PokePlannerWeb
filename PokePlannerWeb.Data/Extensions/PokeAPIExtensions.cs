@@ -19,9 +19,20 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
+        /// Returns a minimal copy of this API resource.
+        /// </summary>
+        public static T Minimise<T>(this T resource) where T : ResourceBase, new()
+        {
+            return new T
+            {
+                Id = resource.Id
+            };
+        }
+
+        /// <summary>
         /// Returns a minimal copy of this named API resource.
         /// </summary>
-        public static T Minimise<T>(this T resource) where T : NamedApiResource, new()
+        public static T MinimiseNamed<T>(this T resource) where T : NamedApiResource, new()
         {
             return new T
             {

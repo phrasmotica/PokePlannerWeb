@@ -14,7 +14,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// Service for managing a collection of entries in the data store.
     /// </summary>
     public abstract class ServiceBase<TSource, TEntry>
-        where TSource : ApiResource
+        where TSource : ApiResource, new()
         where TEntry : EntryBase
     {
         /// <summary>

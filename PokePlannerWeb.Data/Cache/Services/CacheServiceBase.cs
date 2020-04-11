@@ -5,13 +5,14 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Cache.Abstractions;
 using PokePlannerWeb.Data.Cache.Models;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Cache.Services
 {
     /// <summary>
     /// Service for managing a collection of PokeAPI resources in the cache.
     /// </summary>
-    public class CacheServiceBase<TResource> where TResource : ResourceBase
+    public class CacheServiceBase<TResource> where TResource : ResourceBase, new()
     {
         /// <summary>
         /// The cache source.
@@ -127,6 +128,11 @@ namespace PokePlannerWeb.Data.Cache.Services
         /// </summary>
         public virtual async Task<TResource> Upsert(UrlNavigation<TResource> res)
         {
+            if (res == null)
+            {
+                return null;
+            }
+
             var resource = await PokeApi.Get(res);
             return await Upsert(resource.Id);
         }
@@ -145,6 +151,15 @@ namespace PokePlannerWeb.Data.Cache.Services
             }
 
             return entryList;
+        }
+
+        /// <summary>
+        /// Returns a minimal copy of the given resource, caching the resource if needed.
+        /// </summary>
+        public virtual async Task<TResource> GetMinimal(UrlNavigation<TResource> res)
+        {
+            var resource = await Upsert(res);
+            return resource?.Minimise();
         }
 
         #endregion

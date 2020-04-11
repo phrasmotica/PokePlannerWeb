@@ -2,13 +2,14 @@
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Cache.Abstractions;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Cache.Services
 {
     /// <summary>
     /// Service for managing a collection of named PokeAPI resources in the cache.
     /// </summary>
-    public class NamedCacheServiceBase<TResource> : CacheServiceBase<TResource> where TResource : NamedApiResource
+    public class NamedCacheServiceBase<TResource> : CacheServiceBase<TResource> where TResource : NamedApiResource, new()
     {
         /// <summary>
         /// The cache source.
@@ -32,6 +33,11 @@ namespace PokePlannerWeb.Data.Cache.Services
         /// </summary>
         public override async Task<TResource> Upsert(UrlNavigation<TResource> res)
         {
+            if (res == null)
+            {
+                return null;
+            }
+
             var namedRes = res as NamedApiResource<TResource>;
 
             var name = namedRes.Name;
@@ -56,6 +62,15 @@ namespace PokePlannerWeb.Data.Cache.Services
             }
 
             return entry.Resource;
+        }
+
+        /// <summary>
+        /// Returns a minimal copy of the given resource, caching the resource if needed.
+        /// </summary>
+        public override async Task<TResource> GetMinimal(UrlNavigation<TResource> res)
+        {
+            var resource = await Upsert(res);
+            return resource?.MinimiseNamed();
         }
 
         #endregion
