@@ -107,6 +107,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Returns the evolution chain for the species with the given ID.
+        /// </summary>
+        public async Task<EvolutionChainEntry> GetBySpeciesId(int speciesId)
+        {
+            var species = await PokemonSpeciesCacheService.Upsert(speciesId);
+            return await Upsert(species.EvolutionChain);
+        }
+
+        /// <summary>
         /// Upserts the evolution chain from the given navigation property and returns it.
         /// </summary>
         public override async Task<EvolutionChainEntry> Upsert(UrlNavigation<EvolutionChain> evolutionChain)
