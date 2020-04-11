@@ -1,5 +1,6 @@
-import { LocalString } from "./LocalString"
+import { EvolutionChain } from "./EvolutionChain"
 import { Generation } from "./Generation"
+import { LocalString } from "./LocalString"
 import { Pokemon } from "./Pokemon"
 
 /**
@@ -32,6 +33,11 @@ export class PokemonSpeciesEntry {
     generation: Generation
 
     /**
+     * The species' evolution chain.
+     */
+    evolutionChain: EvolutionChain
+
+    /**
      * The IDs of the version groups where this species is valid.
      */
     validity: number[]
@@ -45,6 +51,7 @@ export class PokemonSpeciesEntry {
         displayNames: LocalString[],
         varieties: Pokemon[],
         generation: Generation,
+        evolutionChain: EvolutionChain,
         validity: number[]
     ) {
         this.speciesId = speciesId
@@ -52,6 +59,7 @@ export class PokemonSpeciesEntry {
         this.displayNames = displayNames
         this.varieties = varieties
         this.generation = generation
+        this.evolutionChain = evolutionChain
         this.validity = validity
     }
 
@@ -65,6 +73,7 @@ export class PokemonSpeciesEntry {
             species.displayNames,
             species.varieties,
             species.generation,
+            species.evolutionChain,
             species.validity
         )
     }

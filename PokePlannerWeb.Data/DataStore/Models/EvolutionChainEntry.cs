@@ -25,7 +25,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class ChainLinkEntry
     {
         /// <summary>
-        /// Whether or not this link is for a baby Pokemon. This would only ever be true on the base link.
+        /// Whether this link is for a baby Pokemon. Only ever true on the base link.
         /// </summary>
         public bool IsBaby { get; set; }
 
@@ -132,8 +132,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public Type PartyType { get; set; }
 
         /// <summary>
-        /// Gets or sets the required relation between the Pokémon's Attack and Defense
-        /// stats: 1 means Attack > Defense, 0 means Attack = Defense, -1 means Attack < Defense.
+        /// Gets or sets the required relation between the Pokémon's Attack and Defense stats:
+        /// 1 means Attack > Defense
+        /// 0 means Attack = Defense
+        /// -1 means Attack < Defense
         /// </summary>
         public int? RelativePhysicalStats { get; set; }
 
