@@ -7,7 +7,7 @@ import { Type } from "./Type"
 /**
  * Represents a evolution chain in the data store.
  */
-export interface EvolutionChainEntry {
+export class EvolutionChainEntry {
     /**
      * The ID of the evolution chain.
      */
@@ -17,12 +17,33 @@ export interface EvolutionChainEntry {
      * The evolution chain link.
      */
     chain: ChainLinkEntry
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        evolutionChainId: number,
+        chain: ChainLinkEntry
+    ) {
+        this.evolutionChainId = evolutionChainId
+        this.chain = chain
+    }
+
+    /**
+     * Returns an evolution chain created from the given entry.
+     */
+    static from(evolutionChain: EvolutionChainEntry) {
+        return new EvolutionChainEntry(
+            evolutionChain.evolutionChainId,
+            ChainLinkEntry.from(evolutionChain.chain)
+        )
+    }
 }
 
 /**
  * Represents a link to a species as part of an evolution chain.
  */
-export interface ChainLinkEntry {
+export class ChainLinkEntry {
     /**
      * Whether this link is for a baby Pokemon. Only ever true on the base link.
      */
@@ -42,6 +63,33 @@ export interface ChainLinkEntry {
      * A list of chain objects.
      */
     evolvesTo: ChainLinkEntry[]
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        isBaby: boolean,
+        species: PokemonSpecies,
+        evolutionDetails: EvolutionDetailEntry[],
+        evolvesTo: ChainLinkEntry[]
+    ) {
+        this.isBaby = isBaby
+        this.species = species
+        this.evolutionDetails = evolutionDetails
+        this.evolvesTo = evolvesTo
+    }
+
+    /**
+     * Returns a chain link created from the given entry.
+     */
+    static from(chainLink: ChainLinkEntry): ChainLinkEntry {
+        return new ChainLinkEntry(
+            chainLink.isBaby,
+            chainLink.species,
+            chainLink.evolutionDetails,
+            chainLink.evolvesTo.map(e => ChainLinkEntry.from(e))
+        )
+    }
 }
 
 /**
