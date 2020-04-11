@@ -288,7 +288,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
         }
 
         if (detail.timeOfDay !== null) {
-            items.push(<span>at {detail.timeOfDay}</span>)
+            items.push(<span>during {detail.timeOfDay}</span>)
         }
 
         if (detail.tradeSpecies !== null) {
