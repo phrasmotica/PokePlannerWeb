@@ -85,6 +85,11 @@ namespace PokePlannerWeb
             services.AddSingleton<EvolutionTriggerService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<ItemEntry>(dataStoreSettings.ItemCollectionName)
+            );
+            services.AddSingleton<ItemService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationCollectionName)
             );
             services.AddSingleton<GenerationService>();
@@ -195,6 +200,11 @@ namespace PokePlannerWeb
                 cacheSourceFactory.CreateNamed<Generation>(cacheSettings.GenerationCollectionName)
             );
             services.AddSingleton<GenerationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<Item>(cacheSettings.ItemCollectionName)
+            );
+            services.AddSingleton<ItemCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<LocationArea>(cacheSettings.LocationAreaCollectionName)

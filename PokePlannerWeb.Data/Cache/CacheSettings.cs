@@ -6,11 +6,6 @@
     public class CacheSettings : ICacheSettings
     {
         /// <summary>
-        /// The name of the collection of generations.
-        /// </summary>
-        public string GenerationCollectionName { get; set; }
-
-        /// <summary>
         /// The name of the collection of evolution chains.
         /// </summary>
         public string EvolutionChainCollectionName { get; set; }
@@ -19,6 +14,16 @@
         /// The name of the collection of evolution triggers.
         /// </summary>
         public string EvolutionTriggerCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of generations.
+        /// </summary>
+        public string GenerationCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of items.
+        /// </summary>
+        public string ItemCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of locations.
@@ -97,11 +102,6 @@
     public interface ICacheSettings
     {
         /// <summary>
-        /// The name of the collection of generations.
-        /// </summary>
-        string GenerationCollectionName { get; set; }
-
-        /// <summary>
         /// The name of the collection of evolution chains.
         /// </summary>
         string EvolutionChainCollectionName { get; set; }
@@ -110,6 +110,16 @@
         /// The name of the collection of evolution triggers.
         /// </summary>
         string EvolutionTriggerCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of generations.
+        /// </summary>
+        string GenerationCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of items.
+        /// </summary>
+        string ItemCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of locations.

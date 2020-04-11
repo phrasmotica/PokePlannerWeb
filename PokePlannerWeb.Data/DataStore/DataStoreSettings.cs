@@ -26,6 +26,11 @@
         public string GenerationCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of items.
+        /// </summary>
+        public string ItemCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of locations.
         /// </summary>
         public string LocationCollectionName { get; set; }
@@ -120,6 +125,11 @@
         /// The name of the collection of generations.
         /// </summary>
         string GenerationCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of items.
+        /// </summary>
+        string ItemCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of locations.
