@@ -18,7 +18,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The evolution chain service.
         /// </summary>
-        private readonly EvolutionChainService EvolutionChainService;
+        private readonly EvolutionChainCacheService EvolutionChainCacheService;
 
         /// <summary>
         /// The generation service.
@@ -42,13 +42,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
-            EvolutionChainService evolutionChainService,
+            EvolutionChainCacheService evolutionChainCacheService,
             GenerationService generationService,
             PokemonService pokemonService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
-            EvolutionChainService = evolutionChainService;
+            EvolutionChainCacheService = evolutionChainCacheService;
             GenerationService = generationService;
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;
@@ -77,10 +77,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     Id = generation.GenerationId,
                     Name = generation.Name
                 },
-                EvolutionChain = new EvolutionChain
-                {
-                    Id = evolutionChain.EvolutionChainId
-                },
+                EvolutionChain = evolutionChain,
                 Validity = validity.ToList()
             };
         }
@@ -182,9 +179,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the evolution chain of the given Pokemon species.
         /// </summary>
-        private async Task<EvolutionChainEntry> GetEvolutionChain(PokemonSpecies species)
+        private async Task<EvolutionChain> GetEvolutionChain(PokemonSpecies species)
         {
-            return await EvolutionChainService.Upsert(species.EvolutionChain);
+            var evolutionChain = await EvolutionChainCacheService.Upsert(species.EvolutionChain);
+            return evolutionChain.Compress();
         }
 
         /// <summary>

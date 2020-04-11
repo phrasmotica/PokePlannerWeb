@@ -11,6 +11,19 @@ namespace PokePlannerWeb.Data.Extensions
     public static class PokeAPIExtensions
     {
         /// <summary>
+        /// Returns null if this evolution chain has only one stage, else returns the whole chain.
+        /// </summary>
+        public static EvolutionChain Compress(this EvolutionChain evolutionChain)
+        {
+            if (!evolutionChain.Chain.EvolvesTo.Any())
+            {
+                return null;
+            }
+
+            return evolutionChain;
+        }
+
+        /// <summary>
         /// Returns the name from the given list of names in the given locale.
         /// </summary>
         public static string GetName(this List<Names> names, string locale = "en")
