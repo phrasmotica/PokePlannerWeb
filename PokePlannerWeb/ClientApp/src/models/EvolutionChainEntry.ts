@@ -38,6 +38,13 @@ export class EvolutionChainEntry {
             ChainLinkEntry.from(evolutionChain.chain)
         )
     }
+
+    /**
+     * Returns the IDs of the species in the chain.
+     */
+    getSpeciesIds(): number[] {
+        return this.chain.getSpeciesIds()
+    }
 }
 
 /**
@@ -89,6 +96,18 @@ export class ChainLinkEntry {
             chainLink.evolutionDetails,
             chainLink.evolvesTo.map(e => ChainLinkEntry.from(e))
         )
+    }
+
+    /**
+     * Returns the IDs of the species in the chain.
+     */
+    getSpeciesIds(): number[] {
+        if (this.evolvesTo.length <= 0) {
+            return [this.species.id]
+        }
+
+        let nextSpeciesIds = this.evolvesTo.flatMap(e => e.getSpeciesIds())
+        return [this.species.id, ...nextSpeciesIds]
     }
 }
 
