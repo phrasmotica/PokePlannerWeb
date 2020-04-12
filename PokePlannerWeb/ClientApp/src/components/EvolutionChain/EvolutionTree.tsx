@@ -1,17 +1,18 @@
-﻿import React, { Component } from "react"
+import React, { Component } from "react"
 import { Button } from "reactstrap"
 import key from "weak-key"
 
-import { EvolutionTree } from "./EvolutionTree"
-
 import { IHasIndex } from "../CommonMembers"
 
-import { EvolutionChainEntry, ChainLinkEntry, EvolutionDetailEntry } from "../../models/EvolutionChainEntry"
+import { ChainLinkEntry, EvolutionDetailEntry } from "../../models/EvolutionChainEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
-import "./EvolutionChain.scss"
+interface IEvolutionTreeProps extends IHasIndex {
+    /**
+     * The chain to render.
+     */
+    chain: ChainLinkEntry
 
-interface IEvolutionChainProps extends IHasIndex {
     /**
      * The ID of the species this chain is being shown for.
      */
@@ -33,125 +34,22 @@ interface IEvolutionChainProps extends IHasIndex {
     setSpecies: (speciesId: number) => void
 }
 
-interface IEvolutionChainState {
-    /**
-     * The evolution chain.
-     */
-    evolutionChain: EvolutionChainEntry | undefined
+interface IEvolutionTreeState {
 
-    /**
-     * Whether we're loading the evolution chain.
-     */
-    loadingChain: boolean
 }
 
 /**
- * Component for showing a set of stats as a graph.
+ * Component for rendering an evolution chain as a tree.
  */
-export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionChainState> {
-    /**
-     * Constructor.
-     */
-    constructor(props: IEvolutionChainProps) {
-        super(props)
-        this.state = {
-            evolutionChain: undefined,
-            loadingChain: false
-        }
-    }
-
-    /**
-     * Fetch the evolution chain if necessary.
-     */
-    componentDidUpdate(previousProps: IEvolutionChainProps) {
-        // don't fetch if we're loading
-        if (this.state.loadingChain) {
-            return
-        }
-
-        let previousSpeciesId = previousProps.speciesId
-        let speciesId = this.props.speciesId
-        let speciesChanged = previousSpeciesId !== speciesId
-
-        // species is the same, don't fetch
-        if (!speciesChanged) {
-            return
-        }
-
-        // species has changed, fetch chain if we don't have one
-        let chain = this.state.evolutionChain
-        if (chain === undefined) {
-            this.fetchEvolutionChain()
-            return
-        }
-
-        // if we've got a new species, fetch chain
-        if (previousSpeciesId === undefined && speciesId !== undefined) {
-            this.fetchEvolutionChain()
-            return
-        }
-
-        // if we've now got no species, clear chain
-        if (previousSpeciesId !== undefined && speciesId === undefined) {
-            this.fetchEvolutionChain()
-            return
-        }
-
-        // species has changed - only fetch if new one is in a different chain
-        let chainSpeciesIds = chain.getSpeciesIds()
-        let previousSpeciesInChain = chainSpeciesIds.includes(previousSpeciesId!)
-        let speciesInChain = chainSpeciesIds.includes(speciesId!)
-        let chainChanged = previousSpeciesInChain !== speciesInChain
-
-        if (chainChanged) {
-            this.fetchEvolutionChain()
-        }
-    }
-
+export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTreeState> {
     /**
      * Renders the component.
      */
     render() {
-        return this.renderEvolutionChain()
-    }
-
-    /**
-     * Renders the evolution chain.
-     */
-    renderEvolutionChain() {
-        if (!this.props.shouldShowChain) {
-            return (
-                <div className="flex-center evolution-chain">
-                    -
-                </div>
-            )
-        }
-
-        if (this.state.loadingChain) {
-            return (
-                <div className="flex-center evolution-chain">
-                    Loading...
-                </div>
-            )
-        }
-
-        let chain = this.state.evolutionChain?.chain
-        if (chain === undefined) {
-            return (
-                <div className="flex-center evolution-chain">
-                    this Pokemon does not evolve
-                </div>
-            )
-        }
-
         return (
-            <EvolutionTree
-                chain={chain}
-                index={this.props.index}
-                speciesId={this.props.speciesId}
-                showShinySprites={this.props.showShinySprites}
-                shouldShowChain={this.props.shouldShowChain}
-                setSpecies={(speciesId: number) => this.props.setSpecies(speciesId)} />
+            <div className="flex-center evolution-chain">
+                {this.renderTree(this.props.chain)}
+            </div>
         )
     }
 
@@ -159,46 +57,9 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
      * Renders the chain as a tree.
      */
     renderTree(chain: ChainLinkEntry) {
-        let depthListElements = []
-
-        let depthLists = chain.toDepthLists()
-        for (let list of depthLists) {
-            // arrows and evolution details
-            let transitionElements = []
-
-            // species name
-            let speciesElements = []
-
-            for (let i = 0; i < list.length; i++) {
-                let link = list[i]
-
-                if (link.evolutionDetails.length > 0) {
-                    transitionElements.push(this.renderTransition(link))
-                    if (i < list.length - 1) {
-                        transitionElements.push(<hr className="chain-separator"></hr>)
-                    }
-                }
-
-                speciesElements.push(this.renderChainLink(link))
-                if (i < list.length - 1) {
-                    speciesElements.push(<hr className="chain-separator"></hr>)
-                }
-            }
-
-            depthListElements.push(
-                <div>
-                    {transitionElements}
-                </div>
-            )
-
-            depthListElements.push(
-                <div>
-                    {speciesElements}
-                </div>
-            )
-        }
-
-        return depthListElements
+        // TODO: render a horizontal tree view where each child node
+        // can be expanded to view the evolution details
+        return this.renderDepthLists(chain)
     }
 
     /**
@@ -453,52 +314,5 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
                 {items}
             </div>
         )
-    }
-
-    /**
-     * Fetches the evolution chain of the species.
-     */
-    fetchEvolutionChain() {
-        let speciesId = this.props.speciesId
-        if (speciesId !== undefined) {
-            console.log(`Evolution chain ${this.props.index}: getting evolution chain for species ${speciesId}...`)
-
-            // loading begins
-            this.setState({ loadingChain: true })
-
-            // construct endpoint URL
-            let endpointUrl = this.constructEndpointUrl(speciesId)
-
-            // get evolution chain
-            fetch(endpointUrl)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response
-                    }
-
-                    throw new Error(`Evolution chain ${this.props.index}: tried to get evolution chain for species ${speciesId} but failed with status ${response.status}!`)
-                })
-                .then(response => response.json())
-                .then((chain: EvolutionChainEntry) => {
-                    let concreteChain = EvolutionChainEntry.from(chain)
-                    this.setState({ evolutionChain: concreteChain })
-                })
-                .catch(error => {
-                    console.error(error)
-                    this.setState({ evolutionChain: undefined })
-                })
-                .finally(() => this.setState({ loadingChain: false }))
-        }
-        else {
-            this.setState({ evolutionChain: undefined })
-        }
-    }
-
-    /**
-     * Returns the endpoint to use when fetching the evolution chain of the species with the given
-     * ID.
-     */
-    constructEndpointUrl(speciesId: number): string {
-        return `${process.env.REACT_APP_API_URL}/evolutionChain/${speciesId}`
     }
 }
