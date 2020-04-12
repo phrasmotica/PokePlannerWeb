@@ -142,26 +142,61 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             )
         }
 
-        // base link
-        let chainLinks = [this.renderChainLink(chain)]
-
-        while (chain.evolvesTo.length > 0) {
-            for (let c of chain.evolvesTo) {
-                chainLinks.push(this.renderTransition(c))
-                chainLinks.push(this.renderChainLink(c))
-            }
-
-            // TODO: recursively push for all items in chain.evolvesTo
-            chain = chain.evolvesTo[0]
-        }
-
+        // TODO: find a package for rendering a tree
         return (
             <div
                 className="flex-center evolution-chain"
                 style={{ marginTop: 4 }}>
-                {chainLinks}
+                {this.renderDepthLists(chain)}
             </div>
         )
+    }
+
+    /**
+     * Renders the chain as a list of its depth lists.
+     */
+    renderDepthLists(chain: ChainLinkEntry) {
+        let depthListElements = []
+
+        let depthLists = chain.toDepthLists()
+        for (let list of depthLists) {
+            // arrows and evolution details
+            let transitionElements = []
+
+            // species name
+            let speciesElements = []
+
+
+            for (let i = 0; i < list.length; i++) {
+                let link = list[i]
+
+                if (link.evolutionDetails.length > 0) {
+                    transitionElements.push(this.renderTransition(link))
+                    if (i < list.length - 1) {
+                        transitionElements.push(<hr className="chain-separator"></hr>)
+                    }
+                }
+
+                speciesElements.push(this.renderChainLink(link))
+                if (i < list.length - 1) {
+                    speciesElements.push(<hr className="chain-separator"></hr>)
+                }
+            }
+
+            depthListElements.push(
+                <div>
+                    {transitionElements}
+                </div>
+            )
+
+            depthListElements.push(
+                <div>
+                    {speciesElements}
+                </div>
+            )
+        }
+
+        return depthListElements
     }
 
     /**

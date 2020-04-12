@@ -7,10 +7,16 @@ $width: 370px;
 }
 
 .chain-member {
+    display: block;
     font-size: 10pt;
 }
 
 .transition {
     display: grid;
     text-align: center;
+}
+
+.chain-separator {
+    margin-top: 0;
+    margin-bottom: 0;
 }
