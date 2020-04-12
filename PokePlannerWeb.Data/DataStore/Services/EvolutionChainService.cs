@@ -46,6 +46,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly TypeCacheService TypeCacheService;
 
         /// <summary>
+        /// The Pokemon species service.
+        /// </summary>
+        private readonly PokemonSpeciesService PokemonSpeciesService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public EvolutionChainService(
@@ -58,6 +63,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             MoveCacheService moveCacheService,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
             TypeCacheService typeCacheService,
+            PokemonSpeciesService pokemonSpeciesService,
             ILogger<EvolutionChainService> logger) : base(dataStoreSource, pokeApi, cacheService, logger)
         {
             EvolutionTriggerCacheService = evolutionTriggerCacheService;
@@ -66,6 +72,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             MoveCacheService = moveCacheService;
             PokemonSpeciesCacheService = pokemonSpeciesCacheService;
             TypeCacheService = typeCacheService;
+            PokemonSpeciesService = pokemonSpeciesService;
         }
 
         #region Entry conversion methods
@@ -139,7 +146,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<ChainLinkEntry> CreateChainLinkEntry(ChainLink chainLink)
         {
-            var species = await PokemonSpeciesCacheService.GetMinimal(chainLink.Species);
+            var species = await PokemonSpeciesService.Upsert(chainLink.Species);
             var evolutionDetailEntries = await CreateEvolutionDetailEntries(chainLink.EvolutionDetails);
 
             var evolvesTo = new List<ChainLinkEntry>();
@@ -154,7 +161,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return new ChainLinkEntry
             {
                 IsBaby = chainLink.IsBaby,
-                Species = species,
+                Species = species.ForEvolutionChain(),
                 EvolutionDetails = evolutionDetailEntries.ToList(),
                 EvolvesTo = evolvesTo
             };

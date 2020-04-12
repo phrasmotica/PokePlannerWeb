@@ -22,7 +22,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
     /// <summary>
     /// Represents a link to a species as part of an evolution chain.
     /// </summary>
-    // TODO: add species display names/sprites/etc to this entry so we can use them in the UI
     public class ChainLinkEntry
     {
         /// <summary>
@@ -33,7 +32,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// The Pokemon species at this stage of the evolution chain.
         /// </summary>
-        public PokemonSpecies Species { get; set; }
+        public PokemonSpeciesEntry Species { get; set; }
 
         /// <summary>
         /// All details regarding the specific details of the referenced species evolution.

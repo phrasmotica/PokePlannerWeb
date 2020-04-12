@@ -47,5 +47,22 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the IDs of the version groups where this Pokemon species is valid.
         /// </summary>
         public List<int> Validity { get; set; }
+
+        /// <summary>
+        /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
+        /// </summary>
+        public PokemonSpeciesEntry ForEvolutionChain()
+        {
+            return new PokemonSpeciesEntry
+            {
+                Key = Key,
+                Name = Name,
+                SpriteUrl = SpriteUrl,
+                ShinySpriteUrl = ShinySpriteUrl,
+                DisplayNames = DisplayNames,
+                Generation = Generation,
+                Validity = Validity
+            };
+        }
     }
 }
