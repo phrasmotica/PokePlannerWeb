@@ -44,8 +44,11 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [ ] Open move in MoveDex
   * [x] Show encounter locations
     * [ ] Open route in RouteDex
-  * [ ] Show evolution chain
-    * [ ] Open chain members in selector
+  * [x] Show evolution chain
+    * [x] Show sprites
+    * [ ] Show evolution details
+    * [x] Open chain members in selector
+    * [ ] Open chain members in next available selector
 * [x] Toggle tooltips on/off
   * [x] Save toggle in cookies
 * [ ] Save/unsave team (requires login)
