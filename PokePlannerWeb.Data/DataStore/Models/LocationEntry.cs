@@ -16,5 +16,18 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the display names of the location.
         /// </summary>
         public List<LocalString> DisplayNames { get; set; }
+
+        /// <summary>
+        /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
+        /// </summary>
+        public LocationEntry ForEvolutionChain()
+        {
+            return new LocationEntry
+            {
+                Key = Key,
+                Name = Name,
+                DisplayNames = DisplayNames
+            };
+        }
     }
 }

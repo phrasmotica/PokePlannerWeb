@@ -64,6 +64,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public override async Task<TEntry> Upsert(NamedApiResource<TSource> res)
         {
+            if (res == null)
+            {
+                return null;
+            }
+
             // check for existing entry by name
             var existingEntry = await GetByName(res.Name);
             if (existingEntry != null)

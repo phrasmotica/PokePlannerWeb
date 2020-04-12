@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -53,12 +52,12 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the item required to cause evolution into this species.
         /// </summary>
-        public Item Item { get; set; }
+        public ItemEntry Item { get; set; }
 
         /// <summary>
         /// Gets or sets the type of event that triggers evolution into this species.
         /// </summary>
-        public EvolutionTrigger Trigger { get; set; }
+        public EvolutionTriggerEntry Trigger { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the gender of the evolving Pokémon species must be in order to
@@ -70,24 +69,24 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the item the evolving species must be holding during the evolution trigger
         /// event to evolve into this species.
         /// </summary>
-        public Item HeldItem { get; set; }
+        public ItemEntry HeldItem { get; set; }
 
         /// <summary>
         /// Gets or sets the move that must be known by the evolving species during the evolution
         /// trigger event in order to evolve into this species.
         /// </summary>
-        public Move KnownMove { get; set; }
+        public MoveEntry KnownMove { get; set; }
 
         /// <summary>
         /// Gets or sets the evolving species must know a move with this type during the evolution
         /// trigger event in order to evolve into this species.
         /// </summary>
-        public Type KnownMoveType { get; set; }
+        public TypeEntry KnownMoveType { get; set; }
 
         /// <summary>
         /// Gets or sets the location the evolution must be triggered at.
         /// </summary>
-        public Location Location { get; set; }
+        public LocationEntry Location { get; set; }
 
         /// <summary>
         /// Gets or sets the minimum required level of the evolving Pokémon species to evolve into
@@ -123,13 +122,13 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the species that must be in the players party in order for the evolving
         /// species to evolve into this species.
         /// </summary>
-        public PokemonSpecies PartySpecies { get; set; }
+        public PokemonSpeciesEntry PartySpecies { get; set; }
 
         /// <summary>
         /// Gets or sets the type of Pokemon the player must have in their party during the
         /// evolution trigger event in order for the evolving species to evolve into this species.
         /// </summary>
-        public Type PartyType { get; set; }
+        public TypeEntry PartyType { get; set; }
 
         /// <summary>
         /// Gets or sets the required relation between the Pokémon's Attack and Defense stats:
@@ -147,7 +146,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the species for which this one must be traded.
         /// </summary>
-        public PokemonSpecies TradeSpecies { get; set; }
+        public PokemonSpeciesEntry TradeSpecies { get; set; }
 
         /// <summary>
         /// Gets or sets whether or not the 3DS needs to be turned upside-down as this Pokemon

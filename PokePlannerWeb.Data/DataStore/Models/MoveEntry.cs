@@ -62,5 +62,18 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the move's target.
         /// </summary>
         public MoveTarget Target { get; set; }
+
+        /// <summary>
+        /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
+        /// </summary>
+        public MoveEntry ForEvolutionChain()
+        {
+            return new MoveEntry
+            {
+                Key = Key,
+                Name = Name,
+                DisplayNames = DisplayNames
+            };
+        }
     }
 }

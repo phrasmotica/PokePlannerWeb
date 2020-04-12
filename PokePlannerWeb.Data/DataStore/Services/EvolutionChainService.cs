@@ -16,24 +16,24 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class EvolutionChainService : ServiceBase<EvolutionChain, EvolutionChainEntry>
     {
         /// <summary>
-        /// The evolution trigger cache service.
+        /// The evolution trigger service.
         /// </summary>
-        private readonly EvolutionTriggerCacheService EvolutionTriggerCacheService;
+        private readonly EvolutionTriggerService EvolutionTriggerService;
 
         /// <summary>
-        /// The item cache service.
+        /// The item service.
         /// </summary>
-        private readonly ItemCacheService ItemCacheService;
+        private readonly ItemService ItemService;
 
         /// <summary>
-        /// The location cache service.
+        /// The location service.
         /// </summary>
-        private readonly LocationCacheService LocationCacheService;
+        private readonly LocationService LocationService;
 
         /// <summary>
-        /// The move cache service.
+        /// The move service.
         /// </summary>
-        private readonly MoveCacheService MoveCacheService;
+        private readonly MoveService MoveService;
 
         /// <summary>
         /// The Pokemon species cache service.
@@ -41,9 +41,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly PokemonSpeciesCacheService PokemonSpeciesCacheService;
 
         /// <summary>
-        /// The type cache service.
+        /// The type service.
         /// </summary>
-        private readonly TypeCacheService TypeCacheService;
+        private readonly TypeService TypeService;
 
         /// <summary>
         /// The Pokemon species service.
@@ -57,21 +57,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<EvolutionChainEntry> dataStoreSource,
             IPokeAPI pokeApi,
             EvolutionChainCacheService cacheService,
-            EvolutionTriggerCacheService evolutionTriggerCacheService,
-            ItemCacheService itemCacheService,
-            LocationCacheService locationCacheService,
-            MoveCacheService moveCacheService,
+            EvolutionTriggerService evolutionTriggerService,
+            ItemService itemService,
+            LocationService locationService,
+            MoveService moveService,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
-            TypeCacheService typeCacheService,
+            TypeService typeCacheService,
             PokemonSpeciesService pokemonSpeciesService,
             ILogger<EvolutionChainService> logger) : base(dataStoreSource, pokeApi, cacheService, logger)
         {
-            EvolutionTriggerCacheService = evolutionTriggerCacheService;
-            ItemCacheService = itemCacheService;
-            LocationCacheService = locationCacheService;
-            MoveCacheService = moveCacheService;
+            EvolutionTriggerService = evolutionTriggerService;
+            ItemService = itemService;
+            LocationService = locationService;
+            MoveService = moveService;
             PokemonSpeciesCacheService = pokemonSpeciesCacheService;
-            TypeCacheService = typeCacheService;
+            TypeService = typeCacheService;
             PokemonSpeciesService = pokemonSpeciesService;
         }
 
@@ -188,35 +188,35 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<EvolutionDetailEntry> CreateEvolutionDetailEntry(EvolutionDetail evolutionDetail)
         {
-            var item = await ItemCacheService.GetMinimal(evolutionDetail.Item);
-            var trigger = await EvolutionTriggerCacheService.GetMinimal(evolutionDetail.Trigger);
-            var heldItem = await ItemCacheService.GetMinimal(evolutionDetail.HeldItem);
-            var knownMove = await MoveCacheService.GetMinimal(evolutionDetail.KnownMove);
-            var knownMoveType = await TypeCacheService.GetMinimal(evolutionDetail.KnownMoveType);
-            var location = await LocationCacheService.GetMinimal(evolutionDetail.Location);
-            var partySpecies = await PokemonSpeciesCacheService.GetMinimal(evolutionDetail.PartySpecies);
-            var partyType = await TypeCacheService.GetMinimal(evolutionDetail.PartyType);
-            var tradeSpecies = await PokemonSpeciesCacheService.GetMinimal(evolutionDetail.TradeSpecies);
+            var item = await ItemService.Upsert(evolutionDetail.Item);
+            var trigger = await EvolutionTriggerService.Upsert(evolutionDetail.Trigger);
+            var heldItem = await ItemService.Upsert(evolutionDetail.HeldItem);
+            var knownMove = await MoveService.Upsert(evolutionDetail.KnownMove);
+            var knownMoveType = await TypeService.Upsert(evolutionDetail.KnownMoveType);
+            var location = await LocationService.Upsert(evolutionDetail.Location);
+            var partySpecies = await PokemonSpeciesService.Upsert(evolutionDetail.PartySpecies);
+            var partyType = await TypeService.Upsert(evolutionDetail.PartyType);
+            var tradeSpecies = await PokemonSpeciesService.Upsert(evolutionDetail.TradeSpecies);
 
             return new EvolutionDetailEntry
             {
-                Item = item,
-                Trigger = trigger,
+                Item = item?.ForEvolutionChain(),
+                Trigger = trigger?.ForEvolutionChain(),
                 Gender = evolutionDetail.Gender,
-                HeldItem = heldItem,
-                KnownMove = knownMove,
-                KnownMoveType = knownMoveType,
-                Location = location,
+                HeldItem = heldItem?.ForEvolutionChain(),
+                KnownMove = knownMove?.ForEvolutionChain(),
+                KnownMoveType = knownMoveType?.ForEvolutionChain(),
+                Location = location?.ForEvolutionChain(),
                 MinLevel = evolutionDetail.MinLevel,
                 MinHappiness = evolutionDetail.MinHappiness,
                 MinBeauty = evolutionDetail.MinBeauty,
                 MinAffection = evolutionDetail.MinAffection,
                 NeedsOverworldRain = evolutionDetail.NeedsOverworldRain,
-                PartySpecies = partySpecies,
-                PartyType = partyType,
+                PartySpecies = partySpecies?.ForEvolutionChain(),
+                PartyType = partyType?.ForEvolutionChain(),
                 RelativePhysicalStats = evolutionDetail.RelativePhysicalStats,
                 TimeOfDay = !string.IsNullOrEmpty(evolutionDetail.TimeOfDay) ? evolutionDetail.TimeOfDay : null,
-                TradeSpecies = tradeSpecies,
+                TradeSpecies = tradeSpecies?.ForEvolutionChain(),
                 TurnUpsideDown = evolutionDetail.TurnUpsideDown
             };
         }
