@@ -5,7 +5,7 @@ import key from "weak-key"
 
 import { CaptureLocations } from "./CaptureLocations"
 import { EfficacyList } from "./EfficacyList"
-import { EvolutionChain } from "./EvolutionChain"
+import { EvolutionChain } from "./EvolutionChain/EvolutionChain"
 import { MoveList } from "./MoveList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"

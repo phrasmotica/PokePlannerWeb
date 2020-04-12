@@ -2,10 +2,10 @@
 import { Button } from "reactstrap"
 import key from "weak-key"
 
-import { IHasIndex } from "./CommonMembers"
+import { IHasIndex } from "../CommonMembers"
 
-import { EvolutionChainEntry, ChainLinkEntry, EvolutionDetailEntry } from "../models/EvolutionChainEntry"
-import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
+import { EvolutionChainEntry, ChainLinkEntry, EvolutionDetailEntry } from "../../models/EvolutionChainEntry"
+import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import "./EvolutionChain.scss"
 
