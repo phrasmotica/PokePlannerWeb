@@ -1,9 +1,8 @@
-﻿$height: 130px;
-$width: 370px;
-.evolution-chain {
+﻿.evolution-chain {
     display: inline-flex;
-    height: $height;
-    width: $width;
+    height: inherit;
+    width: inherit;
+    margin-top: 4;
 }
 
 .chain-member {

@@ -5,6 +5,7 @@ import key from "weak-key"
 import { IHasIndex } from "./CommonMembers"
 
 import { EvolutionChainEntry, ChainLinkEntry, EvolutionDetailEntry } from "../models/EvolutionChainEntry"
+import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
 
 import "./EvolutionChain.scss"
 
@@ -13,6 +14,11 @@ interface IEvolutionChainProps extends IHasIndex {
      * The ID of the species this chain is being shown for.
      */
     speciesId: number | undefined
+
+    /**
+     * Whether to show the species' shiny sprites.
+     */
+    showShinySprites: boolean
 
     /**
      * Whether to show the evolution chain.
@@ -113,9 +119,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
     renderEvolutionChain() {
         if (!this.props.shouldShowChain) {
             return (
-                <div
-                    className="flex-center evolution-chain"
-                    style={{ marginTop: 4 }}>
+                <div className="flex-center evolution-chain">
                     -
                 </div>
             )
@@ -123,9 +127,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
 
         if (this.state.loadingChain) {
             return (
-                <div
-                    className="flex-center evolution-chain"
-                    style={{ marginTop: 4 }}>
+                <div className="flex-center evolution-chain">
                     Loading...
                 </div>
             )
@@ -134,9 +136,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
         let chain = this.state.evolutionChain?.chain
         if (chain === undefined) {
             return (
-                <div
-                    className="flex-center evolution-chain"
-                    style={{ marginTop: 4 }}>
+                <div className="flex-center evolution-chain">
                     this Pokemon does not evolve
                 </div>
             )
@@ -144,9 +144,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
 
         // TODO: find a package for rendering a tree
         return (
-            <div
-                className="flex-center evolution-chain"
-                style={{ marginTop: 4 }}>
+            <div className="flex-center evolution-chain">
                 {this.renderDepthLists(chain)}
             </div>
         )
@@ -212,13 +210,44 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
         }
 
         return (
-            <Button
-                key={key(link)}
-                color="link"
-                className="chain-member"
-                onMouseUp={() => this.props.setSpecies(speciesId)}>
-                {nameElement}
-            </Button>
+            <div key={key(link)}>
+                {this.renderSpeciesSprite(link.species)}
+
+                <div className="flex-center">
+                    <Button
+                        color="link"
+                        className="chain-member"
+                        onMouseUp={() => this.props.setSpecies(speciesId)}>
+                        {nameElement}
+                    </Button>
+                </div>
+            </div>
+        )
+    }
+
+    /**
+     * Renders the species' sprite.
+     */
+    renderSpeciesSprite(species: PokemonSpeciesEntry) {
+        let spriteUrl = this.props.showShinySprites
+                      ? species.shinySpriteUrl
+                      : species.spriteUrl
+
+        if (spriteUrl === null || spriteUrl === "") {
+            return (
+                <div className="flex-center sprite margin-auto-horiz">
+                    (no sprite)
+                </div>
+            )
+        }
+
+        return (
+            <div className="sprite margin-auto-horiz">
+                <img
+                    className="inherit-size"
+                    alt={`sprite${this.props.index}`}
+                    src={spriteUrl} />
+            </div>
         )
     }
 

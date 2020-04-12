@@ -280,13 +280,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
             if (spriteUrl === null || spriteUrl === "") {
                 return (
-                    <div
-                        className="sprite margin-auto-horiz"
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}>
+                    <div className="flex-center sprite margin-auto-horiz">
                         (no sprite)
                     </div>
                 )
@@ -410,11 +404,14 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
 
         return (
-            <EvolutionChain
-                index={this.props.index}
-                speciesId={this.state.speciesId}
-                shouldShowChain={this.shouldShowPokemon()}
-                setSpecies={setSpecies} />
+            <div className="flex-center inherit-size">
+                <EvolutionChain
+                    index={this.props.index}
+                    speciesId={this.state.speciesId}
+                    showShinySprites={this.state.showShinySprite}
+                    shouldShowChain={this.shouldShowPokemon()}
+                    setSpecies={setSpecies} />
+            </div>
         )
     }
 
