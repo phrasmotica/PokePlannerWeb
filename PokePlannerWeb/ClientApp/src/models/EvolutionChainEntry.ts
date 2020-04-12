@@ -1,9 +1,9 @@
-import { EvolutionTrigger } from "./EvolutionTrigger"
-import { Item } from "./Item"
-import { Move } from "./Move"
-import { Location } from "./Location"
-import { PokemonSpecies } from "./PokemonSpecies"
-import { Type } from "./Type"
+import { EvolutionTriggerEntry } from "./EvolutionTriggerEntry"
+import { ItemEntry } from "./ItemEntry"
+import { MoveEntry } from "./MoveEntry"
+import { LocationEntry } from "./LocationEntry"
+import { PokemonSpeciesEntry } from "./PokemonSpeciesEntry"
+import { TypeEntry } from "./TypeEntry"
 
 /**
  * Represents a evolution chain in the data store.
@@ -67,7 +67,7 @@ export class ChainLinkEntry {
     /**
      * The Pokemon species at this stage of the evolution chain.
      */
-    species: PokemonSpecies
+    species: PokemonSpeciesEntry
 
     /**
      * All details regarding the specific details of the referenced species evolution.
@@ -84,7 +84,7 @@ export class ChainLinkEntry {
      */
     constructor(
         isBaby: boolean,
-        species: PokemonSpecies,
+        species: PokemonSpeciesEntry,
         evolutionDetails: EvolutionDetailEntry[],
         evolvesTo: ChainLinkEntry[]
     ) {
@@ -100,8 +100,8 @@ export class ChainLinkEntry {
     static from(chainLink: ChainLinkEntry): ChainLinkEntry {
         return new ChainLinkEntry(
             chainLink.isBaby,
-            chainLink.species,
-            chainLink.evolutionDetails,
+            PokemonSpeciesEntry.from(chainLink.species),
+            chainLink.evolutionDetails.map(e => EvolutionDetailEntry.from(e)),
             chainLink.evolvesTo.map(e => ChainLinkEntry.from(e))
         )
     }
@@ -111,11 +111,11 @@ export class ChainLinkEntry {
      */
     getSpeciesIds(): number[] {
         if (this.evolvesTo.length <= 0) {
-            return [this.species.id]
+            return [this.species.speciesId]
         }
 
         let nextSpeciesIds = this.evolvesTo.flatMap(e => e.getSpeciesIds())
-        return [this.species.id, ...nextSpeciesIds]
+        return [this.species.speciesId, ...nextSpeciesIds]
     }
 
     /**
@@ -154,16 +154,16 @@ export class ChainLinkEntry {
 /**
  * Represents details of how a species evolves into another.
  */
-export interface EvolutionDetailEntry {
+export class EvolutionDetailEntry {
     /**
      * The item required to cause evolution into this species.
      */
-    item: Item
+    item: ItemEntry | null
 
     /**
      * The type of event that triggers evolution into this species.
      */
-    trigger: EvolutionTrigger
+    trigger: EvolutionTriggerEntry | null
 
     /**
      * The ID of the gender of the evolving Pokémon species must be in order to evolve into this
@@ -175,24 +175,24 @@ export interface EvolutionDetailEntry {
      * The item the evolving species must be holding during the evolution trigger event to evolve
      * into this species.
      */
-    heldItem: Item
+    heldItem: ItemEntry | null
 
     /**
      * The move that must be known by the evolving species during the evolution trigger event in
      * order to evolve into this species.
      */
-    knownMove: Move
+    knownMove: MoveEntry | null
 
     /**
      * The evolving species must know a move with this type during the evolution trigger event in
      * order to evolve into this species.
      */
-    knownMoveType: Type
+    knownMoveType: TypeEntry | null
 
     /**
      * The location the evolution must be triggered at.
      */
-    location: Location
+    location: LocationEntry | null
 
     /**
      * The minimum required level of the evolving Pokémon species to evolve into this species.
@@ -223,13 +223,13 @@ export interface EvolutionDetailEntry {
      * The species that must be in the players party in order for the evolving species to evolve
      * into this species.
      */
-    partySpecies: PokemonSpecies
+    partySpecies: PokemonSpeciesEntry | null
 
     /**
      * The type of Pokemon the player must have in their party during the evolution trigger event in
      * order for the evolving species to evolve into this species.
      */
-    partyType: Type
+    partyType: TypeEntry | null
 
     /**
      * The required relation between the Pokémon's Attack and Defense stats:
@@ -247,10 +247,89 @@ export interface EvolutionDetailEntry {
     /**
      * The species for which this one must be traded.
      */
-    tradeSpecies: PokemonSpecies
+    tradeSpecies: PokemonSpeciesEntry | null
 
     /**
      * Whether or not the 3DS needs to be turned upside-down as this Pokemon levels up.
      */
     turnUpsideDown: boolean
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        item: ItemEntry | null,
+        trigger: EvolutionTriggerEntry | null,
+        gender: number | null,
+        heldItem: ItemEntry | null,
+        knownMove: MoveEntry | null,
+        knownMoveType: TypeEntry | null,
+        location: LocationEntry | null,
+        minLevel: number | null,
+        minHappiness: number | null,
+        minBeauty: number | null,
+        minAffection: number | null,
+        needsOverworldRain: boolean,
+        partySpecies: PokemonSpeciesEntry | null,
+        partyType: TypeEntry | null,
+        relativePhysicalStats: number | null,
+        timeOfDay: string | null,
+        tradeSpecies: PokemonSpeciesEntry | null,
+        turnUpsideDown: boolean
+    ) {
+        this.item = item
+        this.trigger = trigger
+        this.gender = gender
+        this.heldItem = heldItem
+        this.knownMove = knownMove
+        this.knownMoveType = knownMoveType
+        this.location = location
+        this.minLevel = minLevel
+        this.minHappiness = minHappiness
+        this.minBeauty = minBeauty
+        this.minAffection = minAffection
+        this.needsOverworldRain = needsOverworldRain
+        this.partySpecies = partySpecies
+        this.partyType = partyType
+        this.relativePhysicalStats = relativePhysicalStats
+        this.timeOfDay = timeOfDay
+        this.tradeSpecies = tradeSpecies
+        this.turnUpsideDown = turnUpsideDown
+    }
+
+    /**
+     * Returns a chain link created from the given entry.
+     */
+    static from(chainLink: EvolutionDetailEntry) {
+        let item = chainLink.item
+        let trigger = chainLink.trigger
+        let heldItem = chainLink.heldItem
+        let knownMove = chainLink.knownMove
+        let knownMoveType = chainLink.knownMoveType
+        let location = chainLink.location
+        let partySpecies = chainLink.partySpecies
+        let partyType = chainLink.partyType
+        let tradeSpecies = chainLink.tradeSpecies
+
+        return new EvolutionDetailEntry(
+            item === null ? null : ItemEntry.from(item),
+            trigger === null ? null : EvolutionTriggerEntry.from(trigger),
+            chainLink.gender,
+            heldItem === null ? null : ItemEntry.from(heldItem),
+            knownMove === null ? null : MoveEntry.from(knownMove),
+            knownMoveType === null ? null : TypeEntry.from(knownMoveType),
+            location === null ? null : LocationEntry.from(location),
+            chainLink.minLevel,
+            chainLink.minHappiness,
+            chainLink.minBeauty,
+            chainLink.minAffection,
+            chainLink.needsOverworldRain,
+            partySpecies === null ? null : PokemonSpeciesEntry.from(partySpecies),
+            partyType === null ? null : TypeEntry.from(partyType),
+            chainLink.relativePhysicalStats,
+            chainLink.timeOfDay,
+            tradeSpecies === null ? null : PokemonSpeciesEntry.from(tradeSpecies),
+            chainLink.turnUpsideDown
+        )
+    }
 }

@@ -166,7 +166,6 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             // species name
             let speciesElements = []
 
-
             for (let i = 0; i < list.length; i++) {
                 let link = list[i]
 
@@ -203,9 +202,9 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
      * Renders the chain link.
      */
     renderChainLink(link: ChainLinkEntry) {
-        let speciesId = link.species.id
+        let speciesId = link.species.speciesId
         let isCurrentSpecies = speciesId === this.props.speciesId
-        let speciesName = link.species.name
+        let speciesName = link.species.getDisplayName("en") ?? link.species.name
 
         let nameElement = <span>{speciesName}</span>
         if (isCurrentSpecies) {
@@ -248,14 +247,14 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
 
             // only need extra info for certain triggers
             // use-item is clear from other details
-            if (trigger.id === 1 && detail.minLevel === null) {
-                triggerElement = "level up"
+            if (trigger.evolutionTriggerId === 1 && detail.minLevel === null) {
+                triggerElement = trigger.getDisplayName("en") ?? "level up"
             }
-            else if (trigger.id === 2) {
-                triggerElement = "trade"
+            else if (trigger.evolutionTriggerId === 2) {
+                triggerElement = trigger.getDisplayName("en") ?? "trade"
             }
-            else if (trigger.id === 4) {
-                triggerElement = "shed"
+            else if (trigger.evolutionTriggerId === 4) {
+                triggerElement = trigger.getDisplayName("en") ?? "shed"
             }
 
             if (triggerElement !== undefined) {
@@ -263,8 +262,10 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             }
         }
 
-        if (detail.item !== null) {
-            items.push(<span>use {detail.item.name}</span>)
+        let item = detail.item
+        if (item !== null) {
+            let itemName = item.getDisplayName("en") ?? item.name
+            items.push(<span>use {itemName}</span>)
         }
 
         let gender = detail.gender
@@ -281,20 +282,28 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             items.push(<span>must be {genderName}</span>)
         }
 
-        if (detail.heldItem !== null) {
-            items.push(<span>holding a {detail.heldItem.name}</span>)
+        let heldItem = detail.heldItem
+        if (heldItem !== null) {
+            let itemName = heldItem.getDisplayName("en") ?? heldItem.name
+            items.push(<span>holding {itemName}</span>)
         }
 
-        if (detail.knownMove !== null) {
-            items.push(<span>knowing {detail.knownMove.name}</span>)
+        let knownMove = detail.knownMove
+        if (knownMove !== null) {
+            let moveName = knownMove.getDisplayName("en") ?? knownMove.name
+            items.push(<span>knowing {moveName}</span>)
         }
 
-        if (detail.knownMoveType !== null) {
-            items.push(<span>knowing a {detail.knownMoveType.name}-type move</span>)
+        let knownMoveType = detail.knownMoveType
+        if (knownMoveType !== null) {
+            let typeName = knownMoveType.getDisplayName("en") ?? knownMoveType.name
+            items.push(<span>knowing a {typeName}-type move</span>)
         }
 
-        if (detail.location !== null) {
-            items.push(<span>at {detail.location.name}</span>)
+        let location = detail.location
+        if (location !== null) {
+            let locationName = location.getDisplayName("en") ?? location.name
+            items.push(<span>at {locationName}</span>)
         }
 
         if (detail.minLevel !== null) {
@@ -317,12 +326,16 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             items.push(<span>while raining</span>)
         }
 
-        if (detail.partySpecies !== null) {
-            items.push(<span>with {detail.partySpecies.name} in the party</span>)
+        let partySpecies = detail.partySpecies
+        if (partySpecies !== null) {
+            let speciesName = partySpecies.getDisplayName("en") ?? partySpecies.name
+            items.push(<span>with {speciesName} in the party</span>)
         }
 
-        if (detail.partyType !== null) {
-            items.push(<span>with a {detail.partyType.name}-type in the party</span>)
+        let partyType = detail.partyType
+        if (partyType !== null) {
+            let typeName = partyType.getDisplayName("en") ?? partyType.name
+            items.push(<span>with a {typeName}-type in the party</span>)
         }
 
         let relativePhysicalStats = detail.relativePhysicalStats
@@ -342,8 +355,10 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             items.push(<span>during {detail.timeOfDay}</span>)
         }
 
-        if (detail.tradeSpecies !== null) {
-            items.push(<span>trade with {detail.tradeSpecies.name}</span>)
+        let tradeSpecies = detail.tradeSpecies
+        if (tradeSpecies !== null) {
+            let speciesName = tradeSpecies.getDisplayName("en") ?? tradeSpecies.name
+            items.push(<span>trade with {speciesName}</span>)
         }
 
         if (detail.turnUpsideDown) {
