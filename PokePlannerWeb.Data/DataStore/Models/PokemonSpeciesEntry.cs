@@ -14,6 +14,16 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public int SpeciesId => Key;
 
         /// <summary>
+        /// Gets or sets this species' front default sprite URL.
+        /// </summary>
+        public string SpriteUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets this species' front shiny sprite URL.
+        /// </summary>
+        public string ShinySpriteUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon species' display names.
         /// </summary>
         public List<LocalString> DisplayNames { get; set; }

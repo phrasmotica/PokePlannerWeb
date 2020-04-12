@@ -26,6 +26,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly GenerationCacheService GenerationCacheService;
 
         /// <summary>
+        /// The Pokemon cache service.
+        /// </summary>
+        private readonly PokemonCacheService PokemonCacheService;
+
+        /// <summary>
         /// The Pokemon service.
         /// </summary>
         private readonly PokemonService PokemonService;
@@ -44,12 +49,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
             EvolutionChainCacheService evolutionChainCacheService,
             GenerationCacheService generationCacheService,
+            PokemonCacheService pokemonCacheService,
             PokemonService pokemonService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
             EvolutionChainCacheService = evolutionChainCacheService;
             GenerationCacheService = generationCacheService;
+            PokemonCacheService = pokemonCacheService;
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;
         }
@@ -61,6 +68,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonSpeciesEntry> ConvertToEntry(PokemonSpecies species)
         {
+            var primaryVariety = await PokemonService.Upsert(species.Varieties[0].Pokemon);
+            var displayNames = GetDisplayNames(species);
             var varieties = await GetVarieties(species);
             var generation = await GetGeneration(species);
             var evolutionChain = await GetEvolutionChain(species);
@@ -70,7 +79,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
             {
                 Key = species.Id,
                 Name = species.Name,
-                DisplayNames = GetDisplayNames(species).ToList(),
+                SpriteUrl = primaryVariety.SpriteUrl,
+                ShinySpriteUrl = primaryVariety.ShinySpriteUrl,
+                DisplayNames = displayNames.ToList(),
                 Varieties = varieties.ToList(),
                 Generation = generation,
                 EvolutionChain = evolutionChain,
@@ -153,12 +164,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             foreach (var res in species.Varieties)
             {
-                var sourceEntry = await PokemonService.Upsert(res.Pokemon);
-                varietiesList.Add(new Pokemon
-                {
-                    Id = sourceEntry.PokemonId,
-                    Name = sourceEntry.Name
-                });
+                var pokemon = await PokemonCacheService.GetMinimal(res.Pokemon);
+                varietiesList.Add(pokemon);
             }
 
             return varietiesList;
