@@ -1,21 +1,28 @@
 ﻿.evolution-chain {
-    display: inline-flex;
     height: inherit;
     width: inherit;
-    margin-top: 4;
+    margin-top: 4px;
 }
 
-.chain-member {
+.evolution-tree-item {
+    display: flex;
+}
+
+.species-button {
     display: block;
-    font-size: 10pt;
+    font-size: 8pt;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .transition {
-    display: grid;
-    text-align: center;
+    display: flex;
+    font-size: 24pt;
+    margin-top: 15px;
 }
 
-.chain-separator {
-    margin-top: 0;
-    margin-bottom: 0;
+.transition-button {
+    font-size: 24pt;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }

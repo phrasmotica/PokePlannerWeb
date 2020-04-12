@@ -408,6 +408,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 <EvolutionChain
                     index={this.props.index}
                     speciesId={this.state.speciesId}
+                    availableSpeciesIds={this.props.species.map(s => s.speciesId)}
                     showShinySprites={this.state.showShinySprite}
                     shouldShowChain={this.shouldShowPokemon()}
                     setSpecies={setSpecies} />

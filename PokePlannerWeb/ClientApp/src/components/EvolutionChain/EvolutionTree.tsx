@@ -7,6 +7,8 @@ import { IHasIndex } from "../CommonMembers"
 import { ChainLinkEntry, EvolutionDetailEntry } from "../../models/EvolutionChainEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
+import "./EvolutionChain.scss"
+
 interface IEvolutionTreeProps extends IHasIndex {
     /**
      * The chain to render.
@@ -19,14 +21,14 @@ interface IEvolutionTreeProps extends IHasIndex {
     speciesId: number | undefined
 
     /**
+     * The IDs of the species available in the parent selector.
+     */
+    availableSpeciesIds: number[]
+
+    /**
      * Whether to show the species' shiny sprites.
      */
     showShinySprites: boolean
-
-    /**
-     * Whether to show the evolution chain.
-     */
-    shouldShowChain: boolean
 
     /**
      * Handler for setting the species in the parent component.
@@ -47,92 +49,96 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      */
     render() {
         return (
-            <div className="flex-center evolution-chain">
+            <div className="evolution-chain">
                 {this.renderTree(this.props.chain)}
             </div>
         )
     }
 
     /**
-     * Renders the chain as a tree.
+     * Renders the chain link as a tree.
      */
-    renderTree(chain: ChainLinkEntry) {
-        // TODO: render a horizontal tree view where each child node
-        // can be expanded to view the evolution details
-        return this.renderDepthLists(chain)
-    }
+    renderTree(link: ChainLinkEntry) {
+        let numChildren = link.evolvesTo.length
+        let widthStyle = {
+            width: `${100 / (numChildren + 1)}%`,
+        }
 
-    /**
-     * Renders the chain as a list of its depth lists.
-     */
-    renderDepthLists(chain: ChainLinkEntry) {
-        let depthListElements = []
+        let transitionElement = null
+        if (link.evolutionDetails.length > 0) {
+            let transitionButton = this.renderTransitionButton(link)
 
-        let depthLists = chain.toDepthLists()
-        for (let list of depthLists) {
-            // arrows and evolution details
-            let transitionElements = []
-
-            // species name
-            let speciesElements = []
-
-            for (let i = 0; i < list.length; i++) {
-                let link = list[i]
-
-                if (link.evolutionDetails.length > 0) {
-                    transitionElements.push(this.renderTransition(link))
-                    if (i < list.length - 1) {
-                        transitionElements.push(<hr className="chain-separator"></hr>)
-                    }
-                }
-
-                speciesElements.push(this.renderChainLink(link))
-                if (i < list.length - 1) {
-                    speciesElements.push(<hr className="chain-separator"></hr>)
-                }
+            // empty divs to ensure arrow is centred above the right species
+            let paddingElements = []
+            for (let i = 0; i < numChildren; i++) {
+                paddingElements.push(<div key={i} style={widthStyle}></div>)
             }
 
-            depthListElements.push(
-                <div>
-                    {transitionElements}
-                </div>
-            )
+            transitionElement = (
+                <div className="transition">
+                    <div className="center-text" style={widthStyle}>
+                        {transitionButton}
+                    </div>
 
-            depthListElements.push(
-                <div>
-                    {speciesElements}
+                    {paddingElements}
                 </div>
             )
         }
 
-        return depthListElements
+        let linkElement = this.renderChainLink(link)
+
+        let childElements = link.evolvesTo.map(l => this.renderTree(l))
+
+        // TODO: pattern doesn't work for wurmple's chain. it's currently processed in the order
+        // wurmple -> silcoon -> beautifly -> cascoon -> dustox, which is correct DFS, but cascoon
+        // is shown as a child of silcoon when it should be a child of wurmple. need to be able to
+        // render the species at the appropriate depth in the tree
+        return (
+            <div>
+                {transitionElement}
+
+                <div className="evolution-tree-item">
+                    {linkElement}
+
+                    <div className="flex-center">
+                        {childElements}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    /**
+     * Renders a button for the transition from this chain link to the next one.
+     */
+    renderTransitionButton(link: ChainLinkEntry) {
+        // TODO: click to toggle evolution details
+        return (
+            <Button color="link" className="transition-button">
+                &#x21b4;
+            </Button>
+        )
     }
 
     /**
      * Renders the chain link.
      */
     renderChainLink(link: ChainLinkEntry) {
-        let speciesId = link.species.speciesId
-        let isCurrentSpecies = speciesId === this.props.speciesId
-        let speciesName = link.species.getDisplayName("en") ?? link.species.name
+        let sprite = this.renderSpeciesSprite(link.species)
 
-        let nameElement = <span>{speciesName}</span>
-        if (isCurrentSpecies) {
-            nameElement = <span><b>{speciesName}</b></span>
-        }
+        let separator = (
+            <div className="flex-center">
+                <hr style={{ width: "80%", margin: 0 }}></hr>
+            </div>
+        )
+
+        let button = this.renderSpeciesButton(link.species)
 
         return (
             <div key={key(link)}>
-                {this.renderSpeciesSprite(link.species)}
-
-                <div className="flex-center">
-                    <Button
-                        color="link"
-                        className="chain-member"
-                        onMouseUp={() => this.props.setSpecies(speciesId)}>
-                        {nameElement}
-                    </Button>
-                </div>
+                {sprite}
+                {separator}
+                {button}
             </div>
         )
     }
@@ -164,7 +170,35 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     }
 
     /**
-     * Renders the chain link.
+     * Renders a button for the species.
+     */
+    renderSpeciesButton(species: PokemonSpeciesEntry) {
+        let speciesId = species.speciesId
+        let isCurrentSpecies = speciesId === this.props.speciesId
+        let speciesName = species.getDisplayName("en") ?? species.name
+
+        let nameElement = <span>{speciesName}</span>
+        if (isCurrentSpecies) {
+            nameElement = <span><b>{speciesName}</b></span>
+        }
+
+        let speciesAvailable = this.props.availableSpeciesIds.includes(speciesId)
+
+        return (
+            <div className="flex-center">
+                <Button
+                    color="link"
+                    disabled={!speciesAvailable}
+                    className="species-button"
+                    onMouseUp={() => this.props.setSpecies(speciesId)}>
+                    {nameElement}
+                </Button>
+            </div>
+        )
+    }
+
+    /**
+     * Renders the transition from this chain link to the next one.
      */
     renderTransition(link: ChainLinkEntry) {
         let details = link.evolutionDetails.map(d => this.renderEvolutionDetail(d))
