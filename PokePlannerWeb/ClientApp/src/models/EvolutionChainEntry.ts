@@ -46,6 +46,13 @@ export class EvolutionChainEntry {
     getSpeciesIds(): number[] {
         return this.chain.getSpeciesIds()
     }
+
+    /**
+     * Returns the chain as an ordered list of links at each depth.
+     */
+    toDepthLists(): ChainLinkEntry[][] {
+        return this.chain.toDepthLists()
+    }
 }
 
 /**
@@ -109,6 +116,38 @@ export class ChainLinkEntry {
 
         let nextSpeciesIds = this.evolvesTo.flatMap(e => e.getSpeciesIds())
         return [this.species.id, ...nextSpeciesIds]
+    }
+
+    /**
+     * Returns an ordered list of lists that each contain the chain links at a given depth.
+     * More generally, this method flattens a tree into a list of nodes indexed by depth.
+     */
+    toDepthLists(): ChainLinkEntry[][] {
+        let depthLists = []
+
+        if (this.evolvesTo.length <= 0) {
+            // empty tree
+            return []
+        }
+
+        let linkQueue: ChainLinkEntry[] = [this]
+        let numberOfLinksAtThisDepth = 0
+
+        while (linkQueue.length > 0) {
+            numberOfLinksAtThisDepth = linkQueue.length
+
+            let depthList = []
+            while (numberOfLinksAtThisDepth > 0) {
+                let link = linkQueue.shift() // shift is O(n) but these lists are small
+                depthList.push(link!)
+                linkQueue.push(...link!.evolvesTo) // deal with this link's children next
+                numberOfLinksAtThisDepth--
+            }
+
+            depthLists.push(depthList)
+        }
+
+        return depthLists
     }
 }
 
