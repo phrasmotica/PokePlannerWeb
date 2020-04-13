@@ -1,5 +1,6 @@
-import { LocalString } from "./LocalString"
+import { EvolutionChain } from "./EvolutionChain"
 import { Generation } from "./Generation"
+import { LocalString } from "./LocalString"
 import { Pokemon } from "./Pokemon"
 
 /**
@@ -17,6 +18,16 @@ export class PokemonSpeciesEntry {
     name: string
 
     /**
+     * The URL of the species' front default sprite.
+     */
+    spriteUrl: string
+
+    /**
+     * The URL of the species' front shiny sprite.
+     */
+    shinySpriteUrl: string
+
+    /**
      * The display names of the species.
      */
     displayNames: LocalString[]
@@ -32,6 +43,11 @@ export class PokemonSpeciesEntry {
     generation: Generation
 
     /**
+     * The species' evolution chain.
+     */
+    evolutionChain: EvolutionChain
+
+    /**
      * The IDs of the version groups where this species is valid.
      */
     validity: number[]
@@ -42,16 +58,22 @@ export class PokemonSpeciesEntry {
     constructor(
         speciesId: number,
         name: string,
+        spriteUrl: string,
+        shinySpriteUrl: string,
         displayNames: LocalString[],
         varieties: Pokemon[],
         generation: Generation,
+        evolutionChain: EvolutionChain,
         validity: number[]
     ) {
         this.speciesId = speciesId
         this.name = name
+        this.spriteUrl = spriteUrl
+        this.shinySpriteUrl = shinySpriteUrl
         this.displayNames = displayNames
         this.varieties = varieties
         this.generation = generation
+        this.evolutionChain = evolutionChain
         this.validity = validity
     }
 
@@ -62,9 +84,12 @@ export class PokemonSpeciesEntry {
         return new PokemonSpeciesEntry(
             species.speciesId,
             species.name,
+            species.spriteUrl,
+            species.shinySpriteUrl,
             species.displayNames,
             species.varieties,
             species.generation,
+            species.evolutionChain,
             species.validity
         )
     }

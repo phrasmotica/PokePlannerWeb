@@ -5,13 +5,14 @@ using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Cache.Abstractions;
 using PokePlannerWeb.Data.Cache.Models;
+using PokePlannerWeb.Data.Extensions;
 
 namespace PokePlannerWeb.Data.Cache.Services
 {
     /// <summary>
     /// Service for managing a collection of PokeAPI resources in the cache.
     /// </summary>
-    public class CacheServiceBase<TResource> where TResource : NamedApiResource
+    public class CacheServiceBase<TResource> where TResource : ResourceBase, new()
     {
         /// <summary>
         /// The cache source.
@@ -125,30 +126,40 @@ namespace PokePlannerWeb.Data.Cache.Services
         /// <summary>
         /// Returns the resource with the given ID, creating a cache entry if it doesn't exist.
         /// </summary>
-        public async Task<TResource> Upsert(NamedApiResource<TResource> res)
+        public virtual async Task<TResource> Upsert(UrlNavigation<TResource> res)
         {
-            var name = res.Name;
-            var entry = await CacheSource.GetCacheEntry(name);
-            if (entry == null)
+            if (res == null)
             {
-                var entryType = typeof(TResource).Name;
-                Logger.LogInformation($"Caching {entryType} with name {name}...");
-
-                var resource = await PokeApi.Get(res);
-                return await Create(resource);
-            }
-            else if (IsStale(entry))
-            {
-                // update cache entry if it's stale
-                var entryType = typeof(TResource).Name;
-                Logger.LogInformation($"Cached {entryType} with name {name} is stale - updating...");
-
-                var resource = await PokeApi.Get(res);
-                await Update(resource);
-                return resource;
+                return null;
             }
 
-            return entry.Resource;
+            var resource = await PokeApi.Get(res);
+            return await Upsert(resource.Id);
+        }
+
+        /// <summary>
+        /// Creates new entries for the given API resources and returns them.
+        /// </summary>
+        public virtual async Task<IEnumerable<TResource>> UpsertMany(IEnumerable<UrlNavigation<TResource>> resources)
+        {
+            var entryList = new List<TResource>();
+
+            foreach (var res in resources)
+            {
+                var entry = await Upsert(res);
+                entryList.Add(entry);
+            }
+
+            return entryList;
+        }
+
+        /// <summary>
+        /// Returns a minimal copy of the given resource, caching the resource if needed.
+        /// </summary>
+        public virtual async Task<TResource> GetMinimal(UrlNavigation<TResource> res)
+        {
+            var resource = await Upsert(res);
+            return resource?.Minimise();
         }
 
         #endregion

@@ -41,6 +41,19 @@ namespace PokePlannerWeb.Data.DataStore.Models
         {
             return EfficacyMap.GetEfficacySet(versionGroupId);
         }
+
+        /// <summary>
+        /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
+        /// </summary>
+        public TypeEntry ForEvolutionChain()
+        {
+            return new TypeEntry
+            {
+                Key = Key,
+                Name = Name,
+                DisplayNames = DisplayNames
+            };
+        }
     }
 
     /// <summary>

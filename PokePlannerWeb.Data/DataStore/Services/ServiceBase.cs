@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 
@@ -13,9 +14,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// Service for managing a collection of entries in the data store.
     /// </summary>
     public abstract class ServiceBase<TSource, TEntry>
-        where TSource : NamedApiResource
+        where TSource : ApiResource, new()
         where TEntry : EntryBase
     {
+        /// <summary>
+        /// The cache service for the resource type.
+        /// </summary>
+        protected readonly CacheServiceBase<TSource> CacheService;
+
         /// <summary>
         /// The data store source.
         /// </summary>
@@ -37,8 +43,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public ServiceBase(
             IDataStoreSource<TEntry> dataStoreSource,
             IPokeAPI pokeApi,
+            CacheServiceBase<TSource> cacheService,
             ILogger<ServiceBase<TSource, TEntry>> logger)
         {
+            CacheService = cacheService;
             DataStoreSource = dataStoreSource;
             PokeApi = pokeApi;
             Logger = logger;
@@ -131,11 +139,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates a new entry for the given named API resource and returns it.
+        /// Creates a new entry for the given API resource and returns it.
         /// </summary>
-        public virtual async Task<TEntry> Upsert(NamedApiResource<TSource> res)
+        public virtual async Task<TEntry> Upsert(UrlNavigation<TSource> res)
         {
-            var source = await PokeApi.Get(res);
+            var source = await CacheService.Upsert(res);
             return await Upsert(source);
         }
 
@@ -156,18 +164,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Creates new entries for the given named API resources and returns them.
+        /// Creates new entries for the given API resources and returns them.
         /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<NamedApiResource<TSource>> resources)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(IEnumerable<UrlNavigation<TSource>> resources)
         {
-            var sources = await PokeApi.Get(resources);
+            var sources = await CacheService.UpsertMany(resources);
             return await UpsertMany(sources);
         }
 
         /// <summary>
         /// Upserts many entries into the data store.
         /// </summary>
-        public virtual async Task<IEnumerable<TEntry>> UpsertMany(NamedApiResourceList<TSource> resources)
+        public virtual async Task<IEnumerable<TEntry>> UpsertMany(ApiResourceList<TSource> resources)
         {
             var sourceType = typeof(TSource).Name;
             var entryType = typeof(TEntry).Name;
@@ -208,7 +216,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var entryList = new List<TEntry>();
 
                 var pagesUsed = 0;
-                NamedApiResourceList<TSource> page;
+                ApiResourceList<TSource> page;
                 do
                 {
                     page = await PokeApi.GetPage<TSource>(pageSize, pageSize * pagesUsed++);

@@ -7,15 +7,15 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing the collection of stat resources in the cache.
     /// </summary>
-    public class StatCacheService : CacheServiceBase<Stat>
+    public class StatCacheService : NamedCacheServiceBase<Stat>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public StatCacheService(
-            ICacheSource<Stat> cacheSource,
+            INamedCacheSource<Stat> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<CacheServiceBase<Stat>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<StatCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

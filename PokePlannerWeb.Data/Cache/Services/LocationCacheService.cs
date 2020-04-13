@@ -7,15 +7,15 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing the collection of location resources in the cache.
     /// </summary>
-    public class LocationCacheService : CacheServiceBase<Location>
+    public class LocationCacheService : NamedCacheServiceBase<Location>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public LocationCacheService(
-            ICacheSource<Location> cacheSource,
+            INamedCacheSource<Location> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<CacheServiceBase<Location>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<LocationCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

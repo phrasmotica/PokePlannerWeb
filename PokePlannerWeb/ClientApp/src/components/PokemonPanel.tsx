@@ -5,6 +5,7 @@ import key from "weak-key"
 
 import { CaptureLocations } from "./CaptureLocations"
 import { EfficacyList } from "./EfficacyList"
+import { EvolutionChain } from "./EvolutionChain/EvolutionChain"
 import { MoveList } from "./MoveList"
 import { PokemonSelector } from "./PokemonSelector"
 import { StatGraph } from "./StatGraph"
@@ -112,6 +113,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         index={this.props.index}
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
+                        defaultSpeciesId={this.state.speciesId}
                         ignoreValidity={this.props.ignoreValidity}
                         generations={this.props.generations}
                         hideTooltips={this.props.hideTooltips}
@@ -148,6 +150,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
                         <Tab eventKey="locations" title="Capture Locations">
                             {this.renderCaptureLocations()}
+                        </Tab>
+
+                        <Tab eventKey="evolution" title="Evolution">
+                            {this.renderEvolutionChain()}
                         </Tab>
                     </Tabs>
                 </div>
@@ -274,13 +280,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
             if (spriteUrl === null || spriteUrl === "") {
                 return (
-                    <div
-                        className="sprite margin-auto-horiz"
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}>
+                    <div className="flex-center sprite margin-auto-horiz">
                         (no sprite)
                     </div>
                 )
@@ -394,6 +394,25 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 versionGroupId={this.props.versionGroupId}
                 showLocations={this.shouldShowPokemon()}
                 hideTooltips={this.props.hideTooltips} />
+        )
+    }
+
+    /**
+     * Renders the evolution chain.
+     */
+    renderEvolutionChain() {
+        const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
+
+        return (
+            <div className="inherit-size">
+                <EvolutionChain
+                    index={this.props.index}
+                    speciesId={this.state.speciesId}
+                    availableSpeciesIds={this.props.species.map(s => s.speciesId)}
+                    showShinySprites={this.state.showShinySprite}
+                    shouldShowChain={this.shouldShowPokemon()}
+                    setSpecies={setSpecies} />
+            </div>
         )
     }
 

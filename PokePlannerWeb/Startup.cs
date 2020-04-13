@@ -75,6 +75,21 @@ namespace PokePlannerWeb
             services.AddSingleton<EncountersService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EvolutionChainEntry>(dataStoreSettings.EvolutionChainCollectionName)
+            );
+            services.AddSingleton<EvolutionChainService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EvolutionTriggerEntry>(dataStoreSettings.EvolutionTriggerCollectionName)
+            );
+            services.AddSingleton<EvolutionTriggerService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<ItemEntry>(dataStoreSettings.ItemCollectionName)
+            );
+            services.AddSingleton<ItemService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<GenerationEntry>(dataStoreSettings.GenerationCollectionName)
             );
             services.AddSingleton<GenerationService>();
@@ -172,77 +187,92 @@ namespace PokePlannerWeb
             var cacheSettings = Configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Generation>(cacheSettings.GenerationCollectionName)
+                cacheSourceFactory.Create<EvolutionChain>(cacheSettings.EvolutionChainCollectionName)
+            );
+            services.AddSingleton<EvolutionChainCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EvolutionTrigger>(cacheSettings.EvolutionTriggerCollectionName)
+            );
+            services.AddSingleton<EvolutionTriggerCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<Generation>(cacheSettings.GenerationCollectionName)
             );
             services.AddSingleton<GenerationCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<LocationArea>(cacheSettings.LocationAreaCollectionName)
+                cacheSourceFactory.CreateNamed<Item>(cacheSettings.ItemCollectionName)
+            );
+            services.AddSingleton<ItemCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<LocationArea>(cacheSettings.LocationAreaCollectionName)
             );
             services.AddSingleton<LocationAreaCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Location>(cacheSettings.LocationCollectionName)
+                cacheSourceFactory.CreateNamed<Location>(cacheSettings.LocationCollectionName)
             );
             services.AddSingleton<LocationCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Move>(cacheSettings.MoveCollectionName)
+                cacheSourceFactory.CreateNamed<Move>(cacheSettings.MoveCollectionName)
             );
             services.AddSingleton<MoveCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
+                cacheSourceFactory.CreateNamed<MoveCategory>(cacheSettings.MoveCategoryCollectionName)
             );
             services.AddSingleton<MoveCategoryCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
+                cacheSourceFactory.CreateNamed<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
             );
             services.AddSingleton<MoveDamageClassCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<MoveTarget>(cacheSettings.MoveTargetCollectionName)
+                cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)
             );
             services.AddSingleton<MoveTargetCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Pokedex>(cacheSettings.PokedexCollectionName)
+                cacheSourceFactory.CreateNamed<Pokedex>(cacheSettings.PokedexCollectionName)
             );
             services.AddSingleton<PokedexCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Pokemon>(cacheSettings.PokemonCollectionName)
+                cacheSourceFactory.CreateNamed<Pokemon>(cacheSettings.PokemonCollectionName)
             );
             services.AddSingleton<PokemonCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<PokemonForm>(cacheSettings.PokemonFormCollectionName)
+                cacheSourceFactory.CreateNamed<PokemonForm>(cacheSettings.PokemonFormCollectionName)
             );
             services.AddSingleton<PokemonFormCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<PokemonSpecies>(cacheSettings.PokemonSpeciesCollectionName)
+                cacheSourceFactory.CreateNamed<PokemonSpecies>(cacheSettings.PokemonSpeciesCollectionName)
             );
             services.AddSingleton<PokemonSpeciesCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Stat>(cacheSettings.StatCollectionName)
+                cacheSourceFactory.CreateNamed<Stat>(cacheSettings.StatCollectionName)
             );
             services.AddSingleton<StatCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Type>(cacheSettings.TypeCollectionName)
+                cacheSourceFactory.CreateNamed<Type>(cacheSettings.TypeCollectionName)
             );
             services.AddSingleton<TypeCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<Version>(cacheSettings.VersionCollectionName)
+                cacheSourceFactory.CreateNamed<Version>(cacheSettings.VersionCollectionName)
             );
             services.AddSingleton<VersionCacheService>();
 
             services.AddSingleton(sp =>
-                cacheSourceFactory.Create<VersionGroup>(cacheSettings.VersionGroupCollectionName)
+                cacheSourceFactory.CreateNamed<VersionGroup>(cacheSettings.VersionGroupCollectionName)
             );
             services.AddSingleton<VersionGroupCacheService>();
         }

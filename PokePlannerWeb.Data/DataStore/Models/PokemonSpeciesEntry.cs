@@ -14,6 +14,16 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public int SpeciesId => Key;
 
         /// <summary>
+        /// Gets or sets this species' front default sprite URL.
+        /// </summary>
+        public string SpriteUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets this species' front shiny sprite URL.
+        /// </summary>
+        public string ShinySpriteUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon species' display names.
         /// </summary>
         public List<LocalString> DisplayNames { get; set; }
@@ -29,8 +39,30 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public Generation Generation { get; set; }
 
         /// <summary>
+        /// Gets or sets the species' evolution chain.
+        /// </summary>
+        public EvolutionChain EvolutionChain { get; set; }
+
+        /// <summary>
         /// Gets or sets the IDs of the version groups where this Pokemon species is valid.
         /// </summary>
         public List<int> Validity { get; set; }
+
+        /// <summary>
+        /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
+        /// </summary>
+        public PokemonSpeciesEntry ForEvolutionChain()
+        {
+            return new PokemonSpeciesEntry
+            {
+                Key = Key,
+                Name = Name,
+                SpriteUrl = SpriteUrl,
+                ShinySpriteUrl = ShinySpriteUrl,
+                DisplayNames = DisplayNames,
+                Generation = Generation,
+                Validity = Validity
+            };
+        }
     }
 }

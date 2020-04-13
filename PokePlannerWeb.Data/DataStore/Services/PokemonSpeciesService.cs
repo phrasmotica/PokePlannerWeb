@@ -16,9 +16,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class PokemonSpeciesService : NamedApiResourceServiceBase<PokemonSpecies, PokemonSpeciesEntry>
     {
         /// <summary>
+        /// The evolution chain cache service.
+        /// </summary>
+        private readonly EvolutionChainCacheService EvolutionChainCacheService;
+
+        /// <summary>
         /// The generation service.
         /// </summary>
-        private readonly GenerationService GenerationService;
+        private readonly GenerationCacheService GenerationCacheService;
+
+        /// <summary>
+        /// The Pokemon cache service.
+        /// </summary>
+        private readonly PokemonCacheService PokemonCacheService;
 
         /// <summary>
         /// The Pokemon service.
@@ -37,12 +47,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonSpeciesEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonSpeciesCacheService pokemonSpeciesCacheService,
-            GenerationService generationService,
+            EvolutionChainCacheService evolutionChainCacheService,
+            GenerationCacheService generationCacheService,
+            PokemonCacheService pokemonCacheService,
             PokemonService pokemonService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
-            GenerationService = generationService;
+            EvolutionChainCacheService = evolutionChainCacheService;
+            GenerationCacheService = generationCacheService;
+            PokemonCacheService = pokemonCacheService;
             PokemonService = pokemonService;
             VersionGroupsService = versionGroupsService;
         }
@@ -54,21 +68,23 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonSpeciesEntry> ConvertToEntry(PokemonSpecies species)
         {
+            var primaryVariety = await PokemonService.Upsert(species.Varieties[0].Pokemon);
+            var displayNames = GetDisplayNames(species);
             var varieties = await GetVarieties(species);
             var generation = await GetGeneration(species);
+            var evolutionChain = await GetEvolutionChain(species);
             var validity = await GetValidity(species);
 
             return new PokemonSpeciesEntry
             {
                 Key = species.Id,
                 Name = species.Name,
-                DisplayNames = GetDisplayNames(species).ToList(),
+                SpriteUrl = primaryVariety.SpriteUrl,
+                ShinySpriteUrl = primaryVariety.ShinySpriteUrl,
+                DisplayNames = displayNames.ToList(),
                 Varieties = varieties.ToList(),
-                Generation = new Generation
-                {
-                    Id = generation.GenerationId,
-                    Name = generation.Name
-                },
+                Generation = generation,
+                EvolutionChain = evolutionChain,
                 Validity = validity.ToList()
             };
         }
@@ -91,7 +107,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<PokemonSpeciesEntry[]> GetPokemonSpecies(int limit, int offset)
         {
-            var resources = await PokeApi.GetPage<PokemonSpecies>(limit, offset);
+            var resources = await PokeApi.GetNamedPage<PokemonSpecies>(limit, offset);
             var species = await UpsertMany(resources);
             return species.OrderBy(s => s.SpeciesId).ToArray();
         }
@@ -148,12 +164,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             foreach (var res in species.Varieties)
             {
-                var sourceEntry = await PokemonService.Upsert(res.Pokemon);
-                varietiesList.Add(new Pokemon
-                {
-                    Id = sourceEntry.PokemonId,
-                    Name = sourceEntry.Name
-                });
+                var pokemon = await PokemonCacheService.GetMinimal(res.Pokemon);
+                varietiesList.Add(pokemon);
             }
 
             return varietiesList;
@@ -162,9 +174,17 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the generation in which the given Pokemon species was introduced.
         /// </summary>
-        private async Task<GenerationEntry> GetGeneration(PokemonSpecies species)
+        private async Task<Generation> GetGeneration(PokemonSpecies species)
         {
-            return await GenerationService.Upsert(species.Generation);
+            return await GenerationCacheService.GetMinimal(species.Generation);
+        }
+
+        /// <summary>
+        /// Returns the evolution chain of the given Pokemon species.
+        /// </summary>
+        private async Task<EvolutionChain> GetEvolutionChain(PokemonSpecies species)
+        {
+            return await EvolutionChainCacheService.GetMinimal(species.EvolutionChain);
         }
 
         /// <summary>

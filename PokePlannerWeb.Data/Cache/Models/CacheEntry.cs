@@ -9,7 +9,7 @@ namespace PokePlannerWeb.Data.Cache.Models
     /// <summary>
     /// Model for a timestamped cache entry.
     /// </summary>
-    public class CacheEntry<T> where T : NamedApiResource
+    public class CacheEntry<T> where T : ResourceBase
     {
         /// <summary>
         /// Gets or sets the ID.

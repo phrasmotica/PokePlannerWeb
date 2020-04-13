@@ -7,15 +7,15 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing the collection of pokedex resources in the cache.
     /// </summary>
-    public class PokedexCacheService : CacheServiceBase<Pokedex>
+    public class PokedexCacheService : NamedCacheServiceBase<Pokedex>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public PokedexCacheService(
-            ICacheSource<Pokedex> cacheSource,
+            INamedCacheSource<Pokedex> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<CacheServiceBase<Pokedex>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<PokedexCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

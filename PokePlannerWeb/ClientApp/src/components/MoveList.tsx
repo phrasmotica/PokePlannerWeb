@@ -83,7 +83,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     componentDidUpdate(previousProps: IMoveListProps) {
-        // refresh efficacy if the version group changed...
+        // refresh move list if the version group changed...
         let previousVersionGroupId = previousProps.versionGroupId
         let versionGroupId = this.props.versionGroupId
         let versionGroupChanged = versionGroupId !== previousVersionGroupId
@@ -91,9 +91,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         // ...or if the Pokemon ID changed
         let previousPokemonId = previousProps.pokemonId
         let pokemonId = this.props.pokemonId
-        let pokemonChanges = pokemonId !== previousPokemonId
+        let pokemonChanged = pokemonId !== previousPokemonId
 
-        if (versionGroupChanged || pokemonChanges) {
+        if (versionGroupChanged || pokemonChanged) {
             this.fetchMoves()
         }
     }

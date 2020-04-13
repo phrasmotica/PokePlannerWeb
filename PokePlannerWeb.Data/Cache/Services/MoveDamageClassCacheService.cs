@@ -7,15 +7,15 @@ namespace PokePlannerWeb.Data.Cache.Services
     /// <summary>
     /// Service for managing the collection of move damage class resources in the cache.
     /// </summary>
-    public class MoveDamageClassCacheService : CacheServiceBase<MoveDamageClass>
+    public class MoveDamageClassCacheService : NamedCacheServiceBase<MoveDamageClass>
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         public MoveDamageClassCacheService(
-            ICacheSource<MoveDamageClass> cacheSource,
+            INamedCacheSource<MoveDamageClass> cacheSource,
             IPokeAPI pokeApi,
-            ILogger<CacheServiceBase<MoveDamageClass>> logger) : base(cacheSource, pokeApi, logger)
+            ILogger<MoveDamageClassCacheService> logger) : base(cacheSource, pokeApi, logger)
         {
         }
     }

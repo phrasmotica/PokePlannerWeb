@@ -12,23 +12,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// <summary>
     /// Service for managing a collection of named API resource entries in the data store.
     /// </summary>
-    public abstract class NamedApiResourceServiceBase<TSource, TEntry> : ServiceBase<TSource, TEntry>
-        where TSource : NamedApiResource
+    public abstract class NamedApiResourceServiceBase<TSource, TEntry> : NamedServiceBase<TSource, TEntry>
+        where TSource : NamedApiResource, new()
         where TEntry : NamedApiResourceEntry
     {
-        /// <summary>
-        /// The cache service for the resource type.
-        /// </summary>
-        protected readonly CacheServiceBase<TSource> CacheService;
-
         /// <summary>
         /// Constructor.
         /// </summary>
         public NamedApiResourceServiceBase(
             IDataStoreSource<TEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            CacheServiceBase<TSource> cacheService,
-            ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(dataStoreSource, pokeApi, logger)
+            NamedCacheServiceBase<TSource> cacheService,
+            ILogger<NamedApiResourceServiceBase<TSource, TEntry>> logger) : base(dataStoreSource, pokeApi, cacheService, logger)
         {
             CacheService = cacheService;
         }
@@ -69,6 +64,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public override async Task<TEntry> Upsert(NamedApiResource<TSource> res)
         {
+            if (res == null)
+            {
+                return null;
+            }
+
             // check for existing entry by name
             var existingEntry = await GetByName(res.Name);
             if (existingEntry != null)

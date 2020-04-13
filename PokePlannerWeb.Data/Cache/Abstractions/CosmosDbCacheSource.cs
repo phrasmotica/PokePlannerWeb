@@ -11,9 +11,9 @@ using PokePlannerWeb.Data.Cache.Models;
 namespace PokePlannerWeb.Data.Cache.Abstractions
 {
     /// <summary>
-    /// Cache source for Cosmos DB.
+    /// Cache source for API resources in Cosmos DB.
     /// </summary>
-    public class CosmosDbCacheSource<TResource> : ICacheSource<TResource> where TResource : NamedApiResource
+    public class CosmosDbCacheSource<TResource> : ICacheSource<TResource> where TResource : ResourceBase
     {
         /// <summary>
         /// The client to Cosmos DB.
@@ -80,15 +80,6 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         }
 
         /// <summary>
-        /// Returns the cache entry for the resource with the given name.
-        /// </summary>
-        public async Task<CacheEntry<TResource>> GetCacheEntry(string name)
-        {
-            var entries = await GetAllItems<TResource>();
-            return entries.FirstOrDefault(e => e.Resource.Name == name);
-        }
-
-        /// <summary>
         /// Returns the first resource that matches the given predicate.
         /// </summary>
         protected async Task<CacheEntry<TResource>> GetOneCacheEntry(Func<TResource, bool> predicate)
@@ -136,7 +127,7 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         /// <summary>
         /// Returns all items in the container of the given type.
         /// </summary>
-        private async Task<IEnumerable<CacheEntry<T>>> GetAllItems<T>() where T : NamedApiResource
+        protected async Task<IEnumerable<CacheEntry<T>>> GetAllItems<T>() where T : ResourceBase
         {
             await CreateIfNeeded();
 
@@ -163,7 +154,7 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         /// <summary>
         /// Returns a partition key for the given resource.
         /// </summary>
-        private static PartitionKey GetPartitionKey(CacheEntry<TResource> entry)
+        protected static PartitionKey GetPartitionKey(CacheEntry<TResource> entry)
         {
             return new PartitionKey(entry.Id.ToString());
         }

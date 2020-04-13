@@ -28,9 +28,9 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
         private readonly string DatabaseName = "PokePlannerWebCache";
 
         /// <summary>
-        /// Creates a cache source for the given named API resource type.
+        /// Creates a cache source for the given API resource type.
         /// </summary>
-        public ICacheSource<TEntry> Create<TEntry>(string collectionName) where TEntry : NamedApiResource
+        public ICacheSource<TEntry> Create<TEntry>(string collectionName) where TEntry : ResourceBase
         {
             var isCosmosDb = Regex.IsMatch(ConnectionString, @"https:\/\/[\w-]+\.documents\.azure\.com");
             if (isCosmosDb)
@@ -40,6 +40,21 @@ namespace PokePlannerWeb.Data.Cache.Abstractions
 
             ConfigureMongoDb();
             return new MongoDbCacheSource<TEntry>(ConnectionString, DatabaseName, collectionName);
+        }
+
+        /// <summary>
+        /// Creates a named cache source for the given named API resource type.
+        /// </summary>
+        public INamedCacheSource<TEntry> CreateNamed<TEntry>(string collectionName) where TEntry : NamedApiResource
+        {
+            var isCosmosDb = Regex.IsMatch(ConnectionString, @"https:\/\/[\w-]+\.documents\.azure\.com");
+            if (isCosmosDb)
+            {
+                return new CosmosDbNamedCacheSource<TEntry>(ConnectionString, PrivateKey, DatabaseName, collectionName);
+            }
+
+            ConfigureMongoDb();
+            return new MongoDbNamedCacheSource<TEntry>(ConnectionString, DatabaseName, collectionName);
         }
 
         /// <summary>

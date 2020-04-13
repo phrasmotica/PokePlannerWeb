@@ -11,6 +11,37 @@ namespace PokePlannerWeb.Data.Extensions
     public static class PokeAPIExtensions
     {
         /// <summary>
+        /// Returns whether this evolution chain has only one stage.
+        /// </summary>
+        public static bool IsEmpty(this EvolutionChain evolutionChain)
+        {
+            return !evolutionChain.Chain.EvolvesTo.Any();
+        }
+
+        /// <summary>
+        /// Returns a minimal copy of this API resource.
+        /// </summary>
+        public static T Minimise<T>(this T resource) where T : ResourceBase, new()
+        {
+            return new T
+            {
+                Id = resource.Id
+            };
+        }
+
+        /// <summary>
+        /// Returns a minimal copy of this named API resource.
+        /// </summary>
+        public static T MinimiseNamed<T>(this T resource) where T : NamedApiResource, new()
+        {
+            return new T
+            {
+                Id = resource.Id,
+                Name = resource.Name
+            };
+        }
+
+        /// <summary>
         /// Returns the name from the given list of names in the given locale.
         /// </summary>
         public static string GetName(this List<Names> names, string locale = "en")
