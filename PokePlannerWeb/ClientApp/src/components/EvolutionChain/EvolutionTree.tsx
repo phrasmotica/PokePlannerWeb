@@ -92,7 +92,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         // wurmple's chain is wrongly serialised by PokeAPI but I've got a PR to fix it...
         // https://github.com/PokeAPI/pokeapi/pull/485
         return (
-            <div>
+            <div key={key(link)}>
                 {transitionElement}
 
                 <div className="evolution-tree-item">
