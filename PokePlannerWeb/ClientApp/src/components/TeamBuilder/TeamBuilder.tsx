@@ -202,42 +202,25 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     renderPokemonPanels() {
-        let rows = []
-        let itemsPerRow = TEAM_SIZE / NUMBER_OF_ROWS
+        let panels = []
 
-        for (let row = 0; row < NUMBER_OF_ROWS; row++) {
-            let items = []
-            for (let col = 0; col < itemsPerRow; col++) {
-                let index = row * itemsPerRow + col
-                items.push(
-                    <PokemonPanel
-                        key={index}
-                        index={index}
-                        versionGroupId={this.state.versionGroupId}
-                        ignoreValidity={this.state.ignoreValidity}
-                        toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
-                        hideTooltips={this.state.hideTooltips}
-                        species={this.state.species}
-                        generations={this.state.generations}
-                        typesPresenceMap={this.state.typesPresenceMap}
-                        baseStatNames={this.state.baseStatNames} />
-                )
-            }
-
-            rows.push(
-                <div
-                    key={row}
-                    className="flex margin-bottom">
-                    {items}
-                </div>
+        for (let i = 0; i < TEAM_SIZE; i++) {
+            panels.push(
+                <PokemonPanel
+                    key={i}
+                    index={i}
+                    versionGroupId={this.state.versionGroupId}
+                    ignoreValidity={this.state.ignoreValidity}
+                    toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
+                    hideTooltips={this.state.hideTooltips}
+                    species={this.state.species}
+                    generations={this.state.generations}
+                    typesPresenceMap={this.state.typesPresenceMap}
+                    baseStatNames={this.state.baseStatNames} />
             )
         }
 
-        return (
-            <div>
-                {rows}
-            </div>
-        )
+        return <div>{panels}</div>
     }
 
     // load all species
