@@ -89,10 +89,8 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
 
         let childElements = link.evolvesTo.map(l => this.renderTree(l))
 
-        // TODO: pattern doesn't work for wurmple's chain. it's currently processed in the order
-        // wurmple -> silcoon -> beautifly -> cascoon -> dustox, which is correct DFS, but cascoon
-        // is shown as a child of silcoon when it should be a child of wurmple. need to be able to
-        // render the species at the appropriate depth in the tree
+        // wurmple's chain is wrongly serialised by PokeAPI but I've got a PR to fix it...
+        // https://github.com/PokeAPI/pokeapi/pull/485
         return (
             <div>
                 {transitionElement}
