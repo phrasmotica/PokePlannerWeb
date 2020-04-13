@@ -16,9 +16,9 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class PokemonFormService : NamedApiResourceServiceBase<PokemonForm, PokemonFormEntry>
     {
         /// <summary>
-        /// The types service.
+        /// The types cache service.
         /// </summary>
-        private readonly TypeService TypesService;
+        private readonly TypeCacheService TypeCacheService;
 
         /// <summary>
         /// The version groups service.
@@ -32,12 +32,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonFormEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonFormCacheService pokemonFormCacheService,
-            TypeService typesService,
+            TypeCacheService typeCacheService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonFormService> logger) : base(dataStoreSource, pokeApi, pokemonFormCacheService, logger)
         {
             VersionGroupsService = versionGroupsService;
-            TypesService = typesService;
+            TypeCacheService = typeCacheService;
         }
 
         #region Entry conversion methods
@@ -82,36 +82,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
             return await Upsert(formId);
         }
 
-        /// <summary>
-        /// Returns the display names of the forms of the Pokemon with the given ID in the given
-        /// locale from the data store.
-        /// </summary>
-        //public async Task<IEnumerable<string>> GetFormDisplayNames(int pokemonId, string locale = "en")
-        //{
-        //    var entry = await GetOrCreate(pokemonId);
-        //    return entry.GetFormDisplayNames(locale);
-        //}
-
-        /// <summary>
-        /// Returns the display name of the Pokemon form with the given ID in the given locale.
-        /// </summary>
-        //public async Task<string> GetFormDisplayName(int formId, string locale = "en")
-        //{
-        //    var form = await PokeApi.Get<PokemonForm>(formId);
-        //    return form.Names.GetName(locale);
-        //}
-
-        /// <summary>
-        /// Returns the types of the Pokemon form with the given ID in the version group with the
-        /// given ID.
-        /// </summary>
-        //public async Task<string[]> GetFormTypesInVersionGroup(int formId, int versionGroupId)
-        //{
-        //    var form = await PokeApi.Get<PokemonForm>(formId);
-        //    var types = await GetTypes(form, versionGroupId);
-        //    return types.ToArray();
-        //}
-
         #endregion
 
         #region Helpers
@@ -154,16 +124,12 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var newestTypeEntries = new List<Type>();
 
             // some forms have different types indicated by their names, i.e. arceus, silvally
-            var allTypes = await TypesService.GetAll();
+            var allTypes = await TypeCacheService.UpsertAll();
             var matchingType = allTypes.SingleOrDefault(t => t.Name == form.FormName);
 
             if (matchingType != null)
             {
-                newestTypeEntries.Add(new Type
-                {
-                    Id = matchingType.TypeId,
-                    Name = matchingType.Name
-                });
+                newestTypeEntries.Add(matchingType.Minimise());
             }
             else
             {
@@ -171,20 +137,15 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var formTypes = await GetFormTypesByName(form.Name);
                 if (formTypes.Any())
                 {
-                    newestTypeEntries = formTypes.Select(t => new Type
-                    {
-                        Id = t.TypeId,
-                        Name = t.Name
-                    }).ToList();
+                    newestTypeEntries = formTypes.Select(t => t.Minimise()).ToList();
                 }
             }
 
-            // FUTURE: anticipating a generation-based types changelog
-            var newestIdWithoutData = await VersionGroupsService.GetOldestVersionGroupId();
-            var newestId = await VersionGroupsService.GetNewestVersionGroupId();
-            for (var id = newestIdWithoutData; id <= newestId; id++)
+            if (newestTypeEntries.Any())
             {
-                typesList.Add(new WithId<Type[]>(id, newestTypeEntries.ToArray()));
+                // FUTURE: anticipating a generation-based types changelog
+                var newestId = await VersionGroupsService.GetNewestVersionGroupId();
+                typesList.Add(new WithId<Type[]>(newestId, newestTypeEntries.ToArray()));
             }
 
             return typesList;
@@ -194,7 +155,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns the types of the Pokemon form with the given form name.
         /// </summary>
         // TODO: store this somewhere sensible
-        private async Task<IEnumerable<TypeEntry>> GetFormTypesByName(string name)
+        private async Task<IEnumerable<Type>> GetFormTypesByName(string name)
         {
             IEnumerable<int> typeIds = new int[0];
 
@@ -340,7 +301,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     break;
             }
 
-            return await TypesService.UpsertMany(typeIds);
+            return await TypeCacheService.UpsertMany(typeIds);
         }
 
         /// <summary>

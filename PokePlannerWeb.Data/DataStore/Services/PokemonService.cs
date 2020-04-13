@@ -30,7 +30,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The types service.
         /// </summary>
-        private readonly TypeService TypesService;
+        private readonly TypeCacheService TypeCacheService;
 
         /// <summary>
         /// The version groups service.
@@ -46,13 +46,13 @@ namespace PokePlannerWeb.Data.DataStore.Services
             PokemonCacheService pokemonCacheService,
             MoveService moveService,
             PokemonFormService pokemonFormsService,
-            TypeService typesService,
+            TypeCacheService typeCacheService,
             VersionGroupService versionGroupsService,
             ILogger<PokemonService> logger) : base(dataStoreSource, pokeApi, pokemonCacheService, logger)
         {
             MoveService = moveService;
             PokemonFormsService = pokemonFormsService;
-            TypesService = typesService;
+            TypeCacheService = typeCacheService;
             VersionGroupService = versionGroupsService;
         }
 
@@ -187,8 +187,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var typesList = new List<WithId<Type[]>>();
 
-            var newestIdWithoutData = await VersionGroupService.GetOldestVersionGroupId();
-
             if (pokemon.PastTypes.Any())
             {
                 foreach (var vg in await VersionGroupService.GetAll())
@@ -197,12 +195,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     if (types != null)
                     {
                         var typeEntries = await MinimiseTypes(types.Types);
-                        for (var id = newestIdWithoutData; id <= vg.VersionGroupId; id++)
-                        {
-                            typesList.Add(new WithId<Type[]>(id, typeEntries.ToArray()));
-                        }
-
-                        newestIdWithoutData = vg.VersionGroupId + 1;
+                        typesList.Add(new WithId<Type[]>(vg.VersionGroupId, typeEntries.ToArray()));
                     }
                 }
             }
@@ -210,10 +203,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             // always include the newest types
             var newestId = await VersionGroupService.GetNewestVersionGroupId();
             var newestTypeEntries = await MinimiseTypes(pokemon.Types);
-            for (var id = newestIdWithoutData; id <= newestId; id++)
-            {
-                typesList.Add(new WithId<Type[]>(id, newestTypeEntries.ToArray()));
-            }
+            typesList.Add(new WithId<Type[]>(newestId, newestTypeEntries.ToArray()));
 
             return typesList;
         }
@@ -223,12 +213,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<Type>> MinimiseTypes(IEnumerable<PokemonType> types)
         {
-            var newestTypeObjs = await TypesService.UpsertMany(types.Select(t => t.Type));
-            return newestTypeObjs.Select(t => new Type
-            {
-                Id = t.TypeId,
-                Name = t.Name
-            });
+            var newestTypeObjs = await TypeCacheService.UpsertMany(types.Select(t => t.Type));
+            return newestTypeObjs.Select(t => t.Minimise());
         }
 
         /// <summary>

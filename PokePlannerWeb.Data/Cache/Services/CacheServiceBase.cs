@@ -138,6 +138,22 @@ namespace PokePlannerWeb.Data.Cache.Services
         }
 
         /// <summary>
+        /// Creates new entries for the API resources with the given IDs and returns them.
+        /// </summary>
+        public virtual async Task<IEnumerable<TResource>> UpsertMany(IEnumerable<int> ids)
+        {
+            var entryList = new List<TResource>();
+
+            foreach (var id in ids)
+            {
+                var entry = await Upsert(id);
+                entryList.Add(entry);
+            }
+
+            return entryList;
+        }
+
+        /// <summary>
         /// Creates new entries for the given API resources and returns them.
         /// </summary>
         public virtual async Task<IEnumerable<TResource>> UpsertMany(IEnumerable<UrlNavigation<TResource>> resources)

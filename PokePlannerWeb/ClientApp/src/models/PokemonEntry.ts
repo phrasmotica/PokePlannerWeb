@@ -120,8 +120,30 @@ export class PokemonEntry {
      * Returns the Pokemon's types in the version group with the given ID.
      */
     getTypes(versionGroupId: number): Type[] {
-        let types = this.types.find(t => t.id === versionGroupId)
-        return types?.data ?? []
+        let types = this.types
+        if (types.length <= 0) {
+            throw new Error(`Pokemon ${this.pokemonId} has no type entries`)
+        }
+
+        let newestVersionGroupId = types.reduce((t1, t2) => t1.id > t2.id ? t1 : t2).id
+
+        // find first types entry with a version group ID after the one we're looking so
+        let matchFunc = (searchId: number) => types.find(e => e.id === searchId)
+
+        let searchId = versionGroupId
+        let matchingEntry: WithId<Type[]> | undefined = undefined
+        while (matchingEntry === undefined && searchId <= newestVersionGroupId) {
+            matchingEntry = matchFunc(searchId)
+            searchId++
+        }
+
+        if (matchingEntry === undefined) {
+            throw new Error(
+                `Pokemon ${this.pokemonId} has no type data for the newest version group (${newestVersionGroupId})`
+            )
+        }
+
+        return matchingEntry.data
     }
 
     /**

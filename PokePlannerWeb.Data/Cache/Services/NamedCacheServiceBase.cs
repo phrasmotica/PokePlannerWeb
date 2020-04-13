@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
 using PokePlannerWeb.Data.Cache.Abstractions;
@@ -62,6 +64,36 @@ namespace PokePlannerWeb.Data.Cache.Services
             }
 
             return entry.Resource;
+        }
+
+        /// <summary>
+        /// Upserts all entries into the cache.
+        /// </summary>
+        public async Task<IEnumerable<TResource>> UpsertAll()
+        {
+            var resourcesPage = await PokeApi.GetNamedPage<TResource>();
+
+            var allResources = await GetAllResources();
+            if (!allResources.Any() || allResources.ToList().Count != resourcesPage.Count)
+            {
+                const int pageSize = 20;
+
+                var entryList = new List<TResource>();
+
+                var pagesUsed = 0;
+                NamedApiResourceList<TResource> page;
+                do
+                {
+                    page = await PokeApi.GetNamedPage<TResource>(pageSize, pageSize * pagesUsed++);
+                    var entries = await UpsertMany(page.Results);
+                    entryList.AddRange(entries);
+                } while (!string.IsNullOrEmpty(page.Next));
+
+                return entryList;
+            }
+
+            // if we have the right number of entries then we're probably good
+            return allResources;
         }
 
         /// <summary>
