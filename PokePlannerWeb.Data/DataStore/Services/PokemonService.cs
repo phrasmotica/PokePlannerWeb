@@ -181,7 +181,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the types of the given Pokemon in all version groups.
+        /// Returns the types of the given Pokemon in past version groups, if any.
         /// </summary>
         private async Task<List<WithId<Type[]>>> GetTypes(Pokemon pokemon)
         {
@@ -189,14 +189,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             if (pokemon.PastTypes.Any())
             {
-                foreach (var vg in await VersionGroupService.GetAll())
+                // determine which version groups need entries
+                var versionGroups = await VersionGroupService.GetAll();
+                var generationNames = pokemon.PastTypes.Select(pt => pt.Generation.Name);
+                var relevantVersionGroups = versionGroups.Where(vg => generationNames.Contains(vg.Generation.Name));
+
+                // ensure we create an entry for only the last version group in the generation
+                var necessaryVersionGroups = relevantVersionGroups.OrderBy(vg => vg.Id)
+                                                                  .GroupBy(vg => vg.Generation.Name)
+                                                                  .Select(gr => gr.Last());
+
+                foreach (var vg in necessaryVersionGroups)
                 {
-                    var types = pokemon.PastTypes.FirstOrDefault(t => t.Generation.Name == vg.Generation.Name);
-                    if (types != null)
-                    {
-                        var typeEntries = await MinimiseTypes(types.Types);
-                        typesList.Add(new WithId<Type[]>(vg.VersionGroupId, typeEntries.ToArray()));
-                    }
+                    var types = pokemon.PastTypes.Single(t => t.Generation.Name == vg.Generation.Name);
+                    var typeEntries = await MinimiseTypes(types.Types);
+                    typesList.Add(new WithId<Type[]>(vg.VersionGroupId, typeEntries.ToArray()));
                 }
             }
 
