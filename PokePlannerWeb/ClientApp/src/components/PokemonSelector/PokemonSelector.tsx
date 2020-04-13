@@ -2,23 +2,23 @@
 import { Button } from "reactstrap"
 import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
 
-import { FormSelector } from "./PokemonSelector/FormSelector"
-import { SpeciesSelector } from "./PokemonSelector/SpeciesSelector"
-import { VarietySelector } from "./PokemonSelector/VarietySelector"
+import { FormSelector } from "./FormSelector"
+import { SpeciesSelector } from "./SpeciesSelector"
+import { VarietySelector } from "./VarietySelector"
 
-import { GenerationEntry } from "../models/GenerationEntry"
-import { PokemonEntry } from "../models/PokemonEntry"
-import { PokemonFormEntry } from "../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
-import { WithId } from "../models/WithId"
+import { GenerationEntry } from "../../models/GenerationEntry"
+import { PokemonEntry } from "../../models/PokemonEntry"
+import { PokemonFormEntry } from "../../models/PokemonFormEntry"
+import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { WithId } from "../../models/WithId"
 
-import { CookieHelper } from "../util/CookieHelper"
+import { CookieHelper } from "../../util/CookieHelper"
 
-import "../styles/types.scss"
+import "../../styles/types.scss"
 import "./PokemonSelector.scss"
-import "./TeamBuilder.scss"
+import "./../TeamBuilder/TeamBuilder.scss"
 
 interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**

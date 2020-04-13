@@ -3,15 +3,15 @@ import { ListGroup, ListGroupItem, Button, Collapse, FormGroup, Input, Label } f
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
-import { IHasCommon } from "./CommonMembers"
+import { IHasCommon } from "../CommonMembers"
 
-import { MoveEntry } from "../models/MoveEntry"
+import { MoveEntry } from "../../models/MoveEntry"
 
-import { CookieHelper } from "../util/CookieHelper"
+import { CookieHelper } from "../../util/CookieHelper"
 
 import "./MoveList.scss"
-import "./TeamBuilder.scss"
-import "../styles/types.scss"
+import "./../TeamBuilder/TeamBuilder.scss"
+import "../../styles/types.scss"
 
 interface IMoveListProps extends IHasCommon {
     /**
@@ -263,7 +263,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                                 id={headerId}
                                 className="type-icon padded"
                                 alt={`type${typeId}`}
-                                src={require(`../images/typeIcons/${typeId}-small.png`)} />
+                                src={require(`../../images/typeIcons/${typeId}-small.png`)} />
 
                 let damageClassIcon = this.getDamageClassIcon(move.damageClass.id)
 

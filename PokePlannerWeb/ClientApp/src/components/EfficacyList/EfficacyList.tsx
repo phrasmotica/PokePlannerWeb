@@ -1,12 +1,12 @@
 ﻿import React, { Component } from "react"
 import { Tooltip } from "reactstrap"
 
-import { IHasCommon } from "./CommonMembers"
-import { EfficacySet } from "../models/EfficacyMap"
-import { TypesPresenceMap } from "../models/TypesPresenceMap"
-import "../util/Extensions"
+import { IHasCommon } from "../CommonMembers"
+import { EfficacySet } from "../../models/EfficacyMap"
+import { TypesPresenceMap } from "../../models/TypesPresenceMap"
+import "../../util/Extensions"
 
-import "../styles/types.scss"
+import "../../styles/types.scss"
 import "./EfficacyList.scss"
 
 /**
@@ -114,7 +114,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                                     id={headerId}
                                     className="type-icon-small padded"
                                     alt={`type${typeId}`}
-                                    src={require(`../images/typeIcons/${typeId}-small.png`)} />
+                                    src={require(`../../images/typeIcons/${typeId}-small.png`)} />
 
                 if (!this.props.showMultipliers || efficacy === undefined) {
                     items.push(

@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 
-import { PokemonPanel } from './PokemonPanel'
+import { PokemonPanel } from '../PokemonPanel/PokemonPanel'
 
-import { IHasVersionGroup, IHasHideTooltips } from './CommonMembers'
+import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
-import { GenerationEntry } from '../models/GenerationEntry'
-import { PokemonSpeciesEntry } from '../models/PokemonSpeciesEntry'
-import { TypesPresenceMap } from '../models/TypesPresenceMap'
-import { VersionGroupEntry } from '../models/VersionGroupEntry'
+import { GenerationEntry } from '../../models/GenerationEntry'
+import { PokemonSpeciesEntry } from '../../models/PokemonSpeciesEntry'
+import { TypesPresenceMap } from '../../models/TypesPresenceMap'
+import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
-import { CookieHelper } from '../util/CookieHelper'
+import { CookieHelper } from '../../util/CookieHelper'
 
 
 /**

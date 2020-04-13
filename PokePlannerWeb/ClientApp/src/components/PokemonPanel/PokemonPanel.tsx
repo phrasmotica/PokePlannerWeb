@@ -3,26 +3,26 @@ import { FormGroup, CustomInput } from "reactstrap"
 import { Tabs, Tab } from "react-bootstrap"
 import key from "weak-key"
 
-import { CaptureLocations } from "./CaptureLocations"
-import { EfficacyList } from "./EfficacyList"
-import { EvolutionChain } from "./EvolutionChain/EvolutionChain"
-import { MoveList } from "./MoveList"
-import { PokemonSelector } from "./PokemonSelector"
-import { StatGraph } from "./StatGraph"
+import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
+import { EfficacyList } from "../EfficacyList/EfficacyList"
+import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
+import { MoveList } from "../MoveList/MoveList"
+import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
+import { StatGraph } from "../StatGraph/StatGraph"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "./CommonMembers"
+import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
 
-import { GenerationEntry } from "../models/GenerationEntry"
-import { PokemonEntry } from "../models/PokemonEntry"
-import { PokemonFormEntry } from "../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../models/PokemonSpeciesEntry"
-import { TypesPresenceMap } from "../models/TypesPresenceMap"
+import { GenerationEntry } from "../../models/GenerationEntry"
+import { PokemonEntry } from "../../models/PokemonEntry"
+import { PokemonFormEntry } from "../../models/PokemonFormEntry"
+import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { TypesPresenceMap } from "../../models/TypesPresenceMap"
 
-import { CookieHelper } from "../util/CookieHelper"
+import { CookieHelper } from "../../util/CookieHelper"
 
 import "./PokemonPanel.scss"
-import "./TeamBuilder.scss"
-import "../styles/types.scss"
+import "./../TeamBuilder/TeamBuilder.scss"
+import "../../styles/types.scss"
 
 interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
@@ -225,7 +225,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                             key={key(type)}
                             className={"type-icon padded" + (shouldShowPokemon ? "" : " hidden")}
                             alt={`type${type.id}`}
-                            src={require(`../images/typeIcons/${type.id}-small.png`)} />
+                            src={require(`../../images/typeIcons/${type.id}-small.png`)} />
                     </div>
                 )
             })

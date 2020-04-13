@@ -2,12 +2,12 @@
 import { ListGroup, ListGroupItem } from "reactstrap"
 import key from "weak-key"
 
-import { EncountersEntry, EncounterEntry } from "../models/EncountersEntry"
+import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
 
-import { IHasCommon } from "./CommonMembers"
+import { IHasCommon } from "../CommonMembers"
 
 import "./CaptureLocations.scss"
-import "./TeamBuilder.scss"
+import "./../TeamBuilder/TeamBuilder.scss"
 
 interface ICaptureLocationsProps extends IHasCommon {
     /**

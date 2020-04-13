@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react"
 
 import "./StatGraph.scss"
-import { IHasIndex } from "./CommonMembers"
+import { IHasIndex } from "../CommonMembers"
 
 interface IStatGraphProps extends IHasIndex {
     /**
