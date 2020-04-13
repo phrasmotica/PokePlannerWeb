@@ -163,10 +163,12 @@ export class MoveEntry {
         }
 
         // find most recent flavour text entry
+        let matchFunc = (searchId: number) => this.flavourTextEntries.find(e => e.id === searchId)
+
         let searchId = versionGroupId
         let matchingEntry: WithId<LocalString[]> | undefined = undefined
         while (matchingEntry === undefined && searchId > 0) {
-            matchingEntry = this.flavourTextEntries.find(e => e.id === searchId)
+            matchingEntry = matchFunc(searchId)
             searchId--
         }
 
