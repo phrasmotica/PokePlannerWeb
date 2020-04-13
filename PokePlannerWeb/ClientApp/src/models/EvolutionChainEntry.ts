@@ -119,6 +119,18 @@ export class ChainLinkEntry {
     }
 
     /**
+     * Returns the number of transitions in this chain.
+     */
+    countTransitions(): number {
+        if (this.evolvesTo.length <= 0) {
+            return 0
+        }
+
+        return this.evolvesTo.length + this.evolvesTo.map(l => l.countTransitions())
+                                                     .reduce((x, y) => x + y)
+    }
+
+    /**
      * Returns an ordered list of lists that each contain the chain links at a given depth.
      * More generally, this method flattens a tree into a list of nodes indexed by depth.
      */

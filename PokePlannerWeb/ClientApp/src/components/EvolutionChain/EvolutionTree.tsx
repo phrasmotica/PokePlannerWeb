@@ -37,7 +37,10 @@ interface IEvolutionTreeProps extends IHasIndex {
 }
 
 interface IEvolutionTreeState {
-
+    /**
+     * Whether to show the evolution details for each transition.
+     */
+    showEvolutionDetails: boolean[]
 }
 
 /**
@@ -45,9 +48,28 @@ interface IEvolutionTreeState {
  */
 export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTreeState> {
     /**
+     * The number of transition buttons rendered so far.
+     */
+    transitionButtonCount: number = 0
+
+    /**
+     * Constructor.
+     */
+    constructor(props: IEvolutionTreeProps) {
+        super(props)
+
+        let numberOfTransitions = this.props.chain.countTransitions();
+        this.state = {
+            showEvolutionDetails: new Array(numberOfTransitions).fill(false)
+        }
+    }
+
+    /**
      * Renders the component.
      */
     render() {
+        this.transitionButtonCount = 0
+
         return (
             <div className="evolution-chain">
                 {this.renderTree(this.props.chain)}
@@ -59,35 +81,57 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders the chain link as a tree.
      */
     renderTree(link: ChainLinkEntry) {
-        let numChildren = link.evolvesTo.length
+        let numChildren = link.countTransitions()
         let widthStyle = {
             width: `${100 / (numChildren + 1)}%`,
         }
 
         let transitionElement = null
         if (link.evolutionDetails.length > 0) {
+            let shouldShowEvolutionDetails = this.state.showEvolutionDetails[this.transitionButtonCount]
             let transitionButton = this.renderTransitionButton(link)
 
             // empty divs to ensure arrow is centred above the right species
             let paddingElements = []
-            for (let i = 0; i < numChildren; i++) {
-                paddingElements.push(<div key={i} style={widthStyle}></div>)
+            if (shouldShowEvolutionDetails) {
+                paddingElements.push(this.renderTransition(link))
+            }
+            else {
+                for (let i = 0; i < numChildren; i++) {
+                    paddingElements.push(<div key={i} style={widthStyle}></div>)
+                }
+            }
+
+            let paddingElement = null
+            if (shouldShowEvolutionDetails) {
+                paddingElement = (
+                    <div className="transition-padding" style={{ flex: 1 }}>
+                        {paddingElements}
+                    </div>
+                )
             }
 
             transitionElement = (
-                <div className="transition">
-                    <div className="center-text" style={widthStyle}>
+                <div className="flex" style={widthStyle}>
+                    <div className="transition center-text">
                         {transitionButton}
                     </div>
 
-                    {paddingElements}
+                    {paddingElement}
                 </div>
             )
         }
 
         let linkElement = this.renderChainLink(link)
 
-        let childElements = link.evolvesTo.map(l => this.renderTree(l))
+        let childrenElement = null
+        if (link.evolvesTo.length > 0) {
+            childrenElement = (
+                <div className="evolution-children">
+                    {link.evolvesTo.map(l => this.renderTree(l))}
+                </div>
+            )
+        }
 
         // wurmple's chain is wrongly serialised by PokeAPI but I've got a PR to fix it...
         // https://github.com/PokeAPI/pokeapi/pull/485
@@ -98,9 +142,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
                 <div className="evolution-tree-item">
                     {linkElement}
 
-                    <div className="flex-center">
-                        {childElements}
-                    </div>
+                    {childrenElement}
                 </div>
             </div>
         )
@@ -110,9 +152,14 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders a button for the transition from this chain link to the next one.
      */
     renderTransitionButton(link: ChainLinkEntry) {
-        // TODO: click to toggle evolution details
+        let index = this.transitionButtonCount++
+        const onClick = () => this.toggleShowEvolutionDetails(index)
+
         return (
-            <Button color="link" className="transition-button">
+            <Button
+                color="link"
+                className="transition-button"
+                onMouseUp={onClick}>
                 &#x21b4;
             </Button>
         )
@@ -339,12 +386,24 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         }
 
         return (
-            <div className="transition">
-                <span style={{ fontSize: 24 }}>
-                    &#x27F6;
-                </span>
+            <div>
                 {items}
             </div>
         )
+    }
+
+    /**
+     * Toggles showing the evolution details with the given index.
+     */
+    toggleShowEvolutionDetails(index: number) {
+        let newShowEvolutionDetails = this.state.showEvolutionDetails.map((item, j) => {
+            if (j === index) {
+                return !item
+            }
+
+            return item
+        })
+
+        this.setState({ showEvolutionDetails: newShowEvolutionDetails })
     }
 }

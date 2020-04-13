@@ -404,7 +404,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
 
         return (
-            <div className="flex-center inherit-size">
+            <div className="inherit-size">
                 <EvolutionChain
                     index={this.props.index}
                     speciesId={this.state.speciesId}
