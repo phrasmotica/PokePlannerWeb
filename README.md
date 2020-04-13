@@ -46,7 +46,7 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [ ] Open route in RouteDex
   * [x] Show evolution chain
     * [x] Show sprites
-    * [ ] Show evolution details
+    * [x] Show evolution details
     * [x] Open chain members in selector
     * [ ] Open chain members in next available selector
 * [x] Toggle tooltips on/off
