@@ -115,8 +115,21 @@ $dim: 96px;
     display: none;
 }
 
+.half-width {
+    width: 50%;
+}
+
 .tabpane {
     &-small > a {
         padding: 0.4rem;
     }
+}
+
+.nav-tabs {
+    border-bottom: unset;
+}
+
+.tab-content {
+    // width: 50%;
+    border: 1px solid #dee2e6;
 }

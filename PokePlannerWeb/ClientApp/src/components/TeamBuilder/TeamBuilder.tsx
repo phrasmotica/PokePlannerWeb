@@ -17,12 +17,7 @@ import { CookieHelper } from '../../util/CookieHelper'
 /**
  * The number of Pokemon panels to show.
  * */
-const TEAM_SIZE: number = 6
-
-/**
- * The number of rows to split the Pokemon panels across.
- */
-const NUMBER_OF_ROWS: number = 2
+const TEAM_SIZE: number = 1
 
 interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
@@ -202,10 +197,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     }
 
     renderPokemonPanels() {
-        let panels = []
+        let items = []
 
         for (let i = 0; i < TEAM_SIZE; i++) {
-            panels.push(
+            items.push(
                 <PokemonPanel
                     key={i}
                     index={i}
@@ -218,9 +213,13 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     typesPresenceMap={this.state.typesPresenceMap}
                     baseStatNames={this.state.baseStatNames} />
             )
+
+            if (i < TEAM_SIZE - 1) {
+                items.push(<hr></hr>)
+            }
         }
 
-        return <div>{panels}</div>
+        return <div>{items}</div>
     }
 
     // load all species

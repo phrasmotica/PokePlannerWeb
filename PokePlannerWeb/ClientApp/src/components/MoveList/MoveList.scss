@@ -27,3 +27,15 @@ $size: 40px;
 .text-align-center {
     text-align: center;
 }
+
+// TODO: remove need to set max-height. Should only be as tall as the parent...
+.move-list-container {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    max-height: 320px;
+}
+
+.move-list {
+    overflow: auto;
+}

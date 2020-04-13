@@ -107,7 +107,7 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         }
 
         return (
-            <div className="flex-space-between margin-bottom-small">
+            <div className="flex margin-bottom-small">
                 {searchBox}
                 {validityTooltip}
                 {filterButton}

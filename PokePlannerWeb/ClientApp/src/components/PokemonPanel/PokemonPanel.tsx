@@ -78,9 +78,14 @@ interface IPokemonPanelState {
     showShinySprite: boolean
 
     /**
-     * The key of the active tab.
+     * The key of the active info tab.
      */
-    activeKey: string | undefined
+    activeInfoTabKey: string | undefined
+
+    /**
+     * The key of the active move tab.
+     */
+    activeMoveTabKey: string | undefined
 }
 
 /**
@@ -94,7 +99,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             variety: undefined,
             form: undefined,
             showShinySprite: false,
-            activeKey: CookieHelper.get(`panel${this.props.index}activeKey`)
+            activeInfoTabKey: CookieHelper.get(`panel${this.props.index}activeInfoTabKey`),
+            activeMoveTabKey: CookieHelper.get(`panel${this.props.index}activeMoveTabKey`)
         }
     }
 
@@ -107,49 +113,59 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
-            <div className="margin-right">
-                <div className="flex">
-                    <PokemonSelector
-                        index={this.props.index}
-                        versionGroupId={this.props.versionGroupId}
-                        species={this.props.species}
-                        defaultSpeciesId={this.state.speciesId}
-                        ignoreValidity={this.props.ignoreValidity}
-                        generations={this.props.generations}
-                        hideTooltips={this.props.hideTooltips}
-                        clearPokemon={clearPokemon}
-                        setSpecies={setSpecies}
-                        setVariety={setVariety}
-                        setForm={setForm}
-                        toggleIgnoreValidity={toggleIgnoreValidity} />
+            <div className="flex pokemon-panel">
+                <div style={{ width: "50%" }}>
+                    <div className="flex">
+                        <PokemonSelector
+                            index={this.props.index}
+                            versionGroupId={this.props.versionGroupId}
+                            species={this.props.species}
+                            defaultSpeciesId={this.state.speciesId}
+                            ignoreValidity={this.props.ignoreValidity}
+                            generations={this.props.generations}
+                            hideTooltips={this.props.hideTooltips}
+                            clearPokemon={clearPokemon}
+                            setSpecies={setSpecies}
+                            setVariety={setVariety}
+                            setForm={setForm}
+                            toggleIgnoreValidity={toggleIgnoreValidity} />
 
-                    {this.renderPokemonInfo()}
+                        {this.renderPokemonInfo()}
+                    </div>
+
+                    <div className="margin-bottom" style={{ fontSize: "10pt" }}>
+                        <Tabs
+                            className="tabpane-small"
+                            transition={false}
+                            activeKey={this.state.activeInfoTabKey}
+                            defaultActiveKey="stats"
+                            onSelect={(k: string) => this.setActiveInfoTabKey(k)}
+                            id="infoTabs">
+                            <Tab eventKey="stats" title="Base Stats">
+                                {this.renderStatsGraph()}
+                            </Tab>
+
+                            <Tab eventKey="efficacy" title="Efficacy">
+                                {this.renderEfficacyList()}
+                            </Tab>
+
+                            <Tab eventKey="locations" title="Capture Locations">
+                                {this.renderCaptureLocations()}
+                            </Tab>
+                        </Tabs>
+                    </div>
                 </div>
 
-                <div
-                    className="margin-bottom"
-                    style={{ fontSize: "10pt" }}>
+                <div style={{ width: "50%", fontSize: "10pt" }}>
                     <Tabs
-                        transition={false}
                         className="tabpane-small"
-                        activeKey={this.state.activeKey}
-                        defaultActiveKey="stats"
-                        onSelect={(k: string) => this.setActiveKey(k)}
-                        id="infoTabs">
-                        <Tab eventKey="stats" title="Base Stats">
-                            {this.renderStatsGraph()}
-                        </Tab>
-
-                        <Tab eventKey="efficacy" title="Efficacy">
-                            {this.renderEfficacyList()}
-                        </Tab>
-
+                        id="movesTabs"
+                        transition={false}
+                        activeKey={this.state.activeMoveTabKey}
+                        defaultActiveKey="moves"
+                        onSelect={(k: string) => this.setActiveMoveTabKey(k)}>
                         <Tab eventKey="moves" title="Moves">
                             {this.renderMoveList()}
-                        </Tab>
-
-                        <Tab eventKey="locations" title="Capture Locations">
-                            {this.renderCaptureLocations()}
                         </Tab>
 
                         <Tab eventKey="evolution" title="Evolution">
@@ -161,7 +177,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    // returns the Pokemon info
+    /**
+     * Renders the Pokemon info.
+     */
     renderPokemonInfo() {
         return (
             <div>
@@ -501,10 +519,18 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     /**
-     * Sets the key of the active tab.
+     * Sets the key of the active info tab.
      */
-    setActiveKey(key: string) {
-        CookieHelper.set(`panel${this.props.index}activeKey`, key)
-        this.setState({ activeKey: key })
+    setActiveInfoTabKey(key: string) {
+        CookieHelper.set(`panel${this.props.index}activeInfoTabKey`, key)
+        this.setState({ activeInfoTabKey: key })
+    }
+
+    /**
+     * Sets the key of the active move tab.
+     */
+    setActiveMoveTabKey(key: string) {
+        CookieHelper.set(`panel${this.props.index}activeMoveTabKey`, key)
+        this.setState({ activeMoveTabKey: key })
     }
 }

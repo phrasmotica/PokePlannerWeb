@@ -81,6 +81,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders the chain link as a tree.
      */
     renderTree(link: ChainLinkEntry) {
+        // TODO: find a package for rendering a file system tree view
         let numChildren = link.countTransitions()
         let widthStyle = {
             width: `${100 / (numChildren + 1)}%`,

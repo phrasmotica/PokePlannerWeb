@@ -57,8 +57,9 @@ $minWidth: 270px;
     min-width: $minWidth;
 }
 
-$overflowHeight: 130px;
-.overflow-y {
-    height: $overflowHeight;
-    overflow-y: scroll;
+$pokemonPanelHeight: 400px;
+.pokemon-panel {
+    min-height: $pokemonPanelHeight;
+    max-height: $pokemonPanelHeight;
+    border: 1px solid black;
 }

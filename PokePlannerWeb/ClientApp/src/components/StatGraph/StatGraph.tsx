@@ -30,9 +30,7 @@ export class StatGraph extends Component<IStatGraphProps, any> {
 
     renderStatGraph() {
         return (
-            <div
-                className="flex-center"
-                style={{ marginTop: 4 }}>
+            <div style={{ margin: 4 }}>
                 <div className="stat-graph">
                     {this.renderStatNames()}
 
@@ -59,7 +57,7 @@ export class StatGraph extends Component<IStatGraphProps, any> {
     renderStatBars() {
         let shouldShowStats = this.props.shouldShowStats
         return (
-            <div className="stat-bars">
+            <div>
                 {this.props.statNames.map((name, i) => {
                     let values = this.props.statValues
                     let value = 0
