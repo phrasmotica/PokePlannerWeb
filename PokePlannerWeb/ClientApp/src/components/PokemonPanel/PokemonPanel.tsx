@@ -20,6 +20,11 @@ interface IPokemonPanelProps extends IHasCommon {
     ignoreValidity: boolean
 
     /**
+     * The ID of the species to be selected by default.
+     */
+    defaultSpeciesId: number | undefined
+
+    /**
      * List of Pokemon species.
      */
     species: PokemonSpeciesEntry[]
@@ -117,7 +122,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         index={this.props.index}
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
-                        defaultSpeciesId={this.state.speciesId}
+                        defaultSpeciesId={this.props.defaultSpeciesId}
                         ignoreValidity={this.props.ignoreValidity}
                         generations={this.props.generations}
                         hideTooltips={this.props.hideTooltips}
