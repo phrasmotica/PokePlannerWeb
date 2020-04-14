@@ -57,9 +57,9 @@ $minWidth: 270px;
     min-width: $minWidth;
 }
 
-$pokemonPanelHeight: 400px;
-.pokemon-panel {
-    min-height: $pokemonPanelHeight;
-    max-height: $pokemonPanelHeight;
+$pokedexPanelHeight: 400px;
+.pokedex-panel {
+    min-height: $pokedexPanelHeight;
+    max-height: $pokedexPanelHeight;
     border: 1px solid black;
 }

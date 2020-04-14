@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 
-import { PokemonPanel } from '../PokemonPanel/PokemonPanel'
+import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
@@ -109,15 +109,15 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     render() {
         let menu = this.renderMenu()
 
-        let pokemonPanels = this.pageIsLoading()
+        let pokedexPanels = this.pageIsLoading()
             ? <p><em>Loading...</em></p>
-            : this.renderPokemonPanels()
+            : this.renderPokedexPanels()
 
         return (
             <div>
                 <p>Build your Pokemon team!</p>
                 {menu}
-                {pokemonPanels}
+                {pokedexPanels}
             </div>
         )
     }
@@ -196,12 +196,12 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         )
     }
 
-    renderPokemonPanels() {
+    renderPokedexPanels() {
         let items = []
 
         for (let i = 0; i < TEAM_SIZE; i++) {
             items.push(
-                <PokemonPanel
+                <PokedexPanel
                     key={i}
                     index={i}
                     versionGroupId={this.state.versionGroupId}

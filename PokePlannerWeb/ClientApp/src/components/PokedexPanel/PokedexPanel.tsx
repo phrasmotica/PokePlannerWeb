@@ -20,11 +20,11 @@ import { TypesPresenceMap } from "../../models/TypesPresenceMap"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
-import "./PokemonPanel.scss"
+import "./PokedexPanel.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
 
-interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
+interface IPokedexPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
@@ -56,7 +56,7 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
     toggleIgnoreValidity: () => void | null
 }
 
-interface IPokemonPanelState {
+interface IPokedexPanelState {
     /**
      * The ID of the Pokemon species.
      */
@@ -91,8 +91,8 @@ interface IPokemonPanelState {
 /**
  * Component for selecting a Pokemon and displaying information about it.
  */
-export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelState> {
-    constructor(props: IPokemonPanelProps) {
+export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelState> {
+    constructor(props: IPokedexPanelProps) {
         super(props)
         this.state = {
             speciesId: undefined,
@@ -113,7 +113,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
-            <div className="flex pokemon-panel">
+            <div className="flex pokedex-panel">
                 <div style={{ width: "50%" }}>
                     <div className="flex">
                         <PokemonSelector
