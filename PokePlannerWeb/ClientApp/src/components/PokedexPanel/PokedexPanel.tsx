@@ -107,6 +107,8 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         const toggleShowShinySprite = () => this.toggleShowShinySprite()
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
+        // TODO: create ActionPanel component for moves/evolution/etc
+
         return (
             <div className="flex pokedex-panel debug-border">
                 <div className="debug-border whalf">

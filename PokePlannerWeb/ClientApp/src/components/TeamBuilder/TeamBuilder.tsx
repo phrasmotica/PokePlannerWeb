@@ -46,6 +46,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
 
     /**
      * The types presence map.
+     * TODO: fetch this in EfficacyList
      */
     typesPresenceMap: TypesPresenceMap
 
@@ -56,6 +57,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
 
     /**
      * The base stat names.
+     * TODO: fetch this in StatGraph
      */
     baseStatNames: string[]
 
