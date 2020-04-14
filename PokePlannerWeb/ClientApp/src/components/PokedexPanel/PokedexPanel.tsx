@@ -116,21 +116,25 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
             <div className="flex pokedex-panel debug-border">
                 <div className="debug-border whalf">
                     <div className="flex debug-border hhalf">
-                        <PokemonSelector
-                            index={this.props.index}
-                            versionGroupId={this.props.versionGroupId}
-                            species={this.props.species}
-                            defaultSpeciesId={this.state.speciesId}
-                            ignoreValidity={this.props.ignoreValidity}
-                            generations={this.props.generations}
-                            hideTooltips={this.props.hideTooltips}
-                            clearPokemon={clearPokemon}
-                            setSpecies={setSpecies}
-                            setVariety={setVariety}
-                            setForm={setForm}
-                            toggleIgnoreValidity={toggleIgnoreValidity} />
+                        <div className="flex-center w60 debug-border">
+                            <PokemonSelector
+                                index={this.props.index}
+                                versionGroupId={this.props.versionGroupId}
+                                species={this.props.species}
+                                defaultSpeciesId={this.state.speciesId}
+                                ignoreValidity={this.props.ignoreValidity}
+                                generations={this.props.generations}
+                                hideTooltips={this.props.hideTooltips}
+                                clearPokemon={clearPokemon}
+                                setSpecies={setSpecies}
+                                setVariety={setVariety}
+                                setForm={setForm}
+                                toggleIgnoreValidity={toggleIgnoreValidity} />
+                        </div>
 
-                        {this.renderPokemonInfo()}
+                        <div className="flex-center w40 debug-border">
+                            {this.renderPokemonInfo()}
+                        </div>
                     </div>
 
                     <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>
@@ -250,7 +254,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         }
 
         return (
-            <div className={"flex-center type-pair"}>
+            <div className="flex-center type-pair">
                 {typesElement}
             </div>
         )
