@@ -1,12 +1,10 @@
 ﻿import React, { Component } from "react"
 import { Tabs, Tab } from "react-bootstrap"
 
-import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
-import { EfficacyList } from "../EfficacyList/EfficacyList"
 import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
+import { InfoPanel } from "../InfoPanel/InfoPanel"
 import { MoveList } from "../MoveList/MoveList"
 import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
-import { StatGraph } from "../StatGraph/StatGraph"
 
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
 
@@ -77,11 +75,6 @@ interface IPokedexPanelState {
     showShinySprite: boolean
 
     /**
-     * The key of the active info tab.
-     */
-    activeInfoTabKey: string | undefined
-
-    /**
      * The key of the active move tab.
      */
     activeMoveTabKey: string | undefined
@@ -98,11 +91,13 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
             variety: undefined,
             form: undefined,
             showShinySprite: false,
-            activeInfoTabKey: CookieHelper.get(`panel${this.props.index}activeInfoTabKey`),
             activeMoveTabKey: CookieHelper.get(`panel${this.props.index}activeMoveTabKey`)
         }
     }
 
+    /**
+     * Renders the component.
+     */
     render() {
         // handlers
         const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
@@ -130,25 +125,15 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         toggleIgnoreValidity={toggleIgnoreValidity} />
 
                     <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>
-                        <Tabs
-                            className="tabpane-small"
-                            transition={false}
-                            activeKey={this.state.activeInfoTabKey}
-                            defaultActiveKey="stats"
-                            onSelect={(k: string) => this.setActiveInfoTabKey(k)}
-                            id="infoTabs">
-                            <Tab eventKey="stats" title="Base Stats">
-                                {this.renderStatsGraph()}
-                            </Tab>
-
-                            <Tab eventKey="efficacy" title="Efficacy">
-                                {this.renderEfficacyList()}
-                            </Tab>
-
-                            <Tab eventKey="locations" title="Capture Locations">
-                                {this.renderCaptureLocations()}
-                            </Tab>
-                        </Tabs>
+                        <InfoPanel
+                            index={this.props.index}
+                            versionGroupId={this.props.versionGroupId}
+                            hideTooltips={this.props.hideTooltips}
+                            pokemon={this.state.variety}
+                            effectiveTypes={this.getEffectiveTypes()}
+                            typesPresenceMap={this.props.typesPresenceMap}
+                            baseStatNames={this.props.baseStatNames}
+                            shouldShowPokemon={this.shouldShowPokemon()} />
                     </div>
                 </div>
 
@@ -173,55 +158,6 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         )
     }
 
-    // returns a graph of the Pokemon's base stats
-    renderStatsGraph() {
-        let baseStats: number[] = []
-
-        let variety = this.state.variety
-        if (variety !== undefined) {
-            let versionGroupId = this.props.versionGroupId
-            if (versionGroupId === undefined) {
-                throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
-            }
-
-            baseStats = variety.getBaseStats(versionGroupId)
-        }
-
-        return (
-            <StatGraph
-                index={this.props.index}
-                statNames={this.props.baseStatNames}
-                statValues={baseStats}
-                shouldShowStats={this.shouldShowPokemon()} />
-        )
-    }
-
-    // returns the efficacy list
-    renderEfficacyList() {
-        let types = this.getEffectiveTypes()
-
-        return (
-            <EfficacyList
-                index={this.props.index}
-                typeIds={types.map(type => type.id)}
-                typesPresenceMap={this.props.typesPresenceMap}
-                versionGroupId={this.props.versionGroupId}
-                showMultipliers={this.shouldShowPokemon()}
-                hideTooltips={this.props.hideTooltips} />
-        )
-    }
-
-    /**
-     * Returns the Pokemon's effective types.
-     */
-    getEffectiveTypes() {
-        return PokemonHelper.getEffectiveTypes(
-            this.state.variety,
-            this.state.form,
-            this.props.versionGroupId
-        )
-    }
-
     /**
      * Renders the move list.
      */
@@ -239,15 +175,14 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         )
     }
 
-    // returns the capture locations
-    renderCaptureLocations() {
-        return (
-            <CaptureLocations
-                index={this.props.index}
-                pokemonId={this.state.variety?.pokemonId}
-                versionGroupId={this.props.versionGroupId}
-                showLocations={this.shouldShowPokemon()}
-                hideTooltips={this.props.hideTooltips} />
+    /**
+     * Returns the Pokemon's effective types.
+     */
+    getEffectiveTypes() {
+        return PokemonHelper.getEffectiveTypes(
+            this.state.variety,
+            this.state.form,
+            this.props.versionGroupId
         )
     }
 
@@ -357,14 +292,6 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      */
     setForm(form: PokemonFormEntry) {
         this.setState({ form: form })
-    }
-
-    /**
-     * Sets the key of the active info tab.
-     */
-    setActiveInfoTabKey(key: string) {
-        CookieHelper.set(`panel${this.props.index}activeInfoTabKey`, key)
-        this.setState({ activeInfoTabKey: key })
     }
 
     /**
