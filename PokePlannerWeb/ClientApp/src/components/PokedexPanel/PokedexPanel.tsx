@@ -113,9 +113,9 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
-            <div className="flex pokedex-panel">
-                <div style={{ width: "50%" }}>
-                    <div className="flex">
+            <div className="flex pokedex-panel debug-border">
+                <div className="debug-border whalf">
+                    <div className="flex debug-border hhalf">
                         <PokemonSelector
                             index={this.props.index}
                             versionGroupId={this.props.versionGroupId}
@@ -133,7 +133,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         {this.renderPokemonInfo()}
                     </div>
 
-                    <div className="margin-bottom" style={{ fontSize: "10pt" }}>
+                    <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>
                         <Tabs
                             className="tabpane-small"
                             transition={false}
@@ -156,7 +156,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                     </div>
                 </div>
 
-                <div style={{ width: "50%", fontSize: "10pt" }}>
+                <div className="debug-border whalf" style={{ fontSize: "10pt" }}>
                     <Tabs
                         className="tabpane-small"
                         id="movesTabs"

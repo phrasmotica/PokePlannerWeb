@@ -56,10 +56,3 @@ $minWidth: 270px;
 .version-group-select {
     min-width: $minWidth;
 }
-
-$pokedexPanelHeight: 400px;
-.pokedex-panel {
-    min-height: $pokedexPanelHeight;
-    max-height: $pokedexPanelHeight;
-    border: 1px solid black;
-}

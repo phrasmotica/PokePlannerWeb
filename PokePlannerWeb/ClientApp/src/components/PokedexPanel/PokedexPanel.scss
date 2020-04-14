@@ -133,3 +133,21 @@ $dim: 96px;
     // width: 50%;
     border: 1px solid #dee2e6;
 }
+
+$pokedexPanelHeight: 400px;
+.pokedex-panel {
+    min-height: $pokedexPanelHeight;
+    max-height: $pokedexPanelHeight;
+}
+
+.whalf {
+    width: 50%;
+}
+
+.hhalf {
+    height: 50%;
+}
+
+.debug-border {
+    border: 1px solid black;
+}

@@ -13,7 +13,6 @@ import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
-
 /**
  * The number of Pokemon panels to show.
  * */
