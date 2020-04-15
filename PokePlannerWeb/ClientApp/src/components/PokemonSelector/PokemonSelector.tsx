@@ -62,6 +62,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     setForm: (form: PokemonFormEntry) => void
 
     /**
+     * Handler for toggling the species filter in the parent component.
+     */
+    toggleSpeciesFilter: () => void
+
+    /**
      * Optional handler for toggling the ignore validity setting.
      */
     toggleIgnoreValidity: () => void | null
@@ -211,6 +216,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 loading={false}
                 generations={this.props.generations}
                 setSpecies={id => this.setSpecies(id)}
+                toggleFilter={() => this.props.toggleSpeciesFilter()}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
         )
     }

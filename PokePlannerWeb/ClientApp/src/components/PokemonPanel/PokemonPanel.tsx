@@ -5,6 +5,7 @@ import key from "weak-key"
 import { IHasCommon } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
+import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
@@ -85,6 +86,11 @@ interface IPokemonPanelState {
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
+
+    /**
+     * Whether to show the species filter.
+     */
+    showSpeciesFilter: boolean
 }
 
 /**
@@ -100,7 +106,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            showShinySprite: false
+            showShinySprite: false,
+            showSpeciesFilter: false
         }
     }
 
@@ -113,7 +120,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
         const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
+
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
+        const toggleSpeciesFilter = () => this.toggleSpeciesFilter()
 
         return (
             <div className="flex debug-border hhalf">
@@ -130,11 +139,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setSpecies={setSpecies}
                         setVariety={setVariety}
                         setForm={setForm}
-                        toggleIgnoreValidity={toggleIgnoreValidity} />
+                        toggleIgnoreValidity={toggleIgnoreValidity}
+                        toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
 
                 <div className="flex-center w40 debug-border">
-                    {this.renderPokemonInfo()}
+                    {this.state.showSpeciesFilter ? this.renderSpeciesFilter() : this.renderPokemonInfo()}
                 </div>
             </div>
         )
@@ -158,6 +168,17 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                     {this.renderShinySpriteSwitch()}
                 </div>
             </div>
+        )
+    }
+
+    /**
+     * Renders the species filter.
+     */
+    renderSpeciesFilter() {
+        return (
+            <SpeciesFilter
+                index={this.props.index}
+                species={this.props.species} />
         )
     }
 
@@ -286,6 +307,15 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }))
 
         this.props.toggleShowShinySprite()
+    }
+
+    /**
+     * Toggles the species filter.
+     */
+    toggleSpeciesFilter() {
+        this.setState(previousState => ({
+            showSpeciesFilter: !previousState.showSpeciesFilter
+        }))
     }
 
     /**

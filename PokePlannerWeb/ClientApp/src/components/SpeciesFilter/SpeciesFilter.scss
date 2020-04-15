@@ -1,0 +1,22 @@
+.generation-button-group {
+    width: 230px;
+}
+
+.fill-parent {
+    width: 100%;
+    height: 100%;
+}
+
+.border-box {
+    // allows for setting 100% width/height and having padding
+    // https://stackoverflow.com/a/3037901
+    box-sizing: border-box;
+}
+
+.padding {
+    padding: 2px;
+}
+
+.margin-bottom {
+    margin-bottom: 2px;
+}

@@ -20,6 +20,11 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
+
+    /**
+     * Handler for toggling the species filter in the parent component.
+     */
+    toggleFilter: () => void
 }
 
 interface ISpeciesSelectorState extends ISelectorBaseState {
@@ -56,7 +61,7 @@ export class SpeciesSelector
                 <Button
                     color={filterOpen ? "success" : "secondary"}
                     className="filter-button"
-                    onMouseUp={() => {this.toggleSpeciesFilter()}}>
+                    onMouseUp={() => {this.toggleFilter()}}>
                     <FaFilter className="selector-button-icon" />
                 </Button>
             </span>
@@ -190,10 +195,12 @@ export class SpeciesSelector
     /**
      * Toggles the species filter.
      */
-    toggleSpeciesFilter() {
+    toggleFilter() {
         this.setState(previousState => ({
             filterOpen: !previousState.filterOpen
         }))
+
+        this.props.toggleFilter()
     }
 
     /**
