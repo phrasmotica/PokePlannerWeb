@@ -115,8 +115,47 @@ $dim: 96px;
     display: none;
 }
 
+.half-width {
+    width: 50%;
+}
+
 .tabpane {
     &-small > a {
         padding: 0.4rem;
     }
+}
+
+.nav-tabs {
+    border-bottom: unset;
+}
+
+.tab-content {
+    // width: 50%;
+    border: 1px solid #dee2e6;
+}
+
+$pokedexPanelHeight: 500px;
+.pokedex-panel {
+    min-height: $pokedexPanelHeight;
+    max-height: $pokedexPanelHeight;
+}
+
+.w40 {
+    width: 40%;
+}
+
+.whalf {
+    width: 50%;
+}
+
+.w60 {
+    width: 60%;
+}
+
+.hhalf {
+    height: 50%;
+}
+
+.debug-border {
+    border: 1px solid black;
 }

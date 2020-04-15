@@ -1,14 +1,10 @@
-﻿$height: 130px;
-$width: 370px;
-.stat-graph {
+﻿.stat-graph {
     display: inline-flex;
-    height: $height;
-    width: $width;
 }
 
 .stat-names {
     padding-right: 6px;
-    font-size: 9pt;
+    font-size: 10pt;
     text-align: right;
 }
 
@@ -19,7 +15,7 @@ $width: 370px;
 }
 
 .stat-value {
-    font-size: 9pt;
+    font-size: 10pt;
 }
 
 .hp {

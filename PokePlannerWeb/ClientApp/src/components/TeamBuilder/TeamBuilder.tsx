@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 
-import { PokemonPanel } from '../PokemonPanel/PokemonPanel'
+import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
@@ -13,16 +13,10 @@ import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
-
 /**
  * The number of Pokemon panels to show.
  * */
-const TEAM_SIZE: number = 6
-
-/**
- * The number of rows to split the Pokemon panels across.
- */
-const NUMBER_OF_ROWS: number = 2
+const TEAM_SIZE: number = 1
 
 interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
@@ -52,6 +46,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
 
     /**
      * The types presence map.
+     * TODO: fetch this in EfficacyList
      */
     typesPresenceMap: TypesPresenceMap
 
@@ -62,6 +57,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
 
     /**
      * The base stat names.
+     * TODO: fetch this in StatGraph
      */
     baseStatNames: string[]
 
@@ -114,15 +110,15 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     render() {
         let menu = this.renderMenu()
 
-        let pokemonPanels = this.pageIsLoading()
+        let pokedexPanels = this.pageIsLoading()
             ? <p><em>Loading...</em></p>
-            : this.renderPokemonPanels()
+            : this.renderPokedexPanels()
 
         return (
             <div>
                 <p>Build your Pokemon team!</p>
                 {menu}
-                {pokemonPanels}
+                {pokedexPanels}
             </div>
         )
     }
@@ -201,12 +197,12 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         )
     }
 
-    renderPokemonPanels() {
-        let panels = []
+    renderPokedexPanels() {
+        let items = []
 
         for (let i = 0; i < TEAM_SIZE; i++) {
-            panels.push(
-                <PokemonPanel
+            items.push(
+                <PokedexPanel
                     key={i}
                     index={i}
                     versionGroupId={this.state.versionGroupId}
@@ -218,9 +214,13 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     typesPresenceMap={this.state.typesPresenceMap}
                     baseStatNames={this.state.baseStatNames} />
             )
+
+            if (i < TEAM_SIZE - 1) {
+                items.push(<hr></hr>)
+            }
         }
 
-        return <div>{panels}</div>
+        return <div>{items}</div>
     }
 
     // load all species

@@ -56,9 +56,3 @@ $minWidth: 270px;
 .version-group-select {
     min-width: $minWidth;
 }
-
-$overflowHeight: 130px;
-.overflow-y {
-    height: $overflowHeight;
-    overflow-y: scroll;
-}

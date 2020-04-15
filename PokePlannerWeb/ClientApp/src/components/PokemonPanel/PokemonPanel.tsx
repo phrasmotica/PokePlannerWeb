@@ -1,34 +1,28 @@
-﻿import React, { Component } from "react"
+import React, { Component } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
-import { Tabs, Tab } from "react-bootstrap"
 import key from "weak-key"
 
-import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
-import { EfficacyList } from "../EfficacyList/EfficacyList"
-import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
-import { MoveList } from "../MoveList/MoveList"
-import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
-import { StatGraph } from "../StatGraph/StatGraph"
+import { IHasCommon } from "../CommonMembers"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
+import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { TypesPresenceMap } from "../../models/TypesPresenceMap"
 
-import { CookieHelper } from "../../util/CookieHelper"
+import { PokemonHelper } from "../../util/PokemonHelper"
 
-import "./PokemonPanel.scss"
-import "./../TeamBuilder/TeamBuilder.scss"
-import "../../styles/types.scss"
-
-interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
+interface IPokemonPanelProps extends IHasCommon {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean
+
+    /**
+     * The ID of the species to be selected by default.
+     */
+    defaultSpeciesId: number | undefined
 
     /**
      * List of Pokemon species.
@@ -41,14 +35,29 @@ interface IPokemonPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
     generations: GenerationEntry[]
 
     /**
-     * The types presence map.
+     * Handler for setting the species ID in the parent component.
      */
-    typesPresenceMap: TypesPresenceMap
+    setSpecies: (speciesId: number | undefined) => void
 
     /**
-     * The base stat names.
+     * Handler for setting the Pokemon variety in the parent component.
      */
-    baseStatNames: string[]
+    setVariety: (variety: PokemonEntry) => void
+
+    /**
+     * Handler for clearing the Pokemon in the parent component.
+     */
+    clearPokemon: () => void
+
+    /**
+     * Handler for setting the Pokemon form in the parent component.
+     */
+    setForm: (form: PokemonFormEntry) => void
+
+    /**
+     * Handler for toggling the shiny sprite.
+     */
+    toggleShowShinySprite: () => void
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -76,28 +85,28 @@ interface IPokemonPanelState {
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
-
-    /**
-     * The key of the active tab.
-     */
-    activeKey: string | undefined
 }
 
 /**
- * Component for selecting a Pokemon and displaying information about it.
+ * Component for selecting a Pokemon and viewing basic information about it.
  */
 export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelState> {
+    /**
+     * Constructor.
+     */
     constructor(props: IPokemonPanelProps) {
         super(props)
         this.state = {
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            showShinySprite: false,
-            activeKey: CookieHelper.get(`panel${this.props.index}activeKey`)
+            showShinySprite: false
         }
     }
 
+    /**
+     * Renders the component.
+     */
     render() {
         // handlers
         const clearPokemon = () => this.clearPokemon()
@@ -107,13 +116,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
 
         return (
-            <div className="margin-right">
-                <div className="flex">
+            <div className="flex debug-border hhalf">
+                <div className="flex-center w60 debug-border">
                     <PokemonSelector
                         index={this.props.index}
                         versionGroupId={this.props.versionGroupId}
                         species={this.props.species}
-                        defaultSpeciesId={this.state.speciesId}
+                        defaultSpeciesId={this.props.defaultSpeciesId}
                         ignoreValidity={this.props.ignoreValidity}
                         generations={this.props.generations}
                         hideTooltips={this.props.hideTooltips}
@@ -122,46 +131,18 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setVariety={setVariety}
                         setForm={setForm}
                         toggleIgnoreValidity={toggleIgnoreValidity} />
-
-                    {this.renderPokemonInfo()}
                 </div>
 
-                <div
-                    className="margin-bottom"
-                    style={{ fontSize: "10pt" }}>
-                    <Tabs
-                        transition={false}
-                        className="tabpane-small"
-                        activeKey={this.state.activeKey}
-                        defaultActiveKey="stats"
-                        onSelect={(k: string) => this.setActiveKey(k)}
-                        id="infoTabs">
-                        <Tab eventKey="stats" title="Base Stats">
-                            {this.renderStatsGraph()}
-                        </Tab>
-
-                        <Tab eventKey="efficacy" title="Efficacy">
-                            {this.renderEfficacyList()}
-                        </Tab>
-
-                        <Tab eventKey="moves" title="Moves">
-                            {this.renderMoveList()}
-                        </Tab>
-
-                        <Tab eventKey="locations" title="Capture Locations">
-                            {this.renderCaptureLocations()}
-                        </Tab>
-
-                        <Tab eventKey="evolution" title="Evolution">
-                            {this.renderEvolutionChain()}
-                        </Tab>
-                    </Tabs>
+                <div className="flex-center w40 debug-border">
+                    {this.renderPokemonInfo()}
                 </div>
             </div>
         )
     }
 
-    // returns the Pokemon info
+    /**
+     * Renders the Pokemon info.
+     */
     renderPokemonInfo() {
         return (
             <div>
@@ -232,7 +213,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
 
         return (
-            <div className={"flex-center type-pair"}>
+            <div className="flex-center type-pair">
                 {typesElement}
             </div>
         )
@@ -242,28 +223,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns the Pokemon's effective types.
      */
     getEffectiveTypes() {
-        let variety = this.state.variety
-        if (variety === undefined) {
-            return []
-        }
-
-        let versionGroupId = this.props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
-        }
-
-        let types = variety.getTypes(versionGroupId)
-
-        let form = this.state.form
-        if (form !== undefined) {
-            let formTypes = form.getTypes(versionGroupId)
-            if (formTypes.length > 0) {
-                // use form-specific types if present
-                types = formTypes
-            }
-        }
-
-        return types
+        return PokemonHelper.getEffectiveTypes(
+            this.state.variety,
+            this.state.form,
+            this.props.versionGroupId
+        )
     }
 
     // returns the Pokemon's sprite
@@ -271,11 +235,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let spriteUrl = ""
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon) {
-            let dataObject = this.getEffectiveDataObject()
+            let dataObject = this.state.form ?? this.state.variety
             if (dataObject !== undefined) {
                 spriteUrl = this.state.showShinySprite
-                            ? dataObject.shinySpriteUrl
-                            : dataObject.spriteUrl
+                    ? dataObject.shinySpriteUrl
+                    : dataObject.spriteUrl
             }
 
             if (spriteUrl === null || spriteUrl === "") {
@@ -297,18 +261,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    /**
-     * Returns the variety or form data object as needed.
-     */
-    getEffectiveDataObject() {
-        let form = this.state.form
-        if (form !== undefined) {
-            return form
-        }
-
-        return this.state.variety
-    }
-
     // returns a switch that toggles between default and shiny sprites
     renderShinySpriteSwitch() {
         return (
@@ -325,102 +277,15 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    // returns a graph of the Pokemon's base stats
-    renderStatsGraph() {
-        let baseStats: number[] = []
-
-        let variety = this.state.variety
-        if (variety !== undefined) {
-            let versionGroupId = this.props.versionGroupId
-            if (versionGroupId === undefined) {
-                throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
-            }
-
-            baseStats = variety.getBaseStats(versionGroupId)
-        }
-
-        return (
-            <StatGraph
-                index={this.props.index}
-                statNames={this.props.baseStatNames}
-                statValues={baseStats}
-                shouldShowStats={this.shouldShowPokemon()} />
-        )
-    }
-
-    // returns the efficacy list
-    renderEfficacyList() {
-        let types = this.getEffectiveTypes()
-
-        return (
-            <EfficacyList
-                index={this.props.index}
-                typeIds={types.map(type => type.id)}
-                typesPresenceMap={this.props.typesPresenceMap}
-                versionGroupId={this.props.versionGroupId}
-                showMultipliers={this.shouldShowPokemon()}
-                hideTooltips={this.props.hideTooltips} />
-        )
-    }
-
     /**
-     * Renders the move list.
+     * Toggles the shiny sprite.
      */
-    renderMoveList() {
-        let versionGroupId = this.props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
-        }
-
-        let typeIds = this.getEffectiveTypes().map(t => t.id)
-
-        return (
-            <MoveList
-                index={this.props.index}
-                versionGroupId={this.props.versionGroupId}
-                pokemonId={this.state.variety?.pokemonId}
-                typeIds={typeIds}
-                showMoves={this.shouldShowPokemon()}
-                hideTooltips={this.props.hideTooltips} />
-        )
-    }
-
-    // returns the capture locations
-    renderCaptureLocations() {
-        return (
-            <CaptureLocations
-                index={this.props.index}
-                pokemonId={this.state.variety?.pokemonId}
-                versionGroupId={this.props.versionGroupId}
-                showLocations={this.shouldShowPokemon()}
-                hideTooltips={this.props.hideTooltips} />
-        )
-    }
-
-    /**
-     * Renders the evolution chain.
-     */
-    renderEvolutionChain() {
-        const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
-
-        return (
-            <div className="inherit-size">
-                <EvolutionChain
-                    index={this.props.index}
-                    speciesId={this.state.speciesId}
-                    availableSpeciesIds={this.props.species.map(s => s.speciesId)}
-                    showShinySprites={this.state.showShinySprite}
-                    shouldShowChain={this.shouldShowPokemon()}
-                    setSpecies={setSpecies} />
-            </div>
-        )
-    }
-
-    // toggle the shiny sprite
     toggleShowShinySprite() {
         this.setState(previousState => ({
             showShinySprite: !previousState.showShinySprite
         }))
+
+        this.props.toggleShowShinySprite()
     }
 
     /**
@@ -439,30 +304,27 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return species
     }
 
-    // returns whether we have a species
+    /**
+     * Returns whether we have a species.
+     */
     hasSpecies() {
         return this.state.speciesId !== undefined
     }
 
-    // returns whether the Pokemon is valid
+    /**
+     * Returns whether the Pokemon is valid.
+     */
     pokemonIsValid() {
-        let versionGroupId = this.props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
-        }
-
-        let pokemonIsValid = this.getSpecies().isValid(versionGroupId)
-
-        let form = this.state.form
-        if (form !== undefined && form.hasValidity()) {
-            // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
-        }
-
-        return pokemonIsValid
+        return PokemonHelper.pokemonIsValid(
+            this.getSpecies(),
+            this.state.form,
+            this.props.versionGroupId
+        )
     }
 
-    // returns true if the Pokemon should be displayed
+    /**
+     * Returns whether the Pokemon should be displayed.
+     */
     shouldShowPokemon() {
         return this.hasSpecies()
             && this.state.form !== undefined
@@ -478,33 +340,39 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
         else {
             this.setState({ speciesId: speciesId })
+
+            this.props.setSpecies(speciesId)
         }
     }
 
-    // remove all Pokemon data from this panel
+    /**
+     * Clears all Pokemon state.
+     */
     clearPokemon() {
         this.setState({
             speciesId: undefined,
             variety: undefined,
             form: undefined
         })
-    }
 
-    // set the species variety
-    setVariety(variety: PokemonEntry) {
-        this.setState({ variety: variety })
-    }
-
-    // set the Pokemon form
-    setForm(form: PokemonFormEntry) {
-        this.setState({ form: form })
+        this.props.clearPokemon()
     }
 
     /**
-     * Sets the key of the active tab.
+     * Sets the species variety.
      */
-    setActiveKey(key: string) {
-        CookieHelper.set(`panel${this.props.index}activeKey`, key)
-        this.setState({ activeKey: key })
+    setVariety(variety: PokemonEntry) {
+        this.setState({ variety: variety })
+
+        this.props.setVariety(variety)
+    }
+
+    /**
+     * Sets the Pokemon form.
+     */
+    setForm(form: PokemonFormEntry) {
+        this.setState({ form: form })
+
+        this.props.setForm(form)
     }
 }

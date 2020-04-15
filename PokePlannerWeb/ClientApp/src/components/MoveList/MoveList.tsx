@@ -100,12 +100,12 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
     render() {
         return (
-            <div>
+            <div className="move-list-container">
                 <div style={{ marginTop: 4 }}>
                     {this.renderFilters()}
                 </div>
 
-                <div style={{ marginTop: 4 }}>
+                <div className="move-list" style={{ marginTop: 4 }}>
                     {this.renderMoves()}
                 </div>
             </div>
@@ -123,7 +123,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         let sameTypeId = "sameTypeCheckbox" + this.props.index
 
         return (
-            <div className="flex">
+            <div className="flex" style={{ marginLeft: 4 }}>
                 <FormGroup
                     check
                     className="margin-right-small">
@@ -216,7 +216,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     renderMoves() {
         if (this.props.pokemonId === undefined) {
             return (
-                <ListGroup className="overflow-y">
+                <ListGroup>
                     <ListGroupItem>
                         -
                     </ListGroupItem>
@@ -226,7 +226,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         if (this.state.loadingMoves) {
             return (
-                <ListGroup className="overflow-y">
+                <ListGroup>
                     <ListGroupItem>
                         Loading...
                     </ListGroupItem>
@@ -316,7 +316,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             }
 
             return (
-                <ListGroup className="overflow-y">
+                <ListGroup>
                     {rows}
                 </ListGroup>
             )
@@ -325,7 +325,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         // no moves to show...
         if (this.hasFilters()) {
             return (
-                <ListGroup className="overflow-y">
+                <ListGroup>
                     <ListGroupItem>
                         All moves have been filtered
                     </ListGroupItem>
@@ -334,7 +334,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         return (
-            <ListGroup className="overflow-y">
+            <ListGroup>
                 <ListGroupItem>
                     No moves in this game version
                 </ListGroupItem>
