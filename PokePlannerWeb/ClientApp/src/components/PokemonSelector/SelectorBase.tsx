@@ -72,7 +72,7 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         let selectedOption = null
         let entryId = (this.props as TProps).entryId
         if (entryId !== undefined) {
-            // undefined doesn't clear stored state to coalesce to null
+            // undefined doesn't clear stored state so coalesce to null
             // https://github.com/JedWatson/react-select/issues/3066
             selectedOption = options.find(o => o.value === entryId) ?? null
         }
