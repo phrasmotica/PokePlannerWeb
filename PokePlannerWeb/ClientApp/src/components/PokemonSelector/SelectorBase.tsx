@@ -102,9 +102,6 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         let validityTooltip = this.renderValidityTooltip(selectId)
 
         let filterButton = this.renderFilterButton()
-        if (this.state.filterOpen) {
-            searchBox = this.renderFilter()
-        }
 
         return (
             <div className="flex margin-bottom-small">
@@ -198,11 +195,6 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
      * Renders the filter button.
      */
     abstract renderFilterButton(): any
-
-    /**
-     * Renders the filter.
-     */
-    abstract renderFilter(): any
 
     /**
      * Returns the selected entry.

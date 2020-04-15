@@ -83,6 +83,11 @@ interface IPokemonPanelState {
     form: PokemonFormEntry | undefined
 
     /**
+     * The IDs of the generations in the species filter.
+     */
+    filteredGenerationIds: number[]
+
+    /**
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
@@ -106,6 +111,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
+            filteredGenerationIds: [],
             showShinySprite: false,
             showSpeciesFilter: false
         }
@@ -139,6 +145,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setSpecies={setSpecies}
                         setVariety={setVariety}
                         setForm={setForm}
+                        filteredGenerationIds={this.state.filteredGenerationIds}
                         toggleIgnoreValidity={toggleIgnoreValidity}
                         toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
@@ -178,7 +185,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return (
             <SpeciesFilter
                 index={this.props.index}
-                species={this.props.species} />
+                species={this.props.species}
+                generations={this.props.generations}
+                filteredGenerationIds={this.state.filteredGenerationIds}
+                setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)} />
         )
     }
 
@@ -404,5 +414,21 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ form: form })
 
         this.props.setForm(form)
+    }
+
+    /**
+     * Sets the filtered generation IDs.
+     */
+    setFilteredGenerationIds(ids: number[]) {
+        this.setState({ filteredGenerationIds: ids })
+
+        // no longer have a valid species
+        let speciesId = this.state.speciesId
+        if (speciesId !== undefined) {
+            let species = this.getSpecies()
+            if (!ids.includes(species.generation.id)) {
+                this.setSpecies(undefined)
+            }
+        }
     }
 }

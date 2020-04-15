@@ -20,3 +20,9 @@
 .margin-bottom {
     margin-bottom: 2px;
 }
+
+$hrMargin: 5px;
+.hr {
+    margin-top: $hrMargin;
+    margin-bottom: $hrMargin;
+}

@@ -1,16 +1,37 @@
 import React, { Component } from "react"
 import { Collapse, Button } from "reactstrap"
 
+import { GenerationFilter } from "./GenerationFilter"
+
 import { IHasIndex } from "../CommonMembers"
 
-import "./SpeciesFilter.scss"
+import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+
+import { CookieHelper } from "../../util/CookieHelper"
+
+import "./SpeciesFilter.scss"
 
 interface ISpeciesFilterProps extends IHasIndex {
     /**
      * The species to filter.
      */
     species: PokemonSpeciesEntry[]
+
+    /**
+     * The generations.
+     */
+    generations: GenerationEntry[]
+
+    /**
+     * The IDs of the generations that pass the filter.
+     */
+    filteredGenerationIds: number[]
+
+    /**
+     * Handler for settings the filtered generation IDs in the parent component.
+     */
+    setGenerationFilterIds: (filterIds: number[]) => void
 }
 
 interface ISpeciesFilterState {
@@ -77,6 +98,8 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                     </Collapse>
                 </div>
 
+                <hr className="hr" />
+
                 <div className="margin-bottom">
                     <Button
                         block
@@ -90,6 +113,8 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         {this.renderTypeFilter()}
                     </Collapse>
                 </div>
+
+                <hr className="hr" />
 
                 <div>
                     <Button
@@ -112,8 +137,27 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Renders the generation filter.
      */
     renderGenerationFilter() {
+        let species = this.props.species
+        let generationIds = species.map(s => s.generation.id).distinct()
+
+        let generations = this.props.generations
+        let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
+                                          .map(g => g.getShortDisplayName("en") ?? "-")
+
+        let filteredGenerationIds = this.props.filteredGenerationIds
+        if (filteredGenerationIds.length <= 0) {
+            filteredGenerationIds = generationIds
+        }
+
+        const setFilterIds = (filterIds: number[]) => this.props.setGenerationFilterIds(filterIds)
+
         return (
-            <span>GenerationFilter</span>
+            <GenerationFilter
+                index={this.props.index}
+                generationIds={generationIds}
+                generationLabels={generationLabels}
+                filteredGenerationIds={filteredGenerationIds}
+                setGenerationFilterIds={setFilterIds} />
         )
     }
 

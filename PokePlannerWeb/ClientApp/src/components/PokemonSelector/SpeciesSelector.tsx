@@ -2,7 +2,6 @@ import React from "react"
 import { Button } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
 
-import { Filter } from "./Filter"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
@@ -17,6 +16,11 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     generations: GenerationEntry[]
 
     /**
+     * The IDs of the generations that pass the filter.
+     */
+    filteredGenerationIds: number[]
+
+    /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
@@ -28,10 +32,7 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
 }
 
 interface ISpeciesSelectorState extends ISelectorBaseState {
-    /**
-     * The IDs of the generations to filter species for.
-     */
-    generationFilterIds: number[]
+
 }
 
 /**
@@ -44,7 +45,6 @@ export class SpeciesSelector
      */
     initState(): ISpeciesSelectorState {
         return {
-            generationFilterIds: [],
             filterOpen: false,
             validityTooltipOpen: false
         }
@@ -65,33 +65,6 @@ export class SpeciesSelector
                     <FaFilter className="selector-button-icon" />
                 </Button>
             </span>
-        )
-    }
-
-    /**
-     * Renders the filter.
-     */
-    renderFilter(): any {
-        let species = this.props.entries
-        let generationIds = species.map(s => s.generation.id)
-                                   .distinct()
-
-        let filteredGenerationIds = species.filter(s => this.isPresent(s))
-                                           .map(s => s.generation.id)
-                                           .distinct()
-
-        let generations = this.props.generations
-        let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
-                                          .map(g => g.getShortDisplayName("en") ?? "-")
-
-        return (
-            <Filter
-                index={this.props.index}
-                allIds={generationIds}
-                allLabels={generationLabels}
-                filteredIds={filteredGenerationIds}
-                placeholder="Filter by generation"
-                setFilterIds={(filterIds: number[]) => this.setGenerationFilterIds(filterIds)} />
         )
     }
 
@@ -149,7 +122,7 @@ export class SpeciesSelector
      * Returns whether the species passes the filter.
      */
     isPresent(species: PokemonSpeciesEntry) {
-        let filters = this.state.generationFilterIds
+        let filters = this.props.filteredGenerationIds
         return filters.length <= 0 || filters.includes(species.generation.id)
     }
 
@@ -201,21 +174,5 @@ export class SpeciesSelector
         }))
 
         this.props.toggleFilter()
-    }
-
-    /**
-     * Sets the species ID filter.
-     */
-    setGenerationFilterIds(filterIds: number[]) {
-        this.setState({ generationFilterIds: filterIds })
-
-        // no longer have a valid species
-        let speciesId = this.props.entryId
-        if (speciesId !== undefined) {
-            let species = this.getSelectedEntry()
-            if (!filterIds.includes(species.generation.id)) {
-                this.props.setSpecies(undefined)
-            }
-        }
     }
 }
