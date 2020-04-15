@@ -1,9 +1,7 @@
 ﻿import React, { Component } from "react"
-import { Tabs, Tab } from "react-bootstrap"
 
-import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
+import { ActionPanel } from "../ActionPanel/ActionPanel"
 import { InfoPanel } from "../InfoPanel/InfoPanel"
-import { MoveList } from "../MoveList/MoveList"
 import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 
 import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
@@ -14,7 +12,6 @@ import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { TypesPresenceMap } from "../../models/TypesPresenceMap"
 
-import { CookieHelper } from "../../util/CookieHelper"
 import { PokemonHelper } from "../../util/PokemonHelper"
 
 import "./PokedexPanel.scss"
@@ -73,11 +70,6 @@ interface IPokedexPanelState {
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
-
-    /**
-     * The key of the active move tab.
-     */
-    activeMoveTabKey: string | undefined
 }
 
 /**
@@ -90,8 +82,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            showShinySprite: false,
-            activeMoveTabKey: CookieHelper.get(`panel${this.props.index}activeMoveTabKey`)
+            showShinySprite: false
         }
     }
 
@@ -106,8 +97,6 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
         const toggleShowShinySprite = () => this.toggleShowShinySprite()
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
-
-        // TODO: create ActionPanel component for moves/evolution/etc
 
         return (
             <div className="flex pokedex-panel debug-border">
@@ -141,40 +130,19 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                 </div>
 
                 <div className="debug-border whalf" style={{ fontSize: "10pt" }}>
-                    <Tabs
-                        className="tabpane-small"
-                        id="movesTabs"
-                        transition={false}
-                        activeKey={this.state.activeMoveTabKey}
-                        defaultActiveKey="moves"
-                        onSelect={(k: string) => this.setActiveMoveTabKey(k)}>
-                        <Tab eventKey="moves" title="Moves">
-                            {this.renderMoveList()}
-                        </Tab>
-
-                        <Tab eventKey="evolution" title="Evolution">
-                            {this.renderEvolutionChain()}
-                        </Tab>
-                    </Tabs>
+                    <ActionPanel
+                        index={this.props.index}
+                        versionGroupId={this.props.versionGroupId}
+                        hideTooltips={this.props.hideTooltips}
+                        species={this.props.species}
+                        speciesId={this.state.speciesId}
+                        variety={this.state.variety}
+                        form={this.state.form}
+                        shouldShowPokemon={this.shouldShowPokemon()}
+                        showShinySprite={this.state.showShinySprite}
+                        setSpecies={setSpecies} />
                 </div>
             </div>
-        )
-    }
-
-    /**
-     * Renders the move list.
-     */
-    renderMoveList() {
-        let typeIds = this.getEffectiveTypes().map(t => t.id)
-
-        return (
-            <MoveList
-                index={this.props.index}
-                versionGroupId={this.props.versionGroupId}
-                pokemonId={this.state.variety?.pokemonId}
-                typeIds={typeIds}
-                showMoves={this.shouldShowPokemon()}
-                hideTooltips={this.props.hideTooltips} />
         )
     }
 
@@ -186,25 +154,6 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
             this.state.variety,
             this.state.form,
             this.props.versionGroupId
-        )
-    }
-
-    /**
-     * Renders the evolution chain.
-     */
-    renderEvolutionChain() {
-        const setSpecies = (speciesId: number) => this.setSpecies(speciesId)
-
-        return (
-            <div className="inherit-size">
-                <EvolutionChain
-                    index={this.props.index}
-                    speciesId={this.state.speciesId}
-                    availableSpeciesIds={this.props.species.map(s => s.speciesId)}
-                    showShinySprites={this.state.showShinySprite}
-                    shouldShowChain={this.shouldShowPokemon()}
-                    setSpecies={setSpecies} />
-            </div>
         )
     }
 
@@ -295,13 +244,5 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      */
     setForm(form: PokemonFormEntry) {
         this.setState({ form: form })
-    }
-
-    /**
-     * Sets the key of the active move tab.
-     */
-    setActiveMoveTabKey(key: string) {
-        CookieHelper.set(`panel${this.props.index}activeMoveTabKey`, key)
-        this.setState({ activeMoveTabKey: key })
     }
 }
