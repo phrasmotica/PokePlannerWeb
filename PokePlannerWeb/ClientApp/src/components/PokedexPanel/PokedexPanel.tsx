@@ -114,6 +114,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         defaultSpeciesId={this.state.speciesId}
                         generations={this.props.generations}
                         types={this.props.types}
+                        baseStatNames={this.props.baseStatNames}
                         hideTooltips={this.props.hideTooltips}
                         ignoreValidity={this.props.ignoreValidity}
                         setSpecies={setSpecies}

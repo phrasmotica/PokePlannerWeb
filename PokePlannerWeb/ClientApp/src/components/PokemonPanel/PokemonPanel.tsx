@@ -5,6 +5,7 @@ import key from "weak-key"
 import { IHasCommon } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
+import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilter"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
@@ -40,6 +41,11 @@ interface IPokemonPanelProps extends IHasCommon {
      * List of types.
      */
     types: TypeEntry[]
+
+    /**
+     * The base stat names.
+     */
+    baseStatNames: string[]
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -99,6 +105,11 @@ interface IPokemonPanelState {
     filteredTypeIds: number[]
 
     /**
+     * The minimum values of base stats in the species filter.
+     */
+    baseStatMinValues: BaseStatFilterValues
+
+    /**
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
@@ -124,8 +135,18 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             form: undefined,
             filteredGenerationIds: [],
             filteredTypeIds: [],
+            baseStatMinValues: this.props.baseStatNames.map(_ => 0), // TODO: initialise to array of undefined
             showShinySprite: false,
             showSpeciesFilter: false
+        }
+    }
+
+    /**
+     * Refresh minimum base stat values for the species filter.
+     */
+    componentDidUpdate(props: IPokemonPanelProps) {
+        if (!props.baseStatNames.equals(this.props.baseStatNames)) {
+            this.setState({ baseStatMinValues: this.props.baseStatNames.map(_ => 0) })
         }
     }
 
@@ -159,6 +180,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setForm={setForm}
                         filteredGenerationIds={this.state.filteredGenerationIds}
                         filteredTypeIds={this.state.filteredTypeIds}
+                        baseStatMinValues={this.state.baseStatMinValues}
                         toggleIgnoreValidity={toggleIgnoreValidity}
                         toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
@@ -204,8 +226,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 filteredGenerationIds={this.state.filteredGenerationIds}
                 types={this.props.types}
                 filteredTypeIds={this.state.filteredTypeIds}
+                baseStatNames={this.props.baseStatNames}
+                baseStatMinValues={this.state.baseStatMinValues}
                 setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)}
-                setTypeFilterIds={ids => this.setFilteredTypeIds(ids)} />
+                setTypeFilterIds={ids => this.setFilteredTypeIds(ids)}
+                setBaseStatFilterValues={values => this.setBaseStatFilterValues(values)} />
         )
     }
 
@@ -456,7 +481,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let versionGroupId = this.props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Species filter ${this.props.index}: version group ID is undefined!`
+                `Pokemon panel ${this.props.index}: version group ID is undefined!`
             )
         }
 
@@ -469,6 +494,36 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             let speciesTypes = species.getTypes(versionGroupId)
             let intersection = speciesTypes.filter(t => ids.includes(t.id))
             if (intersection.length <= 0) {
+                this.setSpecies(undefined)
+            }
+        }
+    }
+
+    /**
+     * Sets the filtered generation IDs.
+     */
+    setBaseStatFilterValues(values: BaseStatFilterValues) {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Pokemon panel ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        this.setState({ baseStatMinValues: values })
+
+        // no longer have a valid species
+        let speciesId = this.state.speciesId
+        if (speciesId !== undefined) {
+            let species = this.getSpecies()
+            let speciesBaseStats = species.getBaseStats(versionGroupId)
+
+            // TODO: create class for BaseStatFilterValues and add method for this check
+            let failsBaseStatFilter = values.map(
+                (minValue, index) => minValue === undefined || speciesBaseStats[index] >= minValue
+            ).some(b => !b)
+
+            if (failsBaseStatFilter) {
                 this.setSpecies(undefined)
             }
         }

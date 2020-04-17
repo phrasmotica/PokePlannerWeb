@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { Collapse, Button } from "reactstrap"
 
+import { BaseStatFilter, BaseStatFilterValues } from "./BaseStatFilter"
 import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
 
@@ -31,6 +32,16 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     types: TypeEntry[]
 
     /**
+     * The base stat minimum values.
+     */
+    baseStatMinValues: BaseStatFilterValues
+
+    /**
+     * The base stat names.
+     */
+    baseStatNames: string[]
+
+    /**
      * The IDs of the generations that pass the filter.
      */
     filteredGenerationIds: number[]
@@ -49,6 +60,11 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
      * Handler for settings the filtered type IDs in the parent component.
      */
     setTypeFilterIds: (ids: number[]) => void
+
+    /**
+     * Handler for settings the filtered type IDs in the parent component.
+     */
+    setBaseStatFilterValues: (values: BaseStatFilterValues) => void
 }
 
 interface ISpeciesFilterState {
@@ -220,8 +236,17 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Renders the base stat filter.
      */
     renderBaseStatFilter() {
+        let minValues = this.props.baseStatMinValues
+        let baseStatNames = this.props.baseStatNames
+
+        const setFilterValues = (values: BaseStatFilterValues) => this.props.setBaseStatFilterValues(values)
+
         return (
-            <span>BaseStatFilter</span>
+            <BaseStatFilter
+                index={this.props.index}
+                baseStatMinValues={minValues}
+                baseStatLabels={baseStatNames}
+                setBaseStatFilterValues={setFilterValues} />
         )
     }
 

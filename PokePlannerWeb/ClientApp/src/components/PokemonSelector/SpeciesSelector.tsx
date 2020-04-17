@@ -4,6 +4,8 @@ import { FaFilter } from "react-icons/fa"
 
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
+import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilter"
+
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
@@ -26,6 +28,11 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     filteredTypeIds: number[]
 
     /**
+     * The IDs of the types to filter.
+     */
+    baseStatMinValues: BaseStatFilterValues
+
+    /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
@@ -40,9 +47,7 @@ interface ISpeciesSelectorState extends ISelectorBaseState {
 
 }
 
-type TypeFilter = number[]
-
-type BaseStatFilters = (number | undefined)[]
+export type TypeFilter = number[]
 
 /**
  * Component for selecting a Pokemon species.
@@ -150,8 +155,10 @@ export class SpeciesSelector
         let passesTypeFilter = typeFilter.length <= 0 || intersection.length > 0
 
         // base stat filter test
-        let baseStatFilter: BaseStatFilters = [0, 0, 0, 0, 0, 0] // TODO: implement filter
+        let baseStatFilter: BaseStatFilterValues = this.props.baseStatMinValues
         let speciesBaseStats = species.getBaseStats(versionGroupId)
+
+        // TODO: create class for BaseStatFilterValues and add method for this check
         let passesBaseStatFilter = baseStatFilter.map(
             (minValue, index) => minValue === undefined || speciesBaseStats[index] >= minValue
         ).every(b => b)

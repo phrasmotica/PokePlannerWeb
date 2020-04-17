@@ -8,6 +8,8 @@ import { FormSelector } from "./FormSelector"
 import { SpeciesSelector } from "./SpeciesSelector"
 import { VarietySelector } from "./VarietySelector"
 
+import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilter"
+
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
@@ -50,6 +52,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
      * The IDs of the types that pass the filter.
      */
     filteredTypeIds: number[]
+
+    /**
+     * The IDs of the types to filter.
+     */
+    baseStatMinValues: BaseStatFilterValues
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -226,6 +233,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 generations={this.props.generations}
                 filteredGenerationIds={this.props.filteredGenerationIds}
                 filteredTypeIds={this.props.filteredTypeIds}
+                baseStatMinValues={this.props.baseStatMinValues}
                 setSpecies={id => this.setSpecies(id)}
                 toggleFilter={() => this.props.toggleSpeciesFilter()}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
