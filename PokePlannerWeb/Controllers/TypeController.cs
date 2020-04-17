@@ -35,6 +35,15 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
+        /// Returns all types.
+        /// </summary>
+        public async Task<TypeEntry[]> GetTypes()
+        {
+            Logger.LogInformation("Getting types...");
+            return await TypesService.GetAll();
+        }
+
+        /// <summary>
         /// Returns the types presence map for the version group with the given ID.
         /// </summary>
         [HttpGet("presence/{versionGroupId:int}")]
