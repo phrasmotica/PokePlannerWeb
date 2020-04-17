@@ -95,9 +95,6 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
             filterIds.splice(i, 1)
         }
 
-        // TODO: when selecting a Pokemon in gen V, e.g. Victini, and then filtering out gen V
-        // species, the panel clears as expected. But then when re-selecting gen V in the filter
-        // the word Victini reappears in the species selector...
         this.props.setGenerationFilterIds(filterIds)
     }
 }
