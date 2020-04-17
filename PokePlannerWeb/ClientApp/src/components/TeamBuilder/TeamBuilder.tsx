@@ -231,6 +231,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     hideTooltips={this.state.hideTooltips}
                     species={this.state.species}
                     generations={this.state.generations}
+                    types={this.state.types}
                     typesPresenceMap={this.state.typesPresenceMap}
                     baseStatNames={this.state.baseStatNames} />
             )

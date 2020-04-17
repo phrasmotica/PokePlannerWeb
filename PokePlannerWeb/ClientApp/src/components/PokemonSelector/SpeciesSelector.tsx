@@ -21,6 +21,11 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     filteredGenerationIds: number[]
 
     /**
+     * The IDs of the types that pass the filter.
+     */
+    filteredTypeIds: number[]
+
+    /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
@@ -139,7 +144,7 @@ export class SpeciesSelector
         let passesGenerationFilter = generationFilter.length <= 0 || speciesIsPresent
 
         // type filter test
-        let typeFilter: TypeFilter = [] // TODO: implement filter
+        let typeFilter: TypeFilter = this.props.filteredTypeIds
         let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
         let intersection = speciesTypes.filter(i => typeFilter.includes(i))
         let passesTypeFilter = typeFilter.length <= 0 || intersection.length > 0

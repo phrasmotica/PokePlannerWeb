@@ -2,17 +2,19 @@ import React, { Component } from "react"
 import { Collapse, Button } from "reactstrap"
 
 import { GenerationFilter } from "./GenerationFilter"
+import { TypeFilter } from "./TypeFilter"
 
-import { IHasIndex } from "../CommonMembers"
+import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { TypeEntry } from "../../models/TypeEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
 import "./SpeciesFilter.scss"
 
-interface ISpeciesFilterProps extends IHasIndex {
+interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The species to filter.
      */
@@ -24,14 +26,29 @@ interface ISpeciesFilterProps extends IHasIndex {
     generations: GenerationEntry[]
 
     /**
+     * The species to filter.
+     */
+    types: TypeEntry[]
+
+    /**
      * The IDs of the generations that pass the filter.
      */
     filteredGenerationIds: number[]
 
     /**
+     * The IDs of the types that pass the filter.
+     */
+    filteredTypeIds: number[]
+
+    /**
      * Handler for settings the filtered generation IDs in the parent component.
      */
-    setGenerationFilterIds: (filterIds: number[]) => void
+    setGenerationFilterIds: (ids: number[]) => void
+
+    /**
+     * Handler for settings the filtered type IDs in the parent component.
+     */
+    setTypeFilterIds: (ids: number[]) => void
 }
 
 interface ISpeciesFilterState {
@@ -165,8 +182,37 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Renders the type filter.
      */
     renderTypeFilter() {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Species filter ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        let species = this.props.species
+        let typeIds = species.flatMap(s => s.getTypes(versionGroupId!)
+                             .map(t => t.id))
+                             .distinct()
+                             .sort((i, j) => i - j) // ascending order
+
+        let types = this.props.types
+        let typeLabels = types.filter(t => typeIds.includes(t.typeId))
+                              .map(t => t.getDisplayName("en") ?? "-")
+
+        let filteredTypeIds = this.props.filteredTypeIds
+        if (filteredTypeIds.length <= 0) {
+            filteredTypeIds = typeIds
+        }
+
+        const setFilterIds = (filterIds: number[]) => this.props.setTypeFilterIds(filterIds)
+
         return (
-            <span>TypeFilter</span>
+            <TypeFilter
+                index={this.props.index}
+                typeIds={typeIds}
+                typeLabels={typeLabels}
+                filteredTypeIds={filteredTypeIds}
+                setTypeFilterIds={setFilterIds} />
         )
     }
 

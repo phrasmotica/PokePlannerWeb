@@ -13,6 +13,7 @@ import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
+import { TypeEntry } from "../../models/TypeEntry"
 
 interface IPokemonPanelProps extends IHasCommon {
     /**
@@ -34,6 +35,11 @@ interface IPokemonPanelProps extends IHasCommon {
      * List of generations.
      */
     generations: GenerationEntry[]
+
+    /**
+     * List of types.
+     */
+    types: TypeEntry[]
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -88,6 +94,11 @@ interface IPokemonPanelState {
     filteredGenerationIds: number[]
 
     /**
+     * The IDs of the types in the species filter.
+     */
+    filteredTypeIds: number[]
+
+    /**
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
@@ -112,6 +123,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             variety: undefined,
             form: undefined,
             filteredGenerationIds: [],
+            filteredTypeIds: [],
             showShinySprite: false,
             showSpeciesFilter: false
         }
@@ -146,6 +158,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setVariety={setVariety}
                         setForm={setForm}
                         filteredGenerationIds={this.state.filteredGenerationIds}
+                        filteredTypeIds={this.state.filteredTypeIds}
                         toggleIgnoreValidity={toggleIgnoreValidity}
                         toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
@@ -185,10 +198,14 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return (
             <SpeciesFilter
                 index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
                 species={this.props.species}
                 generations={this.props.generations}
                 filteredGenerationIds={this.state.filteredGenerationIds}
-                setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)} />
+                types={this.props.types}
+                filteredTypeIds={this.state.filteredTypeIds}
+                setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)}
+                setTypeFilterIds={ids => this.setFilteredTypeIds(ids)} />
         )
     }
 
@@ -427,6 +444,31 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         if (speciesId !== undefined) {
             let species = this.getSpecies()
             if (!ids.includes(species.generation.id)) {
+                this.setSpecies(undefined)
+            }
+        }
+    }
+
+    /**
+     * Sets the filtered generation IDs.
+     */
+    setFilteredTypeIds(ids: number[]) {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Species filter ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        this.setState({ filteredTypeIds: ids })
+
+        // no longer have a valid species
+        let speciesId = this.state.speciesId
+        if (speciesId !== undefined) {
+            let species = this.getSpecies()
+            let speciesTypes = species.getTypes(versionGroupId)
+            let intersection = speciesTypes.filter(t => ids.includes(t.id))
+            if (intersection.length <= 0) {
                 this.setSpecies(undefined)
             }
         }

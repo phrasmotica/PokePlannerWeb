@@ -10,6 +10,7 @@ import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { TypeEntry } from "../../models/TypeEntry"
 import { TypesPresenceMap } from "../../models/TypesPresenceMap"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
@@ -33,6 +34,11 @@ interface IPokedexPanelProps extends IHasIndex, IHasVersionGroup, IHasHideToolti
      * List of generations.
      */
     generations: GenerationEntry[]
+
+    /**
+     * List of types.
+     */
+    types: TypeEntry[]
 
     /**
      * The types presence map.
@@ -107,6 +113,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         species={this.props.species}
                         defaultSpeciesId={this.state.speciesId}
                         generations={this.props.generations}
+                        types={this.props.types}
                         hideTooltips={this.props.hideTooltips}
                         ignoreValidity={this.props.ignoreValidity}
                         setSpecies={setSpecies}

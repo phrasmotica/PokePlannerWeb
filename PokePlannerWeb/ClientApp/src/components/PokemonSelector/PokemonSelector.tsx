@@ -47,6 +47,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     filteredGenerationIds: number[]
 
     /**
+     * The IDs of the types that pass the filter.
+     */
+    filteredTypeIds: number[]
+
+    /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
@@ -220,6 +225,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 loading={false}
                 generations={this.props.generations}
                 filteredGenerationIds={this.props.filteredGenerationIds}
+                filteredTypeIds={this.props.filteredTypeIds}
                 setSpecies={id => this.setSpecies(id)}
                 toggleFilter={() => this.props.toggleSpeciesFilter()}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
