@@ -34,16 +34,6 @@ interface IGenerationFilterState {
  */
 export class GenerationFilter extends Component<IGenerationFilterProps, IGenerationFilterState> {
     /**
-     * Constructor.
-     */
-    constructor(props: IGenerationFilterProps) {
-        super(props)
-        this.state = {
-            filteredGenerationIds: []
-        }
-    }
-
-    /**
      * Renders the component.
      */
     render() {
