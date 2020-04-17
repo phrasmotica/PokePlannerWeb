@@ -76,7 +76,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<TypeEntry[]> GetAll()
         {
             var allTypes = await UpsertAll();
-            return allTypes.ToArray();
+            return allTypes.OrderBy(t => t.TypeId).ToArray();
         }
 
         /// <summary>
