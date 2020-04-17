@@ -29,6 +29,16 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
+        /// Gets or sets the types of this species' primary variety indexed by version group ID.
+        /// </summary>
+        public List<WithId<Type[]>> Types { get; set; }
+
+        /// <summary>
+        /// Gets or sets the base stats of this species' primary variety indexed by version group ID.
+        /// </summary>
+        public List<WithId<int[]>> BaseStats { get; set; }
+
+        /// <summary>
         /// Gets or sets the Pokemon this species represents.
         /// </summary>
         public List<Pokemon> Varieties { get; set; }
