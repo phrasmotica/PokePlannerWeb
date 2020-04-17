@@ -1,7 +1,7 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using MongoDB.Bson.Serialization.Conventions;
 using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.Util;
 
 namespace PokePlannerWeb.Data.DataStore.Abstractions
 {
@@ -13,14 +13,12 @@ namespace PokePlannerWeb.Data.DataStore.Abstractions
         /// <summary>
         /// The connection string to the database instance.
         /// </summary>
-        private readonly string ConnectionString = Environment.GetEnvironmentVariable(
-            "PokePlannerWebConnectionString", EnvironmentVariableTarget.Machine);
+        private readonly string ConnectionString = EnvHelper.GetVariable("PokePlannerWebConnectionString");
 
         /// <summary>
         /// The private key of the database.
         /// </summary>
-        private readonly string PrivateKey = Environment.GetEnvironmentVariable(
-            "PokePlannerWebPrivateKey", EnvironmentVariableTarget.Machine);
+        private readonly string PrivateKey = EnvHelper.GetVariable("PokePlannerWebPrivateKey");
 
         /// <summary>
         /// The name of the database.
