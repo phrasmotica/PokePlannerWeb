@@ -60,6 +60,7 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
 
             return (
                 <Button
+                    size="sm"
                     key={id}
                     color={isPresent ? "success" : "secondary"}
                     onMouseUp={() => this.toggleFilterId(id)}>
