@@ -35,6 +35,10 @@ interface ISpeciesSelectorState extends ISelectorBaseState {
 
 }
 
+type TypeFilter = number[]
+
+type BaseStatFilters = (number | undefined)[]
+
 /**
  * Component for selecting a Pokemon species.
  */
@@ -122,8 +126,32 @@ export class SpeciesSelector
      * Returns whether the species passes the filter.
      */
     isPresent(species: PokemonSpeciesEntry) {
-        let filters = this.props.filteredGenerationIds
-        return filters.length <= 0 || filters.includes(species.generation.id)
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Species selector ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        // generation filter test
+        let generationFilter = this.props.filteredGenerationIds
+        let speciesIsPresent = generationFilter.includes(species.generation.id)
+        let passesGenerationFilter = generationFilter.length <= 0 || speciesIsPresent
+
+        // type filter test
+        let typeFilter: TypeFilter = [] // TODO: implement filter
+        let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+        let intersection = speciesTypes.filter(i => typeFilter.includes(i))
+        let passesTypeFilter = typeFilter.length <= 0 || intersection.length > 0
+
+        // base stat filter test
+        let baseStatFilter: BaseStatFilters = [0, 0, 0, 0, 0, 0] // TODO: implement filter
+        let speciesBaseStats = species.getBaseStats(versionGroupId)
+        let passesBaseStatFilter = baseStatFilter.map(
+            (minValue, index) => minValue === undefined || speciesBaseStats[index] >= minValue
+        ).every(b => b)
+
+        return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
     }
 
     /**
