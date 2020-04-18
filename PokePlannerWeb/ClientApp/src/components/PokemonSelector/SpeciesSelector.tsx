@@ -5,6 +5,7 @@ import { FaFilter } from "react-icons/fa"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
+import { TypeFilterModel } from "../SpeciesFilter/TypeFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
@@ -25,12 +26,12 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     /**
      * The IDs of the types that pass the filter.
      */
-    filteredTypeIds: number[]
+    typeFilter: TypeFilterModel
 
     /**
      * The IDs of the types to filter.
      */
-    baseStatMinValues: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterValues
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -46,8 +47,6 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
 interface ISpeciesSelectorState extends ISelectorBaseState {
 
 }
-
-export type TypeFilter = number[]
 
 /**
  * Component for selecting a Pokemon species.
@@ -149,16 +148,12 @@ export class SpeciesSelector
         let passesGenerationFilter = generationFilter.length <= 0 || speciesIsPresent
 
         // type filter test
-        let typeFilter: TypeFilter = this.props.filteredTypeIds
         let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
-        let intersection = speciesTypes.filter(i => typeFilter.includes(i))
-        let passesTypeFilter = typeFilter.length <= 0 || intersection.length > 0
+        let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
 
         // base stat filter test
-        let baseStatFilter: BaseStatFilterValues = this.props.baseStatMinValues
         let speciesBaseStats = species.getBaseStats(versionGroupId)
-
-        let passesBaseStatFilter = baseStatFilter.passesFilter(speciesBaseStats)
+        let passesBaseStatFilter = this.props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
     }

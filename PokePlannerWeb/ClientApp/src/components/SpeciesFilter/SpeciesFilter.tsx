@@ -5,6 +5,7 @@ import { BaseStatFilter } from "./BaseStatFilter"
 import { BaseStatFilterValues } from "./BaseStatFilterValues"
 import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
+import { TypeFilterModel } from "./TypeFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
@@ -50,7 +51,7 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The IDs of the types that pass the filter.
      */
-    filteredTypeIds: number[]
+    typeFilter: TypeFilterModel
 
     /**
      * Handler for settings the filtered generation IDs in the parent component.
@@ -60,7 +61,7 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * Handler for settings the filtered type IDs in the parent component.
      */
-    setTypeFilterIds: (ids: number[]) => void
+    setTypeFilter: (filter: TypeFilterModel) => void
 
     /**
      * Handler for settings the filtered type IDs in the parent component.
@@ -216,20 +217,20 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         let typeLabels = types.filter(t => typeIds.includes(t.typeId))
                               .map(t => t.getDisplayName("en") ?? "-")
 
-        let filteredTypeIds = this.props.filteredTypeIds
-        if (filteredTypeIds.length <= 0) {
-            filteredTypeIds = typeIds
+        let typeFilter = this.props.typeFilter
+        if (typeFilter.isEmpty()) {
+            typeFilter = new TypeFilterModel(typeIds)
         }
 
-        const setFilterIds = (filterIds: number[]) => this.props.setTypeFilterIds(filterIds)
+        const setTypeFilter = (filter: TypeFilterModel) => this.props.setTypeFilter(filter)
 
         return (
             <TypeFilter
                 index={this.props.index}
                 typeIds={typeIds}
                 typeLabels={typeLabels}
-                filteredTypeIds={filteredTypeIds}
-                setTypeFilterIds={setFilterIds} />
+                typeFilter={typeFilter}
+                setTypeFilter={setTypeFilter} />
         )
     }
 

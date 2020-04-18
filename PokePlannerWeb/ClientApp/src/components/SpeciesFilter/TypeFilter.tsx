@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
 
+import { TypeFilterModel } from "./TypeFilterModel"
+
 import { IHasIndex } from "../CommonMembers"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -19,14 +21,14 @@ interface ITypeFilterProps extends IHasIndex {
     typeLabels: string[]
 
     /**
-     * The IDs of the types that pass the filter.
+     * The type filter model.
      */
-    filteredTypeIds: number[]
+    typeFilter: TypeFilterModel
 
     /**
      * Handler for setting the type filter in the parent component.
      */
-    setTypeFilterIds: (ids: number[]) => void
+    setTypeFilter: (filter: TypeFilterModel) => void
 }
 
 interface ITypeFilterState {
@@ -44,16 +46,16 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
         super(props)
 
         // set filter values from cookies
-        let cookieTypeFilterIds = []
+        let cookieTypeIds = []
         for (let id of this.props.typeIds) {
             let cookieName = `typeFilter${this.props.index}active${id}`
             let active = CookieHelper.getFlag(cookieName)
             if (active) {
-                cookieTypeFilterIds.push(id)
+                cookieTypeIds.push(id)
             }
         }
 
-        this.props.setTypeFilterIds(cookieTypeFilterIds)
+        this.props.setTypeFilter(new TypeFilterModel(cookieTypeIds))
     }
 
     /**
@@ -69,7 +71,7 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
     renderFilter() {
         let items = this.props.typeIds.map((id, index) => {
             let label = this.props.typeLabels[index]
-            let active = this.props.filteredTypeIds.includes(id)
+            let active = this.props.typeFilter.passesFilter([id])
 
             let headerId = `list${this.props.index}type${index}`
 
@@ -114,24 +116,12 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
      * Toggles the given ID in the filter.
      */
     toggleFilterId(id: number) {
-        let filterIds = this.props.filteredTypeIds
-        let i = filterIds.indexOf(id)
-
-        if (i >= 0 && filterIds.length <= 1) {
-            // can't filter out everything
-            return
-        }
-
-        if (i < 0) {
-            filterIds.push(id)
-        }
-        else {
-            filterIds.splice(i, 1)
-        }
+        let typeFilter = this.props.typeFilter
+        let isActive = typeFilter.toggle(id)
 
         let cookieName = `typeFilter${this.props.index}active${id}`
-        CookieHelper.set(cookieName, i < 0)
+        CookieHelper.set(cookieName, isActive)
 
-        this.props.setTypeFilterIds(filterIds)
+        this.props.setTypeFilter(typeFilter)
     }
 }

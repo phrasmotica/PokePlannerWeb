@@ -7,6 +7,7 @@ import { IHasCommon } from "../CommonMembers"
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
 import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
+import { TypeFilterModel } from "../SpeciesFilter/TypeFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
@@ -102,7 +103,7 @@ interface IPokemonPanelState {
     /**
      * The IDs of the types in the species filter.
      */
-    filteredTypeIds: number[]
+    typeFilter: TypeFilterModel
 
     /**
      * The minimum values of base stats in the species filter.
@@ -134,7 +135,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             variety: undefined,
             form: undefined,
             filteredGenerationIds: [],
-            filteredTypeIds: [],
+            typeFilter: TypeFilterModel.createEmpty(),
             baseStatFilter: BaseStatFilterValues.createEmpty(this.props.baseStatNames.length),
             showShinySprite: false,
             showSpeciesFilter: false
@@ -181,8 +182,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setVariety={setVariety}
                         setForm={setForm}
                         filteredGenerationIds={this.state.filteredGenerationIds}
-                        filteredTypeIds={this.state.filteredTypeIds}
-                        baseStatMinValues={this.state.baseStatFilter}
+                        typeFilter={this.state.typeFilter}
+                        baseStatFilter={this.state.baseStatFilter}
                         toggleIgnoreValidity={toggleIgnoreValidity}
                         toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
@@ -227,11 +228,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 generations={this.props.generations}
                 filteredGenerationIds={this.state.filteredGenerationIds}
                 types={this.props.types}
-                filteredTypeIds={this.state.filteredTypeIds}
+                typeFilter={this.state.typeFilter}
                 baseStatNames={this.props.baseStatNames}
                 baseStatMinValues={this.state.baseStatFilter}
                 setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)}
-                setTypeFilterIds={ids => this.setFilteredTypeIds(ids)}
+                setTypeFilter={ids => this.setTypeFilter(ids)}
                 setBaseStatFilterValues={values => this.setBaseStatFilterValues(values)} />
         )
     }
@@ -367,6 +368,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Toggles the species filter.
      */
     toggleSpeciesFilter() {
+        // TODO: bug where toggling the filter causes the panel to clear...
         this.setState(previousState => ({
             showSpeciesFilter: !previousState.showSpeciesFilter
         }))
@@ -477,9 +479,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     /**
-     * Sets the filtered generation IDs.
+     * Sets the type filter.
      */
-    setFilteredTypeIds(ids: number[]) {
+    setTypeFilter(filter: TypeFilterModel) {
         let versionGroupId = this.props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
@@ -487,15 +489,16 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             )
         }
 
-        this.setState({ filteredTypeIds: ids })
+        this.setState({ typeFilter: filter })
 
         // no longer have a valid species
         let speciesId = this.state.speciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
-            let speciesTypes = species.getTypes(versionGroupId)
-            let intersection = speciesTypes.filter(t => ids.includes(t.id))
-            if (intersection.length <= 0) {
+            let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+
+            let failsTypeFilter = !filter.passesFilter(speciesTypes)
+            if (failsTypeFilter) {
                 this.setSpecies(undefined)
             }
         }
