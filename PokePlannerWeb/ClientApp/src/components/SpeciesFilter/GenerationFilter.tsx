@@ -3,6 +3,8 @@ import { Button, ButtonGroup } from "reactstrap"
 
 import { IHasIndex } from "../CommonMembers"
 
+import { CookieHelper } from "../../util/CookieHelper"
+
 interface IGenerationFilterProps extends IHasIndex {
     /**
      * The IDs of the generations to filter.
@@ -33,6 +35,25 @@ interface IGenerationFilterState {
  * Component for filtering a list of species stored in the parent component by generation.
  */
 export class GenerationFilter extends Component<IGenerationFilterProps, IGenerationFilterState> {
+    /**
+     * Constructor.
+     */
+    constructor(props: IGenerationFilterProps) {
+        super(props)
+
+        // set filter values from cookies
+        let cookieGenerationFilterIds = []
+        for (let id of this.props.generationIds) {
+            let cookieName = `generationFilter${this.props.index}active${id}`
+            let active = CookieHelper.getFlag(cookieName)
+            if (active) {
+                cookieGenerationFilterIds.push(id)
+            }
+        }
+
+        this.props.setGenerationFilterIds(cookieGenerationFilterIds)
+    }
+
     /**
      * Renders the component.
      */
@@ -84,6 +105,9 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
         else {
             filterIds.splice(i, 1)
         }
+
+        let cookieName = `generationFilter${this.props.index}active${id}`
+        CookieHelper.set(cookieName, i < 0)
 
         this.props.setGenerationFilterIds(filterIds)
     }
