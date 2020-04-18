@@ -6,6 +6,11 @@
     public class DataStoreSettings : IDataStoreSettings
     {
         /// <summary>
+        /// The name of the collection of abilities.
+        /// </summary>
+        public string AbilityCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of encounters.
         /// </summary>
         public string EncounterCollectionName { get; set; }
@@ -106,6 +111,11 @@
     /// </summary>
     public interface IDataStoreSettings
     {
+        /// <summary>
+        /// The name of the collection of abilities.
+        /// </summary>
+        string AbilityCollectionName { get; set; }
+
         /// <summary>
         /// The name of the collection of encounters.
         /// </summary>
