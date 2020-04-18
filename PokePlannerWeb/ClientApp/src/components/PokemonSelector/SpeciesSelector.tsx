@@ -72,7 +72,7 @@ export class SpeciesSelector
         return (
             <span title="Filter by generation">
                 <Button
-                    color={filterOpen ? "success" : "secondary"}
+                    color={filterOpen ? "success" : "info"}
                     className="filter-button"
                     onMouseUp={() => {this.toggleFilter()}}>
                     <FaFilter className="selector-button-icon" />

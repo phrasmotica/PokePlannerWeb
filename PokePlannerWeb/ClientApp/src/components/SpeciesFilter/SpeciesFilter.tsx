@@ -114,21 +114,27 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      */
     renderFilters() {
         let generationFilterLabel = "Filter by generation"
+        let generationFilterColour = "info"
         let generationFilter = this.props.generationFilter
         if (generationFilter.isEnabled() && !generationFilter.isEmpty()) {
             generationFilterLabel += ` (${generationFilter.count()})`
+            generationFilterColour = "success"
         }
 
         let typeFilterLabel = "Filter by type"
+        let typeFilterColour = "info"
         let typeFilter = this.props.typeFilter
         if (typeFilter.isEnabled() && !typeFilter.isEmpty()) {
             typeFilterLabel += ` (${typeFilter.count()})`
+            typeFilterColour = "success"
         }
 
         let baseStatFilterLabel = "Filter by base stats"
+        let baseStatFilterColour = "info"
         let baseStatFilter = this.props.baseStatFilter
         if (baseStatFilter.isEnabled() && !baseStatFilter.isEmpty()) {
             baseStatFilterLabel += ` (${baseStatFilter.count()})`
+            baseStatFilterColour = "success"
         }
 
         const toggleGenerationFilter = () => this.toggleGenerationFilter()
@@ -140,7 +146,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                 <div className="margin-bottom">
                     <Button
                         block
-                        color="info"
+                        color={generationFilterColour}
                         size="sm"
                         className="margin-bottom"
                         onClick={toggleGenerationFilter}>
@@ -157,7 +163,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                 <div className="margin-bottom">
                     <Button
                         block
-                        color="info"
+                        color={typeFilterColour}
                         size="sm"
                         className="margin-bottom"
                         onClick={toggleTypeFilter}>
@@ -174,7 +180,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                 <div>
                     <Button
                         block
-                        color="info"
+                        color={baseStatFilterColour}
                         size="sm"
                         className="margin-bottom"
                         onClick={toggleBaseStatFilter}>
