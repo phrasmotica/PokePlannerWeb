@@ -1,0 +1,15 @@
+.typeFilterContainer {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+.typeFilter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.typeFilterLabel {
+    margin: unset;
+}

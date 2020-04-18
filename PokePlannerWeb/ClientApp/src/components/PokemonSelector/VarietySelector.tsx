@@ -181,13 +181,6 @@ export class VarietySelector
     }
 
     /**
-     * Renders the filter.
-     */
-    renderFilter(): any {
-        return null
-    }
-
-    /**
      * Returns a message indicating the variety ID is undefined.
      */
     getEntryIdUndefinedMessage(): string {

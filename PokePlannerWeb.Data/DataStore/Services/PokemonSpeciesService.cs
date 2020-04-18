@@ -82,6 +82,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 SpriteUrl = primaryVariety.SpriteUrl,
                 ShinySpriteUrl = primaryVariety.ShinySpriteUrl,
                 DisplayNames = displayNames.ToList(),
+                Types = primaryVariety.Types.ToList(),
+                BaseStats = primaryVariety.BaseStats.ToList(),
                 Varieties = varieties.ToList(),
                 Generation = generation,
                 EvolutionChain = evolutionChain,

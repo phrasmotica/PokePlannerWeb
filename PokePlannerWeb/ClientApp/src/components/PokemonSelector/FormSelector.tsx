@@ -147,13 +147,6 @@ export class FormSelector
     }
 
     /**
-     * Renders the filter.
-     */
-    renderFilter(): any {
-        return null
-    }
-
-    /**
      * Returns a message indicating the form ID is undefined.
      */
     getEntryIdUndefinedMessage(): string {

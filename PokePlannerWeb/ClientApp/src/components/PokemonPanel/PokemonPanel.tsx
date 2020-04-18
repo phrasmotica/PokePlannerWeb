@@ -5,6 +5,9 @@ import key from "weak-key"
 import { IHasCommon } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
+import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
+import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
+import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
@@ -12,6 +15,7 @@ import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
+import { TypeEntry } from "../../models/TypeEntry"
 
 interface IPokemonPanelProps extends IHasCommon {
     /**
@@ -33,6 +37,16 @@ interface IPokemonPanelProps extends IHasCommon {
      * List of generations.
      */
     generations: GenerationEntry[]
+
+    /**
+     * List of types.
+     */
+    types: TypeEntry[]
+
+    /**
+     * The base stat names.
+     */
+    baseStatNames: string[]
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -82,9 +96,29 @@ interface IPokemonPanelState {
     form: PokemonFormEntry | undefined
 
     /**
+     * The generation filter.
+     */
+    generationFilter: GenerationFilterModel
+
+    /**
+     * The type filter.
+     */
+    typeFilter: TypeFilterModel
+
+    /**
+     * The base stat filter.
+     */
+    baseStatFilter: BaseStatFilterModel
+
+    /**
      * Whether to show the shiny sprite.
      */
     showShinySprite: boolean
+
+    /**
+     * Whether to show the species filter.
+     */
+    showSpeciesFilter: boolean
 }
 
 /**
@@ -100,7 +134,22 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            showShinySprite: false
+            generationFilter: GenerationFilterModel.createEmpty(),
+            typeFilter: TypeFilterModel.createEmpty(),
+            baseStatFilter: BaseStatFilterModel.createEmpty(this.props.baseStatNames.length),
+            showShinySprite: false,
+            showSpeciesFilter: false
+        }
+    }
+
+    /**
+     * Refresh minimum base stat values for the species filter.
+     */
+    componentDidUpdate(props: IPokemonPanelProps) {
+        let newBaseStatNames = this.props.baseStatNames
+        if (!props.baseStatNames.equals(newBaseStatNames)) {
+            let newFilter = BaseStatFilterModel.createEmpty(newBaseStatNames.length)
+            this.setState({ baseStatFilter: newFilter })
         }
     }
 
@@ -113,7 +162,9 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
         const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
+
         const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
+        const toggleSpeciesFilter = () => this.toggleSpeciesFilter()
 
         return (
             <div className="flex debug-border hhalf">
@@ -130,11 +181,15 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setSpecies={setSpecies}
                         setVariety={setVariety}
                         setForm={setForm}
-                        toggleIgnoreValidity={toggleIgnoreValidity} />
+                        generationFilter={this.state.generationFilter}
+                        typeFilter={this.state.typeFilter}
+                        baseStatFilter={this.state.baseStatFilter}
+                        toggleIgnoreValidity={toggleIgnoreValidity}
+                        toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
 
                 <div className="flex-center w40 debug-border">
-                    {this.renderPokemonInfo()}
+                    {this.state.showSpeciesFilter ? this.renderSpeciesFilter() : this.renderPokemonInfo()}
                 </div>
             </div>
         )
@@ -158,6 +213,27 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                     {this.renderShinySpriteSwitch()}
                 </div>
             </div>
+        )
+    }
+
+    /**
+     * Renders the species filter.
+     */
+    renderSpeciesFilter() {
+        return (
+            <SpeciesFilter
+                index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
+                species={this.props.species}
+                generations={this.props.generations}
+                generationFilter={this.state.generationFilter}
+                types={this.props.types}
+                typeFilter={this.state.typeFilter}
+                baseStatNames={this.props.baseStatNames}
+                baseStatFilter={this.state.baseStatFilter}
+                setGenerationFilter={filter => this.setGenerationFilter(filter)}
+                setTypeFilter={filter => this.setTypeFilter(filter)}
+                setBaseStatFilter={filter => this.setBaseStatFilter(filter)} />
         )
     }
 
@@ -289,6 +365,15 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     /**
+     * Toggles the species filter.
+     */
+    toggleSpeciesFilter() {
+        this.setState(previousState => ({
+            showSpeciesFilter: !previousState.showSpeciesFilter
+        }))
+    }
+
+    /**
      * Returns the data object for the selected species.
      */
     getSpecies() {
@@ -374,5 +459,76 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ form: form })
 
         this.props.setForm(form)
+    }
+
+    /**
+     * Sets the generation filter.
+     */
+    setGenerationFilter(filter: GenerationFilterModel) {
+        this.setState({ generationFilter: filter })
+
+        // no longer have a valid species
+        let speciesId = this.state.speciesId
+        if (speciesId !== undefined) {
+            let species = this.getSpecies()
+            let generationId = species.generation.id
+
+            let failsGenerationFilter = !filter.passesFilter([generationId])
+            if (failsGenerationFilter) {
+                this.setSpecies(undefined)
+            }
+        }
+    }
+
+    /**
+     * Sets the type filter.
+     */
+    setTypeFilter(filter: TypeFilterModel) {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Pokemon panel ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        this.setState({ typeFilter: filter })
+
+        // no longer have a valid species
+        let speciesId = this.state.speciesId
+        if (speciesId !== undefined) {
+            let species = this.getSpecies()
+            let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+
+            let failsTypeFilter = !filter.passesFilter(speciesTypes)
+            if (failsTypeFilter) {
+                this.setSpecies(undefined)
+            }
+        }
+    }
+
+    /**
+     * Sets the base stat filter.
+     */
+    setBaseStatFilter(filter: BaseStatFilterModel) {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Pokemon panel ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        this.setState({ baseStatFilter: filter })
+
+        // no longer have a valid species
+        let speciesId = this.state.speciesId
+        if (speciesId !== undefined) {
+            let species = this.getSpecies()
+            let speciesBaseStats = species.getBaseStats(versionGroupId)
+
+            let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
+            if (failsBaseStatFilter) {
+                this.setSpecies(undefined)
+            }
+        }
     }
 }

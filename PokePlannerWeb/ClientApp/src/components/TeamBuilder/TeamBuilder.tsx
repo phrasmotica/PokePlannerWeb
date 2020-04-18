@@ -8,6 +8,7 @@ import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
 import { GenerationEntry } from '../../models/GenerationEntry'
 import { PokemonSpeciesEntry } from '../../models/PokemonSpeciesEntry'
+import { TypeEntry } from '../../models/TypeEntry'
 import { TypesPresenceMap } from '../../models/TypesPresenceMap'
 import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
@@ -35,6 +36,11 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     generations: GenerationEntry[]
 
     /**
+     * Whether the generations are loading.
+     */
+    loadingGenerations: boolean
+
+    /**
      * List of version groups.
      */
     versionGroups: VersionGroupEntry[]
@@ -43,6 +49,16 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
      * Whether the version groups are loading.
      */
     loadingVersionGroups: boolean
+
+    /**
+     * List of types.
+     */
+    types: TypeEntry[]
+
+    /**
+     * Whether the types are loading.
+     */
+    loadingTypes: boolean
 
     /**
      * The types presence map.
@@ -82,8 +98,11 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             species: [],
             loadingSpecies: true,
             generations: [],
+            loadingGenerations: true,
             versionGroups: [],
             loadingVersionGroups: true,
+            types: [],
+            loadingTypes: true,
             versionGroupId: undefined,
             typesPresenceMap: {
                 versionGroupId: undefined,
@@ -100,6 +119,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     componentDidMount() {
         this.getSpecies()
         this.fetchGenerations()
+        this.fetchTypes()
         this.getVersionGroups()
             .then(() => {
                 this.getBaseStatNames(this.state.versionGroupId)
@@ -211,6 +231,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     hideTooltips={this.state.hideTooltips}
                     species={this.state.species}
                     generations={this.state.generations}
+                    types={this.state.types}
                     typesPresenceMap={this.state.typesPresenceMap}
                     baseStatNames={this.state.baseStatNames} />
             )
@@ -261,6 +282,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
      * Fetches all generations.
      */
     fetchGenerations() {
+        this.setState({ loadingGenerations: true })
+
         fetch(`${process.env.REACT_APP_API_URL}/generation`)
             .then(response => response.json())
             .then((groups: GenerationEntry[]) => {
@@ -268,6 +291,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                 this.setState({ generations: concreteGenerations })
             })
             .catch(error => console.error(error))
+            .finally(() => this.setState({ loadingGenerations: false }))
     }
 
     // load all version groups
@@ -293,6 +317,23 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .catch(error => console.error(error))
             .finally(() => this.setState({ loadingVersionGroups: false }))
+    }
+
+    /**
+     * Fetches all types.
+     * TODO: merge types presence map into this
+     */
+    fetchTypes() {
+        this.setState({ loadingTypes: true })
+
+        fetch(`${process.env.REACT_APP_API_URL}/type`)
+            .then(response => response.json())
+            .then((groups: TypeEntry[]) => {
+                let concreteTypes = groups.map(TypeEntry.from)
+                this.setState({ types: concreteTypes })
+            })
+            .catch(error => console.error(error))
+            .finally(() => this.setState({ loadingTypes: false }))
     }
 
     // retrieves the types presence map for the given version group from TypeController
@@ -384,5 +425,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     pageIsLoading() {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
+            || this.state.loadingGenerations
+            || this.state.loadingTypes
     }
 }

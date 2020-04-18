@@ -8,6 +8,9 @@ import { FormSelector } from "./FormSelector"
 import { SpeciesSelector } from "./SpeciesSelector"
 import { VarietySelector } from "./VarietySelector"
 
+import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
+import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
+
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
@@ -15,6 +18,7 @@ import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
+import { CssHelper } from "../../util/CssHelper"
 
 import "../../styles/types.scss"
 import "./PokemonSelector.scss"
@@ -42,6 +46,21 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     generations: GenerationEntry[]
 
     /**
+     * The generation filter.
+     */
+    generationFilter: GenerationFilterModel
+
+    /**
+     * The type filter.
+     */
+    typeFilter: TypeFilterModel
+
+    /**
+     * The base stat filter.
+     */
+    baseStatFilter: BaseStatFilterModel
+
+    /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
@@ -60,6 +79,11 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
      * Handler for setting the Pokemon form in the parent component.
      */
     setForm: (form: PokemonFormEntry) => void
+
+    /**
+     * Handler for toggling the species filter in the parent component.
+     */
+    toggleSpeciesFilter: () => void
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -153,24 +177,23 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      * Set species from props if necessary.
      */
     componentDidUpdate(previousProps: IPokemonSelectorProps) {
-        let index = this.props.index
-
         let defaultSpeciesId = this.props.defaultSpeciesId
-        if (defaultSpeciesId !== undefined) {
-            if (previousProps.defaultSpeciesId !== defaultSpeciesId) {
-                let speciesIds = this.props.species.map(s => s.speciesId)
-                if (speciesIds.includes(defaultSpeciesId)) {
-                    this.setSpecies(defaultSpeciesId)
+        if (previousProps.defaultSpeciesId !== defaultSpeciesId) {
+            let speciesIds = this.props.species.map(s => s.speciesId)
+            if (defaultSpeciesId !== undefined && speciesIds.includes(defaultSpeciesId)) {
+                this.setSpecies(defaultSpeciesId)
 
-                    // set cookie
-                    CookieHelper.set(`speciesId${this.props.index}`, defaultSpeciesId)
-                }
-                else {
-                    // remove cookies for species that isn't available
-                    CookieHelper.remove(`speciesId${index}`)
-                    CookieHelper.remove(`varietyId${index}`)
-                    CookieHelper.remove(`formId${index}`)
-                }
+                // set cookie
+                CookieHelper.set(`speciesId${this.props.index}`, defaultSpeciesId)
+            }
+            else {
+                // remove cookies for species that isn't available
+                this.setSpecies(undefined)
+
+                let index = this.props.index
+                CookieHelper.remove(`speciesId${index}`)
+                CookieHelper.remove(`varietyId${index}`)
+                CookieHelper.remove(`formId${index}`)
             }
         }
     }
@@ -210,7 +233,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 entryId={this.state.speciesId}
                 loading={false}
                 generations={this.props.generations}
+                generationFilter={this.props.generationFilter}
+                typeFilter={this.props.typeFilter}
+                baseStatFilter={this.props.baseStatFilter}
                 setSpecies={id => this.setSpecies(id)}
+                toggleFilter={() => this.props.toggleSpeciesFilter()}
                 shouldMarkInvalid={!this.props.ignoreValidity && hasNoVariants} />
         )
     }
@@ -273,6 +300,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     renderButtons() {
         let clearDisabled = this.state.speciesId === undefined || this.isLoading()
+        let style = CssHelper.defaultCursorIf(clearDisabled)
 
         return (
             <div className="margin-bottom-small">
@@ -288,7 +316,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 <span title={clearDisabled ? undefined : "Clear"}>
                     <Button
                         color="danger"
-                        style={{ cursor: clearDisabled ? "default" : "pointer" }}
+                        style={style}
                         className="selector-button margin-right-small"
                         disabled={clearDisabled}
                         onMouseUp={() => this.clearPokemon()}>
@@ -347,6 +375,39 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     hasSecondaryForms() {
         let forms = this.getFormsOfSelectedVariety()
         return forms.length >= 2
+    }
+
+    /**
+     * Returns the species that match the species filter.
+     */
+    getFilteredSpecies() {
+        return this.props.species.filter(s => this.isPresent(s))
+    }
+
+    /**
+     * Returns whether the species passes the filter.
+     */
+    isPresent(species: PokemonSpeciesEntry) {
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Species selector ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        // generation filter test
+        let generationId = species.generation.id
+        let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
+
+        // type filter test
+        let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+        let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
+
+        // base stat filter test
+        let speciesBaseStats = species.getBaseStats(versionGroupId)
+        let passesBaseStatFilter = this.props.baseStatFilter.passesFilter(speciesBaseStats)
+
+        return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
     }
 
     /**
@@ -446,9 +507,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             this.props.toggleIgnoreValidity()
         }
 
-        let max = this.props.species.length
+        let speciesList = this.getFilteredSpecies()
+
+        let max = speciesList.length
         let randomIndex = this.randomInt(0, max)
-        let species = this.props.species[randomIndex]
+        let species = speciesList[randomIndex]
 
         this.setSpecies(species.speciesId)
 

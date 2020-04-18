@@ -76,7 +76,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<TypeEntry[]> GetAll()
         {
             var allTypes = await UpsertAll();
-            return allTypes.ToArray();
+            return allTypes.OrderBy(t => t.TypeId).ToArray();
         }
 
         /// <summary>
@@ -194,12 +194,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private async Task<TypeRelations> GetPastDamageRelations(Type type, Generation generation)
         {
             var pastDamageRelations = type.PastDamageRelations;
-            var pastGenerations = await GenerationsService.UpsertMany(pastDamageRelations.Select(t => t.Generation));
-
-            if (pastGenerations.Any())
+            if (pastDamageRelations.Any())
             {
                 // use the earliest generation after the given one with past damage relation data,
                 // if it exists
+                var pastGenerations = await GenerationsService.UpsertMany(pastDamageRelations.Select(t => t.Generation));
                 var laterGens = pastGenerations.Where(g => g.GenerationId >= generation.Id).ToList();
                 if (laterGens.Any())
                 {

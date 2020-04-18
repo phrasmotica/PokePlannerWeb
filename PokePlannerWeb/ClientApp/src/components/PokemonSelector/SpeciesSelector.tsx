@@ -2,8 +2,10 @@ import React from "react"
 import { Button } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
 
-import { Filter } from "./Filter"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
+
+import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
+import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
@@ -17,16 +19,33 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     generations: GenerationEntry[]
 
     /**
+     * The generation filter.
+     */
+    generationFilter: GenerationFilterModel
+
+    /**
+     * The type filter.
+     */
+    typeFilter: TypeFilterModel
+
+    /**
+     * The base stat filter.
+     */
+    baseStatFilter: BaseStatFilterModel
+
+    /**
      * Handler for setting the species ID in the parent component.
      */
     setSpecies: (speciesId: number | undefined) => void
+
+    /**
+     * Handler for toggling the species filter in the parent component.
+     */
+    toggleFilter: () => void
 }
 
 interface ISpeciesSelectorState extends ISelectorBaseState {
-    /**
-     * The IDs of the generations to filter species for.
-     */
-    generationFilterIds: number[]
+
 }
 
 /**
@@ -39,7 +58,6 @@ export class SpeciesSelector
      */
     initState(): ISpeciesSelectorState {
         return {
-            generationFilterIds: [],
             filterOpen: false,
             validityTooltipOpen: false
         }
@@ -54,39 +72,12 @@ export class SpeciesSelector
         return (
             <span title="Filter by generation">
                 <Button
-                    color={filterOpen ? "success" : "secondary"}
+                    color={filterOpen ? "success" : "info"}
                     className="filter-button"
-                    onMouseUp={() => {this.toggleSpeciesFilter()}}>
+                    onMouseUp={() => {this.toggleFilter()}}>
                     <FaFilter className="selector-button-icon" />
                 </Button>
             </span>
-        )
-    }
-
-    /**
-     * Renders the filter.
-     */
-    renderFilter(): any {
-        let species = this.props.entries
-        let generationIds = species.map(s => s.generation.id)
-                                   .distinct()
-
-        let filteredGenerationIds = species.filter(s => this.isPresent(s))
-                                           .map(s => s.generation.id)
-                                           .distinct()
-
-        let generations = this.props.generations
-        let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
-                                          .map(g => g.getShortDisplayName("en") ?? "-")
-
-        return (
-            <Filter
-                index={this.props.index}
-                allIds={generationIds}
-                allLabels={generationLabels}
-                filteredIds={filteredGenerationIds}
-                placeholder="Filter by generation"
-                setFilterIds={(filterIds: number[]) => this.setGenerationFilterIds(filterIds)} />
         )
     }
 
@@ -144,8 +135,26 @@ export class SpeciesSelector
      * Returns whether the species passes the filter.
      */
     isPresent(species: PokemonSpeciesEntry) {
-        let filters = this.state.generationFilterIds
-        return filters.length <= 0 || filters.includes(species.generation.id)
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Species selector ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        // generation filter test
+        let generationId = species.generation.id
+        let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
+
+        // type filter test
+        let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+        let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
+
+        // base stat filter test
+        let speciesBaseStats = species.getBaseStats(versionGroupId)
+        let passesBaseStatFilter = this.props.baseStatFilter.passesFilter(speciesBaseStats)
+
+        return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
     }
 
     /**
@@ -190,25 +199,11 @@ export class SpeciesSelector
     /**
      * Toggles the species filter.
      */
-    toggleSpeciesFilter() {
+    toggleFilter() {
         this.setState(previousState => ({
             filterOpen: !previousState.filterOpen
         }))
-    }
 
-    /**
-     * Sets the species ID filter.
-     */
-    setGenerationFilterIds(filterIds: number[]) {
-        this.setState({ generationFilterIds: filterIds })
-
-        // no longer have a valid species
-        let speciesId = this.props.entryId
-        if (speciesId !== undefined) {
-            let species = this.getSelectedEntry()
-            if (!filterIds.includes(species.generation.id)) {
-                this.props.setSpecies(undefined)
-            }
-        }
+        this.props.toggleFilter()
     }
 }

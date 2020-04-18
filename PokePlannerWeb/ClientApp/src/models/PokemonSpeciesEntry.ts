@@ -2,6 +2,8 @@ import { EvolutionChain } from "./EvolutionChain"
 import { Generation } from "./Generation"
 import { LocalString } from "./LocalString"
 import { Pokemon } from "./Pokemon"
+import { Type } from "./Type"
+import { WithId } from "./WithId"
 
 /**
  * Represents a Pokemon species in the data store.
@@ -33,6 +35,16 @@ export class PokemonSpeciesEntry {
     displayNames: LocalString[]
 
     /**
+     * The types of this species' primary variety indexed by version group ID.
+    */
+    types: WithId<Type[]>[]
+
+    /**
+     * The base stats of this species' primary variety indexed by version group ID.
+     */
+    baseStats: WithId<number[]>[]
+
+    /**
      * The Pokemon this species represents.
      */
     varieties: Pokemon[]
@@ -61,6 +73,8 @@ export class PokemonSpeciesEntry {
         spriteUrl: string,
         shinySpriteUrl: string,
         displayNames: LocalString[],
+        types: WithId<Type[]>[],
+        baseStats: WithId<number[]>[],
         varieties: Pokemon[],
         generation: Generation,
         evolutionChain: EvolutionChain,
@@ -71,6 +85,8 @@ export class PokemonSpeciesEntry {
         this.spriteUrl = spriteUrl
         this.shinySpriteUrl = shinySpriteUrl
         this.displayNames = displayNames
+        this.types = types
+        this.baseStats = baseStats
         this.varieties = varieties
         this.generation = generation
         this.evolutionChain = evolutionChain
@@ -87,6 +103,8 @@ export class PokemonSpeciesEntry {
             species.spriteUrl,
             species.shinySpriteUrl,
             species.displayNames,
+            species.types,
+            species.baseStats,
             species.varieties,
             species.generation,
             species.evolutionChain,
@@ -107,6 +125,44 @@ export class PokemonSpeciesEntry {
         }
 
         return localName?.value
+    }
+
+    /**
+     * Returns the species' types in the version group with the given ID.
+     */
+    getTypes(versionGroupId: number): Type[] {
+        let types = this.types
+        if (types.length <= 0) {
+            throw new Error(`Species ${this.speciesId} has no type entries`)
+        }
+
+        let newestVersionGroupId = types.reduce((t1, t2) => t1.id > t2.id ? t1 : t2).id
+
+        // find first types entry with a version group ID after the one we're looking so
+        let matchFunc = (searchId: number) => types.find(e => e.id === searchId)
+
+        let searchId = versionGroupId
+        let matchingEntry: WithId<Type[]> | undefined = undefined
+        while (matchingEntry === undefined && searchId <= newestVersionGroupId) {
+            matchingEntry = matchFunc(searchId)
+            searchId++
+        }
+
+        if (matchingEntry === undefined) {
+            throw new Error(
+                `Species ${this.speciesId} has no type data for the newest version group (${newestVersionGroupId})`
+            )
+        }
+
+        return matchingEntry.data
+    }
+
+    /**
+     * Returns the Pokemon's base stats in the version group with the given ID.
+     */
+    getBaseStats(versionGroupId: number): number[] {
+        let baseStats = this.baseStats.find(t => t.id === versionGroupId)
+        return baseStats?.data ?? []
     }
 
     /**

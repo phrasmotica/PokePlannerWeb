@@ -72,7 +72,7 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         let selectedOption = null
         let entryId = (this.props as TProps).entryId
         if (entryId !== undefined) {
-            // undefined doesn't clear stored state to coalesce to null
+            // undefined doesn't clear stored state so coalesce to null
             // https://github.com/JedWatson/react-select/issues/3066
             selectedOption = options.find(o => o.value === entryId) ?? null
         }
@@ -102,9 +102,6 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
         let validityTooltip = this.renderValidityTooltip(selectId)
 
         let filterButton = this.renderFilterButton()
-        if (this.state.filterOpen) {
-            searchBox = this.renderFilter()
-        }
 
         return (
             <div className="flex margin-bottom-small">
@@ -198,11 +195,6 @@ export abstract class SelectorBase<TEntry, TProps extends ISelectorBaseProps<TEn
      * Renders the filter button.
      */
     abstract renderFilterButton(): any
-
-    /**
-     * Renders the filter.
-     */
-    abstract renderFilter(): any
 
     /**
      * Returns the selected entry.
