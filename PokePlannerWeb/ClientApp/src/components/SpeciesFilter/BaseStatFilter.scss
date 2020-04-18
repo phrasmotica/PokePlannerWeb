@@ -10,6 +10,12 @@ $fontSize: 9pt;
     margin-bottom: 0px;
 }
 
+.activeCheckbox {
+    position: unset;
+    margin-top: unset;
+    margin-left: unset;
+}
+
 .baseStatFilterInput {
     width: unset;
     font-size: $fontSize;

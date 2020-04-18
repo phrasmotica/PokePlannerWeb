@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Input } from "reactstrap"
+import { Input, Label } from "reactstrap"
 
 import { BaseStatFilterValues } from "./BaseStatFilterValues"
 
@@ -43,21 +43,34 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
      * Renders the filter.
      */
     renderFilter() {
-        // TODO: render sliders and checkboxes next to numeric inputs
         let items = this.props.baseStatFilter.values.map((e, index) => {
-            let value = e.value
             let label = this.props.baseStatLabels[index]
+
+            let checkboxId = `activeCheckbox${index}`
+            let active = e.active
+
+            let value = e.value
 
             return (
                 <div className="baseStatFilter flex-center margin-bottom-small">
-                    <span className="baseStatFilterLabel margin-right-small">
+                    <Label
+                        className="baseStatFilterLabel margin-right-small"
+                        for={checkboxId}>
                         {label}
-                    </span>
+                    </Label>
 
                     <Input
-                        id="minValueInput"
+                        id={checkboxId}
+                        type="checkbox"
+                        className="activeCheckbox margin-right-small"
+                        onChange={_ => this.toggleFilterActive(index)}
+                        checked={active} />
+
+                    <Input
+                        id={`minValueInput${index}`}
                         type="number"
                         className="baseStatFilterInput"
+                        disabled={!active}
 
                         // + before a variable converts it to its numeric representation!
                         onChange={e => this.setFilterValue(+e.target.value, index)}
@@ -74,6 +87,15 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                 {items}
             </div>
         )
+    }
+
+    /**
+     * Sets the given minimum base stat value at the given index.
+     */
+    toggleFilterActive(index: number) {
+        let filterValues = this.props.baseStatFilter
+        filterValues.toggleActive(index)
+        this.props.setBaseStatFilterValues(filterValues)
     }
 
     /**

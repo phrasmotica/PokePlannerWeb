@@ -20,10 +20,18 @@ export class BaseStatFilterValues {
     static createEmpty(count: number) {
         let values = []
         for (let i = 0; i < count; i++) {
-            values.push(new BaseStatFilterValue(true, 0))
+            values.push(new BaseStatFilterValue(false, 0))
         }
 
         return new BaseStatFilterValues(values)
+    }
+
+    /**
+     * Sets a new filter value at the given index.
+     */
+    toggleActive(index: number) {
+        let isActive = this.values[index].active
+        this.values[index].active = !isActive
     }
 
     /**
