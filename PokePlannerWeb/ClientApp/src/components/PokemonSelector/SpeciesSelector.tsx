@@ -5,7 +5,7 @@ import { FaFilter } from "react-icons/fa"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
-import { TypeFilterModel } from "../SpeciesFilter/TypeFilterModel"
+import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"

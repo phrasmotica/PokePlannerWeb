@@ -9,7 +9,7 @@ import { SpeciesSelector } from "./SpeciesSelector"
 import { VarietySelector } from "./VarietySelector"
 
 import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
-import { TypeFilterModel } from "../SpeciesFilter/TypeFilterModel"
+import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"

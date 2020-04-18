@@ -5,7 +5,7 @@ import { BaseStatFilter } from "./BaseStatFilter"
 import { BaseStatFilterValues } from "./BaseStatFilterValues"
 import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
-import { TypeFilterModel } from "./TypeFilterModel"
+import { TypeFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 

@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
 
-import { TypeFilterModel } from "./TypeFilterModel"
+import { TypeFilterModel } from "./IdFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 

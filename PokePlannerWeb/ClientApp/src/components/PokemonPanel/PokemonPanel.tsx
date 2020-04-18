@@ -7,7 +7,7 @@ import { IHasCommon } from "../CommonMembers"
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
 import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
-import { TypeFilterModel } from "../SpeciesFilter/TypeFilterModel"
+import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"

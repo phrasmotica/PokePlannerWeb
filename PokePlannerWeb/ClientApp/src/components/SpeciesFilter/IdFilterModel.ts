@@ -1,7 +1,7 @@
 /**
- * Class representing a filter for types.
+ * Class representing an ID inclusion filter.
  */
-export class TypeFilterModel {
+export class IdFilterModel {
     /**
      * The filter IDs.
      */
@@ -50,7 +50,7 @@ export class TypeFilterModel {
     }
 
     /**
-     * Returns whether the given type IDs pass the filter.
+     * Returns whether the given IDs pass the filter.
      */
     passesFilter(ids: number[]) {
         let typeFilter = this.ids
@@ -59,9 +59,16 @@ export class TypeFilterModel {
     }
 
     /**
-     * Returns an empty type filter.
+     * Returns an empty filter.
      */
     static createEmpty() {
-        return new TypeFilterModel()
+        return new IdFilterModel()
     }
+}
+
+/**
+ * Class representing a filter for types.
+ */
+export class TypeFilterModel extends IdFilterModel {
+
 }
