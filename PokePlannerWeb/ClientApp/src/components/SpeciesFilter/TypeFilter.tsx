@@ -1,9 +1,11 @@
 import React, { Component } from "react"
-import { Button } from "reactstrap"
+import { Input, Label } from "reactstrap"
 
 import { IHasIndex } from "../CommonMembers"
 
 import { CookieHelper } from "../../util/CookieHelper"
+
+import "./TypeFilter.scss"
 
 interface ITypeFilterProps extends IHasIndex {
     /**
@@ -65,27 +67,42 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
      * Renders the filter.
      */
     renderFilter() {
-        // TODO: render grid of type icons with checkboxes
-
         let items = this.props.typeIds.map((id, index) => {
             let label = this.props.typeLabels[index]
-            let isPresent = this.props.filteredTypeIds.includes(id)
+            let active = this.props.filteredTypeIds.includes(id)
+
+            let headerId = `list${this.props.index}type${index}`
+
+            let typeHeader = <img
+                                id={headerId}
+                                className="type-icon-small padded"
+                                alt={`type${id}`}
+                                src={require(`../../images/typeIcons/${id}-small.png`)} />
+
+            let checkboxId = `typeFilter${this.props.index}checkbox${index}`
 
             return (
-                <Button
-                    size="sm"
-                    key={id}
-                    color={isPresent ? "success" : "secondary"}
-                    onMouseUp={() => this.toggleFilterId(id)}>
+                <div className="typeFilter">
+                    <Label
+                        className="typeFilterLabel"
+                        for={checkboxId}>
+                        {typeHeader}
+                    </Label>
+
                     <span title={`Filter to ${label}-type species`}>
-                        {label}
+                        <Input
+                            id={checkboxId}
+                            type="checkbox"
+                            className="activeCheckbox"
+                            onChange={_ => this.toggleFilterId(id)}
+                            checked={active} />
                     </span>
-                </Button>
+                </div>
             )
         })
 
         return (
-            <div>
+            <div className="fill-parent typeFilterContainer">
                 {items}
             </div>
         )
