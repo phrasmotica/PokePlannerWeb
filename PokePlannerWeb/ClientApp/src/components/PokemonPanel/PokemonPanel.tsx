@@ -5,7 +5,7 @@ import key from "weak-key"
 import { IHasCommon } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
-import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
+import { BaseStatFilterModel, BaseStatFilterValue } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
@@ -13,9 +13,10 @@ import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-
-import { PokemonHelper } from "../../util/PokemonHelper"
 import { TypeEntry } from "../../models/TypeEntry"
+
+import { CookieHelper } from "../../util/CookieHelper"
+import { PokemonHelper } from "../../util/PokemonHelper"
 
 interface IPokemonPanelProps extends IHasCommon {
     /**
@@ -134,12 +135,64 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            generationFilter: GenerationFilterModel.createEmpty(),
-            typeFilter: TypeFilterModel.createEmpty(),
-            baseStatFilter: BaseStatFilterModel.createEmpty(this.props.baseStatNames.length),
+            generationFilter: this.createGenerationFilterFromCookies(),
+            typeFilter: this.createTypeFilterFromCookies(),
+            baseStatFilter: this.createBaseStatFilterFromCookies(),
             showShinySprite: false,
             showSpeciesFilter: false
         }
+    }
+
+    /**
+     * Creates a generation filter from the browser cookies.
+     */
+    createGenerationFilterFromCookies() {
+        let isEnabled = CookieHelper.getFlag(`generationFilter${this.props.index}enabled`)
+
+        let cookieGenerationIds = []
+        for (let id of this.props.generations.map(g => g.generationId)) {
+            let cookieName = `generationFilter${this.props.index}active${id}`
+            let active = CookieHelper.getFlag(cookieName)
+            if (active) {
+                cookieGenerationIds.push(id)
+            }
+        }
+
+        return new GenerationFilterModel(isEnabled, cookieGenerationIds)
+    }
+
+    /**
+     * Creates a type filter from the browser cookies.
+     */
+    createTypeFilterFromCookies() {
+        let isEnabled = CookieHelper.getFlag(`typeFilter${this.props.index}enabled`)
+
+        let cookieTypeIds = []
+        for (let id of this.props.types.map(t => t.typeId)) {
+            let cookieName = `typeFilter${this.props.index}active${id}`
+            let active = CookieHelper.getFlag(cookieName)
+            if (active) {
+                cookieTypeIds.push(id)
+            }
+        }
+
+        return new TypeFilterModel(isEnabled, cookieTypeIds)
+    }
+
+    /**
+     * Creates a base stat filter from the browser cookies.
+     */
+    createBaseStatFilterFromCookies() {
+        let isEnabled = CookieHelper.getFlag(`baseStatFilter${this.props.index}enabled`)
+
+        let cookieFilterValues = []
+        for (let i = 0; i < this.props.baseStatNames.length; i++) {
+            let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)
+            let value = CookieHelper.getNumber(`baseStatFilter${this.props.index}value${i}`)
+            cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
+        }
+
+        return new BaseStatFilterModel(isEnabled, cookieFilterValues)
     }
 
     /**
