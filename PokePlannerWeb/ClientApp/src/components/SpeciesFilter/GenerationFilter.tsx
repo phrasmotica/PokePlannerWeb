@@ -83,6 +83,7 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
                     id={toggleId}
                     type="checkbox"
                     className="toggleCheckbox"
+                    checked={this.props.generationFilter.isEnabled()}
                     onChange={_ => this.toggleFilter()} />
 
                 <Label

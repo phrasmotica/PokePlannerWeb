@@ -113,6 +113,24 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Renders the filter.
      */
     renderFilters() {
+        let generationFilterLabel = "Filter by generation"
+        let generationFilter = this.props.generationFilter
+        if (generationFilter.isEnabled() && !generationFilter.isEmpty()) {
+            generationFilterLabel += ` (${generationFilter.count()})`
+        }
+
+        let typeFilterLabel = "Filter by type"
+        let typeFilter = this.props.typeFilter
+        if (typeFilter.isEnabled() && !typeFilter.isEmpty()) {
+            typeFilterLabel += ` (${typeFilter.count()})`
+        }
+
+        let baseStatFilterLabel = "Filter by base stats"
+        let baseStatFilter = this.props.baseStatFilter
+        if (baseStatFilter.isEnabled() && !baseStatFilter.isEmpty()) {
+            baseStatFilterLabel += ` (${baseStatFilter.count()})`
+        }
+
         const toggleGenerationFilter = () => this.toggleGenerationFilter()
         const toggleTypeFilter = () => this.toggleTypeFilter()
         const toggleBaseStatFilter = () => this.toggleBaseStatFilter()
@@ -126,8 +144,9 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         size="sm"
                         className="margin-bottom"
                         onClick={toggleGenerationFilter}>
-                        Filter by generation
+                        {generationFilterLabel}
                     </Button>
+
                     <Collapse isOpen={this.state.generationFilterOpen}>
                         {this.renderGenerationFilter()}
                     </Collapse>
@@ -142,8 +161,9 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         size="sm"
                         className="margin-bottom"
                         onClick={toggleTypeFilter}>
-                        Filter by type
+                        {typeFilterLabel}
                     </Button>
+
                     <Collapse isOpen={this.state.typeFilterOpen}>
                         {this.renderTypeFilter()}
                     </Collapse>
@@ -158,8 +178,9 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         size="sm"
                         className="margin-bottom"
                         onClick={toggleBaseStatFilter}>
-                        Filter by base stats
+                        {baseStatFilterLabel}
                     </Button>
+
                     <Collapse isOpen={this.state.baseStatFilterOpen}>
                         {this.renderBaseStatFilter()}
                     </Collapse>

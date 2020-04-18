@@ -35,7 +35,7 @@ export class IdFilterModel {
     }
 
     /**
-     * Returns the number of IDs in the filter.
+     * Returns whether the filter has no IDs.
      */
     isEmpty() {
         return this.count() <= 0

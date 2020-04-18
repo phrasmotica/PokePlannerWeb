@@ -28,6 +28,20 @@ export class BaseStatFilterModel {
     }
 
     /**
+     * Returns the number of active values in the filter.
+     */
+    count() {
+        return this.values.filter(v => v.active).length
+    }
+
+    /**
+     * Returns whether the filter has no active values.
+     */
+    isEmpty() {
+        return this.count() <= 0
+    }
+
+    /**
      * Toggles the filter and returns whether it's now enabled.
      */
     toggle() {

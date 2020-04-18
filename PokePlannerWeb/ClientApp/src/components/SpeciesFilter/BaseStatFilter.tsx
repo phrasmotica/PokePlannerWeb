@@ -88,6 +88,7 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                     id={toggleId}
                     type="checkbox"
                     className="toggleCheckbox"
+                    checked={this.props.baseStatFilter.isEnabled()}
                     onChange={_ => this.toggleFilter()} />
 
                 <Label

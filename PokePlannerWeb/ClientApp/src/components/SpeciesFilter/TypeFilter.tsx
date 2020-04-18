@@ -84,6 +84,7 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
                     id={toggleId}
                     type="checkbox"
                     className="toggleCheckbox"
+                    checked={this.props.typeFilter.isEnabled()}
                     onChange={_ => this.toggleFilter()} />
 
                 <Label
