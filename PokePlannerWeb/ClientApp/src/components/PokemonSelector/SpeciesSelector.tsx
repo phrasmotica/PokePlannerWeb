@@ -4,7 +4,7 @@ import { FaFilter } from "react-icons/fa"
 
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
-import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
+import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
@@ -31,7 +31,7 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     /**
      * The IDs of the types to filter.
      */
-    baseStatFilter: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterModel
 
     /**
      * Handler for setting the species ID in the parent component.

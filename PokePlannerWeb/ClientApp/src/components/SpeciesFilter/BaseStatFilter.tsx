@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
 import key from "weak-key"
 
-import { BaseStatFilterValues, BaseStatFilterValue } from "./BaseStatFilterValues"
+import { BaseStatFilterModel, BaseStatFilterValue } from "./BaseStatFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 
@@ -14,7 +14,7 @@ interface IBaseStatFilterProps extends IHasIndex {
     /**
      * The IDs of the types to filter.
      */
-    baseStatFilter: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterModel
 
     /**
      * The labels of the base stats to filter.
@@ -34,7 +34,7 @@ interface IBaseStatFilterProps extends IHasIndex {
     /**
      * Handler for setting the filter in the parent component.
      */
-    setBaseStatFilterValues: (values: BaseStatFilterValues) => void
+    setBaseStatFilter: (values: BaseStatFilterModel) => void
 }
 
 interface IBaseStatFilterState {
@@ -59,7 +59,7 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
             cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
         }
 
-        this.props.setBaseStatFilterValues(new BaseStatFilterValues(cookieFilterValues))
+        this.props.setBaseStatFilter(new BaseStatFilterModel(cookieFilterValues))
     }
 
     /**
@@ -130,14 +130,14 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
      * Sets the given minimum base stat value at the given index.
      */
     toggleFilterActive(index: number) {
-        let filterValues = this.props.baseStatFilter
+        let filter = this.props.baseStatFilter
 
         let cookieName = `baseStatFilter${this.props.index}active${index}`
-        let isActive = filterValues.values[index].active
+        let isActive = filter.values[index].active
         CookieHelper.set(cookieName, !isActive)
 
-        filterValues.toggleActive(index)
-        this.props.setBaseStatFilterValues(filterValues)
+        filter.toggleActive(index)
+        this.props.setBaseStatFilter(filter)
     }
 
     /**
@@ -147,8 +147,8 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
         let cookieName = `baseStatFilter${this.props.index}value${index}`
         CookieHelper.set(cookieName, value)
 
-        let filterValues = this.props.baseStatFilter
-        filterValues.setValue(value, index)
-        this.props.setBaseStatFilterValues(filterValues)
+        let filter = this.props.baseStatFilter
+        filter.setValue(value, index)
+        this.props.setBaseStatFilter(filter)
     }
 }

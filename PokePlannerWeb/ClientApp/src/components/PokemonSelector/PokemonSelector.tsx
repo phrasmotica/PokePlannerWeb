@@ -8,7 +8,7 @@ import { FormSelector } from "./FormSelector"
 import { SpeciesSelector } from "./SpeciesSelector"
 import { VarietySelector } from "./VarietySelector"
 
-import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
+import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
@@ -57,7 +57,7 @@ interface IPokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideToo
     /**
      * The IDs of the types to filter.
      */
-    baseStatFilter: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterModel
 
     /**
      * Handler for setting the species ID in the parent component.

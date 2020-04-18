@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Collapse, Button } from "reactstrap"
 
 import { BaseStatFilter } from "./BaseStatFilter"
-import { BaseStatFilterValues } from "./BaseStatFilterValues"
+import { BaseStatFilterModel } from "./BaseStatFilterModel"
 import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
 import { TypeFilterModel } from "./IdFilterModel"
@@ -34,9 +34,9 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     types: TypeEntry[]
 
     /**
-     * The base stat minimum values.
+     * The base stat filter.
      */
-    baseStatMinValues: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterModel
 
     /**
      * The base stat names.
@@ -66,7 +66,7 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * Handler for settings the filtered type IDs in the parent component.
      */
-    setBaseStatFilterValues: (values: BaseStatFilterValues) => void
+    setBaseStatFilter: (filter: BaseStatFilterModel) => void
 }
 
 interface ISpeciesFilterState {
@@ -245,7 +245,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
             )
         }
 
-        let filter = this.props.baseStatMinValues
+        let filter = this.props.baseStatFilter
         let baseStatNames = this.props.baseStatNames
 
         let allSpeciesBaseStats = this.props.species.map(s => s.getBaseStats(versionGroupId!))
@@ -264,7 +264,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
             maxValues.push(maxValue)
         }
 
-        const setFilterValues = (values: BaseStatFilterValues) => this.props.setBaseStatFilterValues(values)
+        const setFilter = (values: BaseStatFilterModel) => this.props.setBaseStatFilter(values)
 
         return (
             <BaseStatFilter
@@ -273,7 +273,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                 baseStatLabels={baseStatNames}
                 minValues={minValues}
                 maxValues={maxValues}
-                setBaseStatFilterValues={setFilterValues} />
+                setBaseStatFilter={setFilter} />
         )
     }
 

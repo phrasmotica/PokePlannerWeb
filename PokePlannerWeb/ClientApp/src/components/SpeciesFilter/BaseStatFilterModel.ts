@@ -1,7 +1,7 @@
 /**
  * Class representing a filter for a set of base stats.
  */
-export class BaseStatFilterValues {
+export class BaseStatFilterModel {
     /**
      * The filter values.
      */
@@ -23,7 +23,7 @@ export class BaseStatFilterValues {
             values.push(new BaseStatFilterValue(false, 0))
         }
 
-        return new BaseStatFilterValues(values)
+        return new BaseStatFilterModel(values)
     }
 
     /**
