@@ -3,6 +3,8 @@ import { Button } from "reactstrap"
 
 import { IHasIndex } from "../CommonMembers"
 
+import { CookieHelper } from "../../util/CookieHelper"
+
 interface ITypeFilterProps extends IHasIndex {
     /**
      * The IDs of the types to filter.
@@ -33,6 +35,25 @@ interface ITypeFilterState {
  * Component for filtering a list of species stored in the parent component by type.
  */
 export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
+    /**
+     * Constructor.
+     */
+    constructor(props: ITypeFilterProps) {
+        super(props)
+
+        // set filter values from cookies
+        let cookieTypeFilterIds = []
+        for (let id of this.props.typeIds) {
+            let cookieName = `typeFilter${this.props.index}active${id}`
+            let active = CookieHelper.getFlag(cookieName)
+            if (active) {
+                cookieTypeFilterIds.push(id)
+            }
+        }
+
+        this.props.setTypeFilterIds(cookieTypeFilterIds)
+    }
+
     /**
      * Renders the component.
      */
@@ -86,6 +107,9 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
         else {
             filterIds.splice(i, 1)
         }
+
+        let cookieName = `typeFilter${this.props.index}active${id}`
+        CookieHelper.set(cookieName, i < 0)
 
         this.props.setTypeFilterIds(filterIds)
     }
