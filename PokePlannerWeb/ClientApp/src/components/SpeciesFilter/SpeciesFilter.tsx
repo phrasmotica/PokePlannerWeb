@@ -117,7 +117,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         const toggleBaseStatFilter = () => this.toggleBaseStatFilter()
 
         return (
-            <div className="fill-parent padding">
+            <div className="fill-parent padding overflow-y">
                 <div className="margin-bottom">
                     <Button
                         block
