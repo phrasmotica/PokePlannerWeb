@@ -237,16 +237,41 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Renders the base stat filter.
      */
     renderBaseStatFilter() {
-        let minValues = this.props.baseStatMinValues
+        let versionGroupId = this.props.versionGroupId
+        if (versionGroupId === undefined) {
+            throw new Error(
+                `Species filter ${this.props.index}: version group ID is undefined!`
+            )
+        }
+
+        let filter = this.props.baseStatMinValues
         let baseStatNames = this.props.baseStatNames
+
+        let allSpeciesBaseStats = this.props.species.map(s => s.getBaseStats(versionGroupId!))
+
+        let minValues = []
+        for (let i = 0; i < baseStatNames.length; i++) {
+            let baseStatsWithMin = allSpeciesBaseStats.reduce((s, t) => s[i] < t[i] ? s : t)
+            let minValue = baseStatsWithMin[i]
+            minValues.push(minValue)
+        }
+
+        let maxValues = []
+        for (let i = 0; i < baseStatNames.length; i++) {
+            let baseStatsWithMax = allSpeciesBaseStats.reduce((s, t) => s[i] > t[i] ? s : t)
+            let maxValue = baseStatsWithMax[i]
+            maxValues.push(maxValue)
+        }
 
         const setFilterValues = (values: BaseStatFilterValues) => this.props.setBaseStatFilterValues(values)
 
         return (
             <BaseStatFilter
                 index={this.props.index}
-                baseStatFilter={minValues}
+                baseStatFilter={filter}
                 baseStatLabels={baseStatNames}
+                minValues={minValues}
+                maxValues={maxValues}
                 setBaseStatFilterValues={setFilterValues} />
         )
     }

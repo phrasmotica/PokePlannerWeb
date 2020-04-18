@@ -19,6 +19,16 @@ interface IBaseStatFilterProps extends IHasIndex {
     baseStatLabels: string[]
 
     /**
+     * The minimum values to allow.
+     */
+    minValues: number[]
+
+    /**
+     * The maximum values to allow.
+     */
+    maxValues: number[]
+
+    /**
      * Handler for setting the filter in the parent component.
      */
     setBaseStatFilterValues: (values: BaseStatFilterValues) => void
@@ -49,7 +59,10 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
             let checkboxId = `activeCheckbox${index}`
             let active = e.active
 
-            let value = e.value
+            let minValue = this.props.minValues[index]
+            let maxValue = this.props.maxValues[index]
+
+            let constrainedValue = Math.min(Math.max(e.value, minValue), maxValue)
 
             return (
                 <div className="baseStatFilter flex-center margin-bottom-small">
@@ -75,9 +88,9 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                         // + before a variable converts it to its numeric representation!
                         onChange={e => this.setFilterValue(+e.target.value, index)}
 
-                        min={0}
-                        value={value}
-                        max={255} />
+                        min={minValue}
+                        value={constrainedValue}
+                        max={maxValue} />
                 </div>
             )
         })
