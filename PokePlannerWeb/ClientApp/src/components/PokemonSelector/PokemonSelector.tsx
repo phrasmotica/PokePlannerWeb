@@ -8,7 +8,7 @@ import { FormSelector } from "./FormSelector"
 import { SpeciesSelector } from "./SpeciesSelector"
 import { VarietySelector } from "./VarietySelector"
 
-import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilter"
+import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"

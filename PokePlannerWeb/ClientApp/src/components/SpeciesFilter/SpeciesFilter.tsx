@@ -1,7 +1,8 @@
 import React, { Component } from "react"
 import { Collapse, Button } from "reactstrap"
 
-import { BaseStatFilter, BaseStatFilterValues } from "./BaseStatFilter"
+import { BaseStatFilter } from "./BaseStatFilter"
+import { BaseStatFilterValues } from "./BaseStatFilterValues"
 import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
 
@@ -244,7 +245,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         return (
             <BaseStatFilter
                 index={this.props.index}
-                baseStatMinValues={minValues}
+                baseStatFilter={minValues}
                 baseStatLabels={baseStatNames}
                 setBaseStatFilterValues={setFilterValues} />
         )

@@ -1,0 +1,66 @@
+/**
+ * Class representing a filter for a set of base stats.
+ */
+export class BaseStatFilterValues {
+    /**
+     * The filter values.
+     */
+    values: BaseStatFilterValue[]
+
+    /**
+     * Constructor.
+     */
+    constructor(values: BaseStatFilterValue[]) {
+        this.values = values
+    }
+
+    /**
+     * Creates a filter set of a given length with empty values.
+     */
+    static createEmpty(count: number) {
+        let values = []
+        for (let i = 0; i < count; i++) {
+            values.push(new BaseStatFilterValue(true, 0))
+        }
+
+        return new BaseStatFilterValues(values)
+    }
+
+    /**
+     * Sets a new filter value at the given index.
+     */
+    setValue(value: number, index: number) {
+        this.values[index].value = value
+    }
+
+    /**
+     * Returns whether the given base stats pass the filter.
+     */
+    passesFilter(stats: number[]) {
+        let passValues = this.values.map((e, index) => !e.active || stats[index] >= e.value)
+        return passValues.every(b => b)
+    }
+}
+
+/**
+ * Class representing a filter value for a base stat.
+ */
+export class BaseStatFilterValue {
+    /**
+     * Whether the filter is enabled.
+     */
+    active: boolean
+
+    /**
+     * The filter value.
+     */
+    value: number
+
+    /**
+     * Constructor.
+     */
+    constructor(active: boolean, value: number) {
+        this.active = active
+        this.value = value
+    }
+}

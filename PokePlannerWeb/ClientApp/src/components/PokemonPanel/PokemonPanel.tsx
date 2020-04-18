@@ -5,7 +5,7 @@ import key from "weak-key"
 import { IHasCommon } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
-import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilter"
+import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
@@ -107,7 +107,7 @@ interface IPokemonPanelState {
     /**
      * The minimum values of base stats in the species filter.
      */
-    baseStatMinValues: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterValues
 
     /**
      * Whether to show the shiny sprite.
@@ -135,7 +135,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             form: undefined,
             filteredGenerationIds: [],
             filteredTypeIds: [],
-            baseStatMinValues: this.props.baseStatNames.map(_ => 0), // TODO: initialise to array of undefined
+            baseStatFilter: BaseStatFilterValues.createEmpty(this.props.baseStatNames.length),
             showShinySprite: false,
             showSpeciesFilter: false
         }
@@ -145,8 +145,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Refresh minimum base stat values for the species filter.
      */
     componentDidUpdate(props: IPokemonPanelProps) {
-        if (!props.baseStatNames.equals(this.props.baseStatNames)) {
-            this.setState({ baseStatMinValues: this.props.baseStatNames.map(_ => 0) })
+        let newBaseStatNames = this.props.baseStatNames
+        if (!props.baseStatNames.equals(newBaseStatNames)) {
+            let newFilter = BaseStatFilterValues.createEmpty(newBaseStatNames.length)
+            this.setState({ baseStatFilter: newFilter })
         }
     }
 
@@ -180,7 +182,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setForm={setForm}
                         filteredGenerationIds={this.state.filteredGenerationIds}
                         filteredTypeIds={this.state.filteredTypeIds}
-                        baseStatMinValues={this.state.baseStatMinValues}
+                        baseStatMinValues={this.state.baseStatFilter}
                         toggleIgnoreValidity={toggleIgnoreValidity}
                         toggleSpeciesFilter={toggleSpeciesFilter} />
                 </div>
@@ -227,7 +229,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 types={this.props.types}
                 filteredTypeIds={this.state.filteredTypeIds}
                 baseStatNames={this.props.baseStatNames}
-                baseStatMinValues={this.state.baseStatMinValues}
+                baseStatMinValues={this.state.baseStatFilter}
                 setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)}
                 setTypeFilterIds={ids => this.setFilteredTypeIds(ids)}
                 setBaseStatFilterValues={values => this.setBaseStatFilterValues(values)} />
@@ -502,7 +504,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     /**
      * Sets the filtered generation IDs.
      */
-    setBaseStatFilterValues(values: BaseStatFilterValues) {
+    setBaseStatFilterValues(filter: BaseStatFilterValues) {
         let versionGroupId = this.props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
@@ -510,7 +512,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             )
         }
 
-        this.setState({ baseStatMinValues: values })
+        this.setState({ baseStatFilter: filter })
 
         // no longer have a valid species
         let speciesId = this.state.speciesId
@@ -518,11 +520,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             let species = this.getSpecies()
             let speciesBaseStats = species.getBaseStats(versionGroupId)
 
-            // TODO: create class for BaseStatFilterValues and add method for this check
-            let failsBaseStatFilter = values.map(
-                (minValue, index) => minValue === undefined || speciesBaseStats[index] >= minValue
-            ).some(b => !b)
-
+            let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {
                 this.setSpecies(undefined)
             }

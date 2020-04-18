@@ -4,7 +4,7 @@ import { FaFilter } from "react-icons/fa"
 
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
-import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilter"
+import { BaseStatFilterValues } from "../SpeciesFilter/BaseStatFilterValues"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
@@ -158,10 +158,7 @@ export class SpeciesSelector
         let baseStatFilter: BaseStatFilterValues = this.props.baseStatMinValues
         let speciesBaseStats = species.getBaseStats(versionGroupId)
 
-        // TODO: create class for BaseStatFilterValues and add method for this check
-        let passesBaseStatFilter = baseStatFilter.map(
-            (minValue, index) => minValue === undefined || speciesBaseStats[index] >= minValue
-        ).every(b => b)
+        let passesBaseStatFilter = baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
     }

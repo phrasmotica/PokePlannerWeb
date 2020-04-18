@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Input } from "reactstrap"
 
+import { BaseStatFilterValues } from "./BaseStatFilterValues"
+
 import { IHasIndex } from "../CommonMembers"
 
 import "./BaseStatFilter.scss"
@@ -9,7 +11,7 @@ interface IBaseStatFilterProps extends IHasIndex {
     /**
      * The IDs of the types to filter.
      */
-    baseStatMinValues: BaseStatFilterValues
+    baseStatFilter: BaseStatFilterValues
 
     /**
      * The labels of the base stats to filter.
@@ -26,8 +28,6 @@ interface IBaseStatFilterState {
 
 }
 
-export type BaseStatFilterValues = (number | undefined)[]
-
 /**
  * Component for filtering a list of species stored in the parent component by type.
  */
@@ -36,8 +36,6 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
      * Renders the component.
      */
     render() {
-        console.log(this.props.baseStatMinValues)
-        console.log(this.props.baseStatLabels)
         return this.renderFilter()
     }
 
@@ -46,7 +44,8 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
      */
     renderFilter() {
         // TODO: render sliders and checkboxes next to numeric inputs
-        let items = this.props.baseStatMinValues.map((value, index) => {
+        let items = this.props.baseStatFilter.values.map((e, index) => {
+            let value = e.value
             let label = this.props.baseStatLabels[index]
 
             return (
@@ -81,8 +80,8 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
      * Sets the given minimum base stat value at the given index.
      */
     setFilterValue(min: number, index: number) {
-        let filterValues = this.props.baseStatMinValues
-        filterValues[index] = min
+        let filterValues = this.props.baseStatFilter
+        filterValues.setValue(min, index)
         this.props.setBaseStatFilterValues(filterValues)
     }
 }
