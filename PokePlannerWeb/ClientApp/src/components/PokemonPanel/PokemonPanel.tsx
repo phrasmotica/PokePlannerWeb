@@ -368,7 +368,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Toggles the species filter.
      */
     toggleSpeciesFilter() {
-        // TODO: bug where toggling the filter causes the panel to clear...
         this.setState(previousState => ({
             showSpeciesFilter: !previousState.showSpeciesFilter
         }))
