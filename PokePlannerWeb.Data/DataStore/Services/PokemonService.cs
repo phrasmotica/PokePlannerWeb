@@ -28,6 +28,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly TypeCacheService TypeCacheService;
 
         /// <summary>
+        /// The ability service.
+        /// </summary>
+        private readonly AbilityService AbilityService;
+
+        /// <summary>
         /// The move service.
         /// </summary>
         private readonly MoveService MoveService;
@@ -51,6 +56,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             PokemonCacheService pokemonCacheService,
             AbilityCacheService abilityCacheService,
             TypeCacheService typeCacheService,
+            AbilityService abilityService,
             MoveService moveService,
             PokemonFormService pokemonFormService,
             VersionGroupService versionGroupService,
@@ -58,6 +64,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             AbilityCacheService = abilityCacheService;
             TypeCacheService = typeCacheService;
+            AbilityService = abilityService;
             MoveService = moveService;
             PokemonFormService = pokemonFormService;
             VersionGroupService = versionGroupService;
@@ -125,6 +132,17 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var relevantMoves = entry.Moves.Single(m => m.Id == versionGroupId);
             var moveEntries = await MoveService.UpsertMany(relevantMoves.Data.Select(m => m.Id));
             return moveEntries.OrderBy(m => m.MoveId).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the abilities of the Pokemon with the given ID from the data store.
+        /// </summary>
+        public async Task<AbilityEntry[]> GetPokemonAbilities(int pokemonId)
+        {
+            var resource = await CacheService.Upsert(pokemonId);
+            var orderedAbilities = resource.Abilities.OrderBy(a => a.Slot).Select(a => a.Ability);
+            var abilityEntries = await AbilityService.UpsertMany(orderedAbilities);
+            return abilityEntries.ToArray();
         }
 
         #endregion
