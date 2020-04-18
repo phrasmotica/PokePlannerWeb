@@ -104,3 +104,40 @@ export class AbilityEntry {
         return localFlavourText?.value
     }
 }
+
+/**
+ * Ability info plus whether it's a hidden ability for some Pokemon.
+ */
+export class PokemonAbilityContext extends AbilityEntry {
+    /**
+     * Whether the ability is hidden.
+     */
+    isHidden: boolean
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        abilityId: number,
+        name: string,
+        displayNames: LocalString[],
+        flavourTextEntries: WithId<LocalString[]>[],
+        isHidden: boolean
+    ) {
+        super(abilityId, name , displayNames, flavourTextEntries)
+        this.isHidden = isHidden
+    }
+
+    /**
+     * Returns an ability context created from the given context.
+     */
+    static from(context: PokemonAbilityContext) {
+        return new PokemonAbilityContext(
+            context.abilityId,
+            context.name,
+            context.displayNames,
+            context.flavourTextEntries,
+            context.isHidden
+        )
+    }
+}

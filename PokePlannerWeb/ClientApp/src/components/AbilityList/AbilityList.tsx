@@ -3,7 +3,7 @@ import key from "weak-key"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { AbilityEntry } from "../../models/AbilityEntry"
+import { PokemonAbilityContext } from "../../models/AbilityEntry"
 
 import "./AbilityList.scss"
 
@@ -23,7 +23,7 @@ interface IAbilityListState {
     /**
      * The abilities to show.
      */
-    abilities: AbilityEntry[]
+    abilities: PokemonAbilityContext[]
 
     /**
      * Whether we're loading the abilities.
@@ -98,11 +98,14 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
         if (this.props.showAbilities && abilities.length > 0) {
             for (let ability of abilities) {
                 let abilityName = ability.getDisplayName("en") ?? "ability"
+                let hiddenText = ability.isHidden ? " (hidden)" : ""
+
                 let nameElement = (
                     <div className="abilityName">
                         <b>
                             {abilityName}
                         </b>
+                        {hiddenText}
                     </div>
                 )
 
@@ -154,8 +157,8 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
                     throw new Error(`Ability list ${this.props.index}: tried to get abilities for Pokemon ${pokemonId} but failed with status ${response.status}!`)
                 })
                 .then(response => response.json())
-                .then((abilities: AbilityEntry[]) => {
-                    let concreteAbilities = abilities.map(AbilityEntry.from)
+                .then((abilities: PokemonAbilityContext[]) => {
+                    let concreteAbilities = abilities.map(PokemonAbilityContext.from)
                     this.setState({ abilities: concreteAbilities })
                 })
                 .catch(error => console.error(error))
