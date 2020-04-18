@@ -102,7 +102,7 @@ export class SpeciesSelector
      * Returns whether the select box should be disabled.
      */
     isDisabled(): boolean {
-        return false
+        return this.getFilteredSpecies().length <= 0
     }
 
     /**
