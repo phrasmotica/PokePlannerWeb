@@ -181,7 +181,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
 
         let generationFilter = this.props.generationFilter
         if (generationFilter.isEmpty()) {
-            generationFilter = new GenerationFilterModel(generationIds)
+            generationFilter = new GenerationFilterModel(false, generationIds)
         }
 
         const setFilter = (filter: GenerationFilterModel) => this.props.setGenerationFilter(filter)
@@ -219,7 +219,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
 
         let typeFilter = this.props.typeFilter
         if (typeFilter.isEmpty()) {
-            typeFilter = new TypeFilterModel(typeIds)
+            typeFilter = new TypeFilterModel(false, typeIds)
         }
 
         const setTypeFilter = (filter: TypeFilterModel) => this.props.setTypeFilter(filter)

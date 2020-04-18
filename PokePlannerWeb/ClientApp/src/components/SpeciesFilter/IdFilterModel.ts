@@ -3,6 +3,11 @@
  */
 export class IdFilterModel {
     /**
+     * Whether the filter is enabled.
+     */
+    enabled: boolean
+
+    /**
      * The filter IDs.
      */
     ids: number[]
@@ -10,8 +15,16 @@ export class IdFilterModel {
     /**
      * Constructor.
      */
-    constructor(ids?: number[]) {
+    constructor(enabled?: boolean, ids?: number[]) {
+        this.enabled = enabled ?? false
         this.ids = ids ?? []
+    }
+
+    /**
+     * Returns whether the filter is enabled.
+     */
+    isEnabled() {
+        return this.enabled
     }
 
     /**
@@ -29,9 +42,17 @@ export class IdFilterModel {
     }
 
     /**
+     * Toggles the filter and returns whether it's now enabled.
+     */
+    toggle() {
+        this.enabled = !this.enabled
+        return this.enabled
+    }
+
+    /**
      * Toggles the given ID in the filter and returns whether the ID is now present.
      */
-    toggle(id: number) {
+    toggleId(id: number) {
         let i = this.ids.indexOf(id)
 
         if (i >= 0 && this.count() <= 1) {
@@ -53,9 +74,19 @@ export class IdFilterModel {
      * Returns whether the given IDs pass the filter.
      */
     passesFilter(ids: number[]) {
-        let typeFilter = this.ids
-        let intersection = ids.filter(i => typeFilter.includes(i))
-        return typeFilter.length <= 0 || intersection.length > 0
+        return !this.isEnabled() || this.isInFilter(ids)
+    }
+
+    /**
+     * Returns whether the given IDs pass the filter.
+     */
+    isInFilter(ids: number[]) {
+        if (this.isEmpty()) {
+            return true
+        }
+
+        let intersection = ids.filter(i => this.ids.includes(i))
+        return intersection.length > 0
     }
 
     /**

@@ -3,6 +3,11 @@
  */
 export class BaseStatFilterModel {
     /**
+     * Whether the filter is enabled.
+     */
+    enabled: boolean
+
+    /**
      * The filter values.
      */
     values: BaseStatFilterValue[]
@@ -10,8 +15,24 @@ export class BaseStatFilterModel {
     /**
      * Constructor.
      */
-    constructor(values: BaseStatFilterValue[]) {
+    constructor(enabled: boolean, values: BaseStatFilterValue[]) {
+        this.enabled = enabled
         this.values = values
+    }
+
+    /**
+     * Returns whether the filter is enabled.
+     */
+    isEnabled() {
+        return this.enabled
+    }
+
+    /**
+     * Toggles the filter and returns whether it's now enabled.
+     */
+    toggle() {
+        this.enabled = !this.enabled
+        return this.enabled
     }
 
     /**
@@ -23,7 +44,7 @@ export class BaseStatFilterModel {
             values.push(new BaseStatFilterValue(false, 0))
         }
 
-        return new BaseStatFilterModel(values)
+        return new BaseStatFilterModel(false, values)
     }
 
     /**
@@ -45,6 +66,10 @@ export class BaseStatFilterModel {
      * Returns whether the given base stats pass the filter.
      */
     passesFilter(stats: number[]) {
+        if (!this.isEnabled()) {
+            return true
+        }
+
         let passValues = this.values.map((e, index) => !e.active || stats[index] >= e.value)
         return passValues.every(b => b)
     }

@@ -18,6 +18,7 @@ import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
+import { CssHelper } from "../../util/CssHelper"
 
 import "../../styles/types.scss"
 import "./PokemonSelector.scss"
@@ -299,6 +300,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      */
     renderButtons() {
         let clearDisabled = this.state.speciesId === undefined || this.isLoading()
+        let style = CssHelper.defaultCursorIf(clearDisabled)
 
         return (
             <div className="margin-bottom-small">
@@ -314,7 +316,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 <span title={clearDisabled ? undefined : "Clear"}>
                     <Button
                         color="danger"
-                        style={{ cursor: clearDisabled ? "default" : "pointer" }}
+                        style={style}
                         className="selector-button margin-right-small"
                         disabled={clearDisabled}
                         onMouseUp={() => this.clearPokemon()}>
