@@ -1,9 +1,11 @@
 import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
 
-import { BaseStatFilterValues } from "./BaseStatFilterValues"
+import { BaseStatFilterValues, BaseStatFilterValue } from "./BaseStatFilterValues"
 
 import { IHasIndex } from "../CommonMembers"
+
+import { CookieHelper } from "../../util/CookieHelper"
 
 import "./BaseStatFilter.scss"
 
@@ -43,6 +45,23 @@ interface IBaseStatFilterState {
  */
 export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFilterState> {
     /**
+     * Constructor.
+     */
+    constructor(props: IBaseStatFilterProps) {
+        super(props)
+
+        // set filter values from cookies
+        let cookieFilterValues = []
+        for (let i = 0; i < this.props.baseStatFilter.values.length; i++) {
+            let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)
+            let value = CookieHelper.getNumber(`baseStatFilter${this.props.index}value${i}`)
+            cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
+        }
+
+        this.props.setBaseStatFilterValues(new BaseStatFilterValues(cookieFilterValues))
+    }
+
+    /**
      * Renders the component.
      */
     render() {
@@ -56,7 +75,7 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
         let items = this.props.baseStatFilter.values.map((e, index) => {
             let label = this.props.baseStatLabels[index]
 
-            let checkboxId = `activeCheckbox${index}`
+            let checkboxId = `baseStatFilter${this.props.index}activeCheckbox${index}`
             let active = e.active
 
             let minValue = this.props.minValues[index]
@@ -107,6 +126,11 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
      */
     toggleFilterActive(index: number) {
         let filterValues = this.props.baseStatFilter
+
+        let cookieName = `baseStatFilter${this.props.index}active${index}`
+        let isActive = filterValues.values[index].active
+        CookieHelper.set(cookieName, !isActive)
+
         filterValues.toggleActive(index)
         this.props.setBaseStatFilterValues(filterValues)
     }
@@ -114,9 +138,12 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
     /**
      * Sets the given minimum base stat value at the given index.
      */
-    setFilterValue(min: number, index: number) {
+    setFilterValue(value: number, index: number) {
+        let cookieName = `baseStatFilter${this.props.index}value${index}`
+        CookieHelper.set(cookieName, value)
+
         let filterValues = this.props.baseStatFilter
-        filterValues.setValue(min, index)
+        filterValues.setValue(value, index)
         this.props.setBaseStatFilterValues(filterValues)
     }
 }
