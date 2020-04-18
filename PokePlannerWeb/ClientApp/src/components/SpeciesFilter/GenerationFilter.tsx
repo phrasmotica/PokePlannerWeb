@@ -75,6 +75,8 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
      * Renders the filter toggle.
      */
     renderToggle() {
+        // TODO: fix bug where the toggle isn't checked when the cookie is read as true...
+        // probably affects the other filter toggles too
         let toggleId = `generationFilter${this.props.index}toggle`
 
         return (
