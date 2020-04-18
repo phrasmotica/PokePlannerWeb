@@ -82,7 +82,9 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
             let checkboxId = `typeFilter${this.props.index}checkbox${index}`
 
             return (
-                <div className="typeFilter">
+                <div
+                    key={index}
+                    className="typeFilter">
                     <Label
                         className="typeFilterLabel"
                         for={checkboxId}>
