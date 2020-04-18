@@ -6,6 +6,11 @@
     public class CacheSettings : ICacheSettings
     {
         /// <summary>
+        /// The name of the collection of abilities.
+        /// </summary>
+        public string AbilityCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of evolution chains.
         /// </summary>
         public string EvolutionChainCollectionName { get; set; }
@@ -101,6 +106,11 @@
     /// </summary>
     public interface ICacheSettings
     {
+        /// <summary>
+        /// The name of the collection of abilities.
+        /// </summary>
+        string AbilityCollectionName { get; set; }
+
         /// <summary>
         /// The name of the collection of evolution chains.
         /// </summary>

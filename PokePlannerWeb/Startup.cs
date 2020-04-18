@@ -67,6 +67,11 @@ namespace PokePlannerWeb
             var dataStoreSourceFactory = new DataStoreSourceFactory();
             var dataStoreSettings = Configuration.GetSection(nameof(DataStoreSettings)).Get<DataStoreSettings>();
 
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<AbilityEntry>(dataStoreSettings.AbilityCollectionName)
+            );
+            services.AddSingleton<AbilityService>();
+
             services.AddSingleton<EfficacyService>();
 
             services.AddSingleton(sp =>
@@ -185,6 +190,11 @@ namespace PokePlannerWeb
             // create cache services
             var cacheSourceFactory = new CacheSourceFactory();
             var cacheSettings = Configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<Ability>(cacheSettings.AbilityCollectionName)
+            );
+            services.AddSingleton<AbilityCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<EvolutionChain>(cacheSettings.EvolutionChainCollectionName)

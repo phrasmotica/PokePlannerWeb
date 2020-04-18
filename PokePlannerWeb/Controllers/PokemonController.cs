@@ -63,5 +63,15 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting moves of Pokemon {pokemonId} in version group {versionGroupId}...");
             return await PokemonService.GetPokemonMoves(pokemonId, versionGroupId);
         }
+
+        /// <summary>
+        /// Returns the abilities of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{pokemonId:int}/abilities")]
+        public async Task<PokemonAbilityContext[]> GetPokemonAbilitiesById(int pokemonId)
+        {
+            Logger.LogInformation($"Getting abilities of Pokemon {pokemonId}...");
+            return await PokemonService.GetPokemonAbilities(pokemonId);
+        }
     }
 }

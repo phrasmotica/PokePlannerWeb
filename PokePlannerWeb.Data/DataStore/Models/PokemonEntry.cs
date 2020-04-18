@@ -39,6 +39,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<WithId<Type[]>> Types { get; set; }
 
         /// <summary>
+        /// Gets or sets this Pokemon's abilities.
+        /// </summary>
+        public List<Ability> Abilities { get; set; }
+
+        /// <summary>
         /// Gets or sets this Pokemon's base stats indexed by version group ID.
         /// </summary>
         public List<WithId<int[]>> BaseStats { get; set; }

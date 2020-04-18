@@ -3,6 +3,7 @@ import { Tabs, Tab } from "react-bootstrap"
 
 import { IHasCommon } from "../CommonMembers"
 
+import { AbilityList } from "../AbilityList/AbilityList"
 import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
 import { EfficacyList } from "../EfficacyList/EfficacyList"
 import { StatGraph } from "../StatGraph/StatGraph"
@@ -67,9 +68,13 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                     className="tabpane-small"
                     transition={false}
                     activeKey={this.state.activeInfoTabKey}
-                    defaultActiveKey="stats"
+                    defaultActiveKey="abilities"
                     onSelect={(k: string) => this.setActiveInfoTabKey(k)}
                     id="infoTabs">
+                    <Tab eventKey="abilities" title="Abilities">
+                        {this.renderAbilityList()}
+                    </Tab>
+
                     <Tab eventKey="stats" title="Base Stats">
                         {this.renderStatsGraph()}
                     </Tab>
@@ -83,6 +88,19 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                     </Tab>
                 </Tabs>
             </div>
+        )
+    }
+
+    /**
+     * Renders the Pokemon's abilities.
+     */
+    renderAbilityList() {
+        return (
+            <AbilityList
+                index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
+                pokemonId={this.props.pokemon?.pokemonId}
+                showAbilities={this.props.shouldShowPokemon} />
         )
     }
 

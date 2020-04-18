@@ -1,3 +1,4 @@
+import { Ability } from "./Ability"
 import { LocalString } from "./LocalString"
 import { Move } from "./Move"
 import { PokemonForm } from "./PokemonForm"
@@ -44,6 +45,11 @@ export class PokemonEntry {
     types: WithId<Type[]>[]
 
     /**
+     * The Pokemon's abilities.
+    */
+    abilities: Ability[]
+
+    /**
      * The Pokemon's base stats indexed by version group ID.
      */
     baseStats: WithId<number[]>[]
@@ -64,6 +70,7 @@ export class PokemonEntry {
         shinySpriteUrl: string,
         forms: PokemonForm[],
         types: WithId<Type[]>[],
+        abilities: Ability[],
         baseStats: WithId<number[]>[],
         moves: WithId<Move[]>[]
     ) {
@@ -74,6 +81,7 @@ export class PokemonEntry {
         this.shinySpriteUrl = shinySpriteUrl
         this.forms = forms
         this.types = types
+        this.abilities = abilities
         this.baseStats = baseStats
         this.moves = moves
     }
@@ -90,6 +98,7 @@ export class PokemonEntry {
             pokemon.shinySpriteUrl,
             pokemon.forms,
             pokemon.types,
+            pokemon.abilities,
             pokemon.baseStats,
             pokemon.moves
         )
