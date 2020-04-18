@@ -98,6 +98,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
         return (
             <AbilityList
                 index={this.props.index}
+                versionGroupId={this.props.versionGroupId}
                 pokemonId={this.props.pokemon?.pokemonId}
                 showAbilities={this.props.shouldShowPokemon} />
         )

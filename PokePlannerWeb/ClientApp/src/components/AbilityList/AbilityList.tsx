@@ -1,13 +1,13 @@
 ﻿import React, { Component } from "react"
 import key from "weak-key"
 
-import { IHasIndex } from "../CommonMembers"
+import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
 import { AbilityEntry } from "../../models/AbilityEntry"
 
 import "./AbilityList.scss"
 
-interface IAbilityListProps extends IHasIndex {
+interface IAbilityListProps extends IHasIndex, IHasVersionGroup {
     /**
      * The ID of the Pokemon to show abilities for.
      */
@@ -98,33 +98,33 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
         if (this.props.showAbilities && abilities.length > 0) {
             for (let ability of abilities) {
                 let abilityName = ability.getDisplayName("en") ?? "ability"
-                let abilityNameElement = (
-                    <span>
+                let nameElement = (
+                    <div className="abilityName">
                         <b>
                             {abilityName}
                         </b>
-                    </span>
+                    </div>
                 )
 
-                let infoPane = (
-                    <span>
-                        (FlavourText)
-                    </span>
+                let flavourTextElement = (
+                    <div className="abilityFlavourText">
+                        {ability.getFlavourText(this.props.versionGroupId!, "en")}
+                    </div>
                 )
 
                 items.push(
                     <div
                         key={key(ability)}
-                        className="abilityItem flex-center">
-                        {abilityNameElement}
-                        {infoPane}
+                        className="abilityItem">
+                        {nameElement}
+                        {flavourTextElement}
                     </div>
                 )
             }
         }
 
         return (
-            <div className="flex">
+            <div className="flex margin-bottom-small">
                 {items}
             </div>
         )
