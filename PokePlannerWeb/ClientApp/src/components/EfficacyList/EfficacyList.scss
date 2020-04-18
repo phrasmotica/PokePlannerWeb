@@ -1,4 +1,11 @@
-﻿.efficacy {
+﻿@import "../../styles/types.scss";
+
+.efficacyListContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax($typeIconWidth, 1fr));
+}
+
+.efficacy {
     text-align: center;
     padding-left: 0px;
     padding-right: 0px;

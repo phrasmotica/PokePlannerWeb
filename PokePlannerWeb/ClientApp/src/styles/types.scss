@@ -26,13 +26,13 @@ $typeIconHeight: 29px;
 .type-icon {
     width: $typeIconWidth;
     height: $typeIconHeight;
+}
 
-    &-small {
-        $typeIconWidth: 64px;
-        $typeIconHeight: 24px;
-        width: $typeIconWidth;
-        height: $typeIconHeight;
-    }
+$typeIconSmallWidth: 64px;
+$typeIconSmallHeight: 24px;
+.type-icon-small {
+    width: $typeIconSmallWidth;
+    height: $typeIconSmallHeight;
 }
 
 .type-pair {

@@ -9,11 +9,6 @@ import "../../util/Extensions"
 import "../../styles/types.scss"
 import "./EfficacyList.scss"
 
-/**
- * The number of rows to split the types across.
- */
-const NUMBER_OF_ROWS: number = 3
-
 interface IEfficacyListProps extends IHasCommon {
     /**
      * The IDs of the types to show efficacy for.
@@ -97,97 +92,84 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
     }
 
     renderTypeEfficacy() {
-        let rows = []
+        let items = []
         let presenceMap = this.props.typesPresenceMap.presenceMap
-        let itemsPerRow = presenceMap.length / NUMBER_OF_ROWS
 
         let efficacy = this.state.efficacy
-        for (let row = 0; row < NUMBER_OF_ROWS; row++) {
-            let items = []
-            for (let col = 0; col < itemsPerRow; col++) {
-                // ensure each headers have unique IDs between all instances
-                let index = row * itemsPerRow + col
-                let headerId = `list${this.props.index}type${index}`
+        for (let index = 0; index < presenceMap.length; index++) {
+            // ensure each headers have unique IDs between all instances
+            let headerId = `list${this.props.index}type${index}`
 
-                let typeId = presenceMap[index].id
-                let typeHeader = <img
-                                    id={headerId}
-                                    className="type-icon-small padded"
-                                    alt={`type${typeId}`}
-                                    src={require(`../../images/typeIcons/${typeId}-small.png`)} />
+            let typeId = presenceMap[index].id
+            let typeHeader = <img
+                                id={headerId}
+                                className="type-icon padded"
+                                alt={`type${typeId}`}
+                                src={require(`../../images/typeIcons/${typeId}.png`)} />
 
-                if (!this.props.showMultipliers || efficacy === undefined) {
+            if (!this.props.showMultipliers || efficacy === undefined) {
+                items.push(
+                    <div
+                        key={index}
+                        className="efficacy">
+                        {typeHeader}
+                        <br />
+                        <span>-</span>
+                    </div>
+                )
+            }
+            else {
+                let typeIsPresent = presenceMap[index].data
+                if (typeIsPresent) {
+                    let matchingData = efficacy.efficacyMultipliers.find(m => m.id === typeId)
+
+                    let multiplier = 1
+                    if (matchingData !== undefined) {
+                        multiplier = matchingData.data
+                    }
+
+                    let multiplierElement = this.getElementFromMultiplier(multiplier)
                     items.push(
                         <div
                             key={index}
                             className="efficacy">
                             {typeHeader}
                             <br />
-                            <span>-</span>
+                            {multiplierElement}
                         </div>
                     )
                 }
                 else {
-                    let typeIsPresent = presenceMap[index].data
-                    if (typeIsPresent) {
-                        let matchingData = efficacy.efficacyMultipliers.find(m => m.id === typeId)
-
-                        let multiplier = 1
-                        if (matchingData !== undefined) {
-                            multiplier = matchingData.data
-                        }
-
-                        let multiplierElement = this.getElementFromMultiplier(multiplier)
-                        items.push(
-                            <div
-                                key={index}
-                                className="efficacy">
-                                {typeHeader}
-                                <br />
-                                {multiplierElement}
-                            </div>
+                    let tooltip = null
+                    if (!this.props.hideTooltips) {
+                        tooltip = (
+                            <Tooltip
+                                isOpen={this.state.typeTooltipOpen[index]}
+                                toggle={() => this.toggleTypeTooltip(index)}
+                                placement="top"
+                                target={headerId}>
+                                absent from this game version
+                            </Tooltip>
                         )
                     }
-                    else {
-                        let tooltip = null
-                        if (!this.props.hideTooltips) {
-                            tooltip = (
-                                <Tooltip
-                                    isOpen={this.state.typeTooltipOpen[index]}
-                                    toggle={() => this.toggleTypeTooltip(index)}
-                                    placement="top"
-                                    target={headerId}>
-                                    absent from this game version
-                                </Tooltip>
-                            )
-                        }
 
-                        items.push(
-                            <div
-                                key={index}
-                                className="efficacy">
-                                {typeHeader}
-                                <br />
-                                <b>N/A</b>
-                                {tooltip}
-                            </div>
-                        )
-                    }
+                    items.push(
+                        <div
+                            key={index}
+                            className="efficacy">
+                            {typeHeader}
+                            <br />
+                            <b>N/A</b>
+                            {tooltip}
+                        </div>
+                    )
                 }
             }
-
-            rows.push(
-                <div
-                    key={row}
-                    className="flex-space-between">
-                    {items}
-                </div>
-            )
         }
 
         return (
-            <div>
-                {rows}
+            <div className="fill-parent efficacyListContainer">
+                {items}
             </div>
         )
     }
