@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
+import key from "weak-key"
 
 import { BaseStatFilterValues, BaseStatFilterValue } from "./BaseStatFilterValues"
 
@@ -84,7 +85,9 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
             let constrainedValue = Math.min(Math.max(e.value, minValue), maxValue)
 
             return (
-                <div className="baseStatFilter flex-center margin-bottom-small">
+                <div
+                    key={key(e)}
+                    className="baseStatFilter flex-center margin-bottom-small">
                     <Label
                         className="baseStatFilterLabel margin-right-small"
                         for={checkboxId}>
