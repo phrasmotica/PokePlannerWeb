@@ -70,7 +70,7 @@ export class SpeciesSelector
         let filterOpen = this.state.filterOpen
 
         return (
-            <span title="Filter by generation">
+            <span title="Filter species">
                 <Button
                     color={filterOpen ? "success" : "info"}
                     className="filter-button"
