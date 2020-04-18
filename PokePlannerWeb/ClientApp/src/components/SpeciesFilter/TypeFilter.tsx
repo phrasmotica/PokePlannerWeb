@@ -45,7 +45,7 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
     constructor(props: ITypeFilterProps) {
         super(props)
 
-        // set filter values from cookies
+        // set filter from cookies
         let cookieTypeIds = []
         for (let id of this.props.typeIds) {
             let cookieName = `typeFilter${this.props.index}active${id}`

@@ -5,7 +5,7 @@ import { BaseStatFilter } from "./BaseStatFilter"
 import { BaseStatFilterModel } from "./BaseStatFilterModel"
 import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
-import { TypeFilterModel } from "./IdFilterModel"
+import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
@@ -44,27 +44,27 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     baseStatNames: string[]
 
     /**
-     * The IDs of the generations that pass the filter.
+     * The generation filter.
      */
-    filteredGenerationIds: number[]
+    generationFilter: GenerationFilterModel
 
     /**
-     * The IDs of the types that pass the filter.
+     * The type filter.
      */
     typeFilter: TypeFilterModel
 
     /**
-     * Handler for settings the filtered generation IDs in the parent component.
+     * Handler for setting the generation filter in the parent component.
      */
-    setGenerationFilterIds: (ids: number[]) => void
+    setGenerationFilter: (filter: GenerationFilterModel) => void
 
     /**
-     * Handler for settings the filtered type IDs in the parent component.
+     * Handler for setting the type filter in the parent component.
      */
     setTypeFilter: (filter: TypeFilterModel) => void
 
     /**
-     * Handler for settings the filtered type IDs in the parent component.
+     * Handler for setting the base stat filter in the parent component.
      */
     setBaseStatFilter: (filter: BaseStatFilterModel) => void
 }
@@ -179,20 +179,20 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
                                           .map(g => g.getShortDisplayName("en") ?? "-")
 
-        let filteredGenerationIds = this.props.filteredGenerationIds
-        if (filteredGenerationIds.length <= 0) {
-            filteredGenerationIds = generationIds
+        let generationFilter = this.props.generationFilter
+        if (generationFilter.isEmpty()) {
+            generationFilter = new GenerationFilterModel(generationIds)
         }
 
-        const setFilterIds = (filterIds: number[]) => this.props.setGenerationFilterIds(filterIds)
+        const setFilter = (filter: GenerationFilterModel) => this.props.setGenerationFilter(filter)
 
         return (
             <GenerationFilter
                 index={this.props.index}
                 generationIds={generationIds}
                 generationLabels={generationLabels}
-                filteredGenerationIds={filteredGenerationIds}
-                setGenerationFilterIds={setFilterIds} />
+                generationFilter={generationFilter}
+                setGenerationFilter={setFilter} />
         )
     }
 

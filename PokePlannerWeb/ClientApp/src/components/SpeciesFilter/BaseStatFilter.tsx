@@ -51,7 +51,7 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
     constructor(props: IBaseStatFilterProps) {
         super(props)
 
-        // set filter values from cookies
+        // set filter from cookies
         let cookieFilterValues = []
         for (let i = 0; i < this.props.baseStatFilter.values.length; i++) {
             let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)

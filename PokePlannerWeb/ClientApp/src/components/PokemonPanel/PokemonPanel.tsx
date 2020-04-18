@@ -7,7 +7,7 @@ import { IHasCommon } from "../CommonMembers"
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
-import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
+import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
@@ -96,17 +96,17 @@ interface IPokemonPanelState {
     form: PokemonFormEntry | undefined
 
     /**
-     * The IDs of the generations in the species filter.
+     * The generation filter.
      */
-    filteredGenerationIds: number[]
+    generationFilter: GenerationFilterModel
 
     /**
-     * The IDs of the types in the species filter.
+     * The type filter.
      */
     typeFilter: TypeFilterModel
 
     /**
-     * The minimum values of base stats in the species filter.
+     * The base stat filter.
      */
     baseStatFilter: BaseStatFilterModel
 
@@ -134,7 +134,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             speciesId: undefined,
             variety: undefined,
             form: undefined,
-            filteredGenerationIds: [],
+            generationFilter: GenerationFilterModel.createEmpty(),
             typeFilter: TypeFilterModel.createEmpty(),
             baseStatFilter: BaseStatFilterModel.createEmpty(this.props.baseStatNames.length),
             showShinySprite: false,
@@ -181,7 +181,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         setSpecies={setSpecies}
                         setVariety={setVariety}
                         setForm={setForm}
-                        filteredGenerationIds={this.state.filteredGenerationIds}
+                        generationFilter={this.state.generationFilter}
                         typeFilter={this.state.typeFilter}
                         baseStatFilter={this.state.baseStatFilter}
                         toggleIgnoreValidity={toggleIgnoreValidity}
@@ -226,13 +226,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 versionGroupId={this.props.versionGroupId}
                 species={this.props.species}
                 generations={this.props.generations}
-                filteredGenerationIds={this.state.filteredGenerationIds}
+                generationFilter={this.state.generationFilter}
                 types={this.props.types}
                 typeFilter={this.state.typeFilter}
                 baseStatNames={this.props.baseStatNames}
                 baseStatFilter={this.state.baseStatFilter}
-                setGenerationFilterIds={ids => this.setFilteredGenerationIds(ids)}
-                setTypeFilter={ids => this.setTypeFilter(ids)}
+                setGenerationFilter={filter => this.setGenerationFilter(filter)}
+                setTypeFilter={filter => this.setTypeFilter(filter)}
                 setBaseStatFilter={filter => this.setBaseStatFilter(filter)} />
         )
     }
@@ -463,16 +463,19 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     /**
-     * Sets the filtered generation IDs.
+     * Sets the generation filter.
      */
-    setFilteredGenerationIds(ids: number[]) {
-        this.setState({ filteredGenerationIds: ids })
+    setGenerationFilter(filter: GenerationFilterModel) {
+        this.setState({ generationFilter: filter })
 
         // no longer have a valid species
         let speciesId = this.state.speciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
-            if (!ids.includes(species.generation.id)) {
+            let generationId = species.generation.id
+
+            let failsGenerationFilter = !filter.passesFilter([generationId])
+            if (failsGenerationFilter) {
                 this.setSpecies(undefined)
             }
         }
@@ -505,7 +508,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     }
 
     /**
-     * Sets the filtered generation IDs.
+     * Sets the base stat filter.
      */
     setBaseStatFilter(filter: BaseStatFilterModel) {
         let versionGroupId = this.props.versionGroupId

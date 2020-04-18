@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Button, ButtonGroup } from "reactstrap"
 
+import { GenerationFilterModel } from "./IdFilterModel"
+
 import { IHasIndex } from "../CommonMembers"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -19,12 +21,12 @@ interface IGenerationFilterProps extends IHasIndex {
     /**
      * The IDs of the generations that pass the filter.
      */
-    filteredGenerationIds: number[]
+    generationFilter: GenerationFilterModel
 
     /**
      * Handler for setting the generation filter in the parent component.
      */
-    setGenerationFilterIds: (filterIds: number[]) => void
+    setGenerationFilter: (filter: GenerationFilterModel) => void
 }
 
 interface IGenerationFilterState {
@@ -41,17 +43,17 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
     constructor(props: IGenerationFilterProps) {
         super(props)
 
-        // set filter values from cookies
-        let cookieGenerationFilterIds = []
+        // set filter from cookies
+        let cookieGenerationIds = []
         for (let id of this.props.generationIds) {
             let cookieName = `generationFilter${this.props.index}active${id}`
             let active = CookieHelper.getFlag(cookieName)
             if (active) {
-                cookieGenerationFilterIds.push(id)
+                cookieGenerationIds.push(id)
             }
         }
 
-        this.props.setGenerationFilterIds(cookieGenerationFilterIds)
+        this.props.setGenerationFilter(new GenerationFilterModel(cookieGenerationIds))
     }
 
     /**
@@ -67,7 +69,7 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
     renderFilter() {
         let items = this.props.generationIds.map((id, index) => {
             let label = this.props.generationLabels[index]
-            let isPresent = this.props.filteredGenerationIds.includes(id)
+            let isPresent = this.props.generationFilter.passesFilter([id])
 
             return (
                 <Button
@@ -93,24 +95,12 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
      * Toggles the given ID in the filter.
      */
     toggleFilterId(id: number) {
-        let filterIds = this.props.filteredGenerationIds
-        let i = filterIds.indexOf(id)
-
-        if (i >= 0 && filterIds.length <= 1) {
-            // can't filter out everything
-            return
-        }
-
-        if (i < 0) {
-            filterIds.push(id)
-        }
-        else {
-            filterIds.splice(i, 1)
-        }
+        let generationFilter = this.props.generationFilter
+        let isActive = generationFilter.toggle(id)
 
         let cookieName = `generationFilter${this.props.index}active${id}`
-        CookieHelper.set(cookieName, i < 0)
+        CookieHelper.set(cookieName, isActive)
 
-        this.props.setGenerationFilterIds(filterIds)
+        this.props.setGenerationFilter(generationFilter)
     }
 }

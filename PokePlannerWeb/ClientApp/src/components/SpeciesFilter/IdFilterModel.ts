@@ -72,3 +72,10 @@ export class IdFilterModel {
 export class TypeFilterModel extends IdFilterModel {
 
 }
+
+/**
+ * Class representing a filter for generations.
+ */
+export class GenerationFilterModel extends IdFilterModel {
+
+}

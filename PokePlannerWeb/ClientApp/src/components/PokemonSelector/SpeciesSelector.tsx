@@ -5,7 +5,7 @@ import { FaFilter } from "react-icons/fa"
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
-import { TypeFilterModel } from "../SpeciesFilter/IdFilterModel"
+import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
@@ -21,7 +21,7 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     /**
      * The IDs of the generations that pass the filter.
      */
-    filteredGenerationIds: number[]
+    generationFilter: GenerationFilterModel
 
     /**
      * The IDs of the types that pass the filter.
@@ -143,9 +143,8 @@ export class SpeciesSelector
         }
 
         // generation filter test
-        let generationFilter = this.props.filteredGenerationIds
-        let speciesIsPresent = generationFilter.includes(species.generation.id)
-        let passesGenerationFilter = generationFilter.length <= 0 || speciesIsPresent
+        let generationId = species.generation.id
+        let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
 
         // type filter test
         let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
