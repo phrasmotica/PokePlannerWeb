@@ -77,7 +77,9 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
                     key={id}
                     color={isPresent ? "success" : "secondary"}
                     onMouseUp={() => this.toggleFilterId(id)}>
-                    {label}
+                    <span title={`Filter to ${label}-type species`}>
+                        {label}
+                    </span>
                 </Button>
             )
         })

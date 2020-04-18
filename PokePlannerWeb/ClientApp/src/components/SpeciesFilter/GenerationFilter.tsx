@@ -75,7 +75,9 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
                     key={id}
                     color={isPresent ? "success" : "secondary"}
                     onMouseUp={() => this.toggleFilterId(id)}>
-                    {label}
+                    <span title={`Filter to species from generation ${label}`}>
+                        {label}
+                    </span>
                 </Button>
             )
         })

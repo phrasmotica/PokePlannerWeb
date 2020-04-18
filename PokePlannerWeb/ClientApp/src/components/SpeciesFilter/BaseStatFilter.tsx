@@ -91,7 +91,9 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                     <Label
                         className="baseStatFilterLabel margin-right-small"
                         for={checkboxId}>
-                        {label}
+                        <span title={`Filter to species with at least ${constrainedValue} base ${label}`}>
+                            {label}
+                        </span>
                     </Label>
 
                     <Input
