@@ -18,22 +18,27 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class PokemonService : NamedApiResourceServiceBase<Pokemon, PokemonEntry>
     {
         /// <summary>
+        /// The ability cache service.
+        /// </summary>
+        private readonly AbilityCacheService AbilityCacheService;
+
+        /// <summary>
+        /// The type cache service.
+        /// </summary>
+        private readonly TypeCacheService TypeCacheService;
+
+        /// <summary>
         /// The move service.
         /// </summary>
         private readonly MoveService MoveService;
 
         /// <summary>
-        /// The Pokemon forms service.
+        /// The Pokemon form service.
         /// </summary>
-        private readonly PokemonFormService PokemonFormsService;
+        private readonly PokemonFormService PokemonFormService;
 
         /// <summary>
-        /// The types service.
-        /// </summary>
-        private readonly TypeCacheService TypeCacheService;
-
-        /// <summary>
-        /// The version groups service.
+        /// The version group service.
         /// </summary>
         private readonly VersionGroupService VersionGroupService;
 
@@ -44,16 +49,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<PokemonEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonCacheService pokemonCacheService,
-            MoveService moveService,
-            PokemonFormService pokemonFormsService,
+            AbilityCacheService abilityCacheService,
             TypeCacheService typeCacheService,
-            VersionGroupService versionGroupsService,
+            MoveService moveService,
+            PokemonFormService pokemonFormService,
+            VersionGroupService versionGroupService,
             ILogger<PokemonService> logger) : base(dataStoreSource, pokeApi, pokemonCacheService, logger)
         {
-            MoveService = moveService;
-            PokemonFormsService = pokemonFormsService;
+            AbilityCacheService = abilityCacheService;
             TypeCacheService = typeCacheService;
-            VersionGroupService = versionGroupsService;
+            MoveService = moveService;
+            PokemonFormService = pokemonFormService;
+            VersionGroupService = versionGroupService;
         }
 
         #region Entry conversion methods
@@ -66,6 +73,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var displayNames = await GetDisplayNames(pokemon);
             var forms = await GetForms(pokemon);
             var types = await GetTypes(pokemon);
+            var abilities = await GetAbilities(pokemon);
             var baseStats = await GetBaseStats(pokemon);
             var moves = await GetMoves(pokemon);
 
@@ -78,6 +86,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 DisplayNames = displayNames.ToList(),
                 Forms = forms.ToList(),
                 Types = types,
+                Abilities = abilities.ToList(),
                 BaseStats = baseStats,
                 Moves = moves.ToList()
             };
@@ -102,7 +111,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         public async Task<PokemonFormEntry[]> GetPokemonForms(int pokemonId, int versionGroupId)
         {
             var entry = await Upsert(pokemonId);
-            var formEntries = await PokemonFormsService.UpsertMany(entry.Forms.Select(f => f.Id));
+            var formEntries = await PokemonFormService.UpsertMany(entry.Forms.Select(f => f.Id));
             return formEntries.OrderBy(f => f.FormId).ToArray();
         }
 
@@ -128,7 +137,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private async Task<IEnumerable<LocalString>> GetDisplayNames(Pokemon pokemon)
         {
             // take display names from primary form, if any
-            var primaryForm = await PokemonFormsService.Upsert(pokemon.Forms[0]);
+            var primaryForm = await PokemonFormService.Upsert(pokemon.Forms[0]);
             return primaryForm.DisplayNames;
         }
 
@@ -169,7 +178,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             foreach (var form in pokemon.Forms)
             {
-                var source = await PokemonFormsService.Upsert(form);
+                var source = await PokemonFormService.Upsert(form);
                 formsList.Add(new PokemonForm
                 {
                     Id = source.FormId,
@@ -222,6 +231,22 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var newestTypeObjs = await TypeCacheService.UpsertMany(types.Select(t => t.Type));
             return newestTypeObjs.Select(t => t.Minimise());
+        }
+
+        /// <summary>
+        /// Returns references to this Pokemon's abilities.
+        /// </summary>
+        private async Task<IEnumerable<Ability>> GetAbilities(Pokemon pokemon)
+        {
+            var abilities = new List<Ability>();
+
+            foreach (var ability in pokemon.Abilities.Select(a => a.Ability))
+            {
+                var abilityRef = await AbilityCacheService.GetMinimal(ability);
+                abilities.Add(abilityRef);
+            }
+
+            return abilities;
         }
 
         /// <summary>
