@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
@@ -15,14 +16,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class AbilityService : NamedApiResourceServiceBase<Ability, AbilityEntry>
     {
         /// <summary>
+        /// The version group service.
+        /// </summary>
+        private readonly VersionGroupService VersionGroupService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public AbilityService(
             IDataStoreSource<AbilityEntry> dataStoreSource,
             IPokeAPI pokeApi,
             AbilityCacheService abilityCacheService,
+            VersionGroupService versionGroupService,
             ILogger<AbilityService> logger) : base(dataStoreSource, pokeApi, abilityCacheService, logger)
         {
+            VersionGroupService = versionGroupService;
         }
 
         #region Entry conversion methods
@@ -30,16 +38,18 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns an ability entry for the given ability.
         /// </summary>
-        protected override Task<AbilityEntry> ConvertToEntry(Ability ability)
+        protected async override Task<AbilityEntry> ConvertToEntry(Ability ability)
         {
             var displayNames = ability.Names.Localise();
+            var flavourTextEntries = await GetFlavourTextEntries(ability);
 
-            return Task.FromResult(new AbilityEntry
+            return new AbilityEntry
             {
                 Key = ability.Id,
                 Name = ability.Name,
-                DisplayNames = displayNames.ToList()
-            });
+                DisplayNames = displayNames.ToList(),
+                FlavourTextEntries = flavourTextEntries.ToList()
+            };
         }
 
         #endregion
@@ -53,6 +63,38 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var allAbilities = await UpsertAll();
             return allAbilities.OrderBy(g => g.Id).ToArray();
+        }
+
+        #endregion
+
+        #region Helper methods
+
+        /// <summary>
+        /// Returns flavour text entries for the given ability, indexed by version group ID.
+        /// </summary>
+        private async Task<IEnumerable<WithId<LocalString[]>>> GetFlavourTextEntries(Ability ability)
+        {
+            var descriptionsList = new List<WithId<LocalString[]>>();
+
+            if (ability.FlavorTextEntries.Any())
+            {
+                foreach (var vg in await VersionGroupService.GetAll())
+                {
+                    var relevantDescriptions = ability.FlavorTextEntries.Where(f => f.VersionGroup.Name == vg.Name);
+                    if (relevantDescriptions.Any())
+                    {
+                        var descriptions = relevantDescriptions.Select(d => new LocalString
+                        {
+                            Language = d.Language.Name,
+                            Value = d.FlavorText
+                        });
+
+                        descriptionsList.Add(new WithId<LocalString[]>(vg.VersionGroupId, descriptions.ToArray()));
+                    }
+                }
+            }
+
+            return descriptionsList;
         }
 
         #endregion
