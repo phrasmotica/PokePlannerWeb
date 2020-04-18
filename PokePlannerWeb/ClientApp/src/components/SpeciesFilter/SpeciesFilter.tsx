@@ -29,19 +29,9 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     generations: GenerationEntry[]
 
     /**
-     * The species to filter.
+     * The types.
      */
     types: TypeEntry[]
-
-    /**
-     * The base stat filter.
-     */
-    baseStatFilter: BaseStatFilterModel
-
-    /**
-     * The base stat names.
-     */
-    baseStatNames: string[]
 
     /**
      * The generation filter.
@@ -52,6 +42,16 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
      * The type filter.
      */
     typeFilter: TypeFilterModel
+
+    /**
+     * The base stat filter.
+     */
+    baseStatFilter: BaseStatFilterModel
+
+    /**
+     * The base stat names.
+     */
+    baseStatNames: string[]
 
     /**
      * Handler for setting the generation filter in the parent component.

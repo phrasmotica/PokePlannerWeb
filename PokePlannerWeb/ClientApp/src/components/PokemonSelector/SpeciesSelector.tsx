@@ -19,17 +19,17 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     generations: GenerationEntry[]
 
     /**
-     * The IDs of the generations that pass the filter.
+     * The generation filter.
      */
     generationFilter: GenerationFilterModel
 
     /**
-     * The IDs of the types that pass the filter.
+     * The type filter.
      */
     typeFilter: TypeFilterModel
 
     /**
-     * The IDs of the types to filter.
+     * The base stat filter.
      */
     baseStatFilter: BaseStatFilterModel
 

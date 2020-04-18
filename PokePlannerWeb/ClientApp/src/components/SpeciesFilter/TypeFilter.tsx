@@ -21,7 +21,7 @@ interface ITypeFilterProps extends IHasIndex {
     typeLabels: string[]
 
     /**
-     * The type filter model.
+     * The type filter.
      */
     typeFilter: TypeFilterModel
 

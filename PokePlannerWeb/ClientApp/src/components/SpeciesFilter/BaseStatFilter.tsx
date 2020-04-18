@@ -12,7 +12,7 @@ import "./BaseStatFilter.scss"
 
 interface IBaseStatFilterProps extends IHasIndex {
     /**
-     * The IDs of the types to filter.
+     * The base stat filter.
      */
     baseStatFilter: BaseStatFilterModel
 
