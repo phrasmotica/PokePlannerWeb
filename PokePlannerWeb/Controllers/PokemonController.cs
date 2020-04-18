@@ -68,7 +68,7 @@ namespace PokePlannerWeb.Controllers
         /// Returns the abilities of the Pokemon with the given ID.
         /// </summary>
         [HttpGet("{pokemonId:int}/abilities")]
-        public async Task<AbilityEntry[]> GetPokemonAbilitiesById(int pokemonId)
+        public async Task<PokemonAbilityContext[]> GetPokemonAbilitiesById(int pokemonId)
         {
             Logger.LogInformation($"Getting abilities of Pokemon {pokemonId}...");
             return await PokemonService.GetPokemonAbilities(pokemonId);

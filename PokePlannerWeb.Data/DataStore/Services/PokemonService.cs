@@ -137,12 +137,20 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the abilities of the Pokemon with the given ID from the data store.
         /// </summary>
-        public async Task<AbilityEntry[]> GetPokemonAbilities(int pokemonId)
+        public async Task<PokemonAbilityContext[]> GetPokemonAbilities(int pokemonId)
         {
             var resource = await CacheService.Upsert(pokemonId);
-            var orderedAbilities = resource.Abilities.OrderBy(a => a.Slot).Select(a => a.Ability);
-            var abilityEntries = await AbilityService.UpsertMany(orderedAbilities);
-            return abilityEntries.ToArray();
+            var orderedAbilities = resource.Abilities.OrderBy(a => a.Slot).ToArray();
+            var abilityEntries = await AbilityService.UpsertMany(orderedAbilities.Select(a => a.Ability));
+
+            var abilityContexts = abilityEntries.Select((e, i) =>
+            {
+                var context = PokemonAbilityContext.From(e);
+                context.IsHidden = orderedAbilities[i].IsHidden;
+                return context;
+            });
+
+            return abilityContexts.ToArray();
         }
 
         #endregion
