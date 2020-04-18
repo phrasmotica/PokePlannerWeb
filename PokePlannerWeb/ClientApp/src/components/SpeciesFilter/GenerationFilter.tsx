@@ -20,7 +20,7 @@ interface IGenerationFilterProps extends IHasIndex {
     generationLabels: string[]
 
     /**
-     * The IDs of the generations that pass the filter.
+     * The generation filter.
      */
     generationFilter: GenerationFilterModel
 
