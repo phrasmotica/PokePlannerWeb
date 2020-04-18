@@ -16,8 +16,8 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [x] 'Clear species' button
     * [x] Save selected species in cookies
     * [x] Filter by generation
-    * [ ] Filter by base stats of default variety
-    * [ ] Filter by types of default variety
+    * [x] Filter by base stats of default variety
+    * [x] Filter by types of default variety
     * [ ] Favourite/unfavourite species (requires login)
   * [x] Select variety (Castform, Shaymin, mega evolutions, etc.)
     * [x] Save selected variety in cookies
