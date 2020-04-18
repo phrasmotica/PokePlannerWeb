@@ -95,9 +95,9 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
     constructor(props: ISpeciesFilterProps) {
         super(props)
         this.state = {
-            generationFilterOpen: CookieHelper.getFlag(`generationFilterOpen${this.props.index}`),
-            typeFilterOpen: CookieHelper.getFlag(`typeFilterOpen${this.props.index}`),
-            baseStatFilterOpen: CookieHelper.getFlag(`baseStatFilterOpen${this.props.index}`)
+            generationFilterOpen: CookieHelper.getFlag(`generationFilter${this.props.index}open`),
+            typeFilterOpen: CookieHelper.getFlag(`typeFilter${this.props.index}open`),
+            baseStatFilterOpen: CookieHelper.getFlag(`baseStatFilter${this.props.index}open`)
         }
     }
 
@@ -280,7 +280,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Toggles the generation filter.
      */
     toggleGenerationFilter() {
-        CookieHelper.set(`generationFilterOpen${this.props.index}`, !this.state.generationFilterOpen)
+        CookieHelper.set(`generationFilter${this.props.index}open`, !this.state.generationFilterOpen)
 
         this.setState(previousState => ({
             generationFilterOpen: !previousState.generationFilterOpen
@@ -291,7 +291,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Toggles the type filter.
      */
     toggleTypeFilter() {
-        CookieHelper.set(`typeFilterOpen${this.props.index}`, !this.state.typeFilterOpen)
+        CookieHelper.set(`typeFilter${this.props.index}open`, !this.state.typeFilterOpen)
 
         this.setState(previousState => ({
             typeFilterOpen: !previousState.typeFilterOpen
@@ -302,7 +302,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      * Toggles the base stat filter.
      */
     toggleBaseStatFilter() {
-        CookieHelper.set(`baseStatFilterOpen${this.props.index}`, !this.state.baseStatFilterOpen)
+        CookieHelper.set(`baseStatFilter${this.props.index}open`, !this.state.baseStatFilterOpen)
 
         this.setState(previousState => ({
             baseStatFilterOpen: !previousState.baseStatFilterOpen
