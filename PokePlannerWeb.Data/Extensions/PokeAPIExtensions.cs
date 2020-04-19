@@ -66,6 +66,14 @@ namespace PokePlannerWeb.Data.Extensions
         }
 
         /// <summary>
+        /// Returns this collection of genera as a collection of localised strings.
+        /// </summary>
+        public static IEnumerable<LocalString> Localise(this IEnumerable<Genuses> genera)
+        {
+            return genera.Select(n => new LocalString { Language = n.Language.Name, Value = n.Genus });
+        }
+
+        /// <summary>
         /// Returns resources for all the versions spanned by this list of encounters.
         /// </summary>
         public static IEnumerable<NamedApiResource<Version>> GetDistinctVersions(this IEnumerable<LocationAreaEncounter> encounters)
