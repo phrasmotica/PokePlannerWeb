@@ -130,6 +130,8 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     </ListGroup>
                 )
             }
+
+            // TODO: show "evolve {preEvolution}" if applicable, else show "Trade"
         }
 
         return encountersElement
