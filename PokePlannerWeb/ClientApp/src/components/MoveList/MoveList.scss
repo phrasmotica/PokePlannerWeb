@@ -71,7 +71,7 @@ $fontSize: 9pt;
 
 .separate-right {
     padding-right: 5px;
-    border-right: 1px solid lightgrey;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
     margin-right: 5px;
 }
 
@@ -80,4 +80,12 @@ $fontSize: 9pt;
     height: calc(1.5em + 0.25rem + 2px);
     font-size: $fontSize;
     padding: 0rem 0.375rem;
+}
+
+.moveInfo {
+    margin-top: 5px;
+}
+
+.moveInfo hr {
+    margin: 0.3rem 0rem;
 }

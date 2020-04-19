@@ -423,20 +423,23 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
-                        <div className="flex">
-                            <div className="margin-right-small">
+                        <div className="flex moveInfo">
+                            <div className="separate-right">
                                 <div className="flex-center">
                                     {typeIcon}
                                     {damageClassIcon}
                                 </div>
 
-                                {powerElement}
+                                <hr />
 
-                                <div>Accuracy: {move.accuracy ?? "-"}</div>
-                                <div>PP: {move.pp ?? "-"}</div>
+                                <div>
+                                    {powerElement}
+                                    <div>Accuracy: {move.accuracy ?? "-"}</div>
+                                    <div>PP: {move.pp ?? "-"}</div>
+                                </div>
                             </div>
 
-                            <div className="text-align-center margin-right-small">
+                            <div className="text-align-center flex-center">
                                 {move.getFlavourText(this.props.versionGroupId!, "en")}
                             </div>
                         </div>
