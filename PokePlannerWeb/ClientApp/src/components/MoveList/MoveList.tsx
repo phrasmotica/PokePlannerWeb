@@ -34,12 +34,22 @@ interface IMoveListProps extends IHasCommon {
 
 interface IMoveListState {
     /**
-     * Whether to only show moves with that deal damage.
+     * Whether to only show moves that deal damage.
      */
     damagingOnly: boolean
 
     /**
-     * Whether to only show moves with that don't deal damage.
+     * Whether to only show moves with at least a minimum base power.
+     */
+    useMinPower: boolean
+
+    /**
+     * The minimum power a move must have to be shown.
+     */
+    minPower: number
+
+    /**
+     * Whether to only show moves that don't deal damage.
      */
     nonDamagingOnly: boolean
 
@@ -75,11 +85,15 @@ interface IMoveListState {
 export class MoveList extends Component<IMoveListProps, IMoveListState> {
     constructor(props: IMoveListProps) {
         super(props)
+
+        let index= this.props.index
         this.state = {
-            damagingOnly: CookieHelper.getFlag(`damagingOnly${this.props.index}`),
-            nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${this.props.index}`),
-            sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${this.props.index}`),
-            levelUpOnly: CookieHelper.getFlag(`levelUpOnly${this.props.index}`),
+            damagingOnly: CookieHelper.getFlag(`damagingOnly${index}`),
+            useMinPower: CookieHelper.getFlag(`useMinPower${index}`),
+            minPower: CookieHelper.getNumber(`minPower${index}`) ?? 0,
+            nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${index}`),
+            sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${index}`),
+            levelUpOnly: CookieHelper.getFlag(`levelUpOnly${index}`),
             moves: [],
             loadingMoves: false,
             movesAreOpen: []
@@ -124,28 +138,66 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Renders the filters.
      */
     renderFilters() {
-        // TODO: filter by power and other metrics
-
         let damagingId = "damagingCheckbox" + this.props.index
+        let minPowerId = "minPowerCheckbox" + this.props.index
+
+        // TODO: compute highest and lowest move power
+        let lowestPower = 0
+        let minPower = this.state.minPower
+        let highestPower = 250
+
         let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
         let levelUpId = "levelUpCheckbox" + this.props.index
 
         return (
             <div className="moveFilter">
-                <div className="flex-center separate-right">
-                    <Input
-                        className="filterCheckbox"
-                        type="checkbox"
-                        id={damagingId}
-                        checked={this.state.damagingOnly}
-                        onChange={() => this.toggleDamagingOnly()} />
+                <div className="separate-right">
+                    <div className="flex-center margin-bottom-small">
+                        <Input
+                            className="filterCheckbox"
+                            type="checkbox"
+                            id={damagingId}
+                            checked={this.state.damagingOnly}
+                            onChange={() => this.toggleDamagingOnly()} />
 
-                    <Label for={damagingId} check>
-                        <span title="Only show moves that deal damage">
-                            damaging only
-                        </span>
-                    </Label>
+                        <Label
+                            check
+                            for={damagingId}
+                            className="margin-right-small">
+                            <span title="Only show moves that deal damage">
+                                damaging only
+                            </span>
+                        </Label>
+                    </div>
+
+                    <div className="flex-center">
+                        <Input
+                            className="filterCheckbox"
+                            type="checkbox"
+                            id={minPowerId}
+                            checked={this.state.useMinPower}
+                            disabled={!this.state.damagingOnly}
+                            onChange={() => this.toggleUseMinPower()} />
+
+                        <Label
+                            check
+                            for={minPowerId}
+                            className="margin-right-small">
+                            <span title={`Only show moves with at least ${minPower} power`}>
+                                minimum power
+                            </span>
+                        </Label>
+
+                        <Input
+                            type="number"
+                            className="minPowerFilterInput"
+                            disabled={!this.state.damagingOnly || !this.state.useMinPower}
+                            onChange={e => this.setMinPower(+e.target.value)}
+                            min={lowestPower}
+                            value={minPower}
+                            max={highestPower} />
+                    </div>
                 </div>
 
                 <div className="flex-center separate-right">
@@ -207,6 +259,25 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             damagingOnly: !previousState.damagingOnly,
             nonDamagingOnly: false
         }))
+    }
+
+    /**
+     * Toggles the minimum power filter.
+     */
+    toggleUseMinPower() {
+        CookieHelper.set(`useMinPower${this.props.index}`, !this.state.useMinPower)
+
+        this.setState(previousState => ({
+            useMinPower: !previousState.useMinPower
+        }))
+    }
+
+    /**
+     * Sets the minimum power.
+     */
+    setMinPower(minPower: number) {
+        CookieHelper.set(`minPower${this.props.index}`, minPower)
+        this.setState({ minPower: minPower })
     }
 
     /**
@@ -414,6 +485,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             moves = moves.filter(m => m.isDamaging())
         }
 
+        if (this.state.useMinPower) {
+            moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
+        }
+
         if (this.state.nonDamagingOnly) {
             moves = moves.filter(m => !m.isDamaging())
         }
@@ -530,8 +605,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     hasFilters() {
         return this.state.damagingOnly
+            || this.state.useMinPower
             || this.state.nonDamagingOnly
             || this.state.sameTypeOnly
+            || this.state.levelUpOnly
     }
 
     /**
