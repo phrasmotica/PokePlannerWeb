@@ -125,7 +125,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 }
 
                 return (
-                    <ListGroup className="overflow-y">
+                    <ListGroup className="encountersListGroup">
                         {items}
                     </ListGroup>
                 )

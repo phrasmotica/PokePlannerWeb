@@ -1,9 +1,9 @@
-﻿.list-group-item {
+﻿.movesListGroup > .list-group-item {
     display: block;
     padding: 0.25rem 0.5rem;
 }
 
-.list-group-item > .btn {
+.movesListGroup > .list-group-item .btn {
     font-weight: unset;
     font-size: unset;
     padding: unset;

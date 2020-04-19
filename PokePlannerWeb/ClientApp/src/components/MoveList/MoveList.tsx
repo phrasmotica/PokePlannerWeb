@@ -342,7 +342,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             }
 
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     {rows}
                 </ListGroup>
             )
