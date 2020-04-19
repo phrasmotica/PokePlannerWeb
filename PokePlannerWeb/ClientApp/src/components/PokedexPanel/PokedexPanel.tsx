@@ -12,6 +12,7 @@ import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { TypeEntry } from "../../models/TypeEntry"
 import { TypesPresenceMap } from "../../models/TypesPresenceMap"
+import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
 
@@ -19,11 +20,16 @@ import "./PokedexPanel.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
 
-interface IPokedexPanelProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
+interface IPokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
     ignoreValidity: boolean
+
+    /**
+     * The version group.
+     */
+    versionGroup: VersionGroupEntry | undefined
 
     /**
      * List of Pokemon species.
@@ -109,7 +115,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                 <div className="debug-border whalf">
                     <PokemonPanel
                         index={this.props.index}
-                        versionGroupId={this.props.versionGroupId}
+                        versionGroupId={this.props.versionGroup?.versionGroupId}
                         species={this.props.species}
                         defaultSpeciesId={this.state.speciesId}
                         generations={this.props.generations}
@@ -127,8 +133,10 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                     <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>
                         <InfoPanel
                             index={this.props.index}
-                            versionGroupId={this.props.versionGroupId}
+                            versionGroupId={this.props.versionGroup?.versionGroupId}
                             hideTooltips={this.props.hideTooltips}
+                            versions={this.props.versionGroup?.versions ?? []}
+                            species={this.getSpecies()}
                             pokemon={this.state.variety}
                             effectiveTypes={this.getEffectiveTypes()}
                             typesPresenceMap={this.props.typesPresenceMap}
@@ -140,7 +148,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                 <div className="debug-border whalf flex-down" style={{ fontSize: "10pt" }}>
                     <ActionPanel
                         index={this.props.index}
-                        versionGroupId={this.props.versionGroupId}
+                        versionGroupId={this.props.versionGroup?.versionGroupId}
                         hideTooltips={this.props.hideTooltips}
                         species={this.props.species}
                         speciesId={this.state.speciesId}
@@ -161,7 +169,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
         return PokemonHelper.getEffectiveTypes(
             this.state.variety,
             this.state.form,
-            this.props.versionGroupId
+            this.props.versionGroup?.versionGroupId
         )
     }
 
@@ -179,15 +187,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      */
     getSpecies() {
         let speciesId = this.state.speciesId
-        let species = this.props.species.find(s => s.speciesId === speciesId)
-
-        if (species === undefined) {
-            throw new Error(
-                `Panel ${this.props.index}: no species found with ID ${speciesId}!`
-            )
-        }
-
-        return species
+        return this.props.species.find(s => s.speciesId === speciesId)
     }
 
     /**
@@ -201,10 +201,15 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      * Returns whether the Pokemon is valid.
      */
     pokemonIsValid() {
+        let species = this.getSpecies()
+        if (species === undefined) {
+            return true
+        }
+
         return PokemonHelper.pokemonIsValid(
-            this.getSpecies(),
+            species,
             this.state.form,
-            this.props.versionGroupId
+            this.props.versionGroup?.versionGroupId
         )
     }
 

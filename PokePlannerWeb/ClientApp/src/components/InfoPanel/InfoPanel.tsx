@@ -6,15 +6,28 @@ import { IHasCommon } from "../CommonMembers"
 import { AbilityList } from "../AbilityList/AbilityList"
 import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
 import { EfficacyList } from "../EfficacyList/EfficacyList"
+import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
 import { StatGraph } from "../StatGraph/StatGraph"
 
 import { PokemonEntry } from "../../models/PokemonEntry"
+import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { Type } from "../../models/Type"
 import { TypesPresenceMap } from "../../models/TypesPresenceMap"
+import { VersionEntry } from "../../models/VersionEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
 interface IInfoPanelProps extends IHasCommon {
+    /**
+     * The versions.
+     */
+    versions: VersionEntry[]
+
+    /**
+     * The species.
+     */
+    species: PokemonSpeciesEntry | undefined
+
     /**
      * The Pokemon.
      */
@@ -68,9 +81,13 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                     className="tabpane-small"
                     transition={false}
                     activeKey={this.state.activeInfoTabKey}
-                    defaultActiveKey="abilities"
+                    defaultActiveKey="flavourText"
                     onSelect={(k: string) => this.setActiveInfoTabKey(k)}
                     id="infoTabs">
+                    <Tab eventKey="flavourText" title="Flavour Text">
+                        {this.renderFlavourTextList()}
+                    </Tab>
+
                     <Tab eventKey="abilities" title="Abilities">
                         {this.renderAbilityList()}
                     </Tab>
@@ -88,6 +105,19 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                     </Tab>
                 </Tabs>
             </div>
+        )
+    }
+
+    /**
+     * Renders the species' flavour text entries.
+     */
+    renderFlavourTextList() {
+        return (
+            <FlavourTextList
+                index={this.props.index}
+                species={this.props.species}
+                versions={this.props.versions}
+                showFlavourText={this.props.shouldShowPokemon} />
         )
     }
 

@@ -36,9 +36,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly PokemonService PokemonService;
 
         /// <summary>
-        /// The version groups service.
+        /// The version group service.
         /// </summary>
-        private readonly VersionGroupService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupService;
+
+        /// <summary>
+        /// The version service.
+        /// </summary>
+        private readonly VersionService VersionService;
 
         /// <summary>
         /// Constructor.
@@ -51,14 +56,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
             GenerationCacheService generationCacheService,
             PokemonCacheService pokemonCacheService,
             PokemonService pokemonService,
-            VersionGroupService versionGroupsService,
+            VersionGroupService versionGroupService,
+            VersionService versionService,
             ILogger<PokemonSpeciesService> logger) : base(dataStoreSource, pokeApi, pokemonSpeciesCacheService, logger)
         {
             EvolutionChainCacheService = evolutionChainCacheService;
             GenerationCacheService = generationCacheService;
             PokemonCacheService = pokemonCacheService;
             PokemonService = pokemonService;
-            VersionGroupsService = versionGroupsService;
+            VersionGroupService = versionGroupService;
+            VersionService = versionService;
         }
 
         #region Entry conversion methods
@@ -70,6 +77,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var primaryVariety = await PokemonService.Upsert(species.Varieties[0].Pokemon);
             var displayNames = GetDisplayNames(species);
+            var genera = GetGenera(species);
+            var flavourTextEntries = await GetFlavourTextEntries(species);
             var varieties = await GetVarieties(species);
             var generation = await GetGeneration(species);
             var evolutionChain = await GetEvolutionChain(species);
@@ -82,6 +91,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 SpriteUrl = primaryVariety.SpriteUrl,
                 ShinySpriteUrl = primaryVariety.ShinySpriteUrl,
                 DisplayNames = displayNames.ToList(),
+                Genera = genera.ToList(),
+                FlavourTextEntries = flavourTextEntries.ToList(),
                 Types = primaryVariety.Types.ToList(),
                 BaseStats = primaryVariety.BaseStats.ToList(),
                 Varieties = varieties.ToList(),
@@ -158,6 +169,42 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
+        /// Returns this Pokemon species's genera.
+        /// </summary>
+        private IEnumerable<LocalString> GetGenera(PokemonSpecies species)
+        {
+            return species.Genera.Localise().ToList();
+        }
+
+        /// <summary>
+        /// Returns flavour text entries for the given species, indexed by version ID.
+        /// </summary>
+        private async Task<IEnumerable<WithId<LocalString[]>>> GetFlavourTextEntries(PokemonSpecies species)
+        {
+            var descriptionsList = new List<WithId<LocalString[]>>();
+
+            if (species.FlavorTextEntries.Any())
+            {
+                foreach (var v in await VersionService.GetAll())
+                {
+                    var relevantDescriptions = species.FlavorTextEntries.Where(f => f.Version.Name == v.Name);
+                    if (relevantDescriptions.Any())
+                    {
+                        var descriptions = relevantDescriptions.Select(d => new LocalString
+                        {
+                            Language = d.Language.Name,
+                            Value = d.FlavorText
+                        });
+
+                        descriptionsList.Add(new WithId<LocalString[]>(v.VersionId, descriptions.ToArray()));
+                    }
+                }
+            }
+
+            return descriptionsList;
+        }
+
+        /// <summary>
         /// Returns the Pokemon that this Pokemon species represents.
         /// </summary>
         private async Task<IEnumerable<Pokemon>> GetVarieties(PokemonSpecies species)
@@ -194,7 +241,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         private async Task<IEnumerable<int>> GetValidity(PokemonSpecies pokemonSpecies)
         {
-            var versionGroups = await VersionGroupsService.GetAll();
+            var versionGroups = await VersionGroupService.GetAll();
             return versionGroups.Where(vg => IsValid(pokemonSpecies, vg))
                                 .Select(vg => vg.VersionGroupId);
         }

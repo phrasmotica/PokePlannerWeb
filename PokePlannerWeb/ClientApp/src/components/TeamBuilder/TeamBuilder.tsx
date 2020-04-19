@@ -225,7 +225,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                 <PokedexPanel
                     key={i}
                     index={i}
-                    versionGroupId={this.state.versionGroupId}
+                    versionGroup={this.getVersionGroup()}
                     ignoreValidity={this.state.ignoreValidity}
                     toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
                     hideTooltips={this.state.hideTooltips}
@@ -242,6 +242,13 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         }
 
         return <div>{items}</div>
+    }
+
+    /**
+     * Returns the entry for the selected version group.
+     */
+    getVersionGroup() {
+        return this.state.versionGroups.find(g => g.versionGroupId === this.state.versionGroupId)
     }
 
     // load all species
