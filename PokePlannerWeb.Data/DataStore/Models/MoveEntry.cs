@@ -76,4 +76,41 @@ namespace PokePlannerWeb.Data.DataStore.Models
             };
         }
     }
+
+    /// <summary>
+    /// Move info plus learn methods for some Pokemon.
+    /// </summary>
+    public class PokemonMoveContext : MoveEntry
+    {
+        /// <summary>
+        /// Gets or sets the level at which the move is learnt, if applicable.
+        /// </summary>
+        public int Level { get; set; }
+
+        /// <summary>
+        /// Gets or sets the methods by which the move is learnt.
+        /// </summary>
+        public List<MoveLearnMethodEntry> Methods { get; set; }
+
+        /// <summary>
+        /// Converts an move entry into an move context instance.
+        /// </summary>
+        public static PokemonMoveContext From(MoveEntry e)
+        {
+            return new PokemonMoveContext
+            {
+                Key = e.Key,
+                DisplayNames = e.DisplayNames,
+                FlavourTextEntries = e.FlavourTextEntries,
+                Type = e.Type,
+                Category = e.Category,
+                Power = e.Power,
+                DamageClass = e.DamageClass,
+                Accuracy = e.Accuracy,
+                PP = e.PP,
+                Priority = e.Priority,
+                Target = e.Target
+            };
+        }
+    }
 }
