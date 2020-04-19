@@ -142,10 +142,12 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         let damagingId = "damagingCheckbox" + this.props.index
         let minPowerId = "minPowerCheckbox" + this.props.index
 
-        // TODO: compute highest and lowest move power
-        let lowestPower = 0
-        let minPower = this.state.minPower
-        let highestPower = 250
+        let movePowers = this.state.moves.filter(m => m.power !== null)
+                                         .map(m => m.power!)
+        let lowestPower = Math.min(...movePowers)
+        let highestPower = Math.max(...movePowers)
+
+        let minPower = Math.min(Math.max(this.state.minPower, lowestPower), highestPower)
 
         let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
