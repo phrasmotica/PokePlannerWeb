@@ -46,25 +46,6 @@ interface IBaseStatFilterState {
  */
 export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFilterState> {
     /**
-     * Constructor.
-     */
-    constructor(props: IBaseStatFilterProps) {
-        super(props)
-
-        // set filter from cookies
-        let isEnabled = CookieHelper.getFlag(`baseStatFilter${this.props.index}enabled`)
-
-        let cookieFilterValues = []
-        for (let i = 0; i < this.props.baseStatFilter.values.length; i++) {
-            let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)
-            let value = CookieHelper.getNumber(`baseStatFilter${this.props.index}value${i}`)
-            cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
-        }
-
-        this.props.setBaseStatFilter(new BaseStatFilterModel(isEnabled, cookieFilterValues))
-    }
-
-    /**
      * Renders the component.
      */
     render() {

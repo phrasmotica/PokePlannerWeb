@@ -39,27 +39,6 @@ interface IGenerationFilterState {
  */
 export class GenerationFilter extends Component<IGenerationFilterProps, IGenerationFilterState> {
     /**
-     * Constructor.
-     */
-    constructor(props: IGenerationFilterProps) {
-        super(props)
-
-        // set filter from cookies
-        let isEnabled = CookieHelper.getFlag(`generationFilter${this.props.index}enabled`)
-
-        let cookieGenerationIds = []
-        for (let id of this.props.generationIds) {
-            let cookieName = `generationFilter${this.props.index}active${id}`
-            let active = CookieHelper.getFlag(cookieName)
-            if (active) {
-                cookieGenerationIds.push(id)
-            }
-        }
-
-        this.props.setGenerationFilter(new GenerationFilterModel(isEnabled, cookieGenerationIds))
-    }
-
-    /**
      * Renders the component.
      */
     render() {
@@ -75,8 +54,6 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
      * Renders the filter toggle.
      */
     renderToggle() {
-        // TODO: fix bug where the toggle isn't checked when the cookie is read as true...
-        // probably affects the other filter toggles too
         let toggleId = `generationFilter${this.props.index}toggle`
 
         return (
