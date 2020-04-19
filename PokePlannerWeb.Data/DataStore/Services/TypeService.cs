@@ -89,29 +89,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the types presence map for the version group with the given ID.
-        /// </summary>
-        public async Task<TypesPresenceMap> GetTypesPresenceMap(int versionGroupId)
-        {
-            var typeMap = new TypesPresenceMap();
-
-            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
-            var types = await GetConcrete();
-
-            var presenceMap = types.OrderBy(t => t.TypeId).Select(type =>
-            {
-                var typeIsPresent = HasType(versionGroup.Generation, type);
-                return new WithId<bool>(type.Key, typeIsPresent);
-            });
-
-            return new TypesPresenceMap
-            {
-                VersionGroupId = versionGroupId,
-                PresenceMap = presenceMap.ToList()
-            };
-        }
-
-        /// <summary>
         /// Returns the types for the version group with the given ID.
         /// </summary>
         public async Task<VersionGroupTypeContext[]> GetTypesByVersionGroupId(int versionGroupId)
@@ -230,21 +207,5 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         #endregion
-    }
-
-    /// <summary>
-    /// Class mapping types by ID to whether they're present in some version group.
-    /// </summary>
-    public class TypesPresenceMap
-    {
-        /// <summary>
-        /// Gets or sets the version group ID.
-        /// </summary>
-        public int VersionGroupId { get; set; }
-
-        /// <summary>
-        /// Gets or sets whether the types are present.
-        /// </summary>
-        public List<WithId<bool>> PresenceMap { get; set; }
     }
 }
