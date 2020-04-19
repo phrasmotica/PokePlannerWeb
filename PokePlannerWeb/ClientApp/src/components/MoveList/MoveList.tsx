@@ -5,6 +5,7 @@ import key from "weak-key"
 
 import { IHasCommon } from "../CommonMembers"
 
+import { ItemEntry } from "../../models/ItemEntry"
 import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
 import { MoveLearnMethodEntry } from "../../models/MoveLearnMethodEntry"
 
@@ -297,6 +298,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 if (move.level > 0) {
                     moveMethod = `(level ${move.level})`
                 }
+                else if (move.machine !== null) {
+                    moveMethod = `(${move.machine.getDisplayName("en") ?? "Machine"})`
+                }
                 else {
                     let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
                     moveMethod = `(${methodsSummary})`
@@ -433,7 +437,21 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     sortMoves(m1: PokemonMoveContext, m2: PokemonMoveContext) {
         // level-up moves in ascending order first, then the rest
         if (m1.level === 0 && m2.level === 0) {
-            return this.sortLearnMethods(m1.methods, m2.methods)
+            // then machines in ascending order
+            if (m1.machine === null && m2.machine === null) {
+                return this.sortLearnMethods(m1.methods, m2.methods)
+            }
+
+            if (m1.machine === null) {
+                return 1
+            }
+
+            if (m2.machine === null) {
+                return -1
+            }
+
+            // ordering by item ID doesn't work so do it by item name
+            return this.sortMachines(m1.machine, m2.machine)
         }
 
         if (m1.level === 0) {
@@ -468,6 +486,31 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         // only thing that separates them is the number of methods
         return m1Indices.length - m2Indices.length
+    }
+
+    /**
+     * Sorts ordered lists of move learn methods into ascending order.
+     */
+    sortMachines(m1: ItemEntry, m2: ItemEntry) {
+        // ordering by item ID doesn't work so do it by item name
+        let m1IsTm = m1.name.startsWith("tm")
+        let m2IsTm = m2.name.startsWith("tm")
+        if (m1IsTm && m2IsTm) {
+            return m1.name.localeCompare(m2.name)
+        }
+
+        // m2 is an HM
+        if (m1IsTm) {
+            return -1
+        }
+
+        // m1 is an HM
+        if (m2IsTm) {
+            return 1
+        }
+
+        // both HMs
+        return m1.name.localeCompare(m2.name)
     }
 
     /**
