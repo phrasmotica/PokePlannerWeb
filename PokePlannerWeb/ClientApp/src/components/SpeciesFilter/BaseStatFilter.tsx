@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
 import key from "weak-key"
 
-import { BaseStatFilterModel, BaseStatFilterValue } from "./BaseStatFilterModel"
+import { BaseStatFilterModel } from "./BaseStatFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 
