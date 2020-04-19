@@ -1,73 +1,60 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using PokeApiNet;
+using PokePlannerWeb.Data.Cache.Services;
+using PokePlannerWeb.Data.DataStore.Abstractions;
+using PokePlannerWeb.Data.DataStore.Models;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
     /// <summary>
-    /// Service for accessing machines information.
+    /// Service for managing the machine entries in the data store.
     /// </summary>
-    public class MachineService
+    public class MachineService : ServiceBase<Machine, MachineEntry>
     {
-        // TODO: create cache service
         /// <summary>
-        /// The number of HM items in the Pokemon series.
+        /// The item cache service.
         /// </summary>
-        public const int NUMBER_OF_HMS = 8;
-
-        /// <summary>
-        /// The PokeAPI data fetcher.
-        /// </summary>
-        protected IPokeAPI PokeApi;
-
-        /// <summary>
-        /// The version group data singleton.
-        /// </summary>
-        protected readonly VersionGroupService VersionGroupsService;
-
-        /// <summary>
-        /// The logger.
-        /// </summary>
-        protected readonly ILogger<MachineService> Logger;
+        private readonly ItemCacheService ItemCacheService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
         public MachineService(
+            IDataStoreSource<MachineEntry> dataStoreSource,
             IPokeAPI pokeApi,
-            VersionGroupService versionGroupsService,
-            ILogger<MachineService> logger)
+            MachineCacheService machineCacheService,
+            ItemCacheService itemCacheService,
+            ILogger<MachineService> logger) : base(dataStoreSource, pokeApi, machineCacheService, logger)
         {
-            PokeApi = pokeApi;
-            VersionGroupsService = versionGroupsService;
-            Logger = logger;
+            ItemCacheService = itemCacheService;
+        }
+
+        #region Entry conversion methods
+
+        /// <summary>
+        /// Returns a machine entry for the given machine.
+        /// </summary>
+        protected override async Task<MachineEntry> ConvertToEntry(Machine machine)
+        {
+            var item = await ItemCacheService.GetMinimal(machine.Item);
+
+            return new MachineEntry
+            {
+                Key = machine.Id,
+                Item = item
+            };
         }
 
         /// <summary>
-        /// Returns all HM moves present in the version group with the given ID.
+        /// Returns the machine required to create an machine entry with the given ID.
         /// </summary>
-        public async Task<List<Move>> GetHMMoves(int versionGroupId)
+        protected override async Task<Machine> FetchSource(int key)
         {
-            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
-
-            var hmMoves = new List<Move>();
-            for (int i = 0; i < NUMBER_OF_HMS; i++)
-            {
-                // fetch HMs by known names for now
-                var hm = await PokeApi.Get<Item>($@"hm{i + 1:D2}");
-                var mvd = hm.Machines.SingleOrDefault(mch => mch.VersionGroup.Name == versionGroup.Name);
-
-                if (mvd != null)
-                {
-                    var machine1 = await PokeApi.Get(mvd.Machine);
-                    var move = await PokeApi.Get(machine1.Move);
-                    hmMoves.Add(move);
-                }
-            }
-
-            return hmMoves;
+            Logger.LogInformation($"Fetching machine source object with ID {key}...");
+            return await CacheService.Upsert(key);
         }
+
+        #endregion
     }
 }

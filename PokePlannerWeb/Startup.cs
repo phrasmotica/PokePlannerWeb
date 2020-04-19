@@ -109,6 +109,9 @@ namespace PokePlannerWeb
             );
             services.AddSingleton<LocationAreaService>();
 
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MachineEntry>(dataStoreSettings.MachineCollectionName)
+            );
             services.AddSingleton<MachineService>();
 
             services.AddSingleton(sp =>
@@ -230,6 +233,11 @@ namespace PokePlannerWeb
                 cacheSourceFactory.CreateNamed<Location>(cacheSettings.LocationCollectionName)
             );
             services.AddSingleton<LocationCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Machine>(cacheSettings.MachineCollectionName)
+            );
+            services.AddSingleton<MachineCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Move>(cacheSettings.MoveCollectionName)
