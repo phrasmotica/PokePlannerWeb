@@ -33,6 +33,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly AbilityService AbilityService;
 
         /// <summary>
+        /// The move learn method service.
+        /// </summary>
+        private readonly MoveLearnMethodService MoveLearnMethodService;
+
+        /// <summary>
         /// The move service.
         /// </summary>
         private readonly MoveService MoveService;
@@ -57,6 +62,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             AbilityCacheService abilityCacheService,
             TypeCacheService typeCacheService,
             AbilityService abilityService,
+            MoveLearnMethodService moveLearnMethodService,
             MoveService moveService,
             PokemonFormService pokemonFormService,
             VersionGroupService versionGroupService,
@@ -65,6 +71,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             AbilityCacheService = abilityCacheService;
             TypeCacheService = typeCacheService;
             AbilityService = abilityService;
+            MoveLearnMethodService = moveLearnMethodService;
             MoveService = moveService;
             PokemonFormService = pokemonFormService;
             VersionGroupService = versionGroupService;
@@ -126,12 +133,47 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// Returns the moves of the Pokemon with the given ID in the version group with the
         /// given ID from the data store.
         /// </summary>
-        public async Task<MoveEntry[]> GetPokemonMoves(int pokemonId, int versionGroupId)
+        public async Task<PokemonMoveContext[]> GetPokemonMoves(int pokemonId, int versionGroupId)
         {
-            var entry = await Upsert(pokemonId);
-            var relevantMoves = entry.Moves.Single(m => m.Id == versionGroupId);
-            var moveEntries = await MoveService.UpsertMany(relevantMoves.Data.Select(m => m.Id));
-            return moveEntries.OrderBy(m => m.MoveId).ToArray();
+            var resource = await CacheService.Upsert(pokemonId);
+            var versionGroup = await VersionGroupService.Upsert(versionGroupId);
+
+            var relevantMoves = resource.Moves.Where(m =>
+            {
+                var versionGroupNames = m.VersionGroupDetails.Select(d => d.VersionGroup.Name);
+                return versionGroupNames.Contains(versionGroup.Name);
+            }).ToArray();
+
+            var moveEntries = await MoveService.UpsertMany(relevantMoves.Select(m => m.Move));
+            var entryList = moveEntries.ToList();
+
+            var moveContexts = new List<PokemonMoveContext>();
+
+            for (int i = 0; i < entryList.Count; i++)
+            {
+                var context = PokemonMoveContext.From(entryList[i]);
+
+                var relevantDetails = relevantMoves[i].VersionGroupDetails
+                                                      .Where(d => d.VersionGroup.Name == versionGroup.Name);
+
+                var methodList = new List<MoveLearnMethodEntry>();
+                foreach (var detail in relevantDetails)
+                {
+                    var method = await MoveLearnMethodService.Upsert(detail.MoveLearnMethod);
+                    if (method.Name == "level-up")
+                    {
+                        context.Level = detail.LevelLearnedAt;
+                    }
+
+                    methodList.Add(method);
+                }
+
+                context.Methods = methodList;
+
+                moveContexts.Add(context);
+            }
+
+            return moveContexts.ToArray();
         }
 
         /// <summary>

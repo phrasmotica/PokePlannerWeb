@@ -58,7 +58,7 @@ namespace PokePlannerWeb.Controllers
         /// Returns the moves of the Pokemon with the given ID.
         /// </summary>
         [HttpGet("{pokemonId:int}/moves/{versionGroupId:int}")]
-        public async Task<MoveEntry[]> GetPokemonMovesById(int pokemonId, int versionGroupId)
+        public async Task<PokemonMoveContext[]> GetPokemonMovesById(int pokemonId, int versionGroupId)
         {
             Logger.LogInformation($"Getting moves of Pokemon {pokemonId} in version group {versionGroupId}...");
             return await PokemonService.GetPokemonMoves(pokemonId, versionGroupId);
