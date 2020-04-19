@@ -8,8 +8,7 @@ import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
 import { GenerationEntry } from '../../models/GenerationEntry'
 import { PokemonSpeciesEntry } from '../../models/PokemonSpeciesEntry'
-import { TypeEntry } from '../../models/TypeEntry'
-import { TypesPresenceMap } from '../../models/TypesPresenceMap'
+import { VersionGroupTypeContext } from '../../models/TypeEntry'
 import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
 import { CookieHelper } from '../../util/CookieHelper'
@@ -53,23 +52,12 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
      * List of types.
      */
-    types: TypeEntry[]
+    types: VersionGroupTypeContext[]
 
     /**
      * Whether the types are loading.
      */
     loadingTypes: boolean
-
-    /**
-     * The types presence map.
-     * TODO: fetch this in EfficacyList
-     */
-    typesPresenceMap: TypesPresenceMap
-
-    /**
-     * Whether the types presence map is loading.
-     */
-    loadingTypesPresenceMap: boolean
 
     /**
      * The base stat names.
@@ -104,11 +92,6 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             types: [],
             loadingTypes: true,
             versionGroupId: undefined,
-            typesPresenceMap: {
-                versionGroupId: undefined,
-                presenceMap: []
-            },
-            loadingTypesPresenceMap: true,
             baseStatNames: [],
             loadingBaseStatNames: true,
             ignoreValidity: CookieHelper.getFlag("ignoreValidity"),
@@ -119,11 +102,10 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     componentDidMount() {
         this.getSpecies()
         this.fetchGenerations()
-        this.fetchTypes()
         this.getVersionGroups()
             .then(() => {
+                this.fetchTypes(this.state.versionGroupId)
                 this.getBaseStatNames(this.state.versionGroupId)
-                this.fetchTypesPresenceMap(this.state.versionGroupId)
             })
     }
 
@@ -232,7 +214,6 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     species={this.state.species}
                     generations={this.state.generations}
                     types={this.state.types}
-                    typesPresenceMap={this.state.typesPresenceMap}
                     baseStatNames={this.state.baseStatNames} />
             )
 
@@ -328,45 +309,24 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     /**
      * Fetches all types.
-     * TODO: merge types presence map into this
      */
-    fetchTypes() {
-        this.setState({ loadingTypes: true })
-
-        fetch(`${process.env.REACT_APP_API_URL}/type`)
-            .then(response => response.json())
-            .then((groups: TypeEntry[]) => {
-                let concreteTypes = groups.map(TypeEntry.from)
-                this.setState({ types: concreteTypes })
-            })
-            .catch(error => console.error(error))
-            .finally(() => this.setState({ loadingTypes: false }))
-    }
-
-    // retrieves the types presence map for the given version group from TypeController
-    fetchTypesPresenceMap(versionGroupId: number | undefined) {
+    fetchTypes(versionGroupId: number | undefined) {
         if (versionGroupId === undefined) {
             return
         }
 
-        console.log(`Team builder: getting types presence map for version group ${versionGroupId}...`)
+        console.log(`Team builder: getting types for version group ${versionGroupId}...`)
 
-        // loading begins
-        this.setState({ loadingTypesPresenceMap: true })
+        this.setState({ loadingTypes: true })
 
-        // get types presence map
-        fetch(`${process.env.REACT_APP_API_URL}/type/presence/${versionGroupId}`)
-            .then(response => {
-                if (response.status === 200) {
-                    return response
-                }
-
-                throw new Error(`Team builder: couldn't get types presence map for version group ${versionGroupId}!`)
-            })
+        fetch(`${process.env.REACT_APP_API_URL}/type/${versionGroupId}`)
             .then(response => response.json())
-            .then(typesPresenceMap => this.setState({ typesPresenceMap: typesPresenceMap }))
+            .then((types: VersionGroupTypeContext[]) => {
+                let concreteTypes = types.map(VersionGroupTypeContext.from)
+                this.setState({ types: concreteTypes })
+            })
             .catch(error => console.error(error))
-            .then(() => this.setState({ loadingTypesPresenceMap: false }))
+            .finally(() => this.setState({ loadingTypes: false }))
     }
 
     // retrieves the types presence map for the given version group from TypeController
@@ -404,7 +364,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         CookieHelper.set("versionGroupId", versionGroupId)
 
         // reload types presence map and base stat names
-        this.fetchTypesPresenceMap(versionGroupId)
+        this.fetchTypes(versionGroupId)
         this.getBaseStatNames(versionGroupId)
     }
 
@@ -433,6 +393,9 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
             || this.state.loadingGenerations
+
+            // TODO: don't reload the entire page when fetching types after
+            // a new version group has been selected
             || this.state.loadingTypes
     }
 }

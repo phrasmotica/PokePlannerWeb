@@ -12,7 +12,7 @@ import { StatGraph } from "../StatGraph/StatGraph"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { Type } from "../../models/Type"
-import { TypesPresenceMap } from "../../models/TypesPresenceMap"
+import { VersionGroupTypeContext } from "../../models/TypeEntry"
 import { VersionEntry } from "../../models/VersionEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -39,9 +39,9 @@ interface IInfoPanelProps extends IHasCommon {
     effectiveTypes: Type[]
 
     /**
-     * The types presence map.
+     * The types.
      */
-    typesPresenceMap: TypesPresenceMap
+    types: VersionGroupTypeContext[]
 
     /**
      * The names of the base stats to display.
@@ -165,7 +165,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
             <EfficacyList
                 index={this.props.index}
                 typeIds={types.map(type => type.id)}
-                typesPresenceMap={this.props.typesPresenceMap}
+                types={this.props.types}
                 versionGroupId={this.props.versionGroupId}
                 showMultipliers={this.props.shouldShowPokemon}
                 hideTooltips={this.props.hideTooltips} />

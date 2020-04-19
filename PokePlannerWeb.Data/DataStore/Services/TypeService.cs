@@ -84,7 +84,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         public async Task<TypeEntry[]> GetConcrete()
         {
-            var allTypes = await UpsertAll();
+            var allTypes = await GetAll();
             return allTypes.Where(t => t.IsConcrete).ToArray();
         }
 
@@ -109,6 +109,24 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 VersionGroupId = versionGroupId,
                 PresenceMap = presenceMap.ToList()
             };
+        }
+
+        /// <summary>
+        /// Returns the types for the version group with the given ID.
+        /// </summary>
+        public async Task<VersionGroupTypeContext[]> GetTypesByVersionGroupId(int versionGroupId)
+        {
+            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
+            var types = await GetConcrete();
+
+            var typeList = types.Select(type =>
+            {
+                var context = VersionGroupTypeContext.From(type);
+                context.IsPresent = HasType(versionGroup.Generation, type);
+                return context;
+            });
+
+            return typeList.ToArray();
         }
 
         /// <summary>

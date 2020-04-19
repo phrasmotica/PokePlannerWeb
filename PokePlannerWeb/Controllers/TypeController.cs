@@ -14,9 +14,9 @@ namespace PokePlannerWeb.Controllers
     public class TypeController : ControllerBase
     {
         /// <summary>
-        /// The Types service.
+        /// The type service.
         /// </summary>
-        private readonly TypeService TypesService;
+        private readonly TypeService TypeService;
 
         /// <summary>
         /// The logger.
@@ -26,11 +26,9 @@ namespace PokePlannerWeb.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        public TypeController(
-            TypeService typesService,
-            ILogger<TypeController> logger)
+        public TypeController(TypeService typeService, ILogger<TypeController> logger)
         {
-            TypesService = typesService;
+            TypeService = typeService;
             Logger = logger;
         }
 
@@ -40,7 +38,7 @@ namespace PokePlannerWeb.Controllers
         public async Task<TypeEntry[]> GetTypes()
         {
             Logger.LogInformation("Getting types...");
-            return await TypesService.GetAll();
+            return await TypeService.GetAll();
         }
 
         /// <summary>
@@ -50,7 +48,17 @@ namespace PokePlannerWeb.Controllers
         public async Task<TypesPresenceMap> GetTypesPresenceMap(int versionGroupId)
         {
             Logger.LogInformation($"Getting types presence map for version group {versionGroupId}...");
-            return await TypesService.GetTypesPresenceMap(versionGroupId);
+            return await TypeService.GetTypesPresenceMap(versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the type set for the version group with the given ID.
+        /// </summary>
+        [HttpGet("{versionGroupId:int}")]
+        public async Task<VersionGroupTypeContext[]> GetTypesByVersionGroupId(int versionGroupId)
+        {
+            Logger.LogInformation($"Getting types for version group {versionGroupId}...");
+            return await TypeService.GetTypesByVersionGroupId(versionGroupId);
         }
     }
 }

@@ -76,10 +76,59 @@ export class TypeEntry {
         let localName = this.displayNames.find(n => n.language === locale)
         if (localName === undefined) {
             console.warn(
-                `Tyoe ${this.typeId} is missing display name in locale '${locale}'`
+                `Type ${this.typeId} is missing display name in locale '${locale}'`
             )
         }
 
         return localName?.value
+    }
+}
+
+/**
+ * Type info plus whether the type is present in some version group.
+ */
+export class VersionGroupTypeContext extends TypeEntry {
+    /**
+     * Whether the type is present.
+     */
+    isPresent: boolean
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        typeId: number,
+        name: string,
+        displayNames: LocalString[],
+        isConcrete: boolean,
+        generation: Generation,
+        efficacyMap: EfficacyMap,
+        isPresent: boolean
+    ) {
+        super(
+            typeId,
+            name,
+            displayNames,
+            isConcrete,
+            generation,
+            efficacyMap
+        )
+
+        this.isPresent = isPresent
+    }
+
+    /**
+     * Returns a type context created from the given context.
+     */
+    static from(context: VersionGroupTypeContext) {
+        return new VersionGroupTypeContext(
+            context.typeId,
+            context.name,
+            context.displayNames,
+            context.isConcrete,
+            context.generation,
+            context.efficacyMap,
+            context.isPresent
+        )
     }
 }

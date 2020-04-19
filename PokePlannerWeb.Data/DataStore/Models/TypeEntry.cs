@@ -57,6 +57,32 @@ namespace PokePlannerWeb.Data.DataStore.Models
     }
 
     /// <summary>
+    /// Type info plus whether the type is present in some version group.
+    /// </summary>
+    public class VersionGroupTypeContext : TypeEntry
+    {
+        /// <summary>
+        /// Gets or sets whether the type is present.
+        /// </summary>
+        public bool IsPresent { get; set; }
+
+        /// <summary>
+        /// Converts an type entry into an type context instance.
+        /// </summary>
+        public static VersionGroupTypeContext From(TypeEntry e)
+        {
+            return new VersionGroupTypeContext
+            {
+                Key = e.Key,
+                DisplayNames = e.DisplayNames,
+                IsConcrete = e.IsConcrete,
+                Generation = e.Generation,
+                EfficacyMap = e.EfficacyMap
+            };
+        }
+    }
+
+    /// <summary>
     /// Model for a map of version group IDs to efficacies of other types against a given type.
     /// </summary>
     public class EfficacyMap

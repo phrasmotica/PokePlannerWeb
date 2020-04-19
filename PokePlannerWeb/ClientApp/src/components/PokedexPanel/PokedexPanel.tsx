@@ -4,14 +4,13 @@ import { ActionPanel } from "../ActionPanel/ActionPanel"
 import { InfoPanel } from "../InfoPanel/InfoPanel"
 import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { TypeEntry } from "../../models/TypeEntry"
-import { TypesPresenceMap } from "../../models/TypesPresenceMap"
+import { VersionGroupTypeContext } from "../../models/TypeEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
@@ -44,12 +43,7 @@ interface IPokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * List of types.
      */
-    types: TypeEntry[]
-
-    /**
-     * The types presence map.
-     */
-    typesPresenceMap: TypesPresenceMap
+    types: VersionGroupTypeContext[]
 
     /**
      * The base stat names.
@@ -139,7 +133,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                             species={this.getSpecies()}
                             pokemon={this.state.variety}
                             effectiveTypes={this.getEffectiveTypes()}
-                            typesPresenceMap={this.props.typesPresenceMap}
+                            types={this.props.types}
                             baseStatNames={this.props.baseStatNames}
                             shouldShowPokemon={this.shouldShowPokemon()} />
                     </div>
