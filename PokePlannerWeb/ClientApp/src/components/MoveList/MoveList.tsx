@@ -242,19 +242,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
-                let moveMethod = ""
-                if (move.level > 0) {
-                    moveMethod = ` (level ${move.level})`
-                }
-                else {
-                    let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
-                    moveMethod = ` (${methodsSummary})`
-                }
-
                 let moveNameElement = (
                     <span>
                         {moveName}
-                        {moveMethod}
                     </span>
                 )
 
@@ -265,18 +255,32 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             <b>
                                 {moveName}
                             </b>
-                            {moveMethod}
                         </span>
                     )
                 }
 
+                let moveMethod = ""
+                if (move.level > 0) {
+                    moveMethod = `(level ${move.level})`
+                }
+                else {
+                    let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
+                    moveMethod = `(${methodsSummary})`
+                }
+
                 const openInfoPane = () => this.toggleMoveOpen(row)
                 let moveNameButton = (
-                    <Button
-                        color="link"
-                        onMouseUp={openInfoPane}>
-                        {moveNameElement}
-                    </Button>
+                    <div className="flex">
+                        <Button
+                            color="link"
+                            onMouseUp={openInfoPane}>
+                            {moveNameElement}
+                        </Button>
+
+                        <span>
+                            {moveMethod}
+                        </span>
+                    </div>
                 )
 
                 let typeId = move.type.id
