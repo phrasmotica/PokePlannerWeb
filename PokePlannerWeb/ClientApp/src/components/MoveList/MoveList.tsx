@@ -8,6 +8,7 @@ import { IHasCommon } from "../CommonMembers"
 import { ItemEntry } from "../../models/ItemEntry"
 import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
 import { MoveLearnMethodEntry } from "../../models/MoveLearnMethodEntry"
+import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -76,7 +77,7 @@ interface IMoveListState {
     /**
      * Whether each move's info pane is open.
      */
-    movesAreOpen: boolean[]
+    movesAreOpen: WithId<boolean>[]
 }
 
 /**
@@ -375,7 +376,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     moveMethod = `(${methodsSummary})`
                 }
 
-                const openInfoPane = () => this.toggleMoveOpen(row)
+                const openInfoPane = () => this.toggleMoveOpen(move.moveId)
                 let moveNameButton = (
                     <div className="flex">
                         <Button
@@ -400,7 +401,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let damageClassIcon = this.getDamageClassIcon(move.damageClass.id)
 
-                let isOpen = this.state.movesAreOpen[row]
+                let isOpen = this.state.movesAreOpen.find(e => e.id === move.moveId)?.data ?? false
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
 
                 // some moves damage but don't have a constant base power, e.g. Low Kick
@@ -614,10 +615,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Toggles the move info pane with the given index.
      */
-    toggleMoveOpen(index: number) {
-        let newMovesAreOpen = this.state.movesAreOpen.map((item, j) => {
-            if (j === index) {
-                return !item
+    toggleMoveOpen(id: number) {
+        let newMovesAreOpen = this.state.movesAreOpen.map(item => {
+            if (item.id === id) {
+                return new WithId<boolean>(id, !item.data)
             }
 
             return item
@@ -692,7 +693,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     let concreteMoves = moves.map(PokemonMoveContext.from)
                     this.setState({
                         moves: concreteMoves,
-                        movesAreOpen: concreteMoves.map(_ => false)
+                        movesAreOpen: concreteMoves.map(m => new WithId<boolean>(m.moveId, false))
                     })
                 })
                 .catch(error => console.error(error))

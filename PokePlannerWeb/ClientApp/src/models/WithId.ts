@@ -1,7 +1,7 @@
 /**
  * Represents some data associated with a numeric ID.
  */
-export interface WithId<T> {
+export class WithId<T> {
     /**
      * The ID.
      */
@@ -11,4 +11,12 @@ export interface WithId<T> {
      * The data.
      */
     data: T
+
+    /**
+     * Constructor.
+     */
+    constructor(id: number, data: T) {
+        this.id = id
+        this.data = data
+    }
 }
