@@ -373,7 +373,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
 
             if (spriteUrl === null || spriteUrl === "") {
                 return (
-                    <div className="flex-center sprite margin-auto-horiz">
+                    <div className="flex-center sprite-large margin-auto-horiz">
                         (no sprite)
                     </div>
                 )
@@ -381,7 +381,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
 
         return (
-            <div className="sprite margin-auto-horiz">
+            <div className="sprite-large margin-auto-horiz">
                 <img
                     className={"inherit-size" + (shouldShowPokemon ? "" : " hidden")}
                     alt={`sprite${this.props.index}`}

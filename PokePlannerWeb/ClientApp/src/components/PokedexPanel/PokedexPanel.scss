@@ -91,6 +91,12 @@
     text-align: center;
 }
 
+$largeDim: 128px;
+.sprite-large {
+    height: $largeDim;
+    width: $largeDim;
+}
+
 $dim: 96px;
 .sprite {
     height: $dim;
