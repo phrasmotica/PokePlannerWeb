@@ -137,7 +137,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                     </div>
                 </div>
 
-                <div className="debug-border whalf" style={{ fontSize: "10pt" }}>
+                <div className="debug-border whalf flex-down" style={{ fontSize: "10pt" }}>
                     <ActionPanel
                         index={this.props.index}
                         versionGroupId={this.props.versionGroupId}

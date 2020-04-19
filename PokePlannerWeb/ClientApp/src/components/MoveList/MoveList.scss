@@ -30,14 +30,26 @@ $size: 40px;
     text-align: center;
 }
 
-// TODO: remove need to set max-height. Should only be as tall as the parent...
+.tab-content > * {
+    width: 100%;
+    height: 100%;
+}
+
 .move-list-container {
     display: flex;
-    flex: 1 1 0;
     flex-direction: column;
-    max-height: 320px;
+    flex: 1;
+    width: 100%;
+    height: 100%;
 }
 
 .move-list {
-    overflow: auto;
+    flex: 1;
+}
+
+// TODO: getting there but it still extends beyond the parent
+// surely do it the same way the species filter does it?
+.movesListGroup {
+    height: 100%;
+    overflow-y: scroll;
 }

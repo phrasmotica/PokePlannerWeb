@@ -13,6 +13,8 @@ import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { PokemonHelper } from "../../util/PokemonHelper"
 import { CookieHelper } from "../../util/CookieHelper"
 
+import "./ActionPanel.scss"
+
 interface IActionPanelProps extends IHasCommon {
     /**
      * List of Pokemon species.
@@ -76,23 +78,21 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
      */
     render() {
         return (
-            <div>
-                <Tabs
-                    className="tabpane-small"
-                    id="movesTabs"
-                    transition={false}
-                    activeKey={this.state.activeMoveTabKey}
-                    defaultActiveKey="moves"
-                    onSelect={(k: string) => this.setActiveMoveTabKey(k)}>
-                    <Tab eventKey="moves" title="Moves">
-                        {this.renderMoveList()}
-                    </Tab>
+            <Tabs
+                className="tabpane-small"
+                id="movesTabs"
+                transition={false}
+                activeKey={this.state.activeMoveTabKey}
+                defaultActiveKey="moves"
+                onSelect={(k: string) => this.setActiveMoveTabKey(k)}>
+                <Tab eventKey="moves" title="Moves">
+                    {this.renderMoveList()}
+                </Tab>
 
-                    <Tab eventKey="evolution" title="Evolution">
-                        {this.renderEvolutionChain()}
-                    </Tab>
-                </Tabs>
-            </div>
+                <Tab eventKey="evolution" title="Evolution">
+                    {this.renderEvolutionChain()}
+                </Tab>
+            </Tabs>
         )
     }
 
