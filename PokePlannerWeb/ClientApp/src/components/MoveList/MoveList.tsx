@@ -1,11 +1,14 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button, Collapse, FormGroup, Input, Label } from "reactstrap"
+import { ListGroup, ListGroupItem, Button, Collapse, Input, Label } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
 import { IHasCommon } from "../CommonMembers"
 
-import { MoveEntry } from "../../models/MoveEntry"
+import { ItemEntry } from "../../models/ItemEntry"
+import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
+import { MoveLearnMethodEntry } from "../../models/MoveLearnMethodEntry"
+import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -32,12 +35,22 @@ interface IMoveListProps extends IHasCommon {
 
 interface IMoveListState {
     /**
-     * Whether to only show moves with that deal damage.
+     * Whether to only show moves that deal damage.
      */
     damagingOnly: boolean
 
     /**
-     * Whether to only show moves with that don't deal damage.
+     * Whether to only show moves with at least a minimum base power.
+     */
+    useMinPower: boolean
+
+    /**
+     * The minimum power a move must have to be shown.
+     */
+    minPower: number
+
+    /**
+     * Whether to only show moves that don't deal damage.
      */
     nonDamagingOnly: boolean
 
@@ -47,9 +60,14 @@ interface IMoveListState {
     sameTypeOnly: boolean
 
     /**
+     * Whether to only show moves learnt by level-up.
+     */
+    levelUpOnly: boolean
+
+    /**
      * The moves to show.
      */
-    moves: MoveEntry[]
+    moves: PokemonMoveContext[]
 
     /**
      * Whether we're loading the moves.
@@ -59,7 +77,7 @@ interface IMoveListState {
     /**
      * Whether each move's info pane is open.
      */
-    movesAreOpen: boolean[]
+    movesAreOpen: WithId<boolean>[]
 }
 
 /**
@@ -68,10 +86,15 @@ interface IMoveListState {
 export class MoveList extends Component<IMoveListProps, IMoveListState> {
     constructor(props: IMoveListProps) {
         super(props)
+
+        let index= this.props.index
         this.state = {
-            damagingOnly: CookieHelper.getFlag(`damagingOnly${this.props.index}`),
-            nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${this.props.index}`),
-            sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${this.props.index}`),
+            damagingOnly: CookieHelper.getFlag(`damagingOnly${index}`),
+            useMinPower: CookieHelper.getFlag(`useMinPower${index}`),
+            minPower: CookieHelper.getNumber(`minPower${index}`) ?? 0,
+            nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${index}`),
+            sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${index}`),
+            levelUpOnly: CookieHelper.getFlag(`levelUpOnly${index}`),
             moves: [],
             loadingMoves: false,
             movesAreOpen: []
@@ -116,34 +139,73 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Renders the filters.
      */
     renderFilters() {
-        // TODO: filter by power and other metrics
-
         let damagingId = "damagingCheckbox" + this.props.index
+        let minPowerId = "minPowerCheckbox" + this.props.index
+
+        let movePowers = this.state.moves.filter(m => m.power !== null)
+                                         .map(m => m.power!)
+        let lowestPower = Math.min(...movePowers)
+        let highestPower = Math.max(...movePowers)
+
+        let minPower = Math.min(Math.max(this.state.minPower, lowestPower), highestPower)
+
         let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
+        let levelUpId = "levelUpCheckbox" + this.props.index
 
         return (
-            <div className="flex" style={{ marginLeft: 4 }}>
-                <FormGroup
-                    check
-                    className="margin-right-small">
-                    <Input
-                        type="checkbox"
-                        id={damagingId}
-                        checked={this.state.damagingOnly}
-                        onChange={() => this.toggleDamagingOnly()} />
+            <div className="moveFilter">
+                <div className="separate-right">
+                    <div className="flex-center margin-bottom-small">
+                        <Input
+                            className="filterCheckbox"
+                            type="checkbox"
+                            id={damagingId}
+                            checked={this.state.damagingOnly}
+                            onChange={() => this.toggleDamagingOnly()} />
 
-                    <Label for={damagingId} check>
-                        <span title="Only show moves that deal damage">
-                            damaging only
-                        </span>
-                    </Label>
-                </FormGroup>
+                        <Label
+                            check
+                            for={damagingId}
+                            className="margin-right-small">
+                            <span title="Only show moves that deal damage">
+                                damaging only
+                            </span>
+                        </Label>
+                    </div>
 
-                <FormGroup
-                    check
-                    className="margin-right-small">
+                    <div className="flex-center">
+                        <Input
+                            className="filterCheckbox"
+                            type="checkbox"
+                            id={minPowerId}
+                            checked={this.state.useMinPower}
+                            disabled={!this.state.damagingOnly}
+                            onChange={() => this.toggleUseMinPower()} />
+
+                        <Label
+                            check
+                            for={minPowerId}
+                            className="margin-right-small">
+                            <span title={`Only show moves with at least ${minPower} power`}>
+                                minimum power
+                            </span>
+                        </Label>
+
+                        <Input
+                            type="number"
+                            className="minPowerFilterInput"
+                            disabled={!this.state.damagingOnly || !this.state.useMinPower}
+                            onChange={e => this.setMinPower(+e.target.value)}
+                            min={lowestPower}
+                            value={minPower}
+                            max={highestPower} />
+                    </div>
+                </div>
+
+                <div className="flex-center separate-right">
                     <Input
+                        className="filterCheckbox"
                         type="checkbox"
                         id={nonDamagingId}
                         checked={this.state.nonDamagingOnly}
@@ -154,10 +216,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             non-damaging only
                         </span>
                     </Label>
-                </FormGroup>
+                </div>
 
-                <FormGroup check>
+                <div className="flex-center separate-right">
                     <Input
+                        className="filterCheckbox"
                         type="checkbox"
                         id={sameTypeId}
                         checked={this.state.sameTypeOnly}
@@ -168,7 +231,22 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             same type only
                         </span>
                     </Label>
-                </FormGroup>
+                </div>
+
+                <div className="flex-center">
+                    <Input
+                        className="filterCheckbox"
+                        type="checkbox"
+                        id={levelUpId}
+                        checked={this.state.levelUpOnly}
+                        onChange={() => this.toggleLevelUpOnly()} />
+
+                    <Label for={levelUpId} check>
+                        <span title="Only show moves learnt by level-up">
+                            level-up only
+                        </span>
+                    </Label>
+                </div>
             </div>
         )
     }
@@ -184,6 +262,25 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             damagingOnly: !previousState.damagingOnly,
             nonDamagingOnly: false
         }))
+    }
+
+    /**
+     * Toggles the minimum power filter.
+     */
+    toggleUseMinPower() {
+        CookieHelper.set(`useMinPower${this.props.index}`, !this.state.useMinPower)
+
+        this.setState(previousState => ({
+            useMinPower: !previousState.useMinPower
+        }))
+    }
+
+    /**
+     * Sets the minimum power.
+     */
+    setMinPower(minPower: number) {
+        CookieHelper.set(`minPower${this.props.index}`, minPower)
+        this.setState({ minPower: minPower })
     }
 
     /**
@@ -211,12 +308,23 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     /**
+     * Toggles the level-up only filter.
+     */
+    toggleLevelUpOnly() {
+        CookieHelper.set(`levelUpOnly${this.props.index}`, !this.state.levelUpOnly)
+
+        this.setState(previousState => ({
+            levelUpOnly: !previousState.levelUpOnly
+        }))
+    }
+
+    /**
      * Renders the moves.
      */
     renderMoves() {
         if (this.props.pokemonId === undefined) {
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     <ListGroupItem>
                         -
                     </ListGroupItem>
@@ -226,7 +334,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         if (this.state.loadingMoves) {
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     <ListGroupItem>
                         Loading...
                     </ListGroupItem>
@@ -241,20 +349,48 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
-                let moveNameElement = <span>{moveName}</span>
+                let moveNameElement = (
+                    <span>
+                        {moveName}
+                    </span>
+                )
 
                 let isStab = this.isStab(move)
                 if (isStab) {
-                    moveNameElement = <span><b>{moveName}</b></span>
+                    moveNameElement = (
+                        <span>
+                            <b>
+                                {moveName}
+                            </b>
+                        </span>
+                    )
                 }
 
-                const openInfoPane = () => this.toggleMoveOpen(row)
+                let moveMethod = ""
+                if (move.level > 0) {
+                    moveMethod = `(level ${move.level})`
+                }
+                else if (move.machine !== null) {
+                    moveMethod = `(${move.machine.getDisplayName("en") ?? "Machine"})`
+                }
+                else {
+                    let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
+                    moveMethod = `(${methodsSummary})`
+                }
+
+                const openInfoPane = () => this.toggleMoveOpen(move.moveId)
                 let moveNameButton = (
-                    <Button
-                        color="link"
-                        onMouseUp={openInfoPane}>
-                        {moveNameElement}
-                    </Button>
+                    <div className="flex">
+                        <Button
+                            color="link"
+                            onMouseUp={openInfoPane}>
+                            {moveNameElement}
+                        </Button>
+
+                        <span>
+                            {moveMethod}
+                        </span>
+                    </div>
                 )
 
                 let typeId = move.type.id
@@ -267,7 +403,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let damageClassIcon = this.getDamageClassIcon(move.damageClass.id)
 
-                let isOpen = this.state.movesAreOpen[row]
+                let isOpen = this.state.movesAreOpen.find(e => e.id === move.moveId)?.data ?? false
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
 
                 // some moves damage but don't have a constant base power, e.g. Low Kick
@@ -287,20 +423,23 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
                 let infoPane = (
                     <Collapse isOpen={isOpen}>
-                        <div className="flex">
-                            <div className="margin-right-small">
+                        <div className="flex moveInfo">
+                            <div className="separate-right">
                                 <div className="flex-center">
                                     {typeIcon}
                                     {damageClassIcon}
                                 </div>
 
-                                {powerElement}
+                                <hr />
 
-                                <div>Accuracy: {move.accuracy ?? "-"}</div>
-                                <div>PP: {move.pp ?? "-"}</div>
+                                <div>
+                                    {powerElement}
+                                    <div>Accuracy: {move.accuracy ?? "-"}</div>
+                                    <div>PP: {move.pp ?? "-"}</div>
+                                </div>
                             </div>
 
-                            <div className="text-align-center margin-right-small">
+                            <div className="text-align-center flex-center">
                                 {move.getFlavourText(this.props.versionGroupId!, "en")}
                             </div>
                         </div>
@@ -316,7 +455,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             }
 
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     {rows}
                 </ListGroup>
             )
@@ -325,7 +464,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         // no moves to show...
         if (this.hasFilters()) {
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     <ListGroupItem>
                         All moves have been filtered
                     </ListGroupItem>
@@ -334,7 +473,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         return (
-            <ListGroup>
+            <ListGroup className="movesListGroup">
                 <ListGroupItem>
                     No moves in this game version
                 </ListGroupItem>
@@ -352,6 +491,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             moves = moves.filter(m => m.isDamaging())
         }
 
+        if (this.state.useMinPower) {
+            moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
+        }
+
         if (this.state.nonDamagingOnly) {
             moves = moves.filter(m => !m.isDamaging())
         }
@@ -360,7 +503,93 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             moves = moves.filter(m => this.isSameType(m))
         }
 
-        return moves
+        if (this.state.levelUpOnly) {
+            moves = moves.filter(m => m.level > 0)
+        }
+
+        return moves.sort((m1, m2) => this.sortMoves(m1, m2))
+    }
+
+    /**
+     * Sorts moves into ascending order.
+     */
+    sortMoves(m1: PokemonMoveContext, m2: PokemonMoveContext) {
+        // level-up moves in ascending order first, then the rest
+        if (m1.level === 0 && m2.level === 0) {
+            // then machines in ascending order
+            if (m1.machine === null && m2.machine === null) {
+                return this.sortLearnMethods(m1.methods, m2.methods)
+            }
+
+            if (m1.machine === null) {
+                return 1
+            }
+
+            if (m2.machine === null) {
+                return -1
+            }
+
+            // ordering by item ID doesn't work so do it by item name
+            return this.sortMachines(m1.machine, m2.machine)
+        }
+
+        if (m1.level === 0) {
+            return 1
+        }
+
+        if (m2.level === 0) {
+            return -1
+        }
+
+        return m1.level - m2.level
+    }
+
+    /**
+     * Sorts ordered lists of move learn methods into ascending order.
+     */
+    sortLearnMethods(m1: MoveLearnMethodEntry[], m2: MoveLearnMethodEntry[]) {
+        // order of importance for move learn methods
+        const order = [1, 4, 3, 2, 5, 6, 7, 8, 9, 10]
+
+        let m1Indices = m1.map(m => order.indexOf(m.moveLearnMethodId))
+        let m2Indices = m2.map(m => order.indexOf(m.moveLearnMethodId))
+
+        // sorts by the importance of all learn method (lexicographically)
+        let commonLength = Math.min(m1Indices.length, m2Indices.length)
+        for (let i = 0; i < commonLength; i++) {
+            let diff = m1Indices[i] - m2Indices[i]
+            if (diff !== 0) {
+                return diff
+            }
+        }
+
+        // only thing that separates them is the number of methods
+        return m1Indices.length - m2Indices.length
+    }
+
+    /**
+     * Sorts ordered lists of move learn methods into ascending order.
+     */
+    sortMachines(m1: ItemEntry, m2: ItemEntry) {
+        // ordering by item ID doesn't work so do it by item name
+        let m1IsTm = m1.name.startsWith("tm")
+        let m2IsTm = m2.name.startsWith("tm")
+        if (m1IsTm && m2IsTm) {
+            return m1.name.localeCompare(m2.name)
+        }
+
+        // m2 is an HM
+        if (m1IsTm) {
+            return -1
+        }
+
+        // m1 is an HM
+        if (m2IsTm) {
+            return 1
+        }
+
+        // both HMs
+        return m1.name.localeCompare(m2.name)
     }
 
     /**
@@ -382,17 +611,19 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      */
     hasFilters() {
         return this.state.damagingOnly
+            || this.state.useMinPower
             || this.state.nonDamagingOnly
             || this.state.sameTypeOnly
+            || this.state.levelUpOnly
     }
 
     /**
      * Toggles the move info pane with the given index.
      */
-    toggleMoveOpen(index: number) {
-        let newMovesAreOpen = this.state.movesAreOpen.map((item, j) => {
-            if (j === index) {
-                return !item
+    toggleMoveOpen(id: number) {
+        let newMovesAreOpen = this.state.movesAreOpen.map(item => {
+            if (item.id === id) {
+                return new WithId<boolean>(id, !item.data)
             }
 
             return item
@@ -463,11 +694,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     throw new Error(`Move list ${this.props.index}: tried to get moves for Pokemon ${pokemonId} but failed with status ${response.status}!`)
                 })
                 .then(response => response.json())
-                .then((moves: MoveEntry[]) => {
-                    let concreteMoves = moves.map(MoveEntry.from)
+                .then((moves: PokemonMoveContext[]) => {
+                    let concreteMoves = moves.map(PokemonMoveContext.from)
                     this.setState({
                         moves: concreteMoves,
-                        movesAreOpen: concreteMoves.map(_ => false)
+                        movesAreOpen: concreteMoves.map(m => new WithId<boolean>(m.moveId, false))
                     })
                 })
                 .catch(error => console.error(error))

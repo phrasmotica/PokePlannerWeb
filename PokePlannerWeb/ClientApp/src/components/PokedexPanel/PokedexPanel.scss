@@ -131,6 +131,9 @@ $dim: 96px;
 
 .tab-content {
     border: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 $pokedexPanelWidth: 1110px;

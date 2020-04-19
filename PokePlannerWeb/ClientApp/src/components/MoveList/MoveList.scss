@@ -1,12 +1,14 @@
-﻿.list-group-item {
+﻿.movesListGroup > .list-group-item {
     display: block;
     padding: 0.25rem 0.5rem;
 }
 
-.list-group-item > .btn {
+.movesListGroup > .list-group-item .btn {
     font-weight: unset;
     font-size: unset;
     padding: unset;
+    border: unset;
+    margin-right: 3px;
 }
 
 $size: 40px;
@@ -28,14 +30,62 @@ $size: 40px;
     text-align: center;
 }
 
-// TODO: remove need to set max-height. Should only be as tall as the parent...
+.tab-content > * {
+    width: 100%;
+    height: 100%;
+}
+
 .move-list-container {
     display: flex;
-    flex: 1 1 0;
     flex-direction: column;
-    max-height: 320px;
+    flex: 1;
+    width: 100%;
+    height: 100%;
 }
 
 .move-list {
-    overflow: auto;
+    flex: 1;
+}
+
+// TODO: getting there but it still extends beyond the parent
+// surely do it the same way the species filter does it?
+.movesListGroup {
+    height: 100%;
+    overflow-y: scroll;
+}
+
+$fontSize: 9pt;
+.moveFilter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $fontSize;
+}
+
+.filterCheckbox {
+    position: unset;
+    margin-top: unset;
+    margin-left: unset;
+    margin-right: 3px;
+}
+
+.separate-right {
+    padding-right: 5px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    margin-right: 5px;
+}
+
+.minPowerFilterInput {
+    width: 30%;
+    height: calc(1.5em + 0.25rem + 2px);
+    font-size: $fontSize;
+    padding: 0rem 0.375rem;
+}
+
+.moveInfo {
+    margin-top: 5px;
+}
+
+.moveInfo hr {
+    margin: 0.3rem 0rem;
 }

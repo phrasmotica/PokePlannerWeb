@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import { Input, Label } from "reactstrap"
 import key from "weak-key"
 
-import { BaseStatFilterModel, BaseStatFilterValue } from "./BaseStatFilterModel"
+import { BaseStatFilterModel } from "./BaseStatFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 
@@ -45,25 +45,6 @@ interface IBaseStatFilterState {
  * Component for filtering a list of species stored in the parent component by type.
  */
 export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFilterState> {
-    /**
-     * Constructor.
-     */
-    constructor(props: IBaseStatFilterProps) {
-        super(props)
-
-        // set filter from cookies
-        let isEnabled = CookieHelper.getFlag(`baseStatFilter${this.props.index}enabled`)
-
-        let cookieFilterValues = []
-        for (let i = 0; i < this.props.baseStatFilter.values.length; i++) {
-            let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)
-            let value = CookieHelper.getNumber(`baseStatFilter${this.props.index}value${i}`)
-            cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
-        }
-
-        this.props.setBaseStatFilter(new BaseStatFilterModel(isEnabled, cookieFilterValues))
-    }
-
     /**
      * Renders the component.
      */

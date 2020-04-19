@@ -46,6 +46,11 @@
         public string LocationAreaCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of machines.
+        /// </summary>
+        public string MachineCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of move categories.
         /// </summary>
         public string MoveCategoryCollectionName { get; set; }
@@ -59,6 +64,11 @@
         /// The name of the collection of move damage classes.
         /// </summary>
         public string MoveDamageClassCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of move learn methods.
+        /// </summary>
+        public string MoveLearnMethodCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of move targets.
@@ -152,6 +162,11 @@
         string LocationAreaCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of machines.
+        /// </summary>
+        string MachineCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of move categories.
         /// </summary>
         string MoveCategoryCollectionName { get; set; }
@@ -165,6 +180,11 @@
         /// The name of the collection of move damage classes.
         /// </summary>
         string MoveDamageClassCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of move learn methods.
+        /// </summary>
+        string MoveLearnMethodCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of move targets.

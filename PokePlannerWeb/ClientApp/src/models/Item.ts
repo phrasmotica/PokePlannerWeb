@@ -1,5 +1,5 @@
 /**
- * Represents a item.
+ * Represents an item.
  */
 export interface Item {
     /**

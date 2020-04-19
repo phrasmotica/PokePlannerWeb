@@ -149,6 +149,18 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<AbilityService>, NullLogger<AbilityService>>();
             services.AddSingleton<AbilityService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveLearnMethodEntry>(dataStoreSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<ILogger<MoveLearnMethodService>, NullLogger<MoveLearnMethodService>>();
+            services.AddSingleton<MoveLearnMethodService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MachineEntry>(dataStoreSettings.MachineCollectionName)
+            );
+            services.AddSingleton<ILogger<MachineService>, NullLogger<MachineService>>();
+            services.AddSingleton<MachineService>();
         }
 
         /// <summary>
@@ -213,6 +225,12 @@ namespace PokePlannerWeb.Tests
             services.AddSingleton<LocationCacheService>();
 
             services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Machine>(cacheSettings.MachineCollectionName)
+            );
+            services.AddSingleton<ILogger<MachineCacheService>, NullLogger<MachineCacheService>>();
+            services.AddSingleton<MachineCacheService>();
+
+            services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Move>(cacheSettings.MoveCollectionName)
             );
             services.AddSingleton<ILogger<MoveCacheService>, NullLogger<MoveCacheService>>();
@@ -229,6 +247,12 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<MoveDamageClassCacheService>, NullLogger<MoveDamageClassCacheService>>();
             services.AddSingleton<MoveDamageClassCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<MoveLearnMethod>(cacheSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<ILogger<MoveLearnMethodCacheService>, NullLogger<MoveLearnMethodCacheService>>();
+            services.AddSingleton<MoveLearnMethodCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)

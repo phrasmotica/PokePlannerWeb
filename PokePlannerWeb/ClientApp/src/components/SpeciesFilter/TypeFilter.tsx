@@ -40,27 +40,6 @@ interface ITypeFilterState {
  */
 export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
     /**
-     * Constructor.
-     */
-    constructor(props: ITypeFilterProps) {
-        super(props)
-
-        // set filter from cookies
-        let isEnabled = CookieHelper.getFlag(`typeFilter${this.props.index}enabled`)
-
-        let cookieTypeIds = []
-        for (let id of this.props.typeIds) {
-            let cookieName = `typeFilter${this.props.index}active${id}`
-            let active = CookieHelper.getFlag(cookieName)
-            if (active) {
-                cookieTypeIds.push(id)
-            }
-        }
-
-        this.props.setTypeFilter(new TypeFilterModel(isEnabled, cookieTypeIds))
-    }
-
-    /**
      * Renders the component.
      */
     render() {

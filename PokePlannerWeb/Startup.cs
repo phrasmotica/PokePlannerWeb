@@ -109,6 +109,9 @@ namespace PokePlannerWeb
             );
             services.AddSingleton<LocationAreaService>();
 
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MachineEntry>(dataStoreSettings.MachineCollectionName)
+            );
             services.AddSingleton<MachineService>();
 
             services.AddSingleton(sp =>
@@ -120,6 +123,11 @@ namespace PokePlannerWeb
                 dataStoreSourceFactory.Create<MoveDamageClassEntry>(dataStoreSettings.MoveDamageClassCollectionName)
             );
             services.AddSingleton<MoveDamageClassService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveLearnMethodEntry>(dataStoreSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<MoveLearnMethodService>();
 
             services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
@@ -227,6 +235,11 @@ namespace PokePlannerWeb
             services.AddSingleton<LocationCacheService>();
 
             services.AddSingleton(sp =>
+                cacheSourceFactory.Create<Machine>(cacheSettings.MachineCollectionName)
+            );
+            services.AddSingleton<MachineCacheService>();
+
+            services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<Move>(cacheSettings.MoveCollectionName)
             );
             services.AddSingleton<MoveCacheService>();
@@ -240,6 +253,11 @@ namespace PokePlannerWeb
                 cacheSourceFactory.CreateNamed<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
             );
             services.AddSingleton<MoveDamageClassCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<MoveLearnMethod>(cacheSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<MoveLearnMethodCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)

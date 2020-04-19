@@ -1,4 +1,8 @@
-﻿.list-group-item {
+﻿.encountersListGroup {
+    overflow-y: scroll;
+}
+
+.encountersListGroup > .list-group-item {
     display: flex;
     align-items: center;
     padding: 0.25rem 0.5rem;

@@ -16,6 +16,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class MoveService : NamedApiResourceServiceBase<Move, MoveEntry>
     {
         /// <summary>
+        /// The machine cache service.
+        /// </summary>
+        private readonly MachineCacheService MachineCacheService;
+
+        /// <summary>
         /// The move category service.
         /// </summary>
         private readonly MoveCategoryService MoveCategoryService;
@@ -47,6 +52,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<MoveEntry> dataStoreSource,
             IPokeAPI pokeApi,
             MoveCacheService moveCacheService,
+            MachineCacheService machineCacheService,
             MoveCategoryService moveCategoryService,
             MoveDamageClassService moveDamageClassService,
             MoveTargetService moveTargetService,
@@ -54,6 +60,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionGroupService versionGroupService,
             ILogger<MoveService> logger) : base(dataStoreSource, pokeApi, moveCacheService, logger)
         {
+            MachineCacheService = machineCacheService;
             MoveCategoryService = moveCategoryService;
             MoveDamageClassService = moveDamageClassService;
             MoveTargetService = moveTargetService;
@@ -74,6 +81,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var category = await MoveCategoryService.Upsert(move.Meta.Category);
             var damageClass = await MoveDamageClassService.Upsert(move.DamageClass);
             var target = await MoveTargetService.Upsert(move.Target);
+            var machines = await GetMachines(move);
 
             return new MoveEntry
             {
@@ -104,7 +112,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 {
                     Id = target.MoveTargetId,
                     Name = target.Name
-                }
+                },
+                Machines = machines.ToList()
             };
         }
 
@@ -138,6 +147,29 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return descriptionsList;
+        }
+
+        /// <summary>
+        /// Returns machines for the given move, indexed by version group ID.
+        /// </summary>
+        private async Task<IEnumerable<WithId<Machine>>> GetMachines(Move move)
+        {
+            var machinesList = new List<WithId<Machine>>();
+
+            if (move.Machines.Any())
+            {
+                foreach (var vg in await VersionGroupService.GetAll())
+                {
+                    var relevantMachine = move.Machines.SingleOrDefault(m => m.VersionGroup.Name == vg.Name);
+                    if (relevantMachine != null)
+                    {
+                        var machine = await MachineCacheService.GetMinimal(relevantMachine.Machine);
+                        machinesList.Add(new WithId<Machine>(vg.VersionGroupId, machine));
+                    }
+                }
+            }
+
+            return machinesList;
         }
 
         #endregion

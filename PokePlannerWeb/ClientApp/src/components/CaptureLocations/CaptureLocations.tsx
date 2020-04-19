@@ -77,7 +77,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     renderCaptureLocations() {
         if (this.state.loadingLocations) {
             return (
-                <ListGroup className="overflow-y">
+                <ListGroup className="encountersListGroup">
                     <ListGroupItem>
                         Loading...
                     </ListGroupItem>
@@ -86,7 +86,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         }
 
         let encountersElement = (
-            <ListGroup className="overflow-y">
+            <ListGroup className="encountersListGroup">
                 <ListGroupItem>
                     -
                 </ListGroupItem>
@@ -95,7 +95,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
         if (this.props.showLocations && this.hasPokemon()) {
             encountersElement = (
-                <ListGroup className="overflow-y">
+                <ListGroup className="encountersListGroup">
                     <ListGroupItem>
                         No capture locations in this version group
                     </ListGroupItem>
@@ -125,11 +125,13 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 }
 
                 return (
-                    <ListGroup className="overflow-y">
+                    <ListGroup className="encountersListGroup">
                         {items}
                     </ListGroup>
                 )
             }
+
+            // TODO: show "evolve {preEvolution}" if applicable, else show "Trade"
         }
 
         return encountersElement

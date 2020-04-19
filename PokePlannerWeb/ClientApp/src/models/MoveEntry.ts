@@ -1,6 +1,9 @@
+import { ItemEntry } from "./ItemEntry"
 import { LocalString } from "./LocalString"
+import { Machine } from "./Machine"
 import { MoveCategory } from "./MoveCategory"
 import { MoveDamageClass } from "./MoveDamageClass"
+import { MoveLearnMethodEntry } from "./MoveLearnMethodEntry"
 import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
 import { WithId } from "./WithId"
@@ -70,6 +73,11 @@ export class MoveEntry {
     target: MoveTarget
 
     /**
+     * The machines that teach the move, indexed by version group ID.
+     */
+    machines: WithId<Machine>[]
+
+    /**
      * Constructor.
      */
     constructor(
@@ -84,7 +92,8 @@ export class MoveEntry {
         accuracy: number | null,
         pp: number | null,
         priority: number,
-        target: MoveTarget
+        target: MoveTarget,
+        machines: WithId<Machine>[]
     ) {
         this.moveId = moveId
         this.name = name
@@ -98,6 +107,7 @@ export class MoveEntry {
         this.pp = pp
         this.priority = priority
         this.target = target
+        this.machines = machines
     }
 
     /**
@@ -116,7 +126,8 @@ export class MoveEntry {
             move.accuracy,
             move.pp,
             move.priority,
-            move.target
+            move.target,
+            move.machines
         )
     }
 
@@ -186,5 +197,91 @@ export class MoveEntry {
         }
 
         return localFlavourText?.value
+    }
+}
+
+/**
+ * Move info plus learn methods for some Pokemon.
+ */
+export class PokemonMoveContext extends MoveEntry {
+    /**
+     * The level at which the move is learnt, if applicable.
+     */
+    level: number
+
+    /**
+     * The machine that teaches the move, if applicable.
+     */
+    machine: ItemEntry | null
+
+    /**
+     * The methods by which the move is learnt.
+     */
+    methods: MoveLearnMethodEntry[]
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        moveId: number,
+        name: string,
+        displayNames: LocalString[],
+        flavourTextEntries: WithId<LocalString[]>[],
+        type: Type,
+        category: MoveCategory,
+        power: number | null,
+        damageClass: MoveDamageClass,
+        accuracy: number | null,
+        pp: number | null,
+        priority: number,
+        target: MoveTarget,
+        machines: WithId<Machine>[],
+        level: number,
+        machine: ItemEntry | null,
+        methods: MoveLearnMethodEntry[]
+    ) {
+        super(
+            moveId,
+            name,
+            displayNames,
+            flavourTextEntries,
+            type,
+            category,
+            power,
+            damageClass,
+            accuracy,
+            pp,
+            priority,
+            target,
+            machines
+        )
+
+        this.level = level
+        this.machine = machine
+        this.methods = methods
+    }
+
+    /**
+     * Returns a move context created from the given context.
+     */
+    static from(context: PokemonMoveContext) {
+        return new PokemonMoveContext(
+            context.moveId,
+            context.name,
+            context.displayNames,
+            context.flavourTextEntries,
+            context.type,
+            context.category,
+            context.power,
+            context.damageClass,
+            context.accuracy,
+            context.pp,
+            context.priority,
+            context.target,
+            context.machines,
+            context.level,
+            context.machine === null ? null : ItemEntry.from(context.machine),
+            context.methods.map(MoveLearnMethodEntry.from)
+        )
     }
 }

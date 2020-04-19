@@ -7,7 +7,7 @@ export class MoveCategoryEntry {
     /**
      * The ID of the move category.
      */
-    moveTargetId: number
+    moveCategoryId: number
 
     /**
      * The name of the move category.
@@ -23,11 +23,11 @@ export class MoveCategoryEntry {
      * Constructor.
      */
     constructor(
-        moveTargetId: number,
+        moveCategoryId: number,
         name: string,
         descriptions: LocalString[]
     ) {
-        this.moveTargetId = moveTargetId
+        this.moveCategoryId = moveCategoryId
         this.name = name
         this.descriptions = descriptions
     }
@@ -37,7 +37,7 @@ export class MoveCategoryEntry {
      */
     static from(category: MoveCategoryEntry) {
         return new MoveCategoryEntry(
-            category.moveTargetId,
+            category.moveCategoryId,
             category.name,
             category.descriptions
         )
@@ -50,7 +50,7 @@ export class MoveCategoryEntry {
         let localDesc = this.descriptions.find(n => n.language === locale)
         if (localDesc === undefined) {
             console.warn(
-                `Move category ${this.moveTargetId} is missing description in locale '${locale}'`
+                `Move category ${this.moveCategoryId} is missing description in locale '${locale}'`
             )
         }
 
