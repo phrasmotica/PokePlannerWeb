@@ -122,6 +122,11 @@ namespace PokePlannerWeb
             services.AddSingleton<MoveDamageClassService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveLearnMethodEntry>(dataStoreSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<MoveLearnMethodService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<MoveEntry>(dataStoreSettings.MoveCollectionName)
             );
             services.AddSingleton<MoveService>();
@@ -240,6 +245,11 @@ namespace PokePlannerWeb
                 cacheSourceFactory.CreateNamed<MoveDamageClass>(cacheSettings.MoveDamageClassCollectionName)
             );
             services.AddSingleton<MoveDamageClassCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<MoveLearnMethod>(cacheSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<MoveLearnMethodCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)

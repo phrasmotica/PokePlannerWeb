@@ -56,6 +56,11 @@
         public string MoveDamageClassCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of move learn methods.
+        /// </summary>
+        public string MoveLearnMethodCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of move targets.
         /// </summary>
         public string MoveTargetCollectionName { get; set; }
@@ -155,6 +160,11 @@
         /// The name of the collection of move damage classes.
         /// </summary>
         string MoveDamageClassCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of move learn methods.
+        /// </summary>
+        string MoveLearnMethodCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of move targets.

@@ -149,6 +149,12 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<AbilityService>, NullLogger<AbilityService>>();
             services.AddSingleton<AbilityService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<MoveLearnMethodEntry>(dataStoreSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<ILogger<MoveLearnMethodService>, NullLogger<MoveLearnMethodService>>();
+            services.AddSingleton<MoveLearnMethodService>();
         }
 
         /// <summary>
@@ -229,6 +235,12 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<MoveDamageClassCacheService>, NullLogger<MoveDamageClassCacheService>>();
             services.AddSingleton<MoveDamageClassCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<MoveLearnMethod>(cacheSettings.MoveLearnMethodCollectionName)
+            );
+            services.AddSingleton<ILogger<MoveLearnMethodCacheService>, NullLogger<MoveLearnMethodCacheService>>();
+            services.AddSingleton<MoveLearnMethodCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.CreateNamed<MoveTarget>(cacheSettings.MoveTargetCollectionName)
