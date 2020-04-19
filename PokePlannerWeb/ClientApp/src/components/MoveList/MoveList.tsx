@@ -251,7 +251,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     renderMoves() {
         if (this.props.pokemonId === undefined) {
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     <ListGroupItem>
                         -
                     </ListGroupItem>
@@ -261,7 +261,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         if (this.state.loadingMoves) {
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     <ListGroupItem>
                         Loading...
                     </ListGroupItem>
@@ -385,7 +385,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         // no moves to show...
         if (this.hasFilters()) {
             return (
-                <ListGroup>
+                <ListGroup className="movesListGroup">
                     <ListGroupItem>
                         All moves have been filtered
                     </ListGroupItem>
@@ -394,7 +394,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         return (
-            <ListGroup>
+            <ListGroup className="movesListGroup">
                 <ListGroupItem>
                     No moves in this game version
                 </ListGroupItem>
