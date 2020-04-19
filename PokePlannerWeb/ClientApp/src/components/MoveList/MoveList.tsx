@@ -48,6 +48,11 @@ interface IMoveListState {
     sameTypeOnly: boolean
 
     /**
+     * Whether to only show moves learnt by level-up.
+     */
+    levelUpOnly: boolean
+
+    /**
      * The moves to show.
      */
     moves: PokemonMoveContext[]
@@ -73,6 +78,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             damagingOnly: CookieHelper.getFlag(`damagingOnly${this.props.index}`),
             nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${this.props.index}`),
             sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${this.props.index}`),
+            levelUpOnly: CookieHelper.getFlag(`levelUpOnly${this.props.index}`),
             moves: [],
             loadingMoves: false,
             movesAreOpen: []
@@ -122,6 +128,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         let damagingId = "damagingCheckbox" + this.props.index
         let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
+        let levelUpId = "levelUpCheckbox" + this.props.index
 
         return (
             <div className="flex" style={{ marginLeft: 4 }}>
@@ -157,7 +164,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     </Label>
                 </FormGroup>
 
-                <FormGroup check>
+                <FormGroup
+                    check
+                    className="margin-right-small">
                     <Input
                         type="checkbox"
                         id={sameTypeId}
@@ -167,6 +176,20 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     <Label for={sameTypeId} check>
                         <span title="Only show moves of the Pokemon's type">
                             same type only
+                        </span>
+                    </Label>
+                </FormGroup>
+
+                <FormGroup check>
+                    <Input
+                        type="checkbox"
+                        id={levelUpId}
+                        checked={this.state.levelUpOnly}
+                        onChange={() => this.toggleLevelUpOnly()} />
+
+                    <Label for={levelUpId} check>
+                        <span title="Only show moves learnt by level-up">
+                            level-up only
                         </span>
                     </Label>
                 </FormGroup>
@@ -208,6 +231,17 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         this.setState(previousState => ({
             sameTypeOnly: !previousState.sameTypeOnly
+        }))
+    }
+
+    /**
+     * Toggles the level-up only filter.
+     */
+    toggleLevelUpOnly() {
+        CookieHelper.set(`levelUpOnly${this.props.index}`, !this.state.levelUpOnly)
+
+        this.setState(previousState => ({
+            levelUpOnly: !previousState.levelUpOnly
         }))
     }
 
@@ -384,6 +418,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         if (this.state.sameTypeOnly) {
             moves = moves.filter(m => this.isSameType(m))
+        }
+
+        if (this.state.levelUpOnly) {
+            moves = moves.filter(m => m.level > 0)
         }
 
         return moves.sort((m1, m2) => this.sortMoves(m1, m2))
