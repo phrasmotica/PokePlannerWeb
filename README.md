@@ -38,7 +38,7 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
   * [x] Show move learnset
     * [x] Show move type/damage class
     * [x] Show move power/accuracy/PP
-    * [ ] Show move learn method
+    * [x] Show move learn method
     * [x] Filter by same type
     * [ ] Filter by learn method
     * [ ] Open move in MoveDex
