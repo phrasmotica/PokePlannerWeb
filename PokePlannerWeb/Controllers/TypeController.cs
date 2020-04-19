@@ -52,15 +52,5 @@ namespace PokePlannerWeb.Controllers
             Logger.LogInformation($"Getting types presence map for version group {versionGroupId}...");
             return await TypesService.GetTypesPresenceMap(versionGroupId);
         }
-
-        /// <summary>
-        /// Returns the type with the given ID.
-        /// </summary>
-        [HttpGet("type/{typeId:int}/name")]
-        public async Task<TypeEntry> GetTypeById(int typeId)
-        {
-            Logger.LogInformation($"Getting type {typeId}...");
-            return await TypesService.Upsert(typeId);
-        }
     }
 }
