@@ -31,7 +31,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or set the versions belonging to the version group.
         /// </summary>
-        public List<Version> Versions { get; set; }
+        public List<VersionEntry> Versions { get; set; }
 
         /// <summary>
         /// Gets or set the Pokedexes present in the version group.

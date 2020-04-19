@@ -69,11 +69,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     Id = generation.GenerationId,
                     Name = generation.Name
                 },
-                Versions = versions.Select(v => new Version
-                {
-                    Id = v.VersionId,
-                    Name = v.Name
-                }).ToList(),
+                Versions = versions.ToList(),
                 Pokedexes = pokedexes.Select(p => new Pokedex
                 {
                     Id = p.PokedexId,
@@ -121,7 +117,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var allVersionGroups = await UpsertAll();
             var relevantVersionGroups = allVersionGroups.Where(vg =>
             {
-                var myVersionIds = vg.Versions.Select(v => v.Id);
+                var myVersionIds = vg.Versions.Select(v => v.VersionId);
                 return myVersionIds.Intersect(versionIds).Any();
             });
 
