@@ -53,3 +53,24 @@ $size: 40px;
     height: 100%;
     overflow-y: scroll;
 }
+
+$fontSize: 9pt;
+.moveFilter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $fontSize;
+}
+
+.filterCheckbox {
+    position: unset;
+    margin-top: unset;
+    margin-left: unset;
+    margin-right: 3px;
+}
+
+.separate-right {
+    padding-right: 5px;
+    border-right: 1px solid lightgrey;
+    margin-right: 5px;
+}

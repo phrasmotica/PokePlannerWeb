@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button, Collapse, FormGroup, Input, Label } from "reactstrap"
+import { ListGroup, ListGroupItem, Button, Collapse, Input, Label } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
@@ -132,11 +132,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         let levelUpId = "levelUpCheckbox" + this.props.index
 
         return (
-            <div className="flex" style={{ marginLeft: 4 }}>
-                <FormGroup
-                    check
-                    className="margin-right-small">
+            <div className="moveFilter">
+                <div className="flex-center separate-right">
                     <Input
+                        className="filterCheckbox"
                         type="checkbox"
                         id={damagingId}
                         checked={this.state.damagingOnly}
@@ -147,12 +146,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             damaging only
                         </span>
                     </Label>
-                </FormGroup>
+                </div>
 
-                <FormGroup
-                    check
-                    className="margin-right-small">
+                <div className="flex-center separate-right">
                     <Input
+                        className="filterCheckbox"
                         type="checkbox"
                         id={nonDamagingId}
                         checked={this.state.nonDamagingOnly}
@@ -163,12 +161,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             non-damaging only
                         </span>
                     </Label>
-                </FormGroup>
+                </div>
 
-                <FormGroup
-                    check
-                    className="margin-right-small">
+                <div className="flex-center separate-right">
                     <Input
+                        className="filterCheckbox"
                         type="checkbox"
                         id={sameTypeId}
                         checked={this.state.sameTypeOnly}
@@ -179,10 +176,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             same type only
                         </span>
                     </Label>
-                </FormGroup>
+                </div>
 
-                <FormGroup check>
+                <div className="flex-center">
                     <Input
+                        className="filterCheckbox"
                         type="checkbox"
                         id={levelUpId}
                         checked={this.state.levelUpOnly}
@@ -193,7 +191,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             level-up only
                         </span>
                     </Label>
-                </FormGroup>
+                </div>
             </div>
         )
     }
