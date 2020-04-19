@@ -160,6 +160,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             {
                 foreach (var vg in await VersionGroupService.GetAll())
                 {
+                    // TODO: arceus has a move learnt from more than one machine in Black/White...
                     var relevantMachine = move.Machines.SingleOrDefault(m => m.VersionGroup.Name == vg.Name);
                     if (relevantMachine != null)
                     {
