@@ -64,6 +64,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public MoveTarget Target { get; set; }
 
         /// <summary>
+        /// Gets or sets the machines that teach the move, indexed by version group ID.
+        /// </summary>
+        public List<WithId<Machine>> Machines { get; set; }
+
+        /// <summary>
         /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
         /// </summary>
         public MoveEntry ForEvolutionChain()
