@@ -93,6 +93,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public int Level { get; set; }
 
         /// <summary>
+        /// Gets or sets the machine that teaches the move, if applicable.
+        /// </summary>
+        public ItemEntry Machine { get; set; }
+
+        /// <summary>
         /// Gets or sets the methods by which the move is learnt.
         /// </summary>
         public List<MoveLearnMethodEntry> Methods { get; set; }

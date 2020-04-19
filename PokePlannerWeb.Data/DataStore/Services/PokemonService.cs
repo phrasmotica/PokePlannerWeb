@@ -33,6 +33,16 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly AbilityService AbilityService;
 
         /// <summary>
+        /// The item service.
+        /// </summary>
+        private readonly ItemService ItemService;
+
+        /// <summary>
+        /// The machine service.
+        /// </summary>
+        private readonly MachineService MachineService;
+
+        /// <summary>
         /// The move learn method service.
         /// </summary>
         private readonly MoveLearnMethodService MoveLearnMethodService;
@@ -62,6 +72,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
             AbilityCacheService abilityCacheService,
             TypeCacheService typeCacheService,
             AbilityService abilityService,
+            ItemService itemService,
+            MachineService machineService,
             MoveLearnMethodService moveLearnMethodService,
             MoveService moveService,
             PokemonFormService pokemonFormService,
@@ -71,6 +83,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
             AbilityCacheService = abilityCacheService;
             TypeCacheService = typeCacheService;
             AbilityService = abilityService;
+            ItemService = itemService;
+            MachineService = machineService;
             MoveLearnMethodService = moveLearnMethodService;
             MoveService = moveService;
             PokemonFormService = pokemonFormService;
@@ -151,7 +165,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             for (int i = 0; i < entryList.Count; i++)
             {
-                var context = PokemonMoveContext.From(entryList[i]);
+                var moveEntry = entryList[i];
+                var context = PokemonMoveContext.From(moveEntry);
 
                 var relevantDetails = relevantMoves[i].VersionGroupDetails
                                                       .Where(d => d.VersionGroup.Name == versionGroup.Name);
@@ -163,6 +178,17 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     if (method.Name == "level-up")
                     {
                         context.Level = detail.LevelLearnedAt;
+                    }
+
+                    if (method.Name == "machine")
+                    {
+                        var machineRef = moveEntry.Machines.SingleOrDefault(m => m.Id == versionGroupId)?.Data;
+                        if (machineRef != null)
+                        {
+                            var machineEntry = await MachineService.Upsert(machineRef.Id);
+                            var machineItem = await ItemService.Upsert(machineEntry.Item.Id);
+                            context.Machine = machineItem;
+                        }
                     }
 
                     methodList.Add(method);
