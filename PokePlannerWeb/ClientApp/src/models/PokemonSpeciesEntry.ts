@@ -40,6 +40,11 @@ export class PokemonSpeciesEntry {
     genera: LocalString[]
 
     /**
+     * The flavour text entries of the species, indexed by version ID.
+     */
+    flavourTextEntries: WithId<LocalString[]>[]
+
+    /**
      * The types of this species' primary variety indexed by version group ID.
     */
     types: WithId<Type[]>[]
@@ -79,6 +84,7 @@ export class PokemonSpeciesEntry {
         shinySpriteUrl: string,
         displayNames: LocalString[],
         genera: LocalString[],
+        flavourTextEntries: WithId<LocalString[]>[],
         types: WithId<Type[]>[],
         baseStats: WithId<number[]>[],
         varieties: Pokemon[],
@@ -92,6 +98,7 @@ export class PokemonSpeciesEntry {
         this.shinySpriteUrl = shinySpriteUrl
         this.displayNames = displayNames
         this.genera = genera
+        this.flavourTextEntries = flavourTextEntries
         this.types = types
         this.baseStats = baseStats
         this.varieties = varieties
@@ -111,6 +118,7 @@ export class PokemonSpeciesEntry {
             species.shinySpriteUrl,
             species.displayNames,
             species.genera,
+            species.flavourTextEntries,
             species.types,
             species.baseStats,
             species.varieties,
@@ -148,6 +156,44 @@ export class PokemonSpeciesEntry {
         }
 
         return localName?.value
+    }
+
+    /**
+     * Returns the species' flavour text in the version with the given ID in the given locale.
+     */
+    getFlavourText(versionId: number, locale: string): string | undefined {
+        if (this.flavourTextEntries.length <= 0) {
+            console.warn(
+                `Species ${this.speciesId} has no flavour text entries`
+            )
+
+            return undefined
+        }
+
+        // find most recent flavour text entry
+        let matchFunc = (searchId: number) => this.flavourTextEntries.find(e => e.id === searchId)
+
+        let searchId = versionId
+        let matchingEntry: WithId<LocalString[]> | undefined = undefined
+        while (matchingEntry === undefined && searchId > 0) {
+            matchingEntry = matchFunc(searchId)
+            searchId--
+        }
+
+        if (matchingEntry === undefined) {
+            // older version than the earliest one with flavour text...
+            // fall back to that one
+            matchingEntry = this.flavourTextEntries[0]
+        }
+
+        let localFlavourText = matchingEntry!.data.find(n => n.language === locale)
+        if (localFlavourText === undefined) {
+            console.warn(
+                `Species ${this.speciesId} is missing flavour text in locale '${locale}'`
+            )
+        }
+
+        return localFlavourText?.value
     }
 
     /**
