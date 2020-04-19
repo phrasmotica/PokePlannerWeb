@@ -5,7 +5,8 @@ import key from "weak-key"
 
 import { IHasCommon } from "../CommonMembers"
 
-import { MoveEntry } from "../../models/MoveEntry"
+import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
+import { MoveLearnMethodEntry } from "../../models/MoveLearnMethodEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -49,7 +50,7 @@ interface IMoveListState {
     /**
      * The moves to show.
      */
-    moves: MoveEntry[]
+    moves: PokemonMoveContext[]
 
     /**
      * Whether we're loading the moves.
@@ -241,11 +242,32 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let move = moves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
-                let moveNameElement = <span>{moveName}</span>
+                let moveMethod = ""
+                if (move.level > 0) {
+                    moveMethod = ` (level ${move.level})`
+                }
+                else {
+                    let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
+                    moveMethod = ` (${methodsSummary})`
+                }
+
+                let moveNameElement = (
+                    <span>
+                        {moveName}
+                        {moveMethod}
+                    </span>
+                )
 
                 let isStab = this.isStab(move)
                 if (isStab) {
-                    moveNameElement = <span><b>{moveName}</b></span>
+                    moveNameElement = (
+                        <span>
+                            <b>
+                                {moveName}
+                            </b>
+                            {moveMethod}
+                        </span>
+                    )
                 }
 
                 const openInfoPane = () => this.toggleMoveOpen(row)
@@ -360,7 +382,50 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             moves = moves.filter(m => this.isSameType(m))
         }
 
-        return moves
+        return moves.sort((m1, m2) => this.sortMoves(m1, m2))
+    }
+
+    /**
+     * Sorts moves into ascending order.
+     */
+    sortMoves(m1: PokemonMoveContext, m2: PokemonMoveContext) {
+        // level-up moves in ascending order first, then the rest
+        if (m1.level === 0 && m2.level === 0) {
+            return this.sortLearnMethods(m1.methods, m2.methods)
+        }
+
+        if (m1.level === 0) {
+            return 1
+        }
+
+        if (m2.level === 0) {
+            return -1
+        }
+
+        return m1.level - m2.level
+    }
+
+    /**
+     * Sorts ordered lists of move learn methods into ascending order.
+     */
+    sortLearnMethods(m1: MoveLearnMethodEntry[], m2: MoveLearnMethodEntry[]) {
+        // order of importance for move learn methods
+        const order = [1, 4, 3, 2, 5, 6, 7, 8, 9, 10]
+
+        let m1Indices = m1.map(m => order.indexOf(m.moveLearnMethodId))
+        let m2Indices = m2.map(m => order.indexOf(m.moveLearnMethodId))
+
+        // sorts by the importance of all learn method (lexicographically)
+        let commonLength = Math.min(m1Indices.length, m2Indices.length)
+        for (let i = 0; i < commonLength; i++) {
+            let diff = m1Indices[i] - m2Indices[i]
+            if (diff !== 0) {
+                return diff
+            }
+        }
+
+        // only thing that separates them is the number of methods
+        return m1Indices.length - m2Indices.length
     }
 
     /**
@@ -463,8 +528,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     throw new Error(`Move list ${this.props.index}: tried to get moves for Pokemon ${pokemonId} but failed with status ${response.status}!`)
                 })
                 .then(response => response.json())
-                .then((moves: MoveEntry[]) => {
-                    let concreteMoves = moves.map(MoveEntry.from)
+                .then((moves: PokemonMoveContext[]) => {
+                    let concreteMoves = moves.map(PokemonMoveContext.from)
                     this.setState({
                         moves: concreteMoves,
                         movesAreOpen: concreteMoves.map(_ => false)

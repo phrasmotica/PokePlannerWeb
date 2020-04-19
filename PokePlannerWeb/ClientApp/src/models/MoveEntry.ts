@@ -1,6 +1,7 @@
 import { LocalString } from "./LocalString"
 import { MoveCategory } from "./MoveCategory"
 import { MoveDamageClass } from "./MoveDamageClass"
+import { MoveLearnMethodEntry } from "./MoveLearnMethodEntry"
 import { MoveTarget } from "./MoveTarget"
 import { Type } from "./Type"
 import { WithId } from "./WithId"
@@ -186,5 +187,80 @@ export class MoveEntry {
         }
 
         return localFlavourText?.value
+    }
+}
+
+/**
+ * Move info plus learn methods for some Pokemon.
+ */
+export class PokemonMoveContext extends MoveEntry {
+    /**
+     * The level at which the move is learnt, if applicable.
+     */
+    level: number
+
+    /**
+     * The methods by which the move is learnt.
+     */
+    methods: MoveLearnMethodEntry[]
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        moveId: number,
+        name: string,
+        displayNames: LocalString[],
+        flavourTextEntries: WithId<LocalString[]>[],
+        type: Type,
+        category: MoveCategory,
+        power: number | null,
+        damageClass: MoveDamageClass,
+        accuracy: number | null,
+        pp: number | null,
+        priority: number,
+        target: MoveTarget,
+        level: number,
+        methods: MoveLearnMethodEntry[]
+    ) {
+        super(
+            moveId,
+            name,
+            displayNames,
+            flavourTextEntries,
+            type,
+            category,
+            power,
+            damageClass,
+            accuracy,
+            pp,
+            priority,
+            target
+        )
+
+        this.level = level
+        this.methods = methods
+    }
+
+    /**
+     * Returns a move context created from the given context.
+     */
+    static from(context: PokemonMoveContext) {
+        return new PokemonMoveContext(
+            context.moveId,
+            context.name,
+            context.displayNames,
+            context.flavourTextEntries,
+            context.type,
+            context.category,
+            context.power,
+            context.damageClass,
+            context.accuracy,
+            context.pp,
+            context.priority,
+            context.target,
+            context.level,
+            context.methods.map(MoveLearnMethodEntry.from)
+        )
     }
 }
