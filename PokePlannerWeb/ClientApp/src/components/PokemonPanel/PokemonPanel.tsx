@@ -18,6 +18,8 @@ import { TypeEntry } from "../../models/TypeEntry"
 import { CookieHelper } from "../../util/CookieHelper"
 import { PokemonHelper } from "../../util/PokemonHelper"
 
+import "./PokemonPanel.scss"
+
 interface IPokemonPanelProps extends IHasCommon {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
@@ -254,15 +256,14 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     renderPokemonInfo() {
         return (
             <div>
-                <div>
+                <div className="margin-bottom-small">
                     {this.renderPokemonName()}
-
-                    {this.renderPokemonTypes()}
+                    {this.renderPokemonGenus()}
                 </div>
 
                 <div>
+                    {this.renderPokemonTypes()}
                     {this.renderPokemonSprite()}
-
                     {this.renderShinySpriteSwitch()}
                 </div>
             </div>
@@ -298,7 +299,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
 
         return (
-            <div className="center-text">
+            <div className="pokemonName center-text">
                 {displayNameElement}
             </div>
         )
@@ -317,6 +318,22 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         }
 
         return displayName
+    }
+
+    /**
+     * Renders the Pokemon's genus.
+     */
+    renderPokemonGenus() {
+        let genusElement = "-"
+        if (this.shouldShowPokemon()) {
+            genusElement = this.getSpecies().getGenus("en") ?? "-"
+        }
+
+        return (
+            <div className="pokemonGenus center-text">
+                {genusElement}
+            </div>
+        )
     }
 
     // returns the Pokemon's types

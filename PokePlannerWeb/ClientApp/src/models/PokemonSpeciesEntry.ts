@@ -35,6 +35,11 @@ export class PokemonSpeciesEntry {
     displayNames: LocalString[]
 
     /**
+     * The genera of the species.
+     */
+    genera: LocalString[]
+
+    /**
      * The types of this species' primary variety indexed by version group ID.
     */
     types: WithId<Type[]>[]
@@ -73,6 +78,7 @@ export class PokemonSpeciesEntry {
         spriteUrl: string,
         shinySpriteUrl: string,
         displayNames: LocalString[],
+        genera: LocalString[],
         types: WithId<Type[]>[],
         baseStats: WithId<number[]>[],
         varieties: Pokemon[],
@@ -85,6 +91,7 @@ export class PokemonSpeciesEntry {
         this.spriteUrl = spriteUrl
         this.shinySpriteUrl = shinySpriteUrl
         this.displayNames = displayNames
+        this.genera = genera
         this.types = types
         this.baseStats = baseStats
         this.varieties = varieties
@@ -103,6 +110,7 @@ export class PokemonSpeciesEntry {
             species.spriteUrl,
             species.shinySpriteUrl,
             species.displayNames,
+            species.genera,
             species.types,
             species.baseStats,
             species.varieties,
@@ -121,6 +129,21 @@ export class PokemonSpeciesEntry {
             // species should have display names in every locale so throw an error
             throw new Error(
                 `Pokemon species ${this.speciesId} is missing display name in locale '${locale}'`
+            )
+        }
+
+        return localName?.value
+    }
+
+    /**
+     * Returns the species' genus in the given locale.
+     */
+    getGenus(locale: string): string | undefined {
+        let localName = this.genera.find(n => n.language === locale)
+        if (localName === undefined) {
+            // species should have genus in every locale so throw an error
+            throw new Error(
+                `Species ${this.speciesId} is missing genus in locale '${locale}'`
             )
         }
 
