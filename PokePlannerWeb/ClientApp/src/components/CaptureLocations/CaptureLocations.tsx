@@ -3,13 +3,19 @@ import { ListGroup, ListGroupItem } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
+import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import "./CaptureLocations.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 
-interface ICaptureLocationsProps extends IHasCommon {
+interface ICaptureLocationsProps extends IHasIndex, IHasHideTooltips {
+    /**
+     * The version group.
+     */
+    versionGroup: VersionGroupEntry | undefined
+
     /**
      * The ID of the Pokemon to show capture locations for.
      */
@@ -104,8 +110,8 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
             let locations = this.state.locations
             if (locations !== undefined) {
-                let encounters = locations.encounters
-                let matchingEncounter = encounters.find(e => e.id === this.props.versionGroupId)
+                let versionGroupId = this.props.versionGroup?.versionGroupId
+                let matchingEncounter = locations.encounters.find(e => e.id === versionGroupId)
                 if (matchingEncounter === undefined) {
                     return encountersElement
                 }
@@ -115,11 +121,19 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 let items = []
                 for (let row = 0; row < encountersData.length; row++) {
                     let encounter = encountersData[row]
-                    let displayName = encounter.getDisplayName("en") ?? `(encounter)${row}`
+                    let displayName = encounter.getDisplayName("en") ?? `encounter`
+
+                    let versions = this.props.versionGroup?.versions ?? []
+                    let maxChances = versions.map(v => {
+                        let maxChance = encounter.chances.find(c => c.id === v.versionId)!.data
+                        return `${maxChance}% (${v.getDisplayName("en") ?? "version"})`
+                    })
+                    let maxChancesSummary = maxChances.join(", ")
 
                     items.push(
                         <ListGroupItem key={key(encounter)}>
                             {displayName}
+                            {maxChancesSummary}
                         </ListGroupItem>
                     )
                 }
