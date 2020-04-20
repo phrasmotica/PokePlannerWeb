@@ -66,7 +66,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the machines that teach the move, indexed by version group ID.
         /// </summary>
-        public List<WithId<Machine>> Machines { get; set; }
+        public List<WithId<Machine[]>> Machines { get; set; }
 
         /// <summary>
         /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
@@ -93,9 +93,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public int Level { get; set; }
 
         /// <summary>
-        /// Gets or sets the machine that teaches the move, if applicable.
+        /// Gets or sets the machines that teach the move, if applicable.
         /// </summary>
-        public ItemEntry Machine { get; set; }
+        public List<ItemEntry> LearnMachines { get; set; }
 
         /// <summary>
         /// Gets or sets the methods by which the move is learnt.
@@ -110,6 +110,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
             return new PokemonMoveContext
             {
                 Key = e.Key,
+                Name = e.Name,
                 DisplayNames = e.DisplayNames,
                 FlavourTextEntries = e.FlavourTextEntries,
                 Type = e.Type,

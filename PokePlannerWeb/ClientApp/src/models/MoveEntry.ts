@@ -75,7 +75,7 @@ export class MoveEntry {
     /**
      * The machines that teach the move, indexed by version group ID.
      */
-    machines: WithId<Machine>[]
+    machines: WithId<Machine[]>[]
 
     /**
      * Constructor.
@@ -93,7 +93,7 @@ export class MoveEntry {
         pp: number | null,
         priority: number,
         target: MoveTarget,
-        machines: WithId<Machine>[]
+        machines: WithId<Machine[]>[]
     ) {
         this.moveId = moveId
         this.name = name
@@ -210,9 +210,9 @@ export class PokemonMoveContext extends MoveEntry {
     level: number
 
     /**
-     * The machine that teaches the move, if applicable.
+     * The machines that teach the move, if applicable.
      */
-    machine: ItemEntry | null
+    learnMachines: ItemEntry[] | null
 
     /**
      * The methods by which the move is learnt.
@@ -235,9 +235,9 @@ export class PokemonMoveContext extends MoveEntry {
         pp: number | null,
         priority: number,
         target: MoveTarget,
-        machines: WithId<Machine>[],
+        machines: WithId<Machine[]>[],
         level: number,
-        machine: ItemEntry | null,
+        learnMachines: ItemEntry[] | null,
         methods: MoveLearnMethodEntry[]
     ) {
         super(
@@ -257,7 +257,7 @@ export class PokemonMoveContext extends MoveEntry {
         )
 
         this.level = level
-        this.machine = machine
+        this.learnMachines = learnMachines
         this.methods = methods
     }
 
@@ -280,7 +280,7 @@ export class PokemonMoveContext extends MoveEntry {
             context.target,
             context.machines,
             context.level,
-            context.machine === null ? null : ItemEntry.from(context.machine),
+            context.learnMachines === null ? null : context.learnMachines.map(ItemEntry.from),
             context.methods.map(MoveLearnMethodEntry.from)
         )
     }

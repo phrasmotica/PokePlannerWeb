@@ -370,8 +370,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 if (move.level > 0) {
                     moveMethod = `(level ${move.level})`
                 }
-                else if (move.machine !== null) {
-                    moveMethod = `(${move.machine.getDisplayName("en") ?? "Machine"})`
+                else if (move.learnMachines !== null) {
+                    let machinesSummary = move.learnMachines.map(m => m.getDisplayName("en") ?? "Machine").join(", ")
+                    moveMethod = `(${machinesSummary})`
                 }
                 else {
                     let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
@@ -517,20 +518,20 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         // level-up moves in ascending order first, then the rest
         if (m1.level === 0 && m2.level === 0) {
             // then machines in ascending order
-            if (m1.machine === null && m2.machine === null) {
+            if (m1.learnMachines === null && m2.learnMachines === null) {
                 return this.sortLearnMethods(m1.methods, m2.methods)
             }
 
-            if (m1.machine === null) {
+            if (m1.learnMachines === null) {
                 return 1
             }
 
-            if (m2.machine === null) {
+            if (m2.learnMachines === null) {
                 return -1
             }
 
             // ordering by item ID doesn't work so do it by item name
-            return this.sortMachines(m1.machine, m2.machine)
+            return this.sortMachines(m1.learnMachines, m2.learnMachines)
         }
 
         if (m1.level === 0) {
@@ -568,28 +569,39 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     /**
-     * Sorts ordered lists of move learn methods into ascending order.
+     * Sorts ordered lists of machines into ascending order.
      */
-    sortMachines(m1: ItemEntry, m2: ItemEntry) {
-        // ordering by item ID doesn't work so do it by item name
-        let m1IsTm = m1.name.startsWith("tm")
-        let m2IsTm = m2.name.startsWith("tm")
-        if (m1IsTm && m2IsTm) {
-            return m1.name.localeCompare(m2.name)
+    sortMachines(machines1: ItemEntry[], machines2: ItemEntry[]) {
+        let commonLength = Math.min(machines1.length, machines2.length)
+        for (let i = 0; i < commonLength; i++) {
+            let m1 = machines1[i], m2 = machines2[i]
+
+            // ordering by item ID doesn't work so do it by item name
+            let m1IsTm = m1.name.startsWith("tm")
+            let m2IsTm = m2.name.startsWith("tm")
+            if (m1IsTm === m2IsTm) {
+                // both the same kind
+                let diff = m1.name.localeCompare(m2.name)
+                if (diff !== 0) {
+                    return diff
+                }
+
+                continue
+            }
+
+            // m2 is an HM
+            if (m1IsTm) {
+                return -1
+            }
+
+            // m1 is an HM
+            if (m2IsTm) {
+                return 1
+            }
         }
 
-        // m2 is an HM
-        if (m1IsTm) {
-            return -1
-        }
-
-        // m1 is an HM
-        if (m2IsTm) {
-            return 1
-        }
-
-        // both HMs
-        return m1.name.localeCompare(m2.name)
+        // only thing that separates them is the number of machines
+        return machines1.length - machines2.length
     }
 
     /**

@@ -182,12 +182,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
                     if (method.Name == "machine")
                     {
-                        var machineRef = moveEntry.Machines.SingleOrDefault(m => m.Id == versionGroupId)?.Data;
-                        if (machineRef != null)
+                        var machineRefs = moveEntry.Machines.SingleOrDefault(m => m.Id == versionGroupId)?.Data;
+                        if (machineRefs.Any())
                         {
-                            var machineEntry = await MachineService.Upsert(machineRef.Id);
-                            var machineItem = await ItemService.Upsert(machineEntry.Item.Id);
-                            context.Machine = machineItem;
+                            var machineItems = new List<ItemEntry>();
+
+                            foreach (var m in machineRefs)
+                            {
+                                var machineEntry = await MachineService.Upsert(m.Id);
+                                var machineItem = await ItemService.Upsert(machineEntry.Item.Id);
+                                machineItems.Add(machineItem);
+                            }
+
+                            context.LearnMachines = machineItems;
                         }
                     }
 

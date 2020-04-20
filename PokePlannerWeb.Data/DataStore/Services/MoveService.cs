@@ -152,20 +152,25 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns machines for the given move, indexed by version group ID.
         /// </summary>
-        private async Task<IEnumerable<WithId<Machine>>> GetMachines(Move move)
+        private async Task<IEnumerable<WithId<Machine[]>>> GetMachines(Move move)
         {
-            var machinesList = new List<WithId<Machine>>();
+            var machinesList = new List<WithId<Machine[]>>();
 
             if (move.Machines.Any())
             {
                 foreach (var vg in await VersionGroupService.GetAll())
                 {
-                    // TODO: arceus has a move learnt from more than one machine in Black/White...
-                    var relevantMachine = move.Machines.SingleOrDefault(m => m.VersionGroup.Name == vg.Name);
-                    if (relevantMachine != null)
+                    var relevantMachines = move.Machines.Where(m => m.VersionGroup.Name == vg.Name);
+                    if (relevantMachines.Any())
                     {
-                        var machine = await MachineCacheService.GetMinimal(relevantMachine.Machine);
-                        machinesList.Add(new WithId<Machine>(vg.VersionGroupId, machine));
+                        var machines = new List<Machine>();
+                        foreach (var m in relevantMachines)
+                        {
+                            var machine = await MachineCacheService.GetMinimal(m.Machine);
+                            machines.Add(machine);
+                        }
+
+                        machinesList.Add(new WithId<Machine[]>(vg.VersionGroupId, machines.ToArray()));
                     }
                 }
             }
