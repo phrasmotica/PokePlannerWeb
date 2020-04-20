@@ -11,6 +11,7 @@ import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
 import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { StatEntry } from "../../models/StatEntry"
 import { TypeEntry } from "../../models/TypeEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -49,9 +50,9 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     baseStatFilter: BaseStatFilterModel
 
     /**
-     * The base stat names.
+     * The base stats.
      */
-    baseStatNames: string[]
+    baseStats: StatEntry[]
 
     /**
      * Handler for setting the generation filter in the parent component.
@@ -273,19 +274,19 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         }
 
         let filter = this.props.baseStatFilter
-        let baseStatNames = this.props.baseStatNames
+        let baseStats = this.props.baseStats
 
         let allSpeciesBaseStats = this.props.species.map(s => s.getBaseStats(versionGroupId!))
 
         let minValues = []
-        for (let i = 0; i < baseStatNames.length; i++) {
+        for (let i = 0; i < baseStats.length; i++) {
             let baseStatsWithMin = allSpeciesBaseStats.reduce((s, t) => s[i] < t[i] ? s : t)
             let minValue = baseStatsWithMin[i]
             minValues.push(minValue)
         }
 
         let maxValues = []
-        for (let i = 0; i < baseStatNames.length; i++) {
+        for (let i = 0; i < baseStats.length; i++) {
             let baseStatsWithMax = allSpeciesBaseStats.reduce((s, t) => s[i] > t[i] ? s : t)
             let maxValue = baseStatsWithMax[i]
             maxValues.push(maxValue)
@@ -297,7 +298,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
             <BaseStatFilter
                 index={this.props.index}
                 baseStatFilter={filter}
-                baseStatLabels={baseStatNames}
+                baseStatLabels={baseStats.map(s => s.getDisplayName("en") ?? "stat")}
                 minValues={minValues}
                 maxValues={maxValues}
                 setBaseStatFilter={setFilter} />

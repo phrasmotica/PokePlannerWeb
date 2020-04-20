@@ -10,6 +10,7 @@ import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { StatEntry } from "../../models/StatEntry"
 import { TypeEntry } from "../../models/TypeEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
@@ -46,9 +47,9 @@ interface IPokedexPanelProps extends IHasIndex, IHasHideTooltips {
     types: TypeEntry[]
 
     /**
-     * The base stat names.
+     * The base stats.
      */
-    baseStatNames: string[]
+    baseStats: StatEntry[]
 
     /**
      * Optional handler for toggling the ignore validity setting.
@@ -114,7 +115,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         defaultSpeciesId={this.state.speciesId}
                         generations={this.props.generations}
                         types={this.props.types}
-                        baseStatNames={this.props.baseStatNames}
+                        baseStats={this.props.baseStats}
                         hideTooltips={this.props.hideTooltips}
                         ignoreValidity={this.props.ignoreValidity}
                         setSpecies={setSpecies}
@@ -134,7 +135,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                             pokemon={this.state.variety}
                             effectiveTypes={this.getEffectiveTypes()}
                             types={this.props.types}
-                            baseStatNames={this.props.baseStatNames}
+                            baseStats={this.props.baseStats}
                             shouldShowPokemon={this.shouldShowPokemon()} />
                     </div>
                 </div>

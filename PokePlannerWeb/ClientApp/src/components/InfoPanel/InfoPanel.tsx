@@ -11,6 +11,7 @@ import { StatGraph } from "../StatGraph/StatGraph"
 
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { StatEntry } from "../../models/StatEntry"
 import { Type } from "../../models/Type"
 import { TypeEntry } from "../../models/TypeEntry"
 import { VersionEntry } from "../../models/VersionEntry"
@@ -50,9 +51,9 @@ interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
     types: TypeEntry[]
 
     /**
-     * The names of the base stats to display.
+     * The base stats.
      */
-    baseStatNames: string[]
+    baseStats: StatEntry[]
 
     /**
      * Whether to show info about the Pokemon.
@@ -157,7 +158,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
         return (
             <StatGraph
                 index={this.props.index}
-                statNames={this.props.baseStatNames}
+                statNames={this.props.baseStats.map(s => s.getDisplayName("en") ?? "stat")}
                 statValues={baseStats}
                 shouldShowStats={this.props.shouldShowPokemon} />
         )

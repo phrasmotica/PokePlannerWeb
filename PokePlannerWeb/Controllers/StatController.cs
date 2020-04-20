@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
@@ -33,14 +34,14 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the names of the base stats in the version group with the given ID.
+        /// Returns the base stats in the version group with the given ID.
         /// </summary>
-        [HttpGet("baseStatNames/{versionGroupId:int}")]
-        public async Task<string[]> GetBaseStatNamesInVersionGroup(int versionGroupId)
+        [HttpGet("{versionGroupId:int}")]
+        public async Task<StatEntry[]> GetBaseStatsInVersionGroup(int versionGroupId)
         {
-            Logger.LogInformation($"Getting names of base stats in version group {versionGroupId}...");
+            Logger.LogInformation($"Getting base stats in version group {versionGroupId}...");
             var allStats = await StatsService.GetBaseStats(versionGroupId);
-            return allStats.Select(s => s.GetDisplayName()).ToArray();
+            return allStats.ToArray();
         }
     }
 }

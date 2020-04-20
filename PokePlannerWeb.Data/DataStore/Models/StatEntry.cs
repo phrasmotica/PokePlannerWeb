@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -22,13 +21,5 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets whether this stat is a battle-only stat.
         /// </summary>
         public bool IsBattleOnly { get; set; }
-
-        /// <summary>
-        /// Returns the name of this stat entry in the given locale.
-        /// </summary>
-        public string GetDisplayName(string locale = "en")
-        {
-            return DisplayNames.SingleOrDefault(n => n.Language == locale)?.Value;
-        }
     }
 }

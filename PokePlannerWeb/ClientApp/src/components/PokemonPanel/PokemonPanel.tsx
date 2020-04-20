@@ -13,6 +13,7 @@ import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { StatEntry } from "../../models/StatEntry"
 import { TypeEntry } from "../../models/TypeEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -47,9 +48,9 @@ interface IPokemonPanelProps extends IHasCommon {
     types: TypeEntry[]
 
     /**
-     * The base stat names.
+     * The base stats.
      */
-    baseStatNames: string[]
+    baseStats: StatEntry[]
 
     /**
      * Handler for setting the species ID in the parent component.
@@ -188,7 +189,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let isEnabled = CookieHelper.getFlag(`baseStatFilter${this.props.index}enabled`)
 
         let cookieFilterValues = []
-        for (let i = 0; i < this.props.baseStatNames.length; i++) {
+        for (let i = 0; i < this.props.baseStats.length; i++) {
             let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)
             let value = CookieHelper.getNumber(`baseStatFilter${this.props.index}value${i}`)
             cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
@@ -201,9 +202,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Refresh minimum base stat values for the species filter.
      */
     componentDidUpdate(props: IPokemonPanelProps) {
-        let newBaseStatNames = this.props.baseStatNames
-        if (!props.baseStatNames.equals(newBaseStatNames)) {
-            let newFilter = BaseStatFilterModel.createEmpty(newBaseStatNames.length)
+        let oldBaseStats = props.baseStats.map(s => s.statId)
+        let newBaseStats = this.props.baseStats.map(s => s.statId)
+        if (!oldBaseStats.equals(newBaseStats)) {
+            let newFilter = BaseStatFilterModel.createEmpty(newBaseStats.length)
             this.setState({ baseStatFilter: newFilter })
         }
     }
@@ -283,7 +285,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                 generationFilter={this.state.generationFilter}
                 types={this.props.types}
                 typeFilter={this.state.typeFilter}
-                baseStatNames={this.props.baseStatNames}
+                baseStats={this.props.baseStats}
                 baseStatFilter={this.state.baseStatFilter}
                 setGenerationFilter={filter => this.setGenerationFilter(filter)}
                 setTypeFilter={filter => this.setTypeFilter(filter)}

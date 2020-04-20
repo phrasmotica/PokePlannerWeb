@@ -8,6 +8,7 @@ import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
 import { GenerationEntry } from '../../models/GenerationEntry'
 import { PokemonSpeciesEntry } from '../../models/PokemonSpeciesEntry'
+import { StatEntry } from '../../models/StatEntry'
 import { TypeEntry } from '../../models/TypeEntry'
 import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
@@ -60,15 +61,14 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     loadingTypes: boolean
 
     /**
-     * The base stat names.
-     * TODO: fetch this in StatGraph
+     * The base stats.
      */
-    baseStatNames: string[]
+    baseStats: StatEntry[]
 
     /**
      * Whether the base stat names are loading.
      */
-    loadingBaseStatNames: boolean
+    loadingBaseStats: boolean
 
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
@@ -92,8 +92,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             types: [],
             loadingTypes: true,
             versionGroupId: undefined,
-            baseStatNames: [],
-            loadingBaseStatNames: true,
+            baseStats: [],
+            loadingBaseStats: true,
             ignoreValidity: CookieHelper.getFlag("ignoreValidity"),
             hideTooltips: CookieHelper.getFlag("hideTooltips")
         }
@@ -105,7 +105,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         this.fetchTypes()
         this.getVersionGroups()
             .then(() => {
-                this.getBaseStatNames(this.state.versionGroupId)
+                this.getBaseStats(this.state.versionGroupId)
             })
     }
 
@@ -214,7 +214,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     species={this.state.species}
                     generations={this.state.generations}
                     types={this.state.types}
-                    baseStatNames={this.state.baseStatNames} />
+                    baseStats={this.state.baseStats} />
             )
 
             if (i < TEAM_SIZE - 1) {
@@ -323,19 +323,21 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             .finally(() => this.setState({ loadingTypes: false }))
     }
 
-    // retrieves the types presence map for the given version group from TypeController
-    getBaseStatNames(versionGroupId: number | undefined) {
+    /**
+     * Retrieves the stats for the given version group from TypeController.
+     */
+    getBaseStats(versionGroupId: number | undefined) {
         if (versionGroupId === undefined) {
             return
         }
 
-        console.log(`Team builder: getting base stat names for version group ${versionGroupId}...`)
+        console.log(`Team builder: getting base stats for version group ${versionGroupId}...`)
 
         // loading begins
-        this.setState({ loadingBaseStatNames: true })
+        this.setState({ loadingBaseStats: true })
 
         // get base stat names
-        fetch(`${process.env.REACT_APP_API_URL}/stat/baseStatNames/${versionGroupId}`)
+        fetch(`${process.env.REACT_APP_API_URL}/stat/${versionGroupId}`)
             .then(response => {
                 if (response.status === 200) {
                     return response
@@ -345,9 +347,12 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                 throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
             })
             .then(response => response.json())
-            .then(baseStatNames => this.setState({ baseStatNames: baseStatNames }))
+            .then((baseStats: StatEntry[]) => {
+                let concreteBaseStats = baseStats.map(StatEntry.from)
+                this.setState({ baseStats: concreteBaseStats })
+            })
             .catch(error => console.error(error))
-            .then(() => this.setState({ loadingBaseStatNames: false }))
+            .then(() => this.setState({ loadingBaseStats: false }))
     }
 
     // set selected version group
@@ -358,7 +363,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         CookieHelper.set("versionGroupId", versionGroupId)
 
         // reload base stat names
-        this.getBaseStatNames(versionGroupId)
+        this.getBaseStats(versionGroupId)
     }
 
     // toggle validity check on Pokemon
@@ -386,9 +391,6 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         return this.state.loadingSpecies
             || this.state.loadingVersionGroups
             || this.state.loadingGenerations
-
-            // TODO: don't reload the entire page when fetching types after
-            // a new version group has been selected
             || this.state.loadingTypes
     }
 }
