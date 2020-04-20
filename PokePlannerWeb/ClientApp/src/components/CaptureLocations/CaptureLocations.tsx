@@ -80,6 +80,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     render() {
+        // TODO: show species catch rate and variety held items
         return (
             <div style={{ marginTop: 4 }}>
                 {this.renderCaptureLocations()}
@@ -160,6 +161,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                         </div>
                     )
 
+                    // TODO: show encounter method details
                     let isOpen = this.state.encountersAreOpen.find(e => e.id === encounterId)?.data ?? false
                     let infoPane = (
                         <Collapse isOpen={isOpen}>
