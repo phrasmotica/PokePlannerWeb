@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem } from "reactstrap"
+import { ListGroup, ListGroupItem, Button } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
@@ -121,7 +121,14 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 let items = []
                 for (let row = 0; row < encountersData.length; row++) {
                     let encounter = encountersData[row]
-                    let displayName = encounter.getDisplayName("en") ?? `encounter`
+                    let encounterName = encounter.getDisplayName("en") ?? `encounter`
+                    let encounterNameElement = (
+                        <span>
+                            <b>
+                                {encounterName}
+                            </b>
+                        </span>
+                    )
 
                     let versions = this.props.versionGroup?.versions ?? []
                     let maxChances = versions.map(v => {
@@ -130,10 +137,23 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     })
                     let maxChancesSummary = maxChances.join(", ")
 
+                    let encounterNameButton = (
+                        <div className="flex">
+                            <Button
+                                color="link"
+                                onMouseUp={() => {}}>
+                                {encounterNameElement}
+                            </Button>
+
+                            <span>
+                                {maxChancesSummary}
+                            </span>
+                        </div>
+                    )
+
                     items.push(
                         <ListGroupItem key={key(encounter)}>
-                            {displayName}
-                            {maxChancesSummary}
+                            {encounterNameButton}
                         </ListGroupItem>
                     )
                 }

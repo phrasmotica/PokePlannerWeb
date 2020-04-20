@@ -7,3 +7,11 @@
     align-items: center;
     padding: 0.25rem 0.5rem;
 }
+
+.encountersListGroup > .list-group-item .btn {
+    font-weight: unset;
+    font-size: unset;
+    padding: unset;
+    border: unset;
+    margin-right: 3px;
+}
