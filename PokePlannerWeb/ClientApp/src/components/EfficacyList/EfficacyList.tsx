@@ -1,16 +1,22 @@
 ﻿import React, { Component } from "react"
 import { Tooltip } from "reactstrap"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 import { EfficacySet } from "../../models/EfficacyMap"
 import { VersionGroupTypeContext } from "../../models/TypeEntry"
+import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import "../../util/Extensions"
 
 import "./EfficacyList.scss"
 import "../../styles/types.scss"
 
-interface IEfficacyListProps extends IHasCommon {
+interface IEfficacyListProps extends IHasIndex, IHasHideTooltips {
+    /**
+     * The version group.
+     */
+    versionGroup: VersionGroupEntry | undefined
+
     /**
      * The IDs of the types to show efficacy for.
      */
@@ -64,8 +70,8 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     componentDidUpdate(previousProps: IEfficacyListProps) {
         // refresh efficacy if the version group changed...
-        let previousVersionGroupId = previousProps.versionGroupId
-        let versionGroupId = this.props.versionGroupId
+        let previousVersionGroupId = previousProps.versionGroup?.versionGroupId
+        let versionGroupId = this.props.versionGroup?.versionGroupId
         let versionGroupChanged = versionGroupId !== previousVersionGroupId
 
         // ...or if the types changed
@@ -120,7 +126,8 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 )
             }
             else {
-                let typeIsPresent = types[index].isPresent
+                let generationId = this.props.versionGroup?.generation.id ?? 0
+                let typeIsPresent = types[index].generation.id <= generationId
                 if (typeIsPresent) {
                     let matchingData = efficacy.efficacyMultipliers.find(m => m.id === typeId)
 
@@ -269,7 +276,7 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     // returns the endpoint to use when fetching efficacy of the given types
     constructEndpointUrl(typeIds: number[]): string {
-        let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroupId=${this.props.versionGroupId}`
+        let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroupId=${this.props.versionGroup?.versionGroupId}`
         for (var i = 0; i < typeIds.length; i++) {
             endpointUrl += `&type${i + 1}=${typeIds[i]}`
         }

@@ -127,7 +127,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                     <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>
                         <InfoPanel
                             index={this.props.index}
-                            versionGroupId={this.props.versionGroup?.versionGroupId}
+                            versionGroup={this.props.versionGroup}
                             hideTooltips={this.props.hideTooltips}
                             versions={this.props.versionGroup?.versions ?? []}
                             species={this.getSpecies()}

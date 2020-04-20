@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { Tabs, Tab } from "react-bootstrap"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { AbilityList } from "../AbilityList/AbilityList"
 import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
@@ -14,10 +14,16 @@ import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { Type } from "../../models/Type"
 import { VersionGroupTypeContext } from "../../models/TypeEntry"
 import { VersionEntry } from "../../models/VersionEntry"
+import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
-interface IInfoPanelProps extends IHasCommon {
+interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
+    /**
+     * The version group.
+     */
+    versionGroup: VersionGroupEntry | undefined
+
     /**
      * The versions.
      */
@@ -128,7 +134,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
         return (
             <AbilityList
                 index={this.props.index}
-                versionGroupId={this.props.versionGroupId}
+                versionGroupId={this.props.versionGroup?.versionGroupId}
                 pokemonId={this.props.pokemon?.pokemonId}
                 showAbilities={this.props.shouldShowPokemon} />
         )
@@ -140,7 +146,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
 
         let pokemon = this.props.pokemon
         if (pokemon !== undefined) {
-            let versionGroupId = this.props.versionGroupId
+            let versionGroupId = this.props.versionGroup?.versionGroupId
             if (versionGroupId === undefined) {
                 throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
             }
@@ -166,7 +172,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                 index={this.props.index}
                 typeIds={types.map(type => type.id)}
                 types={this.props.types}
-                versionGroupId={this.props.versionGroupId}
+                versionGroup={this.props.versionGroup}
                 showMultipliers={this.props.shouldShowPokemon}
                 hideTooltips={this.props.hideTooltips} />
         )
@@ -180,7 +186,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
             <CaptureLocations
                 index={this.props.index}
                 pokemonId={this.props.pokemon?.pokemonId}
-                versionGroupId={this.props.versionGroupId}
+                versionGroupId={this.props.versionGroup?.versionGroupId}
                 showLocations={this.props.shouldShowPokemon}
                 hideTooltips={this.props.hideTooltips} />
         )
