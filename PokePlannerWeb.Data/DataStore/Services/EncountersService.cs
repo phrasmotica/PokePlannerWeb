@@ -98,6 +98,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// Returns the Pokemon's encounters in all version groups.
         /// </summary>
+        // TODO: deprecate EncountersEntry and instead return a set of PokemonEncounterContext models
         private async Task<List<WithId<EncounterEntry[]>>> GetEncounters(Pokemon pokemon)
         {
             var encounterEntriesList = new List<WithId<EncounterEntry[]>>();

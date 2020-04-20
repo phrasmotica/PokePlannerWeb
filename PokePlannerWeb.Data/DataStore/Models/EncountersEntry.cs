@@ -37,5 +37,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets the encounter chances indexed by version ID.
         /// </summary>
         public List<WithId<int>> Chances { get; set; }
+
+        // TODO: organise encounter chances by encounter method and display details.
+        // Will require creating DB services for encounter methods, encounter conditions and
+        // encounter condition values...
     }
 }
