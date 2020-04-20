@@ -24,6 +24,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
     public class EncounterEntry
     {
         /// <summary>
+        /// Gets or sets the ID of the location area of the encounter.
+        /// </summary>
+        public int LocationAreaId { get; set; }
+
+        /// <summary>
         /// Gets or sets the display names of the encounter.
         /// </summary>
         public List<LocalString> DisplayNames { get; set; }

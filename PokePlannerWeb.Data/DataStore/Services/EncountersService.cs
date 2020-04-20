@@ -116,6 +116,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var encounterEntries = new List<EncounterEntry>();
                 foreach (var encounter in relevantEncounters)
                 {
+                    var locationArea = await LocationAreasService.Upsert(encounter.LocationArea);
                     var displayNames = await GetDisplayNames(encounter);
 
                     // filter to relevant version details
@@ -129,6 +130,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
                     var encounterEntry = new EncounterEntry
                     {
+                        LocationAreaId = locationArea.LocationAreaId,
                         DisplayNames = displayNames.ToList(),
                         Chances = chances.ToList()
                     };

@@ -21,6 +21,11 @@ export interface EncountersEntry {
  */
 export class EncounterEntry {
     /**
+     * The ID of the location area of the encounter.
+     */
+    locationAreaId: number
+
+    /**
      * The display names of the encounter.
      */
     displayNames: LocalString[]
@@ -34,9 +39,11 @@ export class EncounterEntry {
      * Constructor.
      */
     constructor(
+        locationAreaId: number,
         displayNames: LocalString[],
         chances: WithId<number>[]
     ) {
+        this.locationAreaId = locationAreaId
         this.displayNames = displayNames
         this.chances = chances
     }
@@ -46,6 +53,7 @@ export class EncounterEntry {
      */
     static from(encounter: EncounterEntry) {
         return new EncounterEntry(
+            encounter.locationAreaId,
             encounter.displayNames,
             encounter.chances
         )
