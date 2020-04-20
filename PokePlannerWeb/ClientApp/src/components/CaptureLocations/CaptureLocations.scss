@@ -3,8 +3,7 @@
 }
 
 .encountersListGroup > .list-group-item {
-    display: flex;
-    align-items: center;
+    display: block;
     padding: 0.25rem 0.5rem;
 }
 
@@ -14,4 +13,12 @@
     padding: unset;
     border: unset;
     margin-right: 3px;
+}
+
+.encounterInfo {
+    margin-top: 5px;
+}
+
+.encounterInfo hr {
+    margin: 0.3rem 0rem;
 }

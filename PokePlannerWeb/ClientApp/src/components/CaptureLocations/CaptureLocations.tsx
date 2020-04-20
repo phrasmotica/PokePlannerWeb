@@ -1,9 +1,10 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button } from "reactstrap"
+import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
+import { WithId } from "../../models/WithId"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
@@ -42,6 +43,11 @@ interface ICaptureLocationsState {
      * Whether the location tooltips are open.
      */
     locationTooltipOpen: boolean[]
+
+    /**
+     * Whether each encounter's info pane is open.
+     */
+    encountersAreOpen: WithId<boolean>[]
 }
 
 /**
@@ -53,7 +59,8 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         this.state = {
             locations: undefined,
             loadingLocations: false,
-            locationTooltipOpen: []
+            locationTooltipOpen: [],
+            encountersAreOpen: []
         }
     }
 
@@ -137,11 +144,13 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     })
                     let maxChancesSummary = maxChances.join(", ")
 
+                    let encounterId = encounter.locationAreaId
+                    const openInfoPane = () => this.toggleEncounterOpen(encounterId)
                     let encounterNameButton = (
                         <div className="flex">
                             <Button
                                 color="link"
-                                onMouseUp={() => {}}>
+                                onMouseUp={openInfoPane}>
                                 {encounterNameElement}
                             </Button>
 
@@ -151,9 +160,19 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                         </div>
                     )
 
+                    let isOpen = this.state.encountersAreOpen.find(e => e.id === encounterId)?.data ?? false
+                    let infoPane = (
+                        <Collapse isOpen={isOpen}>
+                            <div className="flex encounterInfo">
+                                {encounterName}
+                            </div>
+                        </Collapse>
+                    )
+
                     items.push(
                         <ListGroupItem key={key(encounter)}>
                             {encounterNameButton}
+                            {infoPane}
                         </ListGroupItem>
                     )
                 }
@@ -184,6 +203,21 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         this.setState({
             locationTooltipOpen: newLocationTooltipOpen
         })
+    }
+
+    /**
+     * Toggles the encounter info pane with the given index.
+     */
+    toggleEncounterOpen(id: number) {
+        let newEncountersAreOpen = this.state.encountersAreOpen.map(item => {
+            if (item.id === id) {
+                return new WithId<boolean>(id, !item.data)
+            }
+
+            return item
+        })
+
+        this.setState({ encountersAreOpen: newEncountersAreOpen })
     }
 
     // returns true if we have a Pokemon
@@ -217,16 +251,24 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 throw new Error(`Capture locations ${this.props.index}: tried to get capture locations for Pokemon ${pokemonId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then((locations: EncountersEntry) => {
+            .then((encounters: EncountersEntry) => {
                 let concreteLocations = {
-                    pokemonId: locations.pokemonId,
-                    encounters: locations.encounters.map(e => ({
+                    pokemonId: encounters.pokemonId,
+                    encounters: encounters.encounters.map(e => ({
                         id: e.id,
                         data: e.data.map(EncounterEntry.from)
-                    }))
+                    })),
                 }
 
-                this.setState({ locations: concreteLocations })
+                let versionGroupId = this.props.versionGroup?.versionGroupId
+                let relevantEncounters = concreteLocations.encounters.find(
+                    e => e.id === versionGroupId
+                )!.data
+
+                this.setState({
+                    locations: concreteLocations,
+                    encountersAreOpen: relevantEncounters.map(e => new WithId<boolean>(e.locationAreaId, false))
+                })
             })
             .catch(error => console.error(error))
             .then(() => this.setState({ loadingLocations: false }))
