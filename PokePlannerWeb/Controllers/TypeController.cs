@@ -33,13 +33,12 @@ namespace PokePlannerWeb.Controllers
         }
 
         /// <summary>
-        /// Returns the type set for the version group with the given ID.
+        /// Returns all concrete types.
         /// </summary>
-        [HttpGet("{versionGroupId:int}")]
-        public async Task<VersionGroupTypeContext[]> GetTypesByVersionGroupId(int versionGroupId)
+        public async Task<TypeEntry[]> GetConcreteTypes()
         {
-            Logger.LogInformation($"Getting types for version group {versionGroupId}...");
-            return await TypeService.GetTypesByVersionGroupId(versionGroupId);
+            Logger.LogInformation($"Getting concrete types...");
+            return await TypeService.GetConcrete();
         }
     }
 }

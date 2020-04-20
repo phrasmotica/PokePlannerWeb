@@ -8,7 +8,7 @@ import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
 import { GenerationEntry } from '../../models/GenerationEntry'
 import { PokemonSpeciesEntry } from '../../models/PokemonSpeciesEntry'
-import { VersionGroupTypeContext } from '../../models/TypeEntry'
+import { TypeEntry } from '../../models/TypeEntry'
 import { VersionGroupEntry } from '../../models/VersionGroupEntry'
 
 import { CookieHelper } from '../../util/CookieHelper'
@@ -52,7 +52,7 @@ interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
     /**
      * List of types.
      */
-    types: VersionGroupTypeContext[]
+    types: TypeEntry[]
 
     /**
      * Whether the types are loading.
@@ -102,9 +102,9 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     componentDidMount() {
         this.getSpecies()
         this.fetchGenerations()
+        this.fetchTypes()
         this.getVersionGroups()
             .then(() => {
-                this.fetchTypes(this.state.versionGroupId)
                 this.getBaseStatNames(this.state.versionGroupId)
             })
     }
@@ -310,19 +310,13 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     /**
      * Fetches all types.
      */
-    fetchTypes(versionGroupId: number | undefined) {
-        if (versionGroupId === undefined) {
-            return
-        }
-
-        console.log(`Team builder: getting types for version group ${versionGroupId}...`)
-
+    fetchTypes() {
         this.setState({ loadingTypes: true })
 
-        fetch(`${process.env.REACT_APP_API_URL}/type/${versionGroupId}`)
+        fetch(`${process.env.REACT_APP_API_URL}/type`)
             .then(response => response.json())
-            .then((types: VersionGroupTypeContext[]) => {
-                let concreteTypes = types.map(VersionGroupTypeContext.from)
+            .then((types: TypeEntry[]) => {
+                let concreteTypes = types.map(TypeEntry.from)
                 this.setState({ types: concreteTypes })
             })
             .catch(error => console.error(error))
@@ -363,8 +357,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         // set cookie
         CookieHelper.set("versionGroupId", versionGroupId)
 
-        // reload types presence map and base stat names
-        this.fetchTypes(versionGroupId)
+        // reload base stat names
         this.getBaseStatNames(versionGroupId)
     }
 

@@ -12,7 +12,7 @@ import { StatGraph } from "../StatGraph/StatGraph"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { Type } from "../../models/Type"
-import { VersionGroupTypeContext } from "../../models/TypeEntry"
+import { TypeEntry } from "../../models/TypeEntry"
 import { VersionEntry } from "../../models/VersionEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
@@ -47,7 +47,7 @@ interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The types.
      */
-    types: VersionGroupTypeContext[]
+    types: TypeEntry[]
 
     /**
      * The names of the base stats to display.

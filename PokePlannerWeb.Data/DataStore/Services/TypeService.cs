@@ -89,24 +89,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the types for the version group with the given ID.
-        /// </summary>
-        public async Task<VersionGroupTypeContext[]> GetTypesByVersionGroupId(int versionGroupId)
-        {
-            var versionGroup = await VersionGroupsService.Upsert(versionGroupId);
-            var types = await GetConcrete();
-
-            var typeList = types.Select(type =>
-            {
-                var context = VersionGroupTypeContext.From(type);
-                context.IsPresent = HasType(versionGroup.Generation, type);
-                return context;
-            });
-
-            return typeList.ToArray();
-        }
-
-        /// <summary>
         /// Returns the efficacy of the type with the given ID in the version group with the given
         /// ID from the data store.
         /// </summary>

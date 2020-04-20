@@ -10,7 +10,7 @@ import { GenerationEntry } from "../../models/GenerationEntry"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { VersionGroupTypeContext } from "../../models/TypeEntry"
+import { TypeEntry } from "../../models/TypeEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
@@ -43,7 +43,7 @@ interface IPokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * List of types.
      */
-    types: VersionGroupTypeContext[]
+    types: TypeEntry[]
 
     /**
      * The base stat names.

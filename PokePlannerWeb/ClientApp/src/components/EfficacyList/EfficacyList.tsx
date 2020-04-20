@@ -3,7 +3,7 @@ import { Tooltip } from "reactstrap"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 import { EfficacySet } from "../../models/EfficacyMap"
-import { VersionGroupTypeContext } from "../../models/TypeEntry"
+import { TypeEntry } from "../../models/TypeEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import "../../util/Extensions"
@@ -25,7 +25,7 @@ interface IEfficacyListProps extends IHasIndex, IHasHideTooltips {
     /**
      * The types.
      */
-    types: VersionGroupTypeContext[]
+    types: TypeEntry[]
 
     /**
      * Whether to show the multipliers.
