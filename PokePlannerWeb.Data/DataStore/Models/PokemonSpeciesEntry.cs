@@ -69,6 +69,11 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<int> Validity { get; set; }
 
         /// <summary>
+        /// Gets or sets the catch rate of the species.
+        /// </summary>
+        public int CatchRate { get; set; }
+
+        /// <summary>
         /// Returns a subset of this entry for use in <see cref="EvolutionChainEntry"/>.
         /// </summary>
         public PokemonSpeciesEntry ForEvolutionChain()
