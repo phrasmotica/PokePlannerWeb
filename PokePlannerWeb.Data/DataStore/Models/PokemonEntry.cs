@@ -52,5 +52,10 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// Gets or sets this Pokemon's moves indexed by version group ID.
         /// </summary>
         public List<WithId<Move[]>> Moves { get; set; }
+
+        /// <summary>
+        /// Gets or sets the held items this Pokemon may bear in a wild encounter, indexed by version ID.
+        /// </summary>
+        public List<WithId<VersionHeldItemContext[]>> HeldItems { get; set; }
     }
 }
