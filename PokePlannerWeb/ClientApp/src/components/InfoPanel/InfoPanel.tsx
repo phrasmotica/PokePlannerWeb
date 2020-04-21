@@ -186,7 +186,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
         return (
             <CaptureLocations
                 index={this.props.index}
-                pokemonId={this.props.pokemon?.pokemonId}
+                pokemon={this.props.pokemon}
                 versionGroup={this.props.versionGroup}
                 species={this.props.species}
                 showLocations={this.props.shouldShowPokemon}

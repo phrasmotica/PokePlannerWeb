@@ -109,7 +109,14 @@ export class PokemonEntry {
             pokemon.abilities,
             pokemon.baseStats,
             pokemon.moves,
-            pokemon.heldItems
+            pokemon.heldItems.map(
+                h => new WithId<VersionHeldItemContext[]>(
+                    h.id,
+                    h.data.map(
+                        c => VersionHeldItemContext.from(c)
+                    )
+                )
+            )
         )
     }
 

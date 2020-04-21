@@ -3,6 +3,7 @@ import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
+import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 import { WithId } from "../../models/WithId"
@@ -26,7 +27,7 @@ interface ICaptureLocationsProps extends IHasIndex, IHasHideTooltips {
     /**
      * The ID of the Pokemon to show capture locations for.
      */
-    pokemonId: number | undefined
+    pokemon: PokemonEntry | undefined
 
     /**
      * Whether to show the capture locations.
@@ -76,8 +77,8 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     componentDidUpdate(previousProps: ICaptureLocationsProps) {
         // refresh capture locations if the Pokemon ID changed
-        let previousPokemonId = previousProps.pokemonId
-        let pokemonId = this.props.pokemonId
+        let previousPokemonId = previousProps.pokemon?.pokemonId
+        let pokemonId = this.props.pokemon?.pokemonId
         let pokemonChanged = pokemonId !== previousPokemonId
 
         if (pokemonChanged) {
@@ -90,6 +91,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         return (
             <div style={{ marginTop: 4 }}>
                 {this.renderCatchRate()}
+                {this.renderHeldItems()}
                 {this.renderCaptureLocations()}
             </div>
         )
@@ -114,7 +116,68 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     }
 
     /**
-     * Renders the capture locations.
+     * Renders the Pokemon's held items.
+     */
+    renderHeldItems() {
+        let versionGroup = this.props.versionGroup
+        let pokemon = this.props.pokemon
+        if (versionGroup === undefined || pokemon === undefined) {
+            return (
+                <div>
+                    -
+                </div>
+            )
+        }
+
+        let versions = versionGroup.versions
+        let versionIds = versions.map(v => v.versionId)
+        let heldItems = pokemon.heldItems.filter(e => versionIds.includes(e.id))
+
+        let versionElements = []
+        for (let entry of heldItems) {
+            let itemList = entry.data
+
+            let version = versions.find(v => v.versionId === entry.id)
+            let versionName = version!.getDisplayName("en") ?? "version"
+            let versionNameElement = (
+                <div>
+                    <b>
+                        {versionName}
+                    </b>
+                </div>
+            )
+
+            let listElements = []
+            for (let item of itemList) {
+                let itemName = item.getDisplayName("en") ?? "item"
+                let itemRarity = `(${item.rarity}%)`
+
+                listElements.push(
+                    <div>
+                        <span>
+                            {itemName} {itemRarity}
+                        </span>
+                    </div>
+                )
+            }
+
+            versionElements.push(
+                <div>
+                    {versionNameElement}
+                    {listElements}
+                </div>
+            )
+        }
+
+        return (
+            <div className="flex-center margin-bottom-small">
+                {versionElements}
+            </div>
+        )
+    }
+
+    /**
+     * Renders the Pokemon's capture locations.
      */
     renderCaptureLocations() {
         if (this.state.loadingLocations) {
@@ -252,12 +315,12 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     // returns true if we have a Pokemon
     hasPokemon() {
-        return this.props.pokemonId !== undefined
+        return this.props.pokemon !== undefined
     }
 
     // fetches the Pokemon's capture locations from EncounterController
     fetchCaptureLocations() {
-        let pokemonId = this.props.pokemonId
+        let pokemonId = this.props.pokemon?.pokemonId
         if (pokemonId === undefined) {
             this.setState({ locations: undefined })
             return
