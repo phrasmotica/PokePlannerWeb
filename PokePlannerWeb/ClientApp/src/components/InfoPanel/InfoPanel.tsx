@@ -18,6 +18,7 @@ import { VersionEntry } from "../../models/VersionEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import { CookieHelper } from "../../util/CookieHelper"
+import { HeldItemList } from "../HeldItemList/HeldItemList"
 
 interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
@@ -110,6 +111,10 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                     <Tab eventKey="locations" title="Capture Locations">
                         {this.renderCaptureLocations()}
                     </Tab>
+
+                    <Tab eventKey="heldItems" title="Held Items">
+                        {this.renderHeldItems()}
+                    </Tab>
                 </Tabs>
             </div>
         )
@@ -186,11 +191,24 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
         return (
             <CaptureLocations
                 index={this.props.index}
-                pokemon={this.props.pokemon}
+                pokemonId={this.props.pokemon?.pokemonId}
                 versionGroup={this.props.versionGroup}
                 species={this.props.species}
                 showLocations={this.props.shouldShowPokemon}
                 hideTooltips={this.props.hideTooltips} />
+        )
+    }
+
+    /**
+     * Renders the held items.
+     */
+    renderHeldItems() {
+        return (
+            <HeldItemList
+                index={this.props.index}
+                versionGroup={this.props.versionGroup}
+                pokemon={this.props.pokemon}
+                showHeldItems={this.props.shouldShowPokemon} />
         )
     }
 
