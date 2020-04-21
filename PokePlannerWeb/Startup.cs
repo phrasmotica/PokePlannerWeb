@@ -75,6 +75,21 @@ namespace PokePlannerWeb
             services.AddSingleton<EfficacyService>();
 
             services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EncounterConditionEntry>(dataStoreSettings.EncounterConditionCollectionName)
+            );
+            services.AddSingleton<EncounterConditionService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EncounterConditionValueEntry>(dataStoreSettings.EncounterConditionValueCollectionName)
+            );
+            services.AddSingleton<EncounterConditionValueService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EncounterMethodEntry>(dataStoreSettings.EncounterMethodCollectionName)
+            );
+            services.AddSingleton<EncounterMethodService>();
+
+            services.AddSingleton(sp =>
                 dataStoreSourceFactory.Create<EncountersEntry>(dataStoreSettings.EncounterCollectionName)
             );
             services.AddSingleton<EncountersService>();
@@ -203,6 +218,21 @@ namespace PokePlannerWeb
                 cacheSourceFactory.CreateNamed<Ability>(cacheSettings.AbilityCollectionName)
             );
             services.AddSingleton<AbilityCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EncounterCondition>(cacheSettings.EncounterConditionCollectionName)
+            );
+            services.AddSingleton<EncounterConditionCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EncounterConditionValue>(cacheSettings.EncounterConditionValueCollectionName)
+            );
+            services.AddSingleton<EncounterConditionValueCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EncounterMethod>(cacheSettings.EncounterMethodCollectionName)
+            );
+            services.AddSingleton<EncounterMethodCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<EvolutionChain>(cacheSettings.EvolutionChainCollectionName)
