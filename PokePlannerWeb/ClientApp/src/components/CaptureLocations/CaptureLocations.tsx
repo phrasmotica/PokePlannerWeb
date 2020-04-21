@@ -3,6 +3,7 @@ import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
+import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 import { WithId } from "../../models/WithId"
 
@@ -16,6 +17,11 @@ interface ICaptureLocationsProps extends IHasIndex, IHasHideTooltips {
      * The version group.
      */
     versionGroup: VersionGroupEntry | undefined
+
+    /**
+     * The version group.
+     */
+    species: PokemonSpeciesEntry | undefined
 
     /**
      * The ID of the Pokemon to show capture locations for.
@@ -83,11 +89,33 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         // TODO: show species catch rate and variety held items
         return (
             <div style={{ marginTop: 4 }}>
+                {this.renderCatchRate()}
                 {this.renderCaptureLocations()}
             </div>
         )
     }
 
+    /**
+     * Renders the species' catch rate.
+     */
+    renderCatchRate() {
+        let catchRateElement = "-"
+
+        let species = this.props.species
+        if (species !== undefined) {
+            catchRateElement = `${species.catchRate}`
+        }
+
+        return (
+            <div className="flex-center margin-bottom-small">
+                Catch rate: {catchRateElement}
+            </div>
+        )
+    }
+
+    /**
+     * Renders the capture locations.
+     */
     renderCaptureLocations() {
         if (this.state.loadingLocations) {
             return (
