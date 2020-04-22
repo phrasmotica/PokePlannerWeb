@@ -7,6 +7,7 @@ using PokePlannerWeb.Data.Cache.Services;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.Extensions;
+using PokePlannerWeb.Data.Util;
 
 namespace PokePlannerWeb.Data.DataStore.Services
 {
@@ -15,6 +16,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
     /// </summary>
     public class EncountersService : NamedServiceBase<Pokemon, EncountersEntry>
     {
+        /// <summary>
+        /// The encounter method service.
+        /// </summary>
+        private readonly EncounterMethodService EncounterMethodService;
+
         /// <summary>
         /// The locations service.
         /// </summary>
@@ -28,7 +34,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// <summary>
         /// The versions service.
         /// </summary>
-        private readonly VersionService VersionsService;
+        private readonly VersionService VersionService;
 
         /// <summary>
         /// The version groups service.
@@ -42,15 +48,17 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<EncountersEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonCacheService pokemonCacheService,
+            EncounterMethodService encounterMethodService,
             LocationService locationsService,
             LocationAreaService locationAreasService,
             VersionService versionsService,
             VersionGroupService versionGroupsService,
             ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, pokemonCacheService, logger)
         {
+            EncounterMethodService = encounterMethodService;
             LocationsService = locationsService;
             LocationAreasService = locationAreasService;
-            VersionsService = versionsService;
+            VersionService = versionsService;
             VersionGroupsService = versionGroupsService;
         }
 
@@ -106,7 +114,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             // enumerate version groups spanned by this Pokemon's encounters
             // TODO: create encounters cache service
             var encounters = await PokeApi.GetEncounters(pokemon);
-            var versions = await VersionsService.UpsertMany(encounters.GetDistinctVersions());
+            var versions = await VersionService.UpsertMany(encounters.GetDistinctVersions());
             var versionGroups = await VersionGroupsService.UpsertManyByVersionIds(versions.Select(v => v.VersionId));
 
             foreach (var vg in versionGroups)
@@ -128,12 +136,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     });
 
                     var chances = await GetChances(relevantVersionDetails);
+                    var encounterDetails = await GetEncounterDetails(relevantVersionDetails);
 
                     var encounterEntry = new EncounterEntry
                     {
                         LocationAreaId = locationArea.LocationAreaId,
                         DisplayNames = displayNames.ToList(),
-                        Chances = chances.ToList()
+                        Chances = chances.ToList(),
+                        Details = encounterDetails.ToList()
                     };
 
                     encounterEntries.Add(encounterEntry);
@@ -145,6 +155,56 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return encounterEntriesList;
+        }
+
+        /// <summary>
+        /// Returns encounter details sorted by method, indexed by version ID, from the given version details.
+        /// </summary>
+        public async Task<IEnumerable<WithId<EncounterMethodDetails[]>>> GetEncounterDetails(IEnumerable<VersionEncounterDetail> versionEncounterDetails)
+        {
+            var entryList = new List<WithId<EncounterMethodDetails[]>>();
+
+            var versionGroupings = versionEncounterDetails.GroupBy(d => d.Version, new NamedApiResourceComparer<Version>());
+            foreach (var versionGrouping in versionGroupings)
+            {
+                var details = versionGrouping.Select(g => g.EncounterDetails);
+
+                var methodDetailsList = new List<EncounterMethodDetails>();
+
+                // loop through list of encounters in each version
+                foreach (var detail in details)
+                {
+                    var methodGroupings = detail.GroupBy(d => d.Method, new NamedApiResourceComparer<EncounterMethod>());
+
+                    // loop through encounters for each method
+                    foreach (var methodGrouping in methodGroupings)
+                    {
+                        var encounterDetails = methodGrouping.Select(e => new Encounter
+                        {
+                            // same but without method property
+                            Chance = e.Chance,
+                            ConditionValues = e.ConditionValues,
+                            MaxLevel = e.MaxLevel,
+                            MinLevel = e.MinLevel
+                        });
+
+                        var method = await EncounterMethodService.Upsert(methodGrouping.Key);
+                        var methodDetails = new EncounterMethodDetails
+                        {
+                            Method = method,
+                            EncounterDetails = encounterDetails.ToList()
+                        };
+
+                        methodDetailsList.Add(methodDetails);
+                    }
+                }
+
+                var version = await VersionService.Upsert(versionGrouping.Key);
+                var versionEntry = new WithId<EncounterMethodDetails[]>(version.VersionId, methodDetailsList.ToArray());
+                entryList.Add(versionEntry);
+            }
+
+            return entryList;
         }
 
         /// <summary>
@@ -202,7 +262,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
 
             foreach (var vd in encounterDetails)
             {
-                var version = await VersionsService.Upsert(vd.Version);
+                var version = await VersionService.Upsert(vd.Version);
                 var chance = new WithId<int>(version.VersionId, vd.MaxChance);
                 chancesList.Add(chance);
             }

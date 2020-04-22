@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -38,8 +39,25 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public List<WithId<int>> Chances { get; set; }
 
-        // TODO: organise encounter chances by encounter method and display details.
-        // Will require creating DB services for encounter methods, encounter conditions and
-        // encounter condition values...
+        /// <summary>
+        /// Gets or sets the details of the encounter indexed by version ID.
+        /// </summary>
+        public List<WithId<EncounterMethodDetails[]>> Details { get; set; }
+    }
+
+    /// <summary>
+    /// Represents details of an encounter method.
+    /// </summary>
+    public class EncounterMethodDetails
+    {
+        /// <summary>
+        /// Gets or sets the encounter method.
+        /// </summary>
+        public EncounterMethodEntry Method { get; set; }
+
+        /// <summary>
+        /// Gets or sets the encounter details.
+        /// </summary>
+        public List<Encounter> EncounterDetails { get; set; }
     }
 }
