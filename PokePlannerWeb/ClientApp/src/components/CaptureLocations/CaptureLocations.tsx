@@ -165,35 +165,102 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                         </span>
                     )
 
-                    let versions = this.props.versionGroup?.versions ?? []
-                    let maxChances = versions.map(v => {
-                        let maxChance = encounter.chances.find(c => c.id === v.versionId)!.data
-                        return `${maxChance}% (${v.getDisplayName("en") ?? "version"})`
-                    })
-                    let maxChancesSummary = maxChances.join(", ")
-
                     let encounterId = encounter.locationAreaId
                     const openInfoPane = () => this.toggleEncounterOpen(encounterId)
                     let encounterNameButton = (
-                        <div className="flex">
-                            <Button
-                                color="link"
-                                onMouseUp={openInfoPane}>
-                                {encounterNameElement}
-                            </Button>
-
-                            <span>
-                                {maxChancesSummary}
-                            </span>
-                        </div>
+                        <Button
+                            color="link"
+                            onMouseUp={openInfoPane}>
+                            {encounterNameElement}
+                        </Button>
                     )
 
-                    // TODO: show encounter method details
+                    let versions = this.props.versionGroup?.versions ?? []
+
+                    let versionElements = versions.map(v => {
+                        let versionName = v.getDisplayName("en") ?? "version"
+                        let versionNameElement = (
+                            <div className="captureLocationsVersionName">
+                                {versionName}
+                            </div>
+                        )
+
+                        let methodElements = []
+                        let versionDetails = encounter.details.find(e => e.id === v.versionId)
+                        if (versionDetails === undefined) {
+                            methodElements.push(<div>-</div>)
+                        }
+                        else {
+                            let details = versionDetails.data
+                            methodElements = details.map((d, i) => {
+                                let chance = d.encounterDetails.map(ed => ed.chance)
+                                                            .reduce((ed1, ed2) => ed1 + ed2)
+                                let displayName = d.method.getDisplayName("en") ?? "method"
+
+                                let methodElement = (
+                                    <div>
+                                        {chance}%
+                                        ({displayName})
+                                    </div>
+                                )
+
+                                // TODO: each detail has its own condition values - reasonable to assume
+                                // they're the same for each one? There's probably an exception...
+                                let conditionValues = d.encounterDetails[0].conditionValues
+                                let conditionsElement = undefined
+                                if (conditionValues.length > 0) {
+                                    // TODO: use EncounterConditionValueEntry[] instead of EncounterConditionValue[]
+                                    // so we can have display names
+                                    let conditions = conditionValues.map(v => v.name)
+                                                                    .join(", ")
+                                    conditionsElement = (
+                                        <div>
+                                            {conditions}
+                                        </div>
+                                    )
+                                }
+
+                                // TODO: compute true level ranges
+                                // encounter might have two disjoint intervals between these bounds
+                                let minLevel = Math.min(...d.encounterDetails.map(ed => ed.minLevel))
+                                let maxLevel = Math.max(...d.encounterDetails.map(ed => ed.maxLevel))
+
+                                let levelsElement = <div>level {minLevel}</div>
+                                if (maxLevel - minLevel > 0) {
+                                    levelsElement = <div>levels {minLevel} - {maxLevel}</div>
+                                }
+
+                                let separator = undefined
+                                if (i < details.length - 1) {
+                                    separator = <hr style={{ width: "90%" }} />
+                                }
+
+                                return (
+                                    <div key={key(d)}>
+                                        {methodElement}
+                                        {conditionsElement}
+                                        {levelsElement}
+                                        {separator}
+                                    </div>
+                                )
+                            })
+                        }
+
+                        return (
+                            <div
+                                key={key(v)}
+                                className="captureLocationsVersionItem">
+                                {versionNameElement}
+                                {methodElements}
+                            </div>
+                        )
+                    })
+
                     let isOpen = this.state.encountersAreOpen.find(e => e.id === encounterId)?.data ?? false
                     let infoPane = (
                         <Collapse isOpen={isOpen}>
                             <div className="flex encounterInfo">
-                                {encounterName}
+                                {versionElements}
                             </div>
                         </Collapse>
                     )
@@ -289,6 +356,8 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     })),
                 }
 
+                // TODO: Porygon is getting encounters for version group 8 when version group 9 (D/P) is selected
+                // so this fails because find() comes back undefined
                 let versionGroupId = this.props.versionGroup?.versionGroupId
                 let relevantEncounters = concreteLocations.encounters.find(
                     e => e.id === versionGroupId

@@ -1,3 +1,5 @@
+import { Encounter } from "./Encounter"
+import { EncounterMethodEntry } from "./EncounterMethodEntry"
 import { LocalString } from "./LocalString"
 import { WithId } from "./WithId"
 
@@ -36,16 +38,23 @@ export class EncounterEntry {
     chances: WithId<number>[]
 
     /**
+     * The details of the encounter indexed by version ID.
+     */
+    details: WithId<EncounterMethodDetails[]>[]
+
+    /**
      * Constructor.
      */
     constructor(
         locationAreaId: number,
         displayNames: LocalString[],
-        chances: WithId<number>[]
+        chances: WithId<number>[],
+        details: WithId<EncounterMethodDetails[]>[]
     ) {
         this.locationAreaId = locationAreaId
         this.displayNames = displayNames
         this.chances = chances
+        this.details = details
     }
 
     /**
@@ -55,7 +64,11 @@ export class EncounterEntry {
         return new EncounterEntry(
             encounter.locationAreaId,
             encounter.displayNames,
-            encounter.chances
+            encounter.chances,
+            encounter.details.map(e => new WithId<EncounterMethodDetails[]>(
+                e.id,
+                e.data.map(EncounterMethodDetails.from)
+            ))
         )
     }
 
@@ -69,5 +82,41 @@ export class EncounterEntry {
         }
 
         return localName?.value
+    }
+}
+
+/**
+ * Represents details of an encounter method.
+ */
+export class EncounterMethodDetails {
+    /**
+     * The encounter method.
+     */
+    method: EncounterMethodEntry
+
+    /**
+     * The encounter details.
+     */
+    encounterDetails: Encounter[]
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        method: EncounterMethodEntry,
+        encounterDetails: Encounter[]
+    ) {
+        this.method = method
+        this.encounterDetails = encounterDetails
+    }
+
+    /**
+     * Returns a encounter method details object created from the given object.
+     */
+    static from(encounter: EncounterMethodDetails) {
+        return new EncounterMethodDetails(
+            EncounterMethodEntry.from(encounter.method),
+            encounter.encounterDetails
+        )
     }
 }

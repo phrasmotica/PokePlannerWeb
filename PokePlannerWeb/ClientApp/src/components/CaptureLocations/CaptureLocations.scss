@@ -15,6 +15,16 @@
     margin-right: 3px;
 }
 
+.captureLocationsVersionItem {
+    flex: 1;
+    flex-direction: column;
+}
+
+.captureLocationsVersionName {
+    padding: unset;
+    font-weight: bold;
+}
+
 .encounterInfo {
     margin-top: 5px;
 }
