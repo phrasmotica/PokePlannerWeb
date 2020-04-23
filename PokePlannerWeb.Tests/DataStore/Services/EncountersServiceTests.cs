@@ -20,6 +20,22 @@ namespace PokePlannerWeb.Tests.DataStore.Services
         public async Task Grouping_MultipleVersions()
         {
             // arrange
+            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
+            encounterConditionValueService
+                .Setup(
+                    s => s.Upsert(
+                        It.IsAny<NamedApiResource<EncounterConditionValue>>()
+                    )
+                )
+                .Returns<NamedApiResource<EncounterConditionValue>>(
+                    m => Task.FromResult(
+                        new EncounterConditionValueEntry
+                        {
+                            Name = m.Name
+                        }
+                    )
+                );
+
             var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
             encounterMethodService
                 .Setup(
@@ -56,6 +72,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
                 null,
                 null,
                 null,
+                encounterConditionValueService.Object,
                 encounterMethodService.Object,
                 null,
                 null,
@@ -110,6 +127,22 @@ namespace PokePlannerWeb.Tests.DataStore.Services
         public async Task Grouping_OneVersion_MultipleMethods()
         {
             // arrange
+            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
+            encounterConditionValueService
+                .Setup(
+                    s => s.Upsert(
+                        It.IsAny<NamedApiResource<EncounterConditionValue>>()
+                    )
+                )
+                .Returns<NamedApiResource<EncounterConditionValue>>(
+                    m => Task.FromResult(
+                        new EncounterConditionValueEntry
+                        {
+                            Name = m.Name
+                        }
+                    )
+                );
+
             var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
             encounterMethodService
                 .Setup(
@@ -146,6 +179,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
                 null,
                 null,
                 null,
+                encounterConditionValueService.Object,
                 encounterMethodService.Object,
                 null,
                 null,
@@ -194,6 +228,22 @@ namespace PokePlannerWeb.Tests.DataStore.Services
         public async Task Grouping_MultipleVersions_MultipleMethods()
         {
             // arrange
+            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
+            encounterConditionValueService
+                .Setup(
+                    s => s.Upsert(
+                        It.IsAny<NamedApiResource<EncounterConditionValue>>()
+                    )
+                )
+                .Returns<NamedApiResource<EncounterConditionValue>>(
+                    m => Task.FromResult(
+                        new EncounterConditionValueEntry
+                        {
+                            Name = m.Name
+                        }
+                    )
+                );
+
             var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
             encounterMethodService
                 .Setup(
@@ -230,6 +280,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
                 null,
                 null,
                 null,
+                encounterConditionValueService.Object,
                 encounterMethodService.Object,
                 null,
                 null,

@@ -58,7 +58,7 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the encounter details.
         /// </summary>
-        public List<Encounter> EncounterDetails { get; set; }
+        public List<EncounterDetailEntry> EncounterDetails { get; set; }
     }
 
     /// <summary>

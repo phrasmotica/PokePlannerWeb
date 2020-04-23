@@ -17,6 +17,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class EncountersService : NamedServiceBase<Pokemon, EncountersEntry>
     {
         /// <summary>
+        /// The encounter condition value service.
+        /// </summary>
+        private readonly EncounterConditionValueService EncounterConditionValueService;
+
+        /// <summary>
         /// The encounter method service.
         /// </summary>
         private readonly EncounterMethodService EncounterMethodService;
@@ -48,6 +53,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IDataStoreSource<EncountersEntry> dataStoreSource,
             IPokeAPI pokeApi,
             PokemonCacheService pokemonCacheService,
+            EncounterConditionValueService encounterConditionValueService,
             EncounterMethodService encounterMethodService,
             LocationService locationsService,
             LocationAreaService locationAreasService,
@@ -55,6 +61,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             VersionGroupService versionGroupsService,
             ILogger<EncountersService> logger) : base(dataStoreSource, pokeApi, pokemonCacheService, logger)
         {
+            EncounterConditionValueService = encounterConditionValueService;
             EncounterMethodService = encounterMethodService;
             LocationsService = locationsService;
             LocationAreasService = locationAreasService;
@@ -179,14 +186,23 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     // loop through encounters for each method
                     foreach (var methodGrouping in methodGroupings)
                     {
-                        var encounterDetails = methodGrouping.Select(e => new Encounter
+                        var encounterDetails = new List<EncounterDetailEntry>();
+
+                        foreach (var entry in methodGrouping)
                         {
-                            // same but without method property
-                            Chance = e.Chance,
-                            ConditionValues = e.ConditionValues,
-                            MaxLevel = e.MaxLevel,
-                            MinLevel = e.MinLevel
-                        });
+                            var conditionValueEntries = await EncounterConditionValueService.UpsertMany(entry.ConditionValues);
+
+                            var detailEntry = new EncounterDetailEntry
+                            {
+                                // same but without method property
+                                Chance = entry.Chance,
+                                ConditionValues = conditionValueEntries.ToList(),
+                                MaxLevel = entry.MaxLevel,
+                                MinLevel = entry.MinLevel
+                            };
+
+                            encounterDetails.Add(detailEntry);
+                        }
 
                         var method = await EncounterMethodService.Upsert(methodGrouping.Key);
                         var methodDetails = new EncounterMethodDetails

@@ -1,4 +1,4 @@
-import { Encounter } from "./Encounter"
+import { EncounterDetailEntry } from "./EncounterDetailEntry"
 import { EncounterMethodEntry } from "./EncounterMethodEntry"
 import { LocalString } from "./LocalString"
 import { WithId } from "./WithId"
@@ -97,14 +97,14 @@ export class EncounterMethodDetails {
     /**
      * The encounter details.
      */
-    encounterDetails: Encounter[]
+    encounterDetails: EncounterDetailEntry[]
 
     /**
      * Constructor.
      */
     constructor(
         method: EncounterMethodEntry,
-        encounterDetails: Encounter[]
+        encounterDetails: EncounterDetailEntry[]
     ) {
         this.method = method
         this.encounterDetails = encounterDetails
@@ -116,7 +116,7 @@ export class EncounterMethodDetails {
     static from(encounter: EncounterMethodDetails) {
         return new EncounterMethodDetails(
             EncounterMethodEntry.from(encounter.method),
-            encounter.encounterDetails
+            encounter.encounterDetails.map(EncounterDetailEntry.from)
         )
     }
 }
