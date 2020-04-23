@@ -227,9 +227,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                                 let conditionValues = d.encounterDetails[0].conditionValues
                                 let conditionsElement = undefined
                                 if (conditionValues.length > 0) {
-                                    // TODO: use EncounterConditionValueEntry[] instead of EncounterConditionValue[]
-                                    // so we can have display names
-                                    let conditions = conditionValues.map(v => v.name)
+                                    let conditions = conditionValues.map(v => v.getDisplayName("en") ?? v.name)
                                                                     .join(", ")
                                     conditionsElement = (
                                         <div>
