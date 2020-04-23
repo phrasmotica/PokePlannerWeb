@@ -83,6 +83,24 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         if (pokemonChanged) {
             this.fetchCaptureLocations()
         }
+
+        // reset info panel toggle state if version group ID changed
+        let previousVersionGroupId = previousProps.versionGroup?.versionGroupId
+        let versionGroupId = this.props.versionGroup?.versionGroupId
+        let versionGroupChanged = versionGroupId !== previousVersionGroupId
+
+        if (versionGroupChanged) {
+            this.setState(state => {
+                let locations = state.locations?.encounters
+                let encounters = locations?.find(e => e.id === versionGroupId)?.data ?? []
+
+                return {
+                    encountersAreOpen: encounters.map(
+                        e => new WithId<boolean>(e.locationAreaId, false)
+                    )
+                }
+            })
+        }
     }
 
     render() {
