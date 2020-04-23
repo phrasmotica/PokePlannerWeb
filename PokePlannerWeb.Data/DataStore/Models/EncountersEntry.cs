@@ -60,4 +60,30 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// </summary>
         public List<Encounter> EncounterDetails { get; set; }
     }
+
+    /// <summary>
+    /// Model for an encounter detail.
+    /// </summary>
+    public class EncounterDetailEntry
+    {
+        /// <summary>
+        /// The lowest level of the encounter detail.
+        /// </summary>
+        public int MinLevel { get; set; }
+
+        /// <summary>
+        /// The highest level of the encounter detail.
+        /// </summary>
+        public int MaxLevel { get; set; }
+
+        /// <summary>
+        /// The condition values that must be in effect for this encounter to occur.
+        /// </summary>
+        public List<EncounterConditionValueEntry> ConditionValues { get; set; }
+
+        /// <summary>
+        /// The percent chance that this encounter will occur.
+        /// </summary>
+        public int Chance { get; set; }
+    }
 }
