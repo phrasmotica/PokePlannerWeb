@@ -222,8 +222,9 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                                     </div>
                                 )
 
-                                // TODO: each detail has its own condition values - reasonable to assume
-                                // they're the same for each one? There's probably an exception...
+                                // TODO: each detail has its own condition values - I think it's
+                                // reasonable to assume they're the same for each one but there
+                                // might be an exception to the rule...
                                 let conditionValues = d.encounterDetails[0].conditionValues
                                 let conditionsElement = undefined
                                 if (conditionValues.length > 0) {
