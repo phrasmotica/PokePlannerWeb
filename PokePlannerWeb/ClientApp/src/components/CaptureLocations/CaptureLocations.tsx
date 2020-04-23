@@ -356,12 +356,10 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     })),
                 }
 
-                // TODO: Porygon is getting encounters for version group 8 when version group 9 (D/P) is selected
-                // so this fails because find() comes back undefined
                 let versionGroupId = this.props.versionGroup?.versionGroupId
                 let relevantEncounters = concreteLocations.encounters.find(
                     e => e.id === versionGroupId
-                )!.data
+                )?.data ?? []
 
                 this.setState({
                     locations: concreteLocations,
