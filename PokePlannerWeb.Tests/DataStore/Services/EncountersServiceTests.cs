@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
@@ -20,70 +21,11 @@ namespace PokePlannerWeb.Tests.DataStore.Services
         public async Task Grouping_MultipleVersions()
         {
             // arrange
-            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
-            encounterConditionValueService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<EncounterConditionValue>>()
-                    )
-                )
-                .Returns<NamedApiResource<EncounterConditionValue>>(
-                    m => Task.FromResult(
-                        new EncounterConditionValueEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
-            encounterMethodService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<EncounterMethod>>()
-                    )
-                )
-                .Returns<NamedApiResource<EncounterMethod>>(
-                    m => Task.FromResult(
-                        new EncounterMethodEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var versionService = new Mock<VersionService>(null, null, null, null);
-            versionService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<Version>>()
-                    )
-                )
-                .Returns<NamedApiResource<Version>>(
-                    m => Task.FromResult(
-                        new VersionEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var service = new EncountersService(
-                null,
-                null,
-                null,
-                encounterConditionValueService.Object,
-                encounterMethodService.Object,
-                null,
-                null,
-                versionService.Object,
-                null,
-                null
-            );
+            var service = SetupForGetEncounterDetails();
 
             var version1 = PokeApiHelpers.NamedResourceNavigation<Version>("version1", "url1");
             var maxChance1 = 1;
-            var encounters1 = PokeApiHelpers.Encounters();
+            var encounters1 = PokeApiHelpers.Encounters(2);
             var ved1 = new VersionEncounterDetail
             {
                 Version = version1,
@@ -93,7 +35,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
 
             var version2 = PokeApiHelpers.NamedResourceNavigation<Version>("version2", "url2");
             var maxChance2 = 2;
-            var encounters2 = PokeApiHelpers.Encounters();
+            var encounters2 = PokeApiHelpers.Encounters(2);
             var ved2 = new VersionEncounterDetail
             {
                 Version = version2,
@@ -102,7 +44,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
             };
 
             var maxChance3 = 3;
-            var encounters3 = PokeApiHelpers.Encounters();
+            var encounters3 = PokeApiHelpers.Encounters(2);
             var ved3 = new VersionEncounterDetail
             {
                 Version = version2,
@@ -127,72 +69,14 @@ namespace PokePlannerWeb.Tests.DataStore.Services
         public async Task Grouping_OneVersion_MultipleMethods()
         {
             // arrange
-            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
-            encounterConditionValueService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<EncounterConditionValue>>()
-                    )
-                )
-                .Returns<NamedApiResource<EncounterConditionValue>>(
-                    m => Task.FromResult(
-                        new EncounterConditionValueEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
-            encounterMethodService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<EncounterMethod>>()
-                    )
-                )
-                .Returns<NamedApiResource<EncounterMethod>>(
-                    m => Task.FromResult(
-                        new EncounterMethodEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var versionService = new Mock<VersionService>(null, null, null, null);
-            versionService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<Version>>()
-                    )
-                )
-                .Returns<NamedApiResource<Version>>(
-                    m => Task.FromResult(
-                        new VersionEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var service = new EncountersService(
-                null,
-                null,
-                null,
-                encounterConditionValueService.Object,
-                encounterMethodService.Object,
-                null,
-                null,
-                versionService.Object,
-                null,
-                null
-            );
+            var service = SetupForGetEncounterDetails();
 
             var version = PokeApiHelpers.NamedResourceNavigation<Version>();
+            var conditionValues = PokeApiHelpers.ConditionValues(0).ToList();
 
             var maxChance1 = 1;
             var method1 = PokeApiHelpers.NamedResourceNavigation<EncounterMethod>("method1", "url1");
-            var encounters1 = PokeApiHelpers.Encounters(2, method1);
+            var encounters1 = PokeApiHelpers.Encounters(2, conditionValues, method1);
             var ved1 = new VersionEncounterDetail
             {
                 Version = version,
@@ -202,7 +86,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
 
             var maxChance2 = 2;
             var method2 = PokeApiHelpers.NamedResourceNavigation<EncounterMethod>("method2", "url2");
-            var encounters2 = PokeApiHelpers.Encounters(3, method2);
+            var encounters2 = PokeApiHelpers.Encounters(3, conditionValues, method2);
             var ved2 = new VersionEncounterDetail
             {
                 Version = version,
@@ -228,71 +112,14 @@ namespace PokePlannerWeb.Tests.DataStore.Services
         public async Task Grouping_MultipleVersions_MultipleMethods()
         {
             // arrange
-            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
-            encounterConditionValueService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<EncounterConditionValue>>()
-                    )
-                )
-                .Returns<NamedApiResource<EncounterConditionValue>>(
-                    m => Task.FromResult(
-                        new EncounterConditionValueEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
+            var service = SetupForGetEncounterDetails();
 
-            var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
-            encounterMethodService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<EncounterMethod>>()
-                    )
-                )
-                .Returns<NamedApiResource<EncounterMethod>>(
-                    m => Task.FromResult(
-                        new EncounterMethodEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var versionService = new Mock<VersionService>(null, null, null, null);
-            versionService
-                .Setup(
-                    s => s.Upsert(
-                        It.IsAny<NamedApiResource<Version>>()
-                    )
-                )
-                .Returns<NamedApiResource<Version>>(
-                    m => Task.FromResult(
-                        new VersionEntry
-                        {
-                            Name = m.Name
-                        }
-                    )
-                );
-
-            var service = new EncountersService(
-                null,
-                null,
-                null,
-                encounterConditionValueService.Object,
-                encounterMethodService.Object,
-                null,
-                null,
-                versionService.Object,
-                null,
-                null
-            );
+            var conditionValues = PokeApiHelpers.ConditionValues(0).ToList();
 
             var version1 = PokeApiHelpers.NamedResourceNavigation<Version>("version1", "url1");
             var maxChance1 = 1;
             var method1 = PokeApiHelpers.NamedResourceNavigation<EncounterMethod>("method1", "url1");
-            var encounters1 = PokeApiHelpers.Encounters(2, method1);
+            var encounters1 = PokeApiHelpers.Encounters(2, conditionValues, method1);
             var ved1 = new VersionEncounterDetail
             {
                 Version = version1,
@@ -302,7 +129,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
 
             var maxChance2 = 2;
             var method2 = PokeApiHelpers.NamedResourceNavigation<EncounterMethod>("method2", "url2");
-            var encounters2 = PokeApiHelpers.Encounters(3, method2);
+            var encounters2 = PokeApiHelpers.Encounters(3, conditionValues, method2);
             var ved2 = new VersionEncounterDetail
             {
                 Version = version1,
@@ -338,6 +165,121 @@ namespace PokePlannerWeb.Tests.DataStore.Services
             {
                 Assert.That(entry.Data.Length, Is.EqualTo(2));
             }
+        }
+
+        /// <summary>
+        /// Verifies that encounter details from one version with the same method and different
+        /// condition value sets are grouped correctly.
+        /// </summary>
+        [Test]
+        public async Task Grouping_OneVersion_MultipleEncounters_SameMethod_DifferentConditions()
+        {
+            // arrange
+            var service = SetupForGetEncounterDetails();
+
+            var method = PokeApiHelpers.NamedResourceNavigation<EncounterMethod>("method1", "url1");
+
+            var conditionValues1 = PokeApiHelpers.ConditionValues(1).ToList();
+            var encounter1 = PokeApiHelpers.Encounter(conditionValues: conditionValues1, method: method);
+            
+            var conditionValues2 = PokeApiHelpers.ConditionValues(2).ToList();
+            var encounter2 = PokeApiHelpers.Encounter(conditionValues: conditionValues2, method: method);
+
+            var ved1 = new VersionEncounterDetail
+            {
+                Version = PokeApiHelpers.NamedResourceNavigation<Version>(),
+                MaxChance = 1,
+                EncounterDetails = new[] { encounter1, encounter2 }.ToList()
+            };
+
+            var versionEncounterDetails = new[] { ved1 };
+
+            // act
+            var entries = await service.GetEncounterDetails(versionEncounterDetails);
+            var entryList = entries.ToList();
+
+            // assert
+
+            // should be only one version
+            Assert.That(entryList.Count, Is.EqualTo(1));
+            var entry = entryList[0];
+
+            // should only be one method
+            Assert.That(entry.Data.Length, Is.EqualTo(1));
+            var methodDetail = entry.Data[0];
+
+            // should be two condition values details
+            Assert.That(methodDetail.EncounterDetails.Count, Is.EqualTo(2));
+        }
+
+        /// <summary>
+        /// Returns an EncountersService instance for testing
+        /// <see cref="EncountersService.GetEncounterDetails(IEnumerable{VersionEncounterDetail})"/>.
+        /// </summary>
+        private static EncountersService SetupForGetEncounterDetails()
+        {
+            var encounterConditionValueService = new Mock<EncounterConditionValueService>(null, null, null, null);
+            encounterConditionValueService
+                .Setup(
+                    s => s.UpsertMany(
+                        It.IsAny<IEnumerable<NamedApiResource<EncounterConditionValue>>>()
+                    )
+                )
+                .Returns<IEnumerable<NamedApiResource<EncounterConditionValue>>>(
+                    navs => Task.FromResult(
+                        navs.Select(nav =>
+                            new EncounterConditionValueEntry
+                            {
+                                Name = nav.Name
+                            }
+                        )
+                    )
+                );
+
+            var encounterMethodService = new Mock<EncounterMethodService>(null, null, null, null);
+            encounterMethodService
+                .Setup(
+                    s => s.Upsert(
+                        It.IsAny<NamedApiResource<EncounterMethod>>()
+                    )
+                )
+                .Returns<NamedApiResource<EncounterMethod>>(
+                    m => Task.FromResult(
+                        new EncounterMethodEntry
+                        {
+                            Name = m.Name
+                        }
+                    )
+                );
+
+            var versionService = new Mock<VersionService>(null, null, null, null);
+            versionService
+                .Setup(
+                    s => s.Upsert(
+                        It.IsAny<NamedApiResource<Version>>()
+                    )
+                )
+                .Returns<NamedApiResource<Version>>(
+                    m => Task.FromResult(
+                        new VersionEntry
+                        {
+                            Name = m.Name
+                        }
+                    )
+                );
+
+            return new EncountersService(
+                null,
+                null,
+                null,
+                encounterConditionValueService.Object,
+                encounterMethodService.Object,
+                null,
+                null,
+                versionService.Object,
+                null,
+                null
+            );
         }
     }
 }

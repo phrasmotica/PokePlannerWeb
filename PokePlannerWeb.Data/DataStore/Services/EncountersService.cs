@@ -172,47 +172,19 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var entryList = new List<WithId<EncounterMethodDetails[]>>();
 
             var versionGroupings = versionEncounterDetails.GroupBy(d => d.Version, new NamedApiResourceComparer<Version>());
+
+            // loop through versions
             foreach (var versionGrouping in versionGroupings)
             {
-                var details = versionGrouping.Select(g => g.EncounterDetails);
+                var encountersList = versionGrouping.Select(g => g.EncounterDetails);
 
                 var methodDetailsList = new List<EncounterMethodDetails>();
 
                 // loop through list of encounters in each version
-                foreach (var detail in details)
+                foreach (var encounters in encountersList)
                 {
-                    var methodGroupings = detail.GroupBy(d => d.Method, new NamedApiResourceComparer<EncounterMethod>());
-
-                    // loop through encounters for each method
-                    foreach (var methodGrouping in methodGroupings)
-                    {
-                        var encounterDetails = new List<EncounterDetailEntry>();
-
-                        foreach (var entry in methodGrouping)
-                        {
-                            var conditionValueEntries = await EncounterConditionValueService.UpsertMany(entry.ConditionValues);
-
-                            var detailEntry = new EncounterDetailEntry
-                            {
-                                // same but without method property
-                                Chance = entry.Chance,
-                                ConditionValues = conditionValueEntries.ToList(),
-                                MaxLevel = entry.MaxLevel,
-                                MinLevel = entry.MinLevel
-                            };
-
-                            encounterDetails.Add(detailEntry);
-                        }
-
-                        var method = await EncounterMethodService.Upsert(methodGrouping.Key);
-                        var methodDetails = new EncounterMethodDetails
-                        {
-                            Method = method,
-                            EncounterDetails = encounterDetails.ToList()
-                        };
-
-                        methodDetailsList.Add(methodDetails);
-                    }
+                    var methodDetails = await GetEncounterMethodDetails(encounters);
+                    methodDetailsList.AddRange(methodDetails);
                 }
 
                 var version = await VersionService.Upsert(versionGrouping.Key);
@@ -221,6 +193,71 @@ namespace PokePlannerWeb.Data.DataStore.Services
             }
 
             return entryList;
+        }
+
+        /// <summary>
+        /// Returns encounter details, grouped by method, from the list of encounter objects.
+        /// </summary>
+        public async Task<IEnumerable<EncounterMethodDetails>> GetEncounterMethodDetails(List<Encounter> encounters)
+        {
+            var methodDetailsList = new List<EncounterMethodDetails>();
+
+            var methodGroupings = encounters.GroupBy(d => d.Method, new NamedApiResourceComparer<EncounterMethod>());
+
+            // loop through sets of condition values for each method
+            foreach (var methodGrouping in methodGroupings)
+            {
+                var conditionValuesDetailList = new List<ConditionValuesDetail>();
+
+                var conditionGroupings = methodGrouping.GroupBy(
+                    g => g.ConditionValues,
+                    new ListComparer<NamedApiResource<EncounterConditionValue>>(
+                        (x, y) => x.Url == y.Url,
+                        x => x.Url.GetHashCode()
+                    )
+                );
+
+                // loop through encounters for each set of condition values
+                foreach (var conditionGrouping in conditionGroupings)
+                {
+                    var encounterDetails = new List<EncounterDetailEntry>();
+
+                    var firstEntry = conditionGrouping.First();
+                    var conditionValueEntries = await EncounterConditionValueService.UpsertMany(firstEntry.ConditionValues);
+
+                    // finally convert the encounters to entries
+                    foreach (var encounter in conditionGrouping)
+                    {
+                        var detailEntry = new EncounterDetailEntry
+                        {
+                            Chance = encounter.Chance,
+                            MaxLevel = encounter.MaxLevel,
+                            MinLevel = encounter.MinLevel
+                        };
+
+                        encounterDetails.Add(detailEntry);
+                    }
+
+                    var conditionValuesDetail = new ConditionValuesDetail
+                    {
+                        ConditionValues = conditionValueEntries.ToList(),
+                        EncounterDetails = encounterDetails
+                    };
+
+                    conditionValuesDetailList.Add(conditionValuesDetail);
+                }
+
+                var method = await EncounterMethodService.Upsert(methodGrouping.Key);
+                var methodDetails = new EncounterMethodDetails
+                {
+                    Method = method,
+                    EncounterDetails = conditionValuesDetailList.ToList()
+                };
+
+                methodDetailsList.Add(methodDetails);
+            }
+
+            return methodDetailsList;
         }
 
         /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using PokeApiNet;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -58,6 +57,22 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// <summary>
         /// Gets or sets the encounter details.
         /// </summary>
+        public List<ConditionValuesDetail> EncounterDetails { get; set; }
+    }
+
+    /// <summary>
+    /// Model for a list of encounter details under a given set of conditions.
+    /// </summary>
+    public class ConditionValuesDetail
+    {
+        /// <summary>
+        /// Gets or sets the condition values required for the encounters to occur.
+        /// </summary>
+        public List<EncounterConditionValueEntry> ConditionValues { get; set; }
+
+        /// <summary>
+        /// Gets or sets the encounter details.
+        /// </summary>
         public List<EncounterDetailEntry> EncounterDetails { get; set; }
     }
 
@@ -75,11 +90,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         /// The highest level of the encounter detail.
         /// </summary>
         public int MaxLevel { get; set; }
-
-        /// <summary>
-        /// The condition values that must be in effect for this encounter to occur.
-        /// </summary>
-        public List<EncounterConditionValueEntry> ConditionValues { get; set; }
 
         /// <summary>
         /// The percent chance that this encounter will occur.
