@@ -146,7 +146,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var formsListList = new List<WithId<PokemonFormEntry[]>>();
 
             var speciesEntry = await Upsert(speciesId);
-            var varietyEntries = await PokemonService.UpsertMany(speciesEntry.Varieties);
+            var varietyEntries = await PokemonService.UpsertMany(speciesEntry.Varieties.Select(v => v.Id));
 
             foreach (var varietyEntry in varietyEntries)
             {
