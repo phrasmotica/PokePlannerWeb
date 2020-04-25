@@ -16,14 +16,14 @@ namespace PokePlannerWeb.Data.DataStore.Services
     public class PokemonFormService : NamedApiResourceServiceBase<PokemonForm, PokemonFormEntry>
     {
         /// <summary>
-        /// The types cache service.
+        /// The type cache service.
         /// </summary>
         private readonly TypeCacheService TypeCacheService;
 
         /// <summary>
-        /// The version groups service.
+        /// The version group service.
         /// </summary>
-        private readonly VersionGroupService VersionGroupsService;
+        private readonly VersionGroupService VersionGroupService;
 
         /// <summary>
         /// Constructor.
@@ -33,10 +33,10 @@ namespace PokePlannerWeb.Data.DataStore.Services
             IPokeAPI pokeApi,
             PokemonFormCacheService pokemonFormCacheService,
             TypeCacheService typeCacheService,
-            VersionGroupService versionGroupsService,
+            VersionGroupService versionGroupService,
             ILogger<PokemonFormService> logger) : base(dataStoreSource, pokeApi, pokemonFormCacheService, logger)
         {
-            VersionGroupsService = versionGroupsService;
+            VersionGroupService = versionGroupService;
             TypeCacheService = typeCacheService;
         }
 
@@ -47,8 +47,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         /// </summary>
         protected override async Task<PokemonFormEntry> ConvertToEntry(PokemonForm pokemonForm)
         {
+            var versionGroup = await VersionGroupService.Upsert(pokemonForm.VersionGroup);
             var types = await GetTypes(pokemonForm);
-            var versionGroup = await VersionGroupsService.Upsert(pokemonForm.VersionGroup);
             var validity = await GetValidity(pokemonForm);
 
             return new PokemonFormEntry
@@ -121,187 +121,21 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var typesList = new List<WithId<Type[]>>();
 
-            var newestTypeEntries = new List<Type>();
-
-            // some forms have different types indicated by their names, i.e. arceus, silvally
-            var allTypes = await TypeCacheService.UpsertAll();
-            var matchingType = allTypes.SingleOrDefault(t => t.Name == form.FormName);
-
-            if (matchingType != null)
-            {
-                newestTypeEntries.Add(matchingType.Minimise());
-            }
-            else
-            {
-                // some forms' types need to be looked up...
-                var formTypes = await GetFormTypesByName(form.Name);
-                if (formTypes.Any())
-                {
-                    newestTypeEntries = formTypes.Select(t => t.Minimise()).ToList();
-                }
-            }
-
-            if (newestTypeEntries.Any())
-            {
-                // FUTURE: anticipating a generation-based types changelog
-                var newestId = await VersionGroupsService.GetNewestVersionGroupId();
-                typesList.Add(new WithId<Type[]>(newestId, newestTypeEntries.ToArray()));
-            }
+            // always include the newest types
+            var newestId = await VersionGroupService.GetNewestVersionGroupId();
+            var newestTypeEntries = await MinimiseTypes(form.Types);
+            typesList.Add(new WithId<Type[]>(newestId, newestTypeEntries.ToArray()));
 
             return typesList;
         }
 
         /// <summary>
-        /// Returns the types of the Pokemon form with the given form name.
+        /// Minimises a set of Pokemon types.
         /// </summary>
-        // TODO: store this somewhere sensible
-        private async Task<IEnumerable<Type>> GetFormTypesByName(string name)
+        private async Task<IEnumerable<Type>> MinimiseTypes(IEnumerable<PokemonType> types)
         {
-            IEnumerable<int> typeIds = new int[0];
-
-            switch (name)
-            {
-                case "castform-sunny":
-                    typeIds = new[] { 10 };
-                    break;
-
-                case "castform-rainy":
-                    typeIds = new[] { 11 };
-                    break;
-
-                case "castform-snowy":
-                    typeIds = new[] { 15 };
-                    break;
-
-                case "wormadam-sandy":
-                    typeIds = new[] { 7, 5 };
-                    break;
-
-                case "wormadam-trash":
-                    typeIds = new[] { 7, 9 };
-                    break;
-
-                case "rotom-heat":
-                    typeIds = new[] { 13, 10 };
-                    break;
-
-                case "rotom-wash":
-                    typeIds = new[] { 13, 11 };
-                    break;
-
-                case "rotom-frost":
-                    typeIds = new[] { 13, 15 };
-                    break;
-
-                case "rotom-fan":
-                    typeIds = new[] { 13, 3 };
-                    break;
-
-                case "rotom-mow":
-                    typeIds = new[] { 13, 12 };
-                    break;
-
-                case "shaymin-sky":
-                    typeIds = new[] { 12, 3 };
-                    break;
-
-                case "darmanitan-zen":
-                    typeIds = new[] { 10, 14 };
-                    break;
-
-                case "meloetta-pirouette":
-                    typeIds = new[] { 1, 2 };
-                    break;
-
-                case "groudon-primal":
-                    typeIds = new[] { 5, 10 };
-                    break;
-
-                case "hoopa-unbound":
-                    typeIds = new[] { 14, 17 };
-                    break;
-
-                case "rattata-alola":
-                case "raticate-alola":
-                case "raticate-totem-alola":
-                    typeIds = new[] { 17, 1 };
-                    break;
-
-                case "raichu-alola":
-                    typeIds = new[] { 13, 14 };
-                    break;
-
-                case "sandshrew-alola":
-                case "sandslash-alola":
-                    typeIds = new[] { 15, 9 };
-                    break;
-
-                case "vulpix-alola":
-                    typeIds = new[] { 15 };
-                    break;
-
-                case "ninetales-alola":
-                    typeIds = new[] { 15, 18 };
-                    break;
-
-                case "diglett-alola":
-                case "dugtrio-alola":
-                    typeIds = new[] { 5, 9 };
-                    break;
-
-                case "meowth-alola":
-                case "persian-alola":
-                    typeIds = new[] { 17 };
-                    break;
-
-                case "geodude-alola":
-                case "graveler-alola":
-                case "golem-alola":
-                    typeIds = new[] { 6, 13 };
-                    break;
-
-                case "grimer-alola":
-                case "muk-alola":
-                    typeIds = new[] { 4, 17 };
-                    break;
-
-                case "exeggutor-alola":
-                    typeIds = new[] { 12, 16 };
-                    break;
-
-                case "marowak-alola":
-                    typeIds = new[] { 10, 8 };
-                    break;
-
-                case "oricorio-pom-pom":
-                    typeIds = new[] { 13, 3 };
-                    break;
-
-                case "oricorio-pau":
-                    typeIds = new[] { 14, 3 };
-                    break;
-
-                case "oricorio-sensu":
-                    typeIds = new[] { 18, 3 };
-                    break;
-
-                case "necrozma-dusk":
-                    typeIds = new[] { 14, 9 };
-                    break;
-
-                case "necrozma-dawn":
-                    typeIds = new[] { 14, 8 };
-                    break;
-
-                case "necrozma-ultra":
-                    typeIds = new[] { 14, 16 };
-                    break;
-
-                default:
-                    break;
-            }
-
-            return await TypeCacheService.UpsertMany(typeIds);
+            var newestTypeObjs = await TypeCacheService.UpsertMany(types.Select(t => t.Type));
+            return newestTypeObjs.Select(t => t.Minimise());
         }
 
         /// <summary>
@@ -311,7 +145,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         {
             var validityList = new List<int>();
 
-            foreach (var vg in await VersionGroupsService.GetAll())
+            foreach (var vg in await VersionGroupService.GetAll())
             {
                 var isValid = await IsValid(pokemonForm, vg);
                 if (isValid)
@@ -332,7 +166,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             if (pokemonForm.IsMega)
             {
                 // decide based on version group in which it was introduced
-                var formVersionGroup = await VersionGroupsService.Upsert(pokemonForm.VersionGroup);
+                var formVersionGroup = await VersionGroupService.Upsert(pokemonForm.VersionGroup);
                 return formVersionGroup.Order <= versionGroup.Order;
             }
 
