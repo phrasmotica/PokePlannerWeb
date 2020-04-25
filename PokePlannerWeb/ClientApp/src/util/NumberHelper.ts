@@ -3,7 +3,38 @@
  */
 export class NumberHelper {
     /**
-     * Merges the given intervals into a minimal spanning set.
+     * Merges the given integer intervals into a minimal spanning set of intervals.
+     * Differs from mergeIntervals() s.t. [x, y] and [y + 1, z] are merged into [x, z].
+     */
+    static mergeIntRanges(ranges: Interval[]): Interval[] {
+        if (ranges.length <= 1) {
+            return ranges
+        }
+
+        let sortedRanges = ranges.sort((i1, i2) => i1.start - i2.start)
+
+        let stack = [sortedRanges[0]]
+
+        for (let i = 1; i < sortedRanges.length; i++) {
+            let top = stack[stack.length - 1]
+            let range = sortedRanges[i]
+
+            //
+            if (top.end < range.start - 1) {
+                stack.push(range)
+            }
+            else if (top.end < range.end) {
+                top.end = range.end
+                stack.pop()
+                stack.push(top)
+            }
+        }
+
+        return stack
+    }
+
+    /**
+     * Merges the given intervals into a minimal spanning set of intervals.
      */
     static mergeIntervals(intervals: Interval[]): Interval[] {
         if (intervals.length <= 1) {
@@ -32,6 +63,6 @@ export class NumberHelper {
 }
 
 /**
- * Represents an interval of real numbers
+ * Represents an interval of real numbers.
  */
 type Interval = { start: number, end: number }
