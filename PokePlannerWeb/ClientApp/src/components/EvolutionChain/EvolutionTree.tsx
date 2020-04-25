@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Button } from "reactstrap"
+import SuperTreeView from "react-super-treeview"
 import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
@@ -8,6 +9,7 @@ import { ChainLinkEntry, EvolutionDetailEntry } from "../../models/EvolutionChai
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 import "./EvolutionChain.scss"
+import "../../../node_modules/react-super-treeview/dist/style.scss"
 
 interface IEvolutionTreeProps extends IHasIndex {
     /**
@@ -82,71 +84,94 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      */
     renderTree(link: ChainLinkEntry) {
         // TODO: find a package for rendering a file system tree view
-        let numChildren = link.countTransitions()
-        let widthStyle = {
-            width: `${100 / (numChildren + 1)}%`,
-        }
+        let treeViewData = [this.createTreeViewData(link)]
 
-        let transitionElement = null
-        if (link.evolutionDetails.length > 0) {
-            let shouldShowEvolutionDetails = this.state.showEvolutionDetails[this.transitionButtonCount]
-            let transitionButton = this.renderTransitionButton(link)
-
-            // empty divs to ensure arrow is centred above the right species
-            let paddingElements = []
-            if (shouldShowEvolutionDetails) {
-                paddingElements.push(this.renderTransition(link))
-            }
-            else {
-                for (let i = 0; i < numChildren; i++) {
-                    paddingElements.push(<div key={i} style={widthStyle}></div>)
-                }
-            }
-
-            let paddingElement = null
-            if (shouldShowEvolutionDetails) {
-                paddingElement = (
-                    <div className="transition-padding" style={{ flex: 1 }}>
-                        {paddingElements}
-                    </div>
-                )
-            }
-
-            transitionElement = (
-                <div className="flex" style={widthStyle}>
-                    <div className="transition center-text">
-                        {transitionButton}
-                    </div>
-
-                    {paddingElement}
-                </div>
-            )
-        }
-
-        let linkElement = this.renderChainLink(link)
-
-        let childrenElement = null
-        if (link.evolvesTo.length > 0) {
-            childrenElement = (
-                <div className="evolution-children">
-                    {link.evolvesTo.map(l => this.renderTree(l))}
-                </div>
-            )
-        }
-
-        // wurmple's chain is wrongly serialised by PokeAPI but I've got a PR to fix it...
-        // https://github.com/PokeAPI/pokeapi/pull/485
         return (
-            <div key={key(link)}>
-                {transitionElement}
-
-                <div className="evolution-tree-item">
-                    {linkElement}
-
-                    {childrenElement}
-                </div>
-            </div>
+            <SuperTreeView
+                data={treeViewData}
+                isCheckable={(node: any, depth: number) => false}
+                isDeletable={(node: any, depth: number) => false}
+                isExpandable={(node: any, depth: number) => false}
+                noChildrenAvailableMessage="" />
         )
+
+        // let numChildren = link.countTransitions()
+        // let widthStyle = {
+        //     width: `${100 / (numChildren + 1)}%`,
+        // }
+
+        // let transitionElement = null
+        // if (link.evolutionDetails.length > 0) {
+        //     let shouldShowEvolutionDetails = this.state.showEvolutionDetails[this.transitionButtonCount]
+        //     let transitionButton = this.renderTransitionButton(link)
+
+        //     // empty divs to ensure arrow is centred above the right species
+        //     let paddingElements = []
+        //     if (shouldShowEvolutionDetails) {
+        //         paddingElements.push(this.renderTransition(link))
+        //     }
+        //     else {
+        //         for (let i = 0; i < numChildren; i++) {
+        //             paddingElements.push(<div key={i} style={widthStyle}></div>)
+        //         }
+        //     }
+
+        //     let paddingElement = null
+        //     if (shouldShowEvolutionDetails) {
+        //         paddingElement = (
+        //             <div className="transition-padding" style={{ flex: 1 }}>
+        //                 {paddingElements}
+        //             </div>
+        //         )
+        //     }
+
+        //     transitionElement = (
+        //         <div className="flex" style={widthStyle}>
+        //             <div className="transition center-text">
+        //                 {transitionButton}
+        //             </div>
+
+        //             {paddingElement}
+        //         </div>
+        //     )
+        // }
+
+        // let linkElement = this.renderChainLink(link)
+
+        // let childrenElement = null
+        // if (link.evolvesTo.length > 0) {
+        //     childrenElement = (
+        //         <div className="evolution-children">
+        //             {link.evolvesTo.map(l => this.renderTree(l))}
+        //         </div>
+        //     )
+        // }
+
+        // // wurmple's chain is wrongly serialised by PokeAPI but I've got a PR to fix it...
+        // // https://github.com/PokeAPI/pokeapi/pull/485
+        // return (
+        //     <div key={key(link)}>
+        //         {transitionElement}
+
+        //         <div className="evolution-tree-item">
+        //             {linkElement}
+
+        //             {childrenElement}
+        //         </div>
+        //     </div>
+        // )
+    }
+
+    /**
+     * Transforms the chain link entry to a data object for the tree view.
+     */
+    createTreeViewData(link: ChainLinkEntry): any {
+        return {
+            id: link.species.speciesId,
+            name: link.species.getDisplayName("en") ?? link.species.name,
+            isExpanded: link.evolvesTo.length > 0,
+            children: link.evolvesTo.map(e => this.createTreeViewData(e))
+        }
     }
 
     /**
