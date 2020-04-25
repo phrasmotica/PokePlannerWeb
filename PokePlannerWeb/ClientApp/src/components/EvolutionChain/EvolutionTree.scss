@@ -1,0 +1,27 @@
+.evolutionTree {
+    margin-left: 5px;
+}
+
+.evolutionTreeNode {
+    margin-left: 30px;
+}
+
+.evolutionTreeSpeciesButton {
+    text-align: left;
+    border: 0px;
+    padding: 0px;
+}
+
+$dim: 48px;
+.evolutionTreeSprite {
+    height: $dim;
+    width: $dim
+}
+
+.evolutionTreeTransition {
+    padding-left: 2px;
+}
+
+.transitionButton {
+    font-size: 8pt;
+}
