@@ -2,7 +2,7 @@
 import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
 import key from "weak-key"
 
-import { EncountersEntry, EncounterEntry } from "../../models/EncountersEntry"
+import { EncountersEntry, EncounterEntry, EncounterMethodDetails } from "../../models/EncountersEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 import { WithId } from "../../models/WithId"
@@ -209,56 +209,11 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                             methodElements.push(<div>-</div>)
                         }
                         else {
-                            let details = versionDetails.data
-                            methodElements = details.map((d, i) => {
-                                let chance = d.encounterDetails.map(ed => ed.chance)
-                                                            .reduce((ed1, ed2) => ed1 + ed2)
-                                let displayName = d.method.getDisplayName("en") ?? "method"
-
-                                let methodElement = (
-                                    <div>
-                                        {chance}%
-                                        ({displayName})
-                                    </div>
-                                )
-
-                                // TODO: each detail has its own condition values - I think it's
-                                // reasonable to assume they're the same for each one but there
-                                // might be an exception to the rule...
-                                let conditionValues = d.encounterDetails[0].conditionValues
-                                let conditionsElement = undefined
-                                if (conditionValues.length > 0) {
-                                    let conditions = conditionValues.map(v => v.getDisplayName("en") ?? v.name)
-                                                                    .join(", ")
-                                    conditionsElement = (
-                                        <div>
-                                            {conditions}
-                                        </div>
-                                    )
-                                }
-
-                                // TODO: compute true level ranges
-                                // encounter might have two disjoint intervals between these bounds
-                                let minLevel = Math.min(...d.encounterDetails.map(ed => ed.minLevel))
-                                let maxLevel = Math.max(...d.encounterDetails.map(ed => ed.maxLevel))
-
-                                let levelsElement = <div>level {minLevel}</div>
-                                if (maxLevel - minLevel > 0) {
-                                    levelsElement = <div>levels {minLevel} - {maxLevel}</div>
-                                }
-
-                                let separator = undefined
-                                if (i < details.length - 1) {
-                                    separator = <hr style={{ width: "90%" }} />
-                                }
-
-                                return (
-                                    <div key={key(d)}>
-                                        {methodElement}
-                                        {conditionsElement}
-                                        {levelsElement}
-                                        {separator}
-                                    </div>
+                            let detailsList = versionDetails.data
+                            methodElements = detailsList.map((details, index) => {
+                                return this.renderEncounterMethodDetails(
+                                    details,
+                                    index < detailsList.length - 1
                                 )
                             })
                         }
@@ -301,6 +256,57 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         }
 
         return encountersElement
+    }
+
+    /**
+     * Renders the encounter method details.
+     */
+    renderEncounterMethodDetails(details: EncounterMethodDetails, addSeparator = false) {
+        let methodName = details.method.getDisplayName("en") ?? details.method.name
+        let methodElement = <div>{methodName}</div>
+
+        let conditionValueElements = details.conditionValuesDetails.map(cvd => {
+            let conditionsElement = undefined
+            if (cvd.conditionValues.length > 0) {
+                let conditions = cvd.conditionValues.map(v => v.getDisplayName("en") ?? v.name)
+                                                    .join(", ")
+                conditionsElement = <div>{conditions}</div>
+            }
+
+            let chance = cvd.encounterDetails.map(ed => ed.chance)
+                                             .reduce((ed1, ed2) => ed1 + ed2)
+            let chanceElement = <span>{chance}% chance</span>
+
+            // TODO: compute true level ranges
+            // encounter might have two disjoint intervals between these bounds
+            let minLevel = Math.min(...cvd.encounterDetails.map(ed => ed.minLevel))
+            let maxLevel = Math.max(...cvd.encounterDetails.map(ed => ed.maxLevel))
+
+            let levelsElement = <span>level {minLevel}</span>
+            if (maxLevel - minLevel > 0) {
+                levelsElement = <span>levels {minLevel} - {maxLevel}</span>
+            }
+
+            return (
+                <div key={key(cvd)}>
+                    {conditionsElement}
+                    {chanceElement}, {levelsElement}
+                </div>
+            )
+        })
+
+        let separator = undefined
+        if (addSeparator) {
+            separator = <hr style={{ width: "90%" }} />
+        }
+
+        return (
+            <div key={key(details)}>
+                {methodElement}
+                {conditionValueElements}
+                {separator}
+            </div>
+        )
     }
 
     // toggle the location tooltip with the given index
@@ -370,7 +376,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                     encounters: encounters.encounters.map(e => ({
                         id: e.id,
                         data: e.data.map(EncounterEntry.from)
-                    })),
+                    }))
                 }
 
                 let versionGroupId = this.props.versionGroup?.versionGroupId

@@ -209,7 +209,7 @@ namespace PokePlannerWeb.Tests.DataStore.Services
             var methodDetail = entry.Data[0];
 
             // should be two condition values details
-            Assert.That(methodDetail.EncounterDetails.Count, Is.EqualTo(2));
+            Assert.That(methodDetail.ConditionValuesDetails.Count, Is.EqualTo(2));
         }
 
         /// <summary>

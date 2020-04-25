@@ -34,11 +34,6 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public List<LocalString> DisplayNames { get; set; }
 
         /// <summary>
-        /// Gets or sets the encounter chances indexed by version ID.
-        /// </summary>
-        public List<WithId<int>> Chances { get; set; }
-
-        /// <summary>
         /// Gets or sets the details of the encounter indexed by version ID.
         /// </summary>
         public List<WithId<EncounterMethodDetails[]>> Details { get; set; }
@@ -55,9 +50,9 @@ namespace PokePlannerWeb.Data.DataStore.Models
         public EncounterMethodEntry Method { get; set; }
 
         /// <summary>
-        /// Gets or sets the encounter details.
+        /// Gets or sets the condition values details.
         /// </summary>
-        public List<ConditionValuesDetail> EncounterDetails { get; set; }
+        public List<ConditionValuesDetail> ConditionValuesDetails { get; set; }
     }
 
     /// <summary>

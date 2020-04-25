@@ -149,7 +149,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
                     {
                         LocationAreaId = locationArea.LocationAreaId,
                         DisplayNames = displayNames.ToList(),
-                        Chances = chances.ToList(),
                         Details = encounterDetails.ToList()
                     };
 
@@ -251,7 +250,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 var methodDetails = new EncounterMethodDetails
                 {
                     Method = method,
-                    EncounterDetails = conditionValuesDetailList.ToList()
+                    ConditionValuesDetails = conditionValuesDetailList.ToList()
                 };
 
                 methodDetailsList.Add(methodDetails);
