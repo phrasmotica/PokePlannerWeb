@@ -1,4 +1,5 @@
 import { Ability } from "./Ability"
+import { VersionHeldItemContext } from "./ItemEntry"
 import { LocalString } from "./LocalString"
 import { Move } from "./Move"
 import { PokemonForm } from "./PokemonForm"
@@ -60,6 +61,11 @@ export class PokemonEntry {
     moves: WithId<Move[]>[]
 
     /**
+     * The Pokemon's moves indexed by version ID.
+     */
+    heldItems: WithId<VersionHeldItemContext[]>[]
+
+    /**
      * Constructor.
      */
     constructor(
@@ -72,7 +78,8 @@ export class PokemonEntry {
         types: WithId<Type[]>[],
         abilities: Ability[],
         baseStats: WithId<number[]>[],
-        moves: WithId<Move[]>[]
+        moves: WithId<Move[]>[],
+        heldItems: WithId<VersionHeldItemContext[]>[]
     ) {
         this.pokemonId = pokemonId
         this.name = name
@@ -84,6 +91,7 @@ export class PokemonEntry {
         this.abilities = abilities
         this.baseStats = baseStats
         this.moves = moves
+        this.heldItems = heldItems
     }
 
     /**
@@ -100,7 +108,15 @@ export class PokemonEntry {
             pokemon.types,
             pokemon.abilities,
             pokemon.baseStats,
-            pokemon.moves
+            pokemon.moves,
+            pokemon.heldItems.map(
+                h => new WithId<VersionHeldItemContext[]>(
+                    h.id,
+                    h.data.map(
+                        c => VersionHeldItemContext.from(c)
+                    )
+                )
+            )
         )
     }
 

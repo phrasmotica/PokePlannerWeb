@@ -161,6 +161,24 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<MachineService>, NullLogger<MachineService>>();
             services.AddSingleton<MachineService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EncounterConditionEntry>(dataStoreSettings.EncounterConditionCollectionName)
+            );
+            services.AddSingleton<ILogger<EncounterConditionService>, NullLogger<EncounterConditionService>>();
+            services.AddSingleton<EncounterConditionService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EncounterConditionValueEntry>(dataStoreSettings.EncounterConditionValueCollectionName)
+            );
+            services.AddSingleton<ILogger<EncounterConditionValueService>, NullLogger<EncounterConditionValueService>>();
+            services.AddSingleton<EncounterConditionValueService>();
+
+            services.AddSingleton(sp =>
+                dataStoreSourceFactory.Create<EncounterMethodEntry>(dataStoreSettings.EncounterMethodCollectionName)
+            );
+            services.AddSingleton<ILogger<EncounterMethodService>, NullLogger<EncounterMethodService>>();
+            services.AddSingleton<EncounterMethodService>();
         }
 
         /// <summary>
@@ -187,6 +205,24 @@ namespace PokePlannerWeb.Tests
             );
             services.AddSingleton<ILogger<AbilityCacheService>, NullLogger<AbilityCacheService>>();
             services.AddSingleton<AbilityCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EncounterCondition>(cacheSettings.EncounterConditionCollectionName)
+            );
+            services.AddSingleton<ILogger<EncounterConditionCacheService>, NullLogger<EncounterConditionCacheService>>();
+            services.AddSingleton<EncounterConditionCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EncounterConditionValue>(cacheSettings.EncounterConditionValueCollectionName)
+            );
+            services.AddSingleton<ILogger<EncounterConditionValueCacheService>, NullLogger<EncounterConditionValueCacheService>>();
+            services.AddSingleton<EncounterConditionValueCacheService>();
+
+            services.AddSingleton(sp =>
+                cacheSourceFactory.CreateNamed<EncounterMethod>(cacheSettings.EncounterMethodCollectionName)
+            );
+            services.AddSingleton<ILogger<EncounterMethodCacheService>, NullLogger<EncounterMethodCacheService>>();
+            services.AddSingleton<EncounterMethodCacheService>();
 
             services.AddSingleton(sp =>
                 cacheSourceFactory.Create<EvolutionChain>(cacheSettings.EvolutionChainCollectionName)

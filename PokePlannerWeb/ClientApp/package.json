@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/jest": "^25.2.1",
     "@types/react": "^16.9.27",
     "@types/react-select": "^3.0.11",
     "@types/reactstrap": "^8.4.2",
@@ -43,7 +44,7 @@
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
     "build": "react-scripts build",
-    "test": "cross-env CI=true react-scripts test --env=jsdom",
+    "test": "cross-env CI=true react-scripts test --env=jsdom --watch",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
   },

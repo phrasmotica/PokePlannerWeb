@@ -57,3 +57,38 @@ export class ItemEntry {
         return localName?.value
     }
 }
+
+/**
+ * Item info plus the chance that some wild Pokemon is holding it in some version.
+ */
+export class VersionHeldItemContext extends ItemEntry {
+    /**
+     * The rarity of the held item.
+     */
+    rarity: number
+
+    /**
+     * Constructor.
+     */
+    constructor(
+        itemId: number,
+        name: string,
+        displayNames: LocalString[],
+        rarity: number
+    ) {
+        super(itemId, name, displayNames)
+        this.rarity = rarity
+    }
+
+    /**
+     * Returns a held item context created from the given context.
+     */
+    static from(context: VersionHeldItemContext) {
+        return new VersionHeldItemContext(
+            context.itemId,
+            context.name,
+            context.displayNames,
+            context.rarity
+        )
+    }
+}

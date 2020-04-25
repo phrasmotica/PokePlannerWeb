@@ -75,6 +75,11 @@ export class PokemonSpeciesEntry {
     validity: number[]
 
     /**
+     * The species' catch rate.
+     */
+    catchRate: number
+
+    /**
      * Constructor.
      */
     constructor(
@@ -90,7 +95,8 @@ export class PokemonSpeciesEntry {
         varieties: Pokemon[],
         generation: Generation,
         evolutionChain: EvolutionChain,
-        validity: number[]
+        validity: number[],
+        catchRate: number
     ) {
         this.speciesId = speciesId
         this.name = name
@@ -105,6 +111,7 @@ export class PokemonSpeciesEntry {
         this.generation = generation
         this.evolutionChain = evolutionChain
         this.validity = validity
+        this.catchRate = catchRate
     }
 
     /**
@@ -124,7 +131,8 @@ export class PokemonSpeciesEntry {
             species.varieties,
             species.generation,
             species.evolutionChain,
-            species.validity
+            species.validity,
+            species.catchRate
         )
     }
 

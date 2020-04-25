@@ -63,6 +63,11 @@ namespace PokePlannerWeb.Data.DataStore.Services
         private readonly VersionGroupService VersionGroupService;
 
         /// <summary>
+        /// The version service.
+        /// </summary>
+        private readonly VersionService VersionService;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         public PokemonService(
@@ -78,6 +83,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             MoveService moveService,
             PokemonFormService pokemonFormService,
             VersionGroupService versionGroupService,
+            VersionService versionService,
             ILogger<PokemonService> logger) : base(dataStoreSource, pokeApi, pokemonCacheService, logger)
         {
             AbilityCacheService = abilityCacheService;
@@ -89,6 +95,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             MoveService = moveService;
             PokemonFormService = pokemonFormService;
             VersionGroupService = versionGroupService;
+            VersionService = versionService;
         }
 
         #region Entry conversion methods
@@ -104,6 +111,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
             var abilities = await GetAbilities(pokemon);
             var baseStats = await GetBaseStats(pokemon);
             var moves = await GetMoves(pokemon);
+            var heldItems = await GetHeldItems(pokemon);
 
             return new PokemonEntry
             {
@@ -116,7 +124,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Types = types,
                 Abilities = abilities.ToList(),
                 BaseStats = baseStats,
-                Moves = moves.ToList()
+                Moves = moves.ToList(),
+                HeldItems = heldItems.ToList()
             };
         }
 
@@ -387,7 +396,7 @@ namespace PokePlannerWeb.Data.DataStore.Services
         }
 
         /// <summary>
-        /// Returns the given Pokemon's moves in the version group with the given ID.
+        /// Returns the given Pokemon's moves in the given version group.
         /// </summary>
         private async Task<IEnumerable<Move>> GetMoves(Pokemon pokemon, VersionGroupEntry versionGroup)
         {
@@ -403,6 +412,51 @@ namespace PokePlannerWeb.Data.DataStore.Services
             {
                 Id = m.MoveId,
                 Name = m.Name
+            });
+        }
+
+        /// <summary>
+        /// Returns the held items of the given Pokemon, indexed by version ID.
+        /// </summary>
+        private async Task<IEnumerable<WithId<VersionHeldItemContext[]>>> GetHeldItems(Pokemon pokemon)
+        {
+            var itemsList = new List<WithId<VersionHeldItemContext[]>>();
+
+            var versions = await VersionService.GetAll();
+            foreach (var v in versions)
+            {
+                var items = await GetHeldItems(pokemon, v);
+                if (items.Any())
+                {
+                    var itemsEntry = new WithId<VersionHeldItemContext[]>(v.VersionId, items.ToArray());
+                    itemsList.Add(itemsEntry);
+                }
+            }
+
+            return itemsList;
+        }
+
+        /// <summary>
+        /// Returns the given Pokemon's held items in the given version.
+        /// </summary>
+        private async Task<IEnumerable<VersionHeldItemContext>> GetHeldItems(Pokemon pokemon, VersionEntry version)
+        {
+            var allHeldItems = pokemon.HeldItems;
+            var relevantHeldItems = allHeldItems.Where(h =>
+            {
+                var versionGroupNames = h.VersionDetails.Select(vd => vd.Version.Name);
+                return versionGroupNames.Contains(version.Name);
+            }).ToArray();
+
+            var itemEntries = await ItemService.UpsertMany(relevantHeldItems.Select(m => m.Item));
+            return itemEntries.Select((item, index) =>
+            {
+                var context = VersionHeldItemContext.From(item);
+
+                var detail = relevantHeldItems[index].VersionDetails.Single(d => d.Version.Name == version.Name);
+                context.Rarity = detail.Rarity;
+
+                return context;
             });
         }
 

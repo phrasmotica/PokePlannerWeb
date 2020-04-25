@@ -11,6 +11,21 @@
         public string AbilityCollectionName { get; set; }
 
         /// <summary>
+        /// The name of the collection of encounter conditions.
+        /// </summary>
+        public string EncounterConditionCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of encounter condition values.
+        /// </summary>
+        public string EncounterConditionValueCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of encounter methods.
+        /// </summary>
+        public string EncounterMethodCollectionName { get; set; }
+
+        /// <summary>
         /// The name of the collection of evolution chains.
         /// </summary>
         public string EvolutionChainCollectionName { get; set; }
@@ -120,6 +135,21 @@
         /// The name of the collection of abilities.
         /// </summary>
         string AbilityCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of encounter conditions.
+        /// </summary>
+        string EncounterConditionCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of encounter condition values.
+        /// </summary>
+        string EncounterConditionValueCollectionName { get; set; }
+
+        /// <summary>
+        /// The name of the collection of encounter methods.
+        /// </summary>
+        string EncounterMethodCollectionName { get; set; }
 
         /// <summary>
         /// The name of the collection of evolution chains.

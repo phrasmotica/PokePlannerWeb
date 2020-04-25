@@ -98,7 +98,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
                 Varieties = varieties.ToList(),
                 Generation = generation,
                 EvolutionChain = evolutionChain,
-                Validity = validity.ToList()
+                Validity = validity.ToList(),
+                CatchRate = species.CaptureRate
             };
         }
 

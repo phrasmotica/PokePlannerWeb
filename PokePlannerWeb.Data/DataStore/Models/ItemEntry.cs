@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace PokePlannerWeb.Data.DataStore.Models
 {
@@ -28,6 +27,30 @@ namespace PokePlannerWeb.Data.DataStore.Models
                 Key = Key,
                 Name = Name,
                 DisplayNames = DisplayNames
+            };
+        }
+    }
+
+    /// <summary>
+    /// Item info plus the chance that some wild Pokemon is holding it in some version.
+    /// </summary>
+    public class VersionHeldItemContext : ItemEntry
+    {
+        /// <summary>
+        /// Gets or sets the rarity of the held item.
+        /// </summary>
+        public int Rarity { get; set; }
+
+        /// <summary>
+        /// Converts an ability entry into an ability context instance.
+        /// </summary>
+        public static VersionHeldItemContext From(ItemEntry e)
+        {
+            return new VersionHeldItemContext
+            {
+                Key = e.Key,
+                Name = e.Name,
+                DisplayNames = e.DisplayNames
             };
         }
     }

@@ -3,7 +3,32 @@
 }
 
 .encountersListGroup > .list-group-item {
-    display: flex;
-    align-items: center;
+    display: block;
     padding: 0.25rem 0.5rem;
+}
+
+.encountersListGroup > .list-group-item .btn {
+    font-weight: unset;
+    font-size: unset;
+    padding: unset;
+    border: unset;
+    margin-right: 3px;
+}
+
+.captureLocationsVersionItem {
+    flex: 1;
+    flex-direction: column;
+}
+
+.captureLocationsVersionName {
+    padding: unset;
+    font-weight: bold;
+}
+
+.encounterInfo {
+    margin-top: 5px;
+}
+
+.encounterInfo hr {
+    margin: 0.3rem 0rem;
 }

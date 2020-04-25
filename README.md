@@ -21,10 +21,8 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [ ] Favourite/unfavourite species (requires login)
   * [x] Select variety (Castform, Shaymin, mega evolutions, etc.)
     * [x] Save selected variety in cookies
-    * [ ] Filter by version
   * [x] Select form (Shellos, Arceus, Genesect, etc.)
     * [x] Save selected form in cookies
-    * [ ] Filter by version group
   * [x] Highlight as invalid in version group
     * [x] Toggle highlight on/off
       * [x] Save toggle in cookies
@@ -33,7 +31,7 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
   * [x] Show sprite
     * [x] Toggle between default and shiny
   * [x] Show base stats
-  * [ ] Show abilities
+  * [x] Show abilities
   * [x] Show defensive type efficacy
   * [x] Show move learnset
     * [x] Show move type/damage class
@@ -45,6 +43,9 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [x] Filter by learn method
     * [ ] Open move in MoveDex
   * [x] Show encounter locations
+    * [ ] Show species catch rate
+    * [ ] Show variety held items
+    * [ ] Show encounter method details
     * [ ] Open route in RouteDex
   * [x] Show evolution chain
     * [x] Show sprites
