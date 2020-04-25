@@ -267,6 +267,9 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         let methodName = details.method.getDisplayName("en") ?? details.method.name
         let methodElement = <div>{methodName}</div>
 
+        // don't bother showing 100% chance for gift Pokemon
+        let showChance = ![18, 19].includes(details.method.encounterMethodId)
+
         let conditionValueElements = details.conditionValuesDetails.map(cvd => {
             let conditionsElement = undefined
             if (cvd.conditionValues.length > 0) {
@@ -275,9 +278,12 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 conditionsElement = <div>{conditions}</div>
             }
 
-            let chance = cvd.encounterDetails.map(ed => ed.chance)
-                                             .reduce((ed1, ed2) => ed1 + ed2)
-            let chanceElement = <div>{chance}% chance</div>
+            let chanceElement = undefined
+            if (showChance) {
+                let chance = cvd.encounterDetails.map(ed => ed.chance)
+                                                 .reduce((ed1, ed2) => ed1 + ed2)
+                chanceElement = <div>{chance}% chance</div>
+            }
 
             let levelRanges = cvd.encounterDetails.map(ed => new Interval(ed.minLevel, ed.maxLevel))
             let mergedLevelRanges = NumberHelper.mergeIntRanges(levelRanges)
