@@ -65,4 +65,40 @@ export class NumberHelper {
 /**
  * Represents an interval of real numbers.
  */
-type Interval = { start: number, end: number }
+export class Interval {
+    /**
+     * The start of the interval.
+     */
+    start: number
+
+    /**
+     * The end of the interval.
+     */
+    end: number
+
+    /**
+     * Constructor.
+     */
+    constructor(start = 0, end = 0) {
+        this.start = start
+        this.end = end
+    }
+
+    /**
+     * Returns whether this interval is empty.
+     */
+    isEmpty() {
+        return this.end === this.start
+    }
+
+    /**
+     * Returns a string summarising this interval.
+     */
+    summarise() {
+        if (this.end - this.start <= 0) {
+            return `${this.start}`
+        }
+
+        return `${this.start} - ${this.end}`
+    }
+}

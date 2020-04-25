@@ -9,6 +9,8 @@ import { WithId } from "../../models/WithId"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
+import { NumberHelper, Interval } from "../../util/NumberHelper"
+
 import "./CaptureLocations.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 
@@ -275,22 +277,22 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
             let chance = cvd.encounterDetails.map(ed => ed.chance)
                                              .reduce((ed1, ed2) => ed1 + ed2)
-            let chanceElement = <span>{chance}% chance</span>
+            let chanceElement = <div>{chance}% chance</div>
 
-            // TODO: compute true level ranges
-            // encounter might have two disjoint intervals between these bounds
-            let minLevel = Math.min(...cvd.encounterDetails.map(ed => ed.minLevel))
-            let maxLevel = Math.max(...cvd.encounterDetails.map(ed => ed.maxLevel))
+            let levelRanges = cvd.encounterDetails.map(ed => new Interval(ed.minLevel, ed.maxLevel))
+            let mergedLevelRanges = NumberHelper.mergeIntRanges(levelRanges)
+            let intervalsSummary = mergedLevelRanges.map(i => i.summarise()).join(", ")
 
-            let levelsElement = <span>level {minLevel}</span>
-            if (maxLevel - minLevel > 0) {
-                levelsElement = <span>levels {minLevel} - {maxLevel}</span>
+            let levelsElement = <div>level {intervalsSummary}</div>
+            if (mergedLevelRanges.length > 1 || !mergedLevelRanges[0].isEmpty()) {
+                levelsElement = <div>levels {intervalsSummary}</div>
             }
 
             return (
                 <div key={key(cvd)}>
                     {conditionsElement}
-                    {chanceElement}, {levelsElement}
+                    {chanceElement}
+                    {levelsElement}
                 </div>
             )
         })
