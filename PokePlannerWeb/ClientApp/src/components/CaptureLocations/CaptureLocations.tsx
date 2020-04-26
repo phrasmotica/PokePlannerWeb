@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
+import Fuse from "fuse.js"
+import { ListGroup, ListGroupItem, Button, Collapse, Input } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry, EncounterMethodDetails } from "../../models/EncountersEntry"
@@ -107,8 +108,12 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     render() {
         return (
-            <div style={{ marginTop: 4 }}>
-                {this.renderCatchRate()}
+            <div style={{ marginTop: 5 }}>
+                <div className="topBar">
+                    {this.renderCatchRate()}
+                    {this.renderSearchBar()}
+                </div>
+
                 {this.renderCaptureLocations()}
             </div>
         )
@@ -126,8 +131,21 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         }
 
         return (
-            <div className="flex-center margin-bottom-small">
+            <div className="catchRate flex-center">
                 Catch rate: {catchRateElement}
+            </div>
+        )
+    }
+
+    /**
+     * Renders the search bar.
+     */
+    renderSearchBar() {
+        return (
+            <div className="encountersSearchBarContainer flex-center">
+                <Input
+                    className="encountersSearchBar"
+                    placeholder="search" />
             </div>
         )
     }
