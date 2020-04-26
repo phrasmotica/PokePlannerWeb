@@ -186,6 +186,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
 
     /**
      * Renders the capture locations.
+     * TODO: move to ActionPanel
      */
     renderCaptureLocations() {
         return (
