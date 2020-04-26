@@ -294,6 +294,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 levelsElement = <div>levels {intervalsSummary}</div>
             }
 
+            // TODO: render <hr /> if not the last one
             return (
                 <div key={key(cvd)}>
                     {conditionsElement}
