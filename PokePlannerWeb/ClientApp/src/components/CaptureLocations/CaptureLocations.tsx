@@ -270,7 +270,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         // don't bother showing 100% chance for gift Pokemon
         let showChance = ![18, 19].includes(details.method.encounterMethodId)
 
-        let conditionValueElements = details.conditionValuesDetails.map(cvd => {
+        let conditionValueElements = details.conditionValuesDetails.map((cvd, i) => {
             let conditionsElement = undefined
             if (cvd.conditionValues.length > 0) {
                 let conditions = cvd.conditionValues.map(v => v.getDisplayName("en") ?? v.name)
@@ -294,12 +294,19 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 levelsElement = <div>levels {intervalsSummary}</div>
             }
 
-            // TODO: render <hr /> if not the last one
+            let separator = undefined
+            if (i < details.conditionValuesDetails.length - 1) {
+                separator = <hr />
+            }
+
             return (
-                <div key={key(cvd)}>
+                <div
+                    key={key(cvd)}
+                    className="conditionsContainer">
                     {conditionsElement}
                     {chanceElement}
                     {levelsElement}
+                    {separator}
                 </div>
             )
         })
@@ -311,8 +318,14 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
         return (
             <div key={key(details)}>
-                {methodElement}
-                {conditionValueElements}
+                <div className="methodContainer">
+                    {methodElement}
+                </div>
+
+                <div className="cveContainer">
+                    {conditionValueElements}
+                </div>
+
                 {separator}
             </div>
         )
