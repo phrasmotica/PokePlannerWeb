@@ -122,32 +122,6 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     }
 
     /**
-     * Renders a button for the species.
-     */
-    renderSpeciesButton(species: PokemonSpeciesEntry) {
-        let speciesId = species.speciesId
-        let isCurrentSpecies = speciesId === this.props.speciesId
-        let speciesName = species.getDisplayName("en") ?? species.name
-
-        let nameElement = <span>{speciesName}</span>
-        if (isCurrentSpecies) {
-            nameElement = <span><b>{speciesName}</b></span>
-        }
-
-        let speciesAvailable = this.props.availableSpeciesIds.includes(speciesId)
-
-        return (
-            <Button
-                color="link"
-                disabled={!speciesAvailable}
-                className="evolutionTreeSpeciesButton"
-                onMouseUp={() => this.props.setSpecies(speciesId)}>
-                {nameElement}
-            </Button>
-        )
-    }
-
-    /**
      * Renders an expand button for this chain link.
      */
     renderExpandButton(link: ChainLinkEntry) {
@@ -163,6 +137,33 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
                 className="transitionButton"
                 onMouseUp={onClick}>
                 {buttonIcon}
+            </Button>
+        )
+    }
+
+    /**
+     * Renders a button for the species.
+     */
+    renderSpeciesButton(species: PokemonSpeciesEntry) {
+        let speciesId = species.speciesId
+        let isCurrentSpecies = speciesId === this.props.speciesId
+        let speciesName = species.getDisplayName("en") ?? species.name
+
+        let spanTitle = `View ${speciesName}`
+        let nameElement = <span title={spanTitle}>{speciesName}</span>
+        if (isCurrentSpecies) {
+            nameElement = <span><b>{speciesName}</b></span>
+        }
+
+        let speciesAvailable = this.props.availableSpeciesIds.includes(speciesId)
+
+        return (
+            <Button
+                color="link"
+                disabled={!speciesAvailable}
+                className="evolutionTreeSpeciesButton"
+                onMouseUp={() => this.props.setSpecies(speciesId)}>
+                {nameElement}
             </Button>
         )
     }
