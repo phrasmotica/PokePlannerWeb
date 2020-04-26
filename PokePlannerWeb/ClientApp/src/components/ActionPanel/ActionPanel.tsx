@@ -1,21 +1,28 @@
 import React, { Component } from "react"
 import { Tabs, Tab } from "react-bootstrap"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
+import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
 import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
 import { MoveList } from "../MoveList/MoveList"
 
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonFormEntry } from "../../models/PokemonFormEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 
 import { PokemonHelper } from "../../util/PokemonHelper"
 import { CookieHelper } from "../../util/CookieHelper"
 
 import "./ActionPanel.scss"
 
-interface IActionPanelProps extends IHasCommon {
+interface IActionPanelProps extends IHasIndex, IHasHideTooltips {
+    /**
+     * The version group.
+     */
+    versionGroup: VersionGroupEntry | undefined
+
     /**
      * List of Pokemon species.
      */
@@ -92,6 +99,10 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
                 <Tab eventKey="evolution" title="Evolution">
                     {this.renderEvolutionChain()}
                 </Tab>
+
+                <Tab eventKey="locations" title="Capture Locations">
+                    {this.renderCaptureLocations()}
+                </Tab>
             </Tabs>
         )
     }
@@ -105,12 +116,35 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
         return (
             <MoveList
                 index={this.props.index}
-                versionGroupId={this.props.versionGroupId}
+                versionGroupId={this.props.versionGroup?.versionGroupId}
                 pokemonId={this.props.variety?.pokemonId}
                 typeIds={typeIds}
                 showMoves={this.props.shouldShowPokemon}
                 hideTooltips={this.props.hideTooltips} />
         )
+    }
+
+    /**
+     * Renders the capture locations.
+     */
+    renderCaptureLocations() {
+        return (
+            <CaptureLocations
+                index={this.props.index}
+                pokemonId={this.props.variety?.pokemonId}
+                versionGroup={this.props.versionGroup}
+                species={this.getSpecies()}
+                showLocations={this.props.shouldShowPokemon}
+                hideTooltips={this.props.hideTooltips} />
+        )
+    }
+
+    /**
+     * Returns the data object for the selected species.
+     */
+    getSpecies() {
+        let speciesId = this.props.speciesId
+        return this.props.species.find(s => s.speciesId === speciesId)
     }
 
     /**
@@ -120,7 +154,7 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
         return PokemonHelper.getEffectiveTypes(
             this.props.variety,
             this.props.form,
-            this.props.versionGroupId
+            this.props.versionGroup?.versionGroupId
         )
     }
 

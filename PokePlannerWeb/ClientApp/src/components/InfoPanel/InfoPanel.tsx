@@ -4,7 +4,6 @@ import { Tabs, Tab } from "react-bootstrap"
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { AbilityList } from "../AbilityList/AbilityList"
-import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
 import { EfficacyList } from "../EfficacyList/EfficacyList"
 import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
 import { StatGraph } from "../StatGraph/StatGraph"
@@ -108,10 +107,6 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                         {this.renderEfficacyList()}
                     </Tab>
 
-                    <Tab eventKey="locations" title="Capture Locations">
-                        {this.renderCaptureLocations()}
-                    </Tab>
-
                     <Tab eventKey="heldItems" title="Held Items">
                         {this.renderHeldItems()}
                     </Tab>
@@ -180,22 +175,6 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                 types={this.props.types}
                 versionGroup={this.props.versionGroup}
                 showMultipliers={this.props.shouldShowPokemon}
-                hideTooltips={this.props.hideTooltips} />
-        )
-    }
-
-    /**
-     * Renders the capture locations.
-     * TODO: move to ActionPanel
-     */
-    renderCaptureLocations() {
-        return (
-            <CaptureLocations
-                index={this.props.index}
-                pokemonId={this.props.pokemon?.pokemonId}
-                versionGroup={this.props.versionGroup}
-                species={this.props.species}
-                showLocations={this.props.shouldShowPokemon}
                 hideTooltips={this.props.hideTooltips} />
         )
     }
