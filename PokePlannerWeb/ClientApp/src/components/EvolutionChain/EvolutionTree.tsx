@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Button } from "reactstrap"
+import { FaAngleRight, FaAngleDown } from "react-icons/fa"
 import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
@@ -39,9 +40,9 @@ interface IEvolutionTreeProps extends IHasIndex {
 
 interface IEvolutionTreeState {
     /**
-     * Whether to show the evolution details for each transition.
+     * Whether each chain link is expanded.
      */
-    showEvolutionDetails: boolean[]
+    isExpanded: boolean[]
 }
 
 /**
@@ -49,9 +50,9 @@ interface IEvolutionTreeState {
  */
 export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTreeState> {
     /**
-     * The number of transition buttons rendered so far.
+     * The number of expansion buttons rendered so far.
      */
-    transitionButtonCount: number = 0
+    expandButtonCount: number = 0
 
     /**
      * Constructor.
@@ -59,9 +60,9 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     constructor(props: IEvolutionTreeProps) {
         super(props)
 
-        let numberOfTransitions = this.props.chain.countTransitions()
+        let nodeCount = this.props.chain.size()
         this.state = {
-            showEvolutionDetails: new Array(numberOfTransitions).fill(false)
+            isExpanded: new Array(nodeCount).fill(false)
         }
     }
 
@@ -69,7 +70,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders the component.
      */
     render() {
-        this.transitionButtonCount = 0
+        this.expandButtonCount = 0
 
         return (
             <div className="evolutionTree">
@@ -85,30 +86,36 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         let isRoot = link.evolutionDetails.length <= 0
         let className = isRoot ? "" : "evolutionTreeNode"
 
-        let transitionButton = undefined
-        if (link.evolutionDetails.length > 0) {
-            transitionButton = this.renderTransitionButton(link)
-        }
+        let expandButton = this.renderExpandButton(link)
 
         let speciesElement = (
-            <div>
+            <div className="flex">
+                {expandButton}
                 {this.renderSpeciesButton(link.species)}
-                {transitionButton}
             </div>
         )
 
-        let spriteElement = this.renderSpeciesSprite(link.species)
+        let isExpanded = this.state.isExpanded[this.expandButtonCount - 1]
 
-        let shouldShowEvolutionDetails = this.state.showEvolutionDetails[this.transitionButtonCount - 1]
-        let transitionElement = shouldShowEvolutionDetails ? this.renderTransition(link) : null
+        let middleElement = undefined
+        if (isExpanded) {
+            middleElement = (
+                <div className="flex">
+                    <div className="separate-right">
+                        {this.renderSpeciesSprite(link.species)}
+                    </div>
+
+                    {this.renderTransition(link)}
+                </div>
+            )
+        }
 
         return (
             <div
                 key={key(link)}
                 className={className}>
                 {speciesElement}
-                {spriteElement}
-                {transitionElement}
+                {middleElement}
                 {link.evolvesTo.map(l => this.renderChainLink(l))}
             </div>
         )
@@ -141,18 +148,21 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     }
 
     /**
-     * Renders a button for the transition from this chain link to the next one.
+     * Renders an expand button for this chain link.
      */
-    renderTransitionButton(link: ChainLinkEntry) {
-        let index = this.transitionButtonCount++
+    renderExpandButton(link: ChainLinkEntry) {
+        let index = this.expandButtonCount
         const onClick = () => this.toggleShowEvolutionDetails(index)
+
+        let isExpanded = this.state.isExpanded[this.expandButtonCount++]
+        let buttonIcon = isExpanded ? <FaAngleDown /> : <FaAngleRight />
 
         return (
             <Button
                 color="link"
                 className="transitionButton"
                 onMouseUp={onClick}>
-                show transition
+                {buttonIcon}
             </Button>
         )
     }
@@ -187,6 +197,16 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders the transition from this chain link to the next one.
      */
     renderTransition(link: ChainLinkEntry) {
+        if (link.evolutionDetails.length <= 0) {
+            return (
+                <div
+                    key={key(link.species)}
+                    className="evolutionTreeTransition">
+                    unevolved
+                </div>
+            )
+        }
+
         let details = link.evolutionDetails.map(d => this.renderEvolutionDetail(d))
 
         return (
@@ -339,7 +359,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Toggles showing the evolution details with the given index.
      */
     toggleShowEvolutionDetails(index: number) {
-        let newShowEvolutionDetails = this.state.showEvolutionDetails.map((item, j) => {
+        let newShowEvolutionDetails = this.state.isExpanded.map((item, j) => {
             if (j === index) {
                 return !item
             }
@@ -347,6 +367,6 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             return item
         })
 
-        this.setState({ showEvolutionDetails: newShowEvolutionDetails })
+        this.setState({ isExpanded: newShowEvolutionDetails })
     }
 }

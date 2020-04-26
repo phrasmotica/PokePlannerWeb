@@ -3,7 +3,7 @@
 }
 
 .evolutionTreeNode {
-    margin-left: 30px;
+    margin-left: 20px;
 }
 
 .evolutionTreeSpeciesButton {
@@ -12,16 +12,33 @@
     padding: 0px;
 }
 
-$dim: 48px;
+$dim: 96px;
 .evolutionTreeSprite {
     height: $dim;
     width: $dim
 }
 
 .evolutionTreeTransition {
-    padding-left: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.transitionIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+}
+
+$buttonSize: 24px;
 .transitionButton {
-    font-size: 8pt;
+    width: $buttonSize;
+    height: $buttonSize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+    color: black;
+    border: 0px;
 }

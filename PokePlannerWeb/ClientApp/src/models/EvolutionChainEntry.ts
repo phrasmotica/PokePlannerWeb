@@ -119,6 +119,17 @@ export class ChainLinkEntry {
     }
 
     /**
+     * Returns the number of links in this chain.
+     */
+    size(): number {
+        if (this.evolvesTo.length <= 0) {
+            return 1
+        }
+
+        return 1 + this.evolvesTo.map(l => l.size()).reduce((x, y) => x + y)
+    }
+
+    /**
      * Returns the number of transitions in this chain.
      */
     countTransitions(): number {
