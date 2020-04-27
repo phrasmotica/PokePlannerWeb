@@ -1,5 +1,6 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button, Collapse } from "reactstrap"
+import fuzzysort from "fuzzysort"
+import { ListGroup, ListGroupItem, Button, Collapse, Input } from "reactstrap"
 import key from "weak-key"
 
 import { EncountersEntry, EncounterEntry, EncounterMethodDetails } from "../../models/EncountersEntry"
@@ -53,6 +54,11 @@ interface ICaptureLocationsState {
     locationTooltipOpen: boolean[]
 
     /**
+     * The search term.
+     */
+    searchTerm: string
+
+    /**
      * Whether each encounter's info pane is open.
      */
     encountersAreOpen: WithId<boolean>[]
@@ -68,6 +74,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             locations: undefined,
             loadingLocations: false,
             locationTooltipOpen: [],
+            searchTerm: "",
             encountersAreOpen: []
         }
     }
@@ -107,8 +114,12 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
     render() {
         return (
-            <div style={{ marginTop: 4 }}>
-                {this.renderCatchRate()}
+            <div style={{ marginTop: 5 }}>
+                <div className="topBar">
+                    {this.renderCatchRate()}
+                    {this.renderSearchBar()}
+                </div>
+
                 {this.renderCaptureLocations()}
             </div>
         )
@@ -126,8 +137,22 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         }
 
         return (
-            <div className="flex-center margin-bottom-small">
+            <div className="catchRate flex-center">
                 Catch rate: {catchRateElement}
+            </div>
+        )
+    }
+
+    /**
+     * Renders the search bar.
+     */
+    renderSearchBar() {
+        return (
+            <div className="encountersSearchBarContainer flex-center">
+                <Input
+                    className="encountersSearchBar"
+                    placeholder="search"
+                    onChange={e => this.setSearchTerm(e.target.value)} />
             </div>
         )
     }
@@ -172,79 +197,98 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 }
 
                 let encountersData = matchingEncounter.data
+                let filteredData = this.filterEncounterEntries(encountersData)
 
                 let items = []
-                for (let row = 0; row < encountersData.length; row++) {
-                    let encounter = encountersData[row]
-                    let encounterName = encounter.getDisplayName("en") ?? `encounter`
-                    let encounterNameElement = (
-                        <span>
-                            <b>
-                                {encounterName}
-                            </b>
-                        </span>
-                    )
-
-                    let encounterId = encounter.locationAreaId
-                    const openInfoPane = () => this.toggleEncounterOpen(encounterId)
-                    let encounterNameButton = (
-                        <Button
-                            color="link"
-                            onMouseUp={openInfoPane}>
-                            {encounterNameElement}
-                        </Button>
-                    )
-
-                    let versions = this.props.versionGroup?.versions ?? []
-
-                    let versionElements = versions.map(v => {
-                        let versionName = v.getDisplayName("en") ?? "version"
-                        let versionNameElement = (
-                            <div className="captureLocationsVersionName">
-                                {versionName}
-                            </div>
+                if (filteredData.length > 0) {
+                    for (let row = 0; row < filteredData.length; row++) {
+                        let encounter = filteredData[row]
+                        let encounterName = encounter.getDisplayName("en") ?? `encounter`
+                        let encounterNameElement = (
+                            <span className="center-text">
+                                <b>
+                                    {encounterName}
+                                </b>
+                            </span>
                         )
 
-                        let methodElements = []
-                        let versionDetails = encounter.details.find(e => e.id === v.versionId)
-                        if (versionDetails === undefined) {
-                            methodElements.push(<div>-</div>)
-                        }
-                        else {
-                            let detailsList = versionDetails.data
-                            methodElements = detailsList.map((details, index) => {
-                                return this.renderEncounterMethodDetails(
-                                    details,
-                                    index < detailsList.length - 1
-                                )
-                            })
-                        }
-
-                        return (
-                            <div
-                                key={key(v)}
-                                className="captureLocationsVersionItem">
-                                {versionNameElement}
-                                {methodElements}
-                            </div>
+                        let encounterId = encounter.locationAreaId
+                        const openInfoPane = () => this.toggleEncounterOpen(encounterId)
+                        let encounterNameButton = (
+                            <Button
+                                color="link"
+                                onMouseUp={openInfoPane}>
+                                {encounterNameElement}
+                            </Button>
                         )
-                    })
 
-                    let isOpen = this.state.encountersAreOpen.find(e => e.id === encounterId)?.data ?? false
-                    let infoPane = (
-                        <Collapse isOpen={isOpen}>
-                            <div className="flex encounterInfo">
-                                {versionElements}
-                            </div>
-                        </Collapse>
-                    )
+                        let versions = this.props.versionGroup?.versions ?? []
 
-                    items.push(
-                        <ListGroupItem key={key(encounter)}>
-                            {encounterNameButton}
-                            {infoPane}
-                        </ListGroupItem>
-                    )
+                        let versionElements = versions.map(v => {
+                            let versionName = v.getDisplayName("en") ?? "version"
+                            let versionNameElement = (
+                                <div className="captureLocationsVersionName">
+                                    {versionName}
+                                </div>
+                            )
+
+                            let methodElements = []
+                            let versionDetails = encounter.details.find(e => e.id === v.versionId)
+                            if (versionDetails === undefined) {
+                                methodElements.push(<div>-</div>)
+                            }
+                            else {
+                                let detailsList = versionDetails.data
+                                methodElements = detailsList.map((details, index) => {
+                                    return this.renderEncounterMethodDetails(
+                                        details,
+                                        index < detailsList.length - 1
+                                    )
+                                })
+                            }
+
+                            return (
+                                <div
+                                    key={key(v)}
+                                    className="captureLocationsVersionItem">
+                                    {versionNameElement}
+                                    {methodElements}
+                                </div>
+                            )
+                        })
+
+                        let isOpen = this.state.encountersAreOpen.find(e => e.id === encounterId)?.data ?? false
+                        let infoPane = (
+                            <Collapse isOpen={isOpen}>
+                                <div className="flex encounterInfo">
+                                    {versionElements}
+                                </div>
+                            </Collapse>
+                        )
+
+                        items.push(
+                            <ListGroupItem key={key(encounter)}>
+                                {encounterNameButton}
+                                {infoPane}
+                            </ListGroupItem>
+                        )
+                    }
+                }
+                else {
+                    if (this.hasFilters()) {
+                        items.push(
+                            <ListGroupItem key={0}>
+                                All encounters have been filtered
+                            </ListGroupItem>
+                        )
+                    }
+                    else {
+                        items.push(
+                            <ListGroupItem key={0}>
+                                -
+                            </ListGroupItem>
+                        )
+                    }
                 }
 
                 return (
@@ -331,6 +375,30 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         )
     }
 
+    /**
+     * Sets the search term.
+     */
+    setSearchTerm(term: string) {
+        this.setState({ searchTerm: term })
+    }
+
+    /**
+     * Filters the given list of encounters according to the current search term.
+     */
+    filterEncounterEntries(entries: EncounterEntry[]) {
+        let searchTerm = this.state.searchTerm
+        if (searchTerm === "") {
+            return entries
+        }
+
+        let entryNames = entries.map(e => ({ id: e.locationAreaId, name: e.getDisplayName("en") }))
+        const options = { key: 'name' }
+        let results = fuzzysort.go(searchTerm, entryNames, options)
+
+        let resultIds = results.map(r => r.obj.id)
+        return entries.filter(e => resultIds.includes(e.locationAreaId))
+    }
+
     // toggle the location tooltip with the given index
     toggleLocationTooltip(index: number) {
         let newLocationTooltipOpen = this.state.locationTooltipOpen.map((item, j) => {
@@ -364,6 +432,13 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     // returns true if we have a Pokemon
     hasPokemon() {
         return this.props.pokemonId !== undefined
+    }
+
+    /**
+     * Returns whether any filters are active.
+     */
+    hasFilters() {
+        return this.state.searchTerm.length > 0
     }
 
     // fetches the Pokemon's capture locations from EncounterController
