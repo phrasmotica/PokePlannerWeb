@@ -522,10 +522,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         if (this.state.moveClass === MoveClass.Damaging) {
             moves = moves.filter(m => m.isDamaging())
-        }
 
-        if (this.state.useMinPower) {
-            moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
+            if (this.state.useMinPower) {
+                moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
+            }
         }
 
         if (this.state.moveClass === MoveClass.NonDamaging) {
