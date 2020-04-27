@@ -161,8 +161,12 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         let movePowers = this.state.moves.filter(m => m.power !== null)
                                          .map(m => m.power!)
-        let lowestPower = Math.min(...movePowers)
-        let highestPower = Math.max(...movePowers)
+        let lowestPower = 0
+        let highestPower = 0
+        if (movePowers.length > 0) {
+            lowestPower = Math.min(...movePowers)
+            highestPower = Math.max(...movePowers)
+        }
 
         let minPower = Math.min(Math.max(this.state.minPower, lowestPower), highestPower)
 
@@ -250,6 +254,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         for (let c of Object.values(MoveClass)){
             buttons.push(
                 <Button
+                    key={c}
                     className="moveClassButton"
                     color={this.state.moveClass === c ? "success" : "secondary"}
                     disabled={!this.props.showMoves}
