@@ -1,5 +1,5 @@
 ﻿import React, { Component } from "react"
-import Fuse from "fuse.js"
+import fuzzysort from "fuzzysort"
 import { ListGroup, ListGroupItem, Button, Collapse, Input } from "reactstrap"
 import key from "weak-key"
 
@@ -54,6 +54,11 @@ interface ICaptureLocationsState {
     locationTooltipOpen: boolean[]
 
     /**
+     * The search term.
+     */
+    searchTerm: string
+
+    /**
      * Whether each encounter's info pane is open.
      */
     encountersAreOpen: WithId<boolean>[]
@@ -69,6 +74,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             locations: undefined,
             loadingLocations: false,
             locationTooltipOpen: [],
+            searchTerm: "",
             encountersAreOpen: []
         }
     }
@@ -145,7 +151,8 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             <div className="encountersSearchBarContainer flex-center">
                 <Input
                     className="encountersSearchBar"
-                    placeholder="search" />
+                    placeholder="search"
+                    onChange={e => this.setSearchTerm(e.target.value)} />
             </div>
         )
     }
@@ -190,10 +197,11 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 }
 
                 let encountersData = matchingEncounter.data
+                let filteredData = this.filterEncounterEntries(encountersData)
 
                 let items = []
-                for (let row = 0; row < encountersData.length; row++) {
-                    let encounter = encountersData[row]
+                for (let row = 0; row < filteredData.length; row++) {
+                    let encounter = filteredData[row]
                     let encounterName = encounter.getDisplayName("en") ?? `encounter`
                     let encounterNameElement = (
                         <span>
@@ -347,6 +355,30 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 {separator}
             </div>
         )
+    }
+
+    /**
+     * Sets the search term.
+     */
+    setSearchTerm(term: string) {
+        this.setState({ searchTerm: term })
+    }
+
+    /**
+     * Filters the given list of encounters according to the current search term.
+     */
+    filterEncounterEntries(entries: EncounterEntry[]) {
+        let searchTerm = this.state.searchTerm
+        if (searchTerm === "") {
+            return entries
+        }
+
+        let entryNames = entries.map(e => ({ id: e.locationAreaId, name: e.getDisplayName("en") }))
+        const options = { key: 'name' }
+        let results = fuzzysort.go(searchTerm, entryNames, options)
+
+        let resultIds = results.map(r => r.obj.id)
+        return entries.filter(e => resultIds.includes(e.locationAreaId))
     }
 
     // toggle the location tooltip with the given index
