@@ -41,11 +41,13 @@ Pick a version group and team of Pokemon, and view a summary of each Pokemon.
     * [x] Filter by minimum power
     * [x] Filter by same type
     * [x] Filter by learn method
+    * [x] Searchable
     * [ ] Open move in MoveDex
   * [x] Show encounter locations
-    * [ ] Show species catch rate
-    * [ ] Show variety held items
-    * [ ] Show encounter method details
+    * [x] Show species catch rate
+    * [x] Show variety held items
+    * [x] Show encounter method details
+    * [x] Searchable
     * [ ] Open route in RouteDex
   * [x] Show evolution chain
     * [x] Show sprites
