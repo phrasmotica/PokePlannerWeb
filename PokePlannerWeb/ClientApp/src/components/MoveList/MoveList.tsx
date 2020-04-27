@@ -1,9 +1,10 @@
 ﻿import React, { Component } from "react"
-import { ListGroup, ListGroupItem, Button, Collapse, Input, Label } from "reactstrap"
+import fuzzysort from "fuzzysort"
+import { ListGroup, ListGroupItem, Button, Collapse, Input, Label, ButtonGroup } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasCommon, IHasSearch } from "../CommonMembers"
 
 import { ItemEntry } from "../../models/ItemEntry"
 import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
@@ -15,6 +16,27 @@ import { CookieHelper } from "../../util/CookieHelper"
 import "./MoveList.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
+import { CssHelper } from "../../util/CssHelper"
+
+/**
+ * Enum for selecting a move class.
+ */
+enum MoveClass {
+    /**
+     * All moves.
+     */
+    All = 'all',
+
+    /**
+     * Damaging moves.
+     */
+    Damaging = 'damaging',
+
+    /**
+     * Non-damaging moves.
+     */
+    NonDamaging = 'non-damaging'
+}
 
 interface IMoveListProps extends IHasCommon {
     /**
@@ -33,11 +55,11 @@ interface IMoveListProps extends IHasCommon {
     showMoves: boolean
 }
 
-interface IMoveListState {
+interface IMoveListState extends IHasSearch {
     /**
-     * Whether to only show moves that deal damage.
+     * The class of moves to show.
      */
-    damagingOnly: boolean
+    moveClass: MoveClass
 
     /**
      * Whether to only show moves with at least a minimum base power.
@@ -48,11 +70,6 @@ interface IMoveListState {
      * The minimum power a move must have to be shown.
      */
     minPower: number
-
-    /**
-     * Whether to only show moves that don't deal damage.
-     */
-    nonDamagingOnly: boolean
 
     /**
      * Whether to only show moves with one of the current Pokemon's types.
@@ -89,15 +106,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         let index= this.props.index
         this.state = {
-            damagingOnly: CookieHelper.getFlag(`damagingOnly${index}`),
+            moveClass: CookieHelper.get(`moveClass${index}`) as MoveClass,
             useMinPower: CookieHelper.getFlag(`useMinPower${index}`),
             minPower: CookieHelper.getNumber(`minPower${index}`) ?? 0,
-            nonDamagingOnly: CookieHelper.getFlag(`nonDamagingOnly${index}`),
             sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${index}`),
             levelUpOnly: CookieHelper.getFlag(`levelUpOnly${index}`),
             moves: [],
             loadingMoves: false,
-            movesAreOpen: []
+            movesAreOpen: [],
+            searchTerm: ""
         }
     }
 
@@ -124,11 +141,12 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     render() {
         return (
             <div className="move-list-container">
-                <div style={{ marginTop: 4 }}>
+                <div className="flex margin-top-small">
                     {this.renderFilters()}
+                    {this.renderSearchBar()}
                 </div>
 
-                <div className="move-list" style={{ marginTop: 4 }}>
+                <div className="move-list margin-top-small">
                     {this.renderMoves()}
                 </div>
             </div>
@@ -139,7 +157,6 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Renders the filters.
      */
     renderFilters() {
-        let damagingId = "damagingCheckbox" + this.props.index
         let minPowerId = "minPowerCheckbox" + this.props.index
 
         let movePowers = this.state.moves.filter(m => m.power !== null)
@@ -149,38 +166,23 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         let minPower = Math.min(Math.max(this.state.minPower, lowestPower), highestPower)
 
-        let nonDamagingId = "nonDamagingCheckbox" + this.props.index
         let sameTypeId = "sameTypeCheckbox" + this.props.index
         let levelUpId = "levelUpCheckbox" + this.props.index
 
         return (
             <div className="moveFilter">
                 <div className="separate-right">
-                    <div className="flex-center margin-bottom-small">
-                        <Input
-                            className="filterCheckbox"
-                            type="checkbox"
-                            id={damagingId}
-                            checked={this.state.damagingOnly}
-                            onChange={() => this.toggleDamagingOnly()} />
-
-                        <Label
-                            check
-                            for={damagingId}
-                            className="margin-right-small">
-                            <span title="Only show moves that deal damage">
-                                damaging only
-                            </span>
-                        </Label>
+                    <div>
+                        {this.renderClassButtonGroup()}
                     </div>
 
-                    <div className="flex-center">
+                    <div className="flex-center margin-top-small">
                         <Input
                             className="filterCheckbox"
                             type="checkbox"
                             id={minPowerId}
                             checked={this.state.useMinPower}
-                            disabled={!this.state.damagingOnly}
+                            disabled={!this.props.showMoves || this.state.moveClass !== MoveClass.Damaging}
                             onChange={() => this.toggleUseMinPower()} />
 
                         <Label
@@ -195,7 +197,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                         <Input
                             type="number"
                             className="minPowerFilterInput"
-                            disabled={!this.state.damagingOnly || !this.state.useMinPower}
+                            disabled={!this.props.showMoves || this.state.moveClass !== MoveClass.Damaging || !this.state.useMinPower}
                             onChange={e => this.setMinPower(+e.target.value)}
                             min={lowestPower}
                             value={minPower}
@@ -203,65 +205,74 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     </div>
                 </div>
 
-                <div className="flex-center separate-right">
-                    <Input
-                        className="filterCheckbox"
-                        type="checkbox"
-                        id={nonDamagingId}
-                        checked={this.state.nonDamagingOnly}
-                        onChange={() => this.toggleNonDamagingOnly()} />
+                <div className="separate-right">
+                    <div>
+                        <Input
+                            className="filterCheckbox"
+                            type="checkbox"
+                            id={sameTypeId}
+                            checked={this.state.sameTypeOnly}
+                            disabled={!this.props.showMoves}
+                            onChange={() => this.toggleSameTypeOnly()} />
 
-                    <Label for={nonDamagingId} check>
-                        <span title="Only show moves that don't deal damage">
-                            non-damaging only
-                        </span>
-                    </Label>
-                </div>
+                        <Label for={sameTypeId} check>
+                            <span title="Only show moves of the Pokemon's type">
+                                same type only
+                            </span>
+                        </Label>
+                    </div>
 
-                <div className="flex-center separate-right">
-                    <Input
-                        className="filterCheckbox"
-                        type="checkbox"
-                        id={sameTypeId}
-                        checked={this.state.sameTypeOnly}
-                        onChange={() => this.toggleSameTypeOnly()} />
+                    <div className="margin-top-small">
+                        <Input
+                            className="filterCheckbox"
+                            type="checkbox"
+                            id={levelUpId}
+                            checked={this.state.levelUpOnly}
+                            disabled={!this.props.showMoves}
+                            onChange={() => this.toggleLevelUpOnly()} />
 
-                    <Label for={sameTypeId} check>
-                        <span title="Only show moves of the Pokemon's type">
-                            same type only
-                        </span>
-                    </Label>
-                </div>
-
-                <div className="flex-center">
-                    <Input
-                        className="filterCheckbox"
-                        type="checkbox"
-                        id={levelUpId}
-                        checked={this.state.levelUpOnly}
-                        onChange={() => this.toggleLevelUpOnly()} />
-
-                    <Label for={levelUpId} check>
-                        <span title="Only show moves learnt by level-up">
-                            level-up only
-                        </span>
-                    </Label>
+                        <Label for={levelUpId} check>
+                            <span title="Only show moves learnt by level-up">
+                                level-up only
+                            </span>
+                        </Label>
+                    </div>
                 </div>
             </div>
         )
     }
 
     /**
-     * Toggles the damaging only filter.
+     * Renders the button group for selecting the class of move to display.
      */
-    toggleDamagingOnly() {
-        CookieHelper.set(`damagingOnly${this.props.index}`, !this.state.damagingOnly)
-        CookieHelper.set(`nonDamagingOnly${this.props.index}`, false)
+    renderClassButtonGroup() {
+        let buttons = []
+        for (let c of Object.values(MoveClass)){
+            buttons.push(
+                <Button
+                    className="moveClassButton"
+                    color={this.state.moveClass === c ? "success" : "secondary"}
+                    disabled={!this.props.showMoves}
+                    style={CssHelper.defaultCursorIf(!this.props.showMoves)}
+                    onClick={() => this.setClass(c)}>
+                    {c}
+                </Button>
+            )
+        }
 
-        this.setState(previousState => ({
-            damagingOnly: !previousState.damagingOnly,
-            nonDamagingOnly: false
-        }))
+        return (
+            <ButtonGroup>
+                {buttons}
+            </ButtonGroup>
+        )
+    }
+
+    /**
+     * Sets the move class.
+     */
+    setClass(moveClass: MoveClass) {
+        CookieHelper.set(`moveClass${this.props.index}`, moveClass)
+        this.setState({ moveClass: moveClass })
     }
 
     /**
@@ -284,19 +295,6 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     /**
-     * Toggles the non-damaging only filter.
-     */
-    toggleNonDamagingOnly() {
-        CookieHelper.set(`damagingOnly${this.props.index}`, false)
-        CookieHelper.set(`nonDamagingOnly${this.props.index}`, !this.state.nonDamagingOnly)
-
-        this.setState(previousState => ({
-            damagingOnly: false,
-            nonDamagingOnly: !previousState.nonDamagingOnly
-        }))
-    }
-
-    /**
      * Toggles the same type only filter.
      */
     toggleSameTypeOnly() {
@@ -316,6 +314,45 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         this.setState(previousState => ({
             levelUpOnly: !previousState.levelUpOnly
         }))
+    }
+
+    /**
+     * Renders the search bar.
+     */
+    renderSearchBar() {
+        return (
+            <div className="movesSearchBarContainer flex-center">
+                <Input
+                    className="movesSearchBar"
+                    placeholder="search"
+                    disabled={!this.props.showMoves}
+                    onChange={e => this.setSearchTerm(e.target.value)} />
+            </div>
+        )
+    }
+
+    /**
+     * Sets the search term.
+     */
+    setSearchTerm(term: string) {
+        this.setState({ searchTerm: term })
+    }
+
+    /**
+     * Filters the given list of moves according to the current search term.
+     */
+    filterMoveEntries(entries: PokemonMoveContext[]) {
+        let searchTerm = this.state.searchTerm
+        if (searchTerm === "") {
+            return entries
+        }
+
+        let entryNames = entries.map(e => ({ id: e.moveId, name: e.getDisplayName("en") }))
+        const options = { key: 'name' }
+        let results = fuzzysort.go(searchTerm, entryNames, options)
+
+        let resultIds = results.map(r => r.obj.id)
+        return entries.filter(e => resultIds.includes(e.moveId))
     }
 
     /**
@@ -343,10 +380,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         let moves = this.getMovesToShow()
-        if (this.props.showMoves && moves.length > 0) {
+        let filteredMoves = this.filterMoveEntries(moves)
+        if (this.props.showMoves && filteredMoves.length > 0) {
             let rows = []
-            for (let row = 0; row < moves.length; row++) {
-                let move = moves[row]
+            for (let row = 0; row < filteredMoves.length; row++) {
+                let move = filteredMoves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
                 let moveNameElement = (
@@ -488,15 +526,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     getMovesToShow() {
         let moves = this.state.moves
 
-        if (this.state.damagingOnly) {
+        if (this.state.moveClass === MoveClass.Damaging) {
             moves = moves.filter(m => m.isDamaging())
+
+            if (this.state.useMinPower) {
+                moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
+            }
         }
 
-        if (this.state.useMinPower) {
-            moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
-        }
-
-        if (this.state.nonDamagingOnly) {
+        if (this.state.moveClass === MoveClass.NonDamaging) {
             moves = moves.filter(m => !m.isDamaging())
         }
 
@@ -622,9 +660,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Returns whether any filters are active.
      */
     hasFilters() {
-        return this.state.damagingOnly
+        return this.state.moveClass !== MoveClass.All
             || this.state.useMinPower
-            || this.state.nonDamagingOnly
             || this.state.sameTypeOnly
             || this.state.levelUpOnly
     }
