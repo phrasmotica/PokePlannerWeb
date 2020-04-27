@@ -16,6 +16,7 @@ import { CookieHelper } from "../../util/CookieHelper"
 import "./MoveList.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
+import { CssHelper } from "../../util/CssHelper"
 
 /**
  * Enum for selecting a move class.
@@ -181,7 +182,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             type="checkbox"
                             id={minPowerId}
                             checked={this.state.useMinPower}
-                            disabled={this.state.moveClass !== MoveClass.Damaging}
+                            disabled={!this.props.showMoves || this.state.moveClass !== MoveClass.Damaging}
                             onChange={() => this.toggleUseMinPower()} />
 
                         <Label
@@ -196,7 +197,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                         <Input
                             type="number"
                             className="minPowerFilterInput"
-                            disabled={this.state.moveClass !== MoveClass.Damaging || !this.state.useMinPower}
+                            disabled={!this.props.showMoves || this.state.moveClass !== MoveClass.Damaging || !this.state.useMinPower}
                             onChange={e => this.setMinPower(+e.target.value)}
                             min={lowestPower}
                             value={minPower}
@@ -211,6 +212,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             type="checkbox"
                             id={sameTypeId}
                             checked={this.state.sameTypeOnly}
+                            disabled={!this.props.showMoves}
                             onChange={() => this.toggleSameTypeOnly()} />
 
                         <Label for={sameTypeId} check>
@@ -226,6 +228,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             type="checkbox"
                             id={levelUpId}
                             checked={this.state.levelUpOnly}
+                            disabled={!this.props.showMoves}
                             onChange={() => this.toggleLevelUpOnly()} />
 
                         <Label for={levelUpId} check>
@@ -249,6 +252,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 <Button
                     className="moveClassButton"
                     color={this.state.moveClass === c ? "success" : "secondary"}
+                    disabled={!this.props.showMoves}
+                    style={CssHelper.defaultCursorIf(!this.props.showMoves)}
                     onClick={() => this.setClass(c)}>
                     {c}
                 </Button>
@@ -320,6 +325,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 <Input
                     className="movesSearchBar"
                     placeholder="search"
+                    disabled={!this.props.showMoves}
                     onChange={e => this.setSearchTerm(e.target.value)} />
             </div>
         )

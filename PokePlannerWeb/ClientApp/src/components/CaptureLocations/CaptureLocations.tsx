@@ -147,6 +147,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 <Input
                     className="encountersSearchBar"
                     placeholder="search"
+                    disabled={!this.props.showLocations}
                     onChange={e => this.setSearchTerm(e.target.value)} />
             </div>
         )
