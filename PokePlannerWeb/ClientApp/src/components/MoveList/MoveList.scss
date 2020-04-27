@@ -89,3 +89,17 @@ $fontSize: 9pt;
 .moveInfo hr {
     margin: 0.3rem 0rem;
 }
+
+.margin-top-small {
+    margin-top: 5px;
+}
+
+.movesSearchBarContainer {
+    flex: 2;
+}
+
+.movesSearchBar {
+    height: 24px;
+    font-size: 10pt;
+    padding: 0.375rem;
+}

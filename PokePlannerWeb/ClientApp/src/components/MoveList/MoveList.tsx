@@ -1,9 +1,10 @@
 ﻿import React, { Component } from "react"
+import fuzzysort from "fuzzysort"
 import { ListGroup, ListGroupItem, Button, Collapse, Input, Label } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasCommon, IHasSearch } from "../CommonMembers"
 
 import { ItemEntry } from "../../models/ItemEntry"
 import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
@@ -33,7 +34,7 @@ interface IMoveListProps extends IHasCommon {
     showMoves: boolean
 }
 
-interface IMoveListState {
+interface IMoveListState extends IHasSearch {
     /**
      * Whether to only show moves that deal damage.
      */
@@ -97,7 +98,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             levelUpOnly: CookieHelper.getFlag(`levelUpOnly${index}`),
             moves: [],
             loadingMoves: false,
-            movesAreOpen: []
+            movesAreOpen: [],
+            searchTerm: ""
         }
     }
 
@@ -124,11 +126,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     render() {
         return (
             <div className="move-list-container">
-                <div style={{ marginTop: 4 }}>
+                <div className="margin-top-small">
                     {this.renderFilters()}
                 </div>
 
-                <div className="move-list" style={{ marginTop: 4 }}>
+                <div className="margin-top-small">
+                    {this.renderSearchBar()}
+                </div>
+
+                <div className="move-list margin-top-small">
                     {this.renderMoves()}
                 </div>
             </div>
@@ -319,6 +325,44 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     /**
+     * Renders the search bar.
+     */
+    renderSearchBar() {
+        return (
+            <div className="movesSearchBarContainer flex-center">
+                <Input
+                    className="movesSearchBar"
+                    placeholder="search"
+                    onChange={e => this.setSearchTerm(e.target.value)} />
+            </div>
+        )
+    }
+
+    /**
+     * Sets the search term.
+     */
+    setSearchTerm(term: string) {
+        this.setState({ searchTerm: term })
+    }
+
+    /**
+     * Filters the given list of moves according to the current search term.
+     */
+    filterMoveEntries(entries: PokemonMoveContext[]) {
+        let searchTerm = this.state.searchTerm
+        if (searchTerm === "") {
+            return entries
+        }
+
+        let entryNames = entries.map(e => ({ id: e.moveId, name: e.getDisplayName("en") }))
+        const options = { key: 'name' }
+        let results = fuzzysort.go(searchTerm, entryNames, options)
+
+        let resultIds = results.map(r => r.obj.id)
+        return entries.filter(e => resultIds.includes(e.moveId))
+    }
+
+    /**
      * Renders the moves.
      */
     renderMoves() {
@@ -343,10 +387,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         let moves = this.getMovesToShow()
-        if (this.props.showMoves && moves.length > 0) {
+        let filteredMoves = this.filterMoveEntries(moves)
+        if (this.props.showMoves && filteredMoves.length > 0) {
             let rows = []
-            for (let row = 0; row < moves.length; row++) {
-                let move = moves[row]
+            for (let row = 0; row < filteredMoves.length; row++) {
+                let move = filteredMoves[row]
                 let moveName = move.getDisplayName("en") ?? "move"
 
                 let moveNameElement = (
