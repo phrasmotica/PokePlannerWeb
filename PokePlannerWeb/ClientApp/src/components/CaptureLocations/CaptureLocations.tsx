@@ -8,7 +8,7 @@ import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 import { WithId } from "../../models/WithId"
 
-import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips, IHasSearch } from "../CommonMembers"
 
 import { NumberHelper, Interval } from "../../util/NumberHelper"
 
@@ -37,7 +37,7 @@ interface ICaptureLocationsProps extends IHasIndex, IHasHideTooltips {
     showLocations: boolean
 }
 
-interface ICaptureLocationsState {
+interface ICaptureLocationsState extends IHasSearch {
     /**
      * The capture locations to show.
      */
@@ -52,11 +52,6 @@ interface ICaptureLocationsState {
      * Whether the location tooltips are open.
      */
     locationTooltipOpen: boolean[]
-
-    /**
-     * The search term.
-     */
-    searchTerm: string
 
     /**
      * Whether each encounter's info pane is open.

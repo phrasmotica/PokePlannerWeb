@@ -29,6 +29,16 @@ export interface IHasHideTooltips {
 }
 
 /**
+ * Interface for a component that can be searched.
+ */
+export interface IHasSearch {
+    /**
+     * The search term.
+     */
+    searchTerm: string
+}
+
+/**
  * Interface for members shared by numerous components.
  */
 export interface IHasCommon extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
