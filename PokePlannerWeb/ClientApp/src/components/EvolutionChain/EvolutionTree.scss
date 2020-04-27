@@ -6,10 +6,22 @@
     margin-left: 20px;
 }
 
+.evolutionTreeSpeciesContainer {
+    display: flex;
+    align-items: center;
+}
+
 .evolutionTreeSpeciesButton {
     text-align: left;
     border: 0px;
     padding: 0px;
+}
+
+$dim: 20px;
+.evolutionTreeOpenButton {
+    width: $dim;
+    height: $dim;
+    padding: unset;
 }
 
 $dim: 96px;

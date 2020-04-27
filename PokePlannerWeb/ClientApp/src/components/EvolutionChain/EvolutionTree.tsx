@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { Button } from "reactstrap"
-import { FaAngleRight, FaAngleDown } from "react-icons/fa"
+import { FaSistrix } from "react-icons/fa"
+import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io"
 import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
@@ -89,9 +90,10 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         let expandButton = this.renderExpandButton(link)
 
         let speciesElement = (
-            <div className="flex">
+            <div className="evolutionTreeSpeciesContainer">
                 {expandButton}
-                {this.renderSpeciesButton(link.species)}
+                {this.renderSpeciesName(link.species)}
+                {this.renderOpenButton(link.species)}
             </div>
         )
 
@@ -129,7 +131,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         const onClick = () => this.toggleShowEvolutionDetails(index)
 
         let isExpanded = this.state.isExpanded[this.expandButtonCount++]
-        let buttonIcon = isExpanded ? <FaAngleDown /> : <FaAngleRight />
+        let buttonIcon = isExpanded ? <IoIosArrowDown /> : <IoIosArrowForward />
 
         return (
             <Button
@@ -142,28 +144,46 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     }
 
     /**
-     * Renders a button for the species.
+     * Renders the name of the species.
      */
-    renderSpeciesButton(species: PokemonSpeciesEntry) {
+    renderSpeciesName(species: PokemonSpeciesEntry) {
         let speciesId = species.speciesId
-        let isCurrentSpecies = speciesId === this.props.speciesId
         let speciesName = species.getDisplayName("en") ?? species.name
+        let nameElement = <span>{speciesName}</span>
 
-        let spanTitle = `View ${speciesName}`
-        let nameElement = <span title={spanTitle}>{speciesName}</span>
+        let isCurrentSpecies = speciesId === this.props.speciesId
         if (isCurrentSpecies) {
             nameElement = <span><b>{speciesName}</b></span>
+        }
+
+        return (
+            <span className="evolutionTreeSpeciesButton margin-right-small">
+                {nameElement}
+            </span>
+        )
+    }
+
+    /**
+     * Renders a button for opening the given species in the selector.
+     */
+    renderOpenButton(species: PokemonSpeciesEntry) {
+        let speciesId = species.speciesId
+        let isCurrentSpecies = speciesId === this.props.speciesId
+        if (isCurrentSpecies) {
+            return null
         }
 
         let speciesAvailable = this.props.availableSpeciesIds.includes(speciesId)
 
         return (
             <Button
-                color="link"
+                color="success"
                 disabled={!speciesAvailable}
-                className="evolutionTreeSpeciesButton"
+                className="evolutionTreeOpenButton"
                 onMouseUp={() => this.props.setSpecies(speciesId)}>
-                {nameElement}
+                <div className="flex-center">
+                    <FaSistrix />
+                </div>
             </Button>
         )
     }
