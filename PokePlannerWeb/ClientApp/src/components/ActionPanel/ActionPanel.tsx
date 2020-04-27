@@ -92,16 +92,16 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
                 activeKey={this.state.activeMoveTabKey}
                 defaultActiveKey="moves"
                 onSelect={(k: string) => this.setActiveMoveTabKey(k)}>
+                <Tab eventKey="locations" title="Capture Locations">
+                    {this.renderCaptureLocations()}
+                </Tab>
+
                 <Tab eventKey="moves" title="Moves">
                     {this.renderMoveList()}
                 </Tab>
 
                 <Tab eventKey="evolution" title="Evolution">
                     {this.renderEvolutionChain()}
-                </Tab>
-
-                <Tab eventKey="locations" title="Capture Locations">
-                    {this.renderCaptureLocations()}
                 </Tab>
             </Tabs>
         )
