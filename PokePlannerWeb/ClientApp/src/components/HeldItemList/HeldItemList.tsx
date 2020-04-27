@@ -57,7 +57,7 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
     renderHeldItems() {
         let versionGroup = this.props.versionGroup
         let pokemon = this.props.pokemon
-        if (versionGroup === undefined || pokemon === undefined) {
+        if (versionGroup === undefined) {
             return (
                 <div className="flex-center margin-bottom-small">
                     -
@@ -67,14 +67,7 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
 
         let versions = versionGroup.versions
         let versionIds = versions.map(v => v.versionId)
-        let heldItems = pokemon.heldItems.filter(e => versionIds.includes(e.id))
-        if (heldItems.length <= 0) {
-            return (
-                <div className="flex-center margin-bottom-small">
-                    No held items in this game version
-                </div>
-            )
-        }
+        let heldItems = pokemon?.heldItems.filter(e => versionIds.includes(e.id)) ?? []
 
         let versionElements = []
         for (let version of versions) {
@@ -108,7 +101,7 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
             }
             else {
                 listElements.push(
-                    <div className="itemDescription">
+                    <div key={0} className="itemDescription">
                         -
                     </div>
                 )

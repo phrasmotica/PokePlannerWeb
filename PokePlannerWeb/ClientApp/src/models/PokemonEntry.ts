@@ -61,7 +61,7 @@ export class PokemonEntry {
     moves: WithId<Move[]>[]
 
     /**
-     * The Pokemon's moves indexed by version ID.
+     * The Pokemon's held items indexed by version ID.
      */
     heldItems: WithId<VersionHeldItemContext[]>[]
 

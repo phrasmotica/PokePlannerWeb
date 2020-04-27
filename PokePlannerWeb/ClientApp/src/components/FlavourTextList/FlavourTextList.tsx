@@ -49,18 +49,10 @@ export class FlavourTextList extends Component<IFlavourTextListProps, IFlavourTe
      */
     renderFlavourText() {
         let species = this.props.species
-        if (species === undefined) {
-            return (
-                <div className="flex-center">
-                    -
-                </div>
-            )
-        }
-
         let versions = this.props.versions.sort((v1, v2) => v1.versionId - v2.versionId)
 
         let items = []
-        if (this.props.showFlavourText && versions.length > 0) {
+        if (versions.length > 0) {
             for (let v of versions) {
                 let versionNameElement = (
                     <div className="flavourTextVersionName">
@@ -70,9 +62,14 @@ export class FlavourTextList extends Component<IFlavourTextListProps, IFlavourTe
                     </div>
                 )
 
+                let flavourText = "-"
+                if (this.props.showFlavourText && species !== undefined) {
+                    flavourText = species.getFlavourText(v.versionId, "en") ?? "?"
+                }
+
                 let flavourTextElement = (
                     <div className="flavourText">
-                        {species.getFlavourText(v.versionId, "en")}
+                        {flavourText}
                     </div>
                 )
 

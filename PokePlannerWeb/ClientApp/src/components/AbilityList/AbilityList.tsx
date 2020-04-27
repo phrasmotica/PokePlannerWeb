@@ -79,7 +79,7 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
     renderAbilities() {
         if (this.props.pokemonId === undefined) {
             return (
-                <div className="flex-center">
+                <div className="flex-center margin-bottom-small">
                     -
                 </div>
             )
@@ -87,7 +87,7 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
 
         if (this.state.loadingAbilities) {
             return (
-                <div className="flex-center">
+                <div className="flex-center margin-bottom-small">
                     Loading...
                 </div>
             )
