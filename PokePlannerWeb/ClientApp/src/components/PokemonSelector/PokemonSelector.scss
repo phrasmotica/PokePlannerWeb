@@ -21,3 +21,11 @@ $iconSize: 1.5rem;
     height: $iconSize;
     width: $iconSize;
 }
+
+.MuiRating-icon {
+    color: dodgerblue;
+}
+
+.MuiRating-label {
+    margin-bottom: unset;
+}
