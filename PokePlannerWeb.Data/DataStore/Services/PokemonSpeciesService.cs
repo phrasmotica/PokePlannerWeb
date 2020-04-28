@@ -76,8 +76,8 @@ namespace PokePlannerWeb.Data.DataStore.Services
         protected override async Task<PokemonSpeciesEntry> ConvertToEntry(PokemonSpecies species)
         {
             var primaryVariety = await PokemonService.Upsert(species.Varieties[0].Pokemon);
-            var displayNames = GetDisplayNames(species);
-            var genera = GetGenera(species);
+            var displayNames = species.Names.Localise();
+            var genera = species.Genera.Localise();
             var flavourTextEntries = await GetFlavourTextEntries(species);
             var varieties = await GetVarieties(species);
             var generation = await GetGeneration(species);
@@ -160,22 +160,6 @@ namespace PokePlannerWeb.Data.DataStore.Services
         #endregion
 
         #region Helpers
-
-        /// <summary>
-        /// Returns this Pokemon species's display names.
-        /// </summary>
-        private IEnumerable<LocalString> GetDisplayNames(PokemonSpecies species)
-        {
-            return species.Names.Localise().ToList();
-        }
-
-        /// <summary>
-        /// Returns this Pokemon species's genera.
-        /// </summary>
-        private IEnumerable<LocalString> GetGenera(PokemonSpecies species)
-        {
-            return species.Genera.Localise().ToList();
-        }
 
         /// <summary>
         /// Returns flavour text entries for the given species, indexed by version ID.
