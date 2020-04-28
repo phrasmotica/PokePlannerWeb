@@ -106,7 +106,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
 
         let index= this.props.index
         this.state = {
-            moveClass: CookieHelper.get(`moveClass${index}`) as MoveClass,
+            moveClass: (CookieHelper.get(`moveClass${index}`) as MoveClass) ?? MoveClass.All,
             useMinPower: CookieHelper.getFlag(`useMinPower${index}`),
             minPower: CookieHelper.getNumber(`minPower${index}`) ?? 0,
             sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${index}`),
