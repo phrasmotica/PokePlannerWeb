@@ -9,9 +9,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for getting LocationAreaEncounter resources.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class EncounterController : ControllerBase
+    public class EncounterController : ResourceControllerBase
     {
         /// <summary>
         /// The encounters service.
@@ -19,17 +17,11 @@ namespace PokePlannerWeb.Controllers
         private readonly EncountersService EncountersService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<EncounterController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public EncounterController(EncountersService encountersService, ILogger<EncounterController> logger)
+        public EncounterController(EncountersService encountersService, ILogger<EncounterController> logger) : base(logger)
         {
             EncountersService = encountersService;
-            Logger = logger;
         }
 
         /// <summary>

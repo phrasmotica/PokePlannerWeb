@@ -9,9 +9,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for getting version groups.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class VersionGroupController : ControllerBase
+    public class VersionGroupController : ResourceControllerBase
     {
         /// <summary>
         /// The version groups service.
@@ -19,19 +17,11 @@ namespace PokePlannerWeb.Controllers
         private readonly VersionGroupService VersionGroupsService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        protected readonly ILogger<VersionGroupController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public VersionGroupController(
-            VersionGroupService versionGroupsService,
-            ILogger<VersionGroupController> logger)
+        public VersionGroupController(VersionGroupService versionGroupsService, ILogger<VersionGroupController> logger) : base(logger)
         {
             VersionGroupsService = versionGroupsService;
-            Logger = logger;
         }
 
         /// <summary>

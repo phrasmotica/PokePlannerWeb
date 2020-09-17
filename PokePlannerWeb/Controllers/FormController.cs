@@ -9,9 +9,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for calling Form resource endpoints.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class FormController : ControllerBase
+    public class FormController : ResourceControllerBase
     {
         /// <summary>
         /// THe Pokemon forms service.
@@ -19,17 +17,11 @@ namespace PokePlannerWeb.Controllers
         private readonly PokemonFormService PokemonFormsService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<FormController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public FormController(PokemonFormService pokemonFormsService, ILogger<FormController> logger)
+        public FormController(PokemonFormService pokemonFormsService, ILogger<FormController> logger) : base(logger)
         {
             PokemonFormsService = pokemonFormsService;
-            Logger = logger;
         }
 
         /// <summary>

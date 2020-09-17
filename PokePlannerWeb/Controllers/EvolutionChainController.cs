@@ -9,9 +9,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for accessing evolution chain resources.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class EvolutionChainController : ControllerBase
+    public class EvolutionChainController : ResourceControllerBase
     {
         /// <summary>
         /// The evolution chain service.
@@ -19,17 +17,11 @@ namespace PokePlannerWeb.Controllers
         private readonly EvolutionChainService EvolutionChainService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<EvolutionChainController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public EvolutionChainController(EvolutionChainService evolutionChainService, ILogger<EvolutionChainController> logger)
+        public EvolutionChainController(EvolutionChainService evolutionChainService, ILogger<EvolutionChainController> logger) : base(logger)
         {
             EvolutionChainService = evolutionChainService;
-            Logger = logger;
         }
 
         /// <summary>

@@ -9,9 +9,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for calling Type resource endpoints.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class TypeController : ControllerBase
+    public class TypeController : ResourceControllerBase
     {
         /// <summary>
         /// The type service.
@@ -19,17 +17,11 @@ namespace PokePlannerWeb.Controllers
         private readonly TypeService TypeService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<TypeController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public TypeController(TypeService typeService, ILogger<TypeController> logger)
+        public TypeController(TypeService typeService, ILogger<TypeController> logger) : base(logger)
         {
             TypeService = typeService;
-            Logger = logger;
         }
 
         /// <summary>

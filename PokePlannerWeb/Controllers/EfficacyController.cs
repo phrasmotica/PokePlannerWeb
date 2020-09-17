@@ -9,9 +9,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for getting Pokemon type efficacies.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class EfficacyController : ControllerBase
+    public class EfficacyController : ResourceControllerBase
     {
         /// <summary>
         /// The Pokemon service.
@@ -19,19 +17,11 @@ namespace PokePlannerWeb.Controllers
         private readonly EfficacyService EfficacyService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<EfficacyController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public EfficacyController(
-            EfficacyService efficacyService,
-            ILogger<EfficacyController> logger)
+        public EfficacyController(EfficacyService efficacyService, ILogger<EfficacyController> logger) : base(logger)
         {
             EfficacyService = efficacyService;
-            Logger = logger;
         }
 
         /// <summary>

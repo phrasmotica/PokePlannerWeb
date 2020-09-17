@@ -10,9 +10,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for calling Species resource endpoints.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class SpeciesController
+    public class SpeciesController : ResourceControllerBase
     {
         /// <summary>
         /// The Pokemon species service.
@@ -20,19 +18,11 @@ namespace PokePlannerWeb.Controllers
         private readonly PokemonSpeciesService PokemonSpeciesService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        protected readonly ILogger<SpeciesController> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public SpeciesController(
-            PokemonSpeciesService pokemonSpeciesService,
-            ILogger<SpeciesController> logger)
+        public SpeciesController(PokemonSpeciesService pokemonSpeciesService, ILogger<SpeciesController> logger) : base(logger)
         {
             PokemonSpeciesService = pokemonSpeciesService;
-            Logger = logger;
         }
 
         /// <summary>

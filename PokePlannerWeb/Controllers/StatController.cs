@@ -10,9 +10,7 @@ namespace PokePlannerWeb.Controllers
     /// <summary>
     /// Controller for getting stats.
     /// </summary>
-    [ApiController]
-    [Route("[controller]")]
-    public class StatController : ControllerBase
+    public class StatController : ResourceControllerBase
     {
         /// <summary>
         /// The stats service.
@@ -20,17 +18,11 @@ namespace PokePlannerWeb.Controllers
         private readonly StatService StatsService;
 
         /// <summary>
-        /// The logger.
-        /// </summary>
-        private readonly ILogger<StatService> Logger;
-
-        /// <summary>
         /// Constructor.
         /// </summary>
-        public StatController(StatService statsService, ILogger<StatService> logger)
+        public StatController(StatService statsService, ILogger<StatController> logger) : base(logger)
         {
             StatsService = statsService;
-            Logger = logger;
         }
 
         /// <summary>
