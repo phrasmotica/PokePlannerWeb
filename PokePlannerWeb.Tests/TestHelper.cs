@@ -6,13 +6,13 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using PokeApiNet;
 using PokePlannerWeb.Data;
-using PokePlannerWeb.Data.Cache;
 using PokePlannerWeb.Data.Cache.Abstractions;
 using PokePlannerWeb.Data.Cache.Services;
-using PokePlannerWeb.Data.DataStore;
+using PokePlannerWeb.Data.Cache.Settings;
 using PokePlannerWeb.Data.DataStore.Abstractions;
 using PokePlannerWeb.Data.DataStore.Models;
 using PokePlannerWeb.Data.DataStore.Services;
+using PokePlannerWeb.Data.DataStore.Settings;
 
 namespace PokePlannerWeb.Tests
 {
