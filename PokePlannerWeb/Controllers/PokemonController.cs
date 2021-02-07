@@ -1,50 +1,67 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using PokeApiNet.Models;
-using PokePlannerWeb.Data;
-using PokePlannerWeb.Data.Extensions;
-using PokePlannerWeb.Data.Payloads;
-using PokePlannerWeb.Data.Util;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using PokePlannerWeb.Data.DataStore.Models;
+using PokePlannerWeb.Data.DataStore.Services;
 
 namespace PokePlannerWeb.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class PokemonController : ControllerBase
+    /// <summary>
+    /// Controller for calling Pokemon resource endpoints.
+    /// </summary>
+    public class PokemonController : ResourceControllerBase
     {
         /// <summary>
-        /// The logger.
+        /// The Pokemon service.
         /// </summary>
-        private readonly ILogger<PokemonController> Logger;
+        private readonly PokemonService PokemonService;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        public PokemonController(ILogger<PokemonController> logger)
+        public PokemonController(PokemonService pokemonService, ILogger<PokemonController> logger) : base(logger)
         {
-            Logger = logger;
+            PokemonService = pokemonService;
         }
 
         /// <summary>
-        /// Returns a collection of Pokemon.
+        /// Returns the Pokemon with the given ID.
         /// </summary>
-        [HttpGet]
-        public async Task<IEnumerable<PokemonPayload>> GetAsync()
+        [HttpGet("{pokemonId:int}")]
+        public async Task<PokemonEntry> GetPokemonById(int pokemonId)
         {
-            var rng = new Random();
-            var range = Enumerable.Repeat(0, Constants.TEAM_SIZE).Select(x => rng.Next(493) + 1);
-            var tasks = range.Select(async id => {
-                Logger.LogInformation($"Getting Pokemon {id}...");
+            Logger.LogInformation($"Getting Pokemon {pokemonId}...");
+            return await PokemonService.GetPokemon(pokemonId);
+        }
 
-                // construct a payload with all the properties we need
-                var pokemon = await PokeApiData.Get<Pokemon>(id);
-                return await pokemon.AsPayload();
-            });
-            return await Task.WhenAll(tasks);
+        /// <summary>
+        /// Returns the forms of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{pokemonId:int}/forms/{versionGroupId:int}")]
+        public async Task<PokemonFormEntry[]> GetPokemonFormsById(int pokemonId, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting forms of Pokemon {pokemonId} in version group {versionGroupId}...");
+            return await PokemonService.GetPokemonForms(pokemonId, versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the moves of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{pokemonId:int}/moves/{versionGroupId:int}")]
+        public async Task<PokemonMoveContext[]> GetPokemonMovesById(int pokemonId, int versionGroupId)
+        {
+            Logger.LogInformation($"Getting moves of Pokemon {pokemonId} in version group {versionGroupId}...");
+            return await PokemonService.GetPokemonMoves(pokemonId, versionGroupId);
+        }
+
+        /// <summary>
+        /// Returns the abilities of the Pokemon with the given ID.
+        /// </summary>
+        [HttpGet("{pokemonId:int}/abilities")]
+        public async Task<PokemonAbilityContext[]> GetPokemonAbilitiesById(int pokemonId)
+        {
+            Logger.LogInformation($"Getting abilities of Pokemon {pokemonId}...");
+            return await PokemonService.GetPokemonAbilities(pokemonId);
         }
     }
 }

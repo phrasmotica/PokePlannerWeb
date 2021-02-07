@@ -1,0 +1,67 @@
+﻿.encountersListGroup {
+    overflow-y: scroll;
+}
+
+.encountersListGroup > .list-group-item {
+    display: block;
+    padding: 0.25rem 0.5rem;
+}
+
+.encountersListGroup > .list-group-item .btn {
+    font-weight: unset;
+    font-size: unset;
+    padding: unset;
+    border: unset;
+    margin-right: 3px;
+}
+
+.topBar {
+    display: flex;
+    margin: 0px 5px 5px 5px;
+}
+
+.catchRate {
+    flex: 1;
+}
+
+.encountersSearchBarContainer {
+    flex: 2;
+}
+
+.encountersSearchBar {
+    height: 24px;
+    font-size: 10pt;
+    padding: 0.375rem;
+}
+
+.captureLocationsVersionItem {
+    flex: 1;
+    flex-direction: column;
+}
+
+.captureLocationsVersionName {
+    padding: unset;
+    font-weight: bold;
+}
+
+.encounterInfo {
+    margin-top: 5px;
+}
+
+.encounterInfo hr {
+    margin: 0.3rem 0rem;
+}
+
+.methodContainer {
+    padding-bottom: 2px;
+    border-bottom: 1px solid black;
+    margin-right: 10px;
+}
+
+.cveContainer {
+    border-left: 1px solid black;
+}
+
+.conditionsContainer {
+    margin: 0px 5px;
+}

@@ -1,10 +1,5 @@
-﻿using PokeApiNet.Models;
-using PokePlannerWeb.Data.Payloads;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Type = PokePlannerWeb.Data.Mechanics.Type;
+﻿using System.Linq;
+using PokeApiNet;
 
 namespace PokePlannerWeb.Data.Extensions
 {
@@ -14,11 +9,13 @@ namespace PokePlannerWeb.Data.Extensions
     public static class PokemonExtensions
     {
         /// <summary>
-        /// Returns a minimal representation of this Pokemon resource.
+        /// Returns this Pokemon's base stats in the version group with the given ID.
         /// </summary>
-        public static async Task<PokemonPayload> AsPayload(this Pokemon pokemon)
+        public static int[] GetBaseStats(this Pokemon pokemon, int versionGroupId)
         {
-            return await PokemonPayload.Create(pokemon);
+            // FUTURE: anticipating a generation-based base stats changelog
+
+            return pokemon.Stats.Select(bs => bs.BaseStat).ToArray();
         }
     }
 }

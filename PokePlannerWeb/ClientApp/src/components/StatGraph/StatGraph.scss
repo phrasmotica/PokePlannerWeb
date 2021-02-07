@@ -1,0 +1,43 @@
+﻿.stat-graph {
+    display: inline-flex;
+}
+
+.stat-names {
+    padding-right: 6px;
+    font-size: 10pt;
+    text-align: right;
+}
+
+.stat-bar {
+    background-color: dodgerblue;
+    margin-right: 3px;
+    border: 1px solid white;
+}
+
+.stat-value {
+    font-size: 10pt;
+}
+
+.hp {
+    background-color: #FF0000;
+}
+
+.attack {
+    background-color: #F08030;
+}
+
+.defense {
+    background-color: #F8D030;
+}
+
+.special-attack {
+    background-color: #6890F0;
+}
+
+.special-defense {
+    background-color: #78C850;
+}
+
+.speed {
+    background-color: #F85888;
+}
