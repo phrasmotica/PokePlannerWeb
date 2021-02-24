@@ -284,7 +284,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     // load all version groups
     async getVersionGroups() {
-        await fetch(`${process.env.REACT_APP_API_URL}/versionGroup/all`)
+        await fetch(`${process.env.REACT_APP_API_URL}/versionGroup`)
             .then(response => response.json())
             .then((groups: VersionGroupEntry[]) => {
                 let concreteVersionGroups = groups.map(VersionGroupEntry.from)
