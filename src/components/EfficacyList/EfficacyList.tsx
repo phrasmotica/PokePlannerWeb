@@ -276,9 +276,9 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
 
     // returns the endpoint to use when fetching efficacy of the given types
     constructEndpointUrl(typeIds: number[]): string {
-        let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroupId=${this.props.versionGroup?.versionGroupId}`
+        let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroup=${this.props.versionGroup?.versionGroupId}`
         for (var i = 0; i < typeIds.length; i++) {
-            endpointUrl += `&type${i + 1}=${typeIds[i]}`
+            endpointUrl += `&type=${typeIds[i]}`
         }
 
         return endpointUrl
