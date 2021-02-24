@@ -1,9 +1,9 @@
-import { Ability } from "./Ability"
+import { AbilityEntry } from "./AbilityEntry"
 import { VersionHeldItemContext } from "./ItemEntry"
 import { LocalString } from "./LocalString"
-import { Move } from "./Move"
-import { PokemonForm } from "./PokemonForm"
-import { Type } from "./Type"
+import { MoveEntry } from "./MoveEntry"
+import { PokemonFormEntry } from "./PokemonFormEntry"
+import { TypeEntry } from "./TypeEntry"
 import { WithId } from "./WithId"
 
 /**
@@ -38,17 +38,17 @@ export class PokemonEntry {
     /**
      * The forms of the Pokemon.
      */
-    forms: PokemonForm[]
+    forms: PokemonFormEntry[]
 
     /**
      * The Pokemon's types indexed by version group ID.
     */
-    types: WithId<Type[]>[]
+    types: WithId<TypeEntry[]>[]
 
     /**
      * The Pokemon's abilities.
     */
-    abilities: Ability[]
+    abilities: AbilityEntry[]
 
     /**
      * The Pokemon's base stats indexed by version group ID.
@@ -58,7 +58,7 @@ export class PokemonEntry {
     /**
      * The Pokemon's moves indexed by version group ID.
      */
-    moves: WithId<Move[]>[]
+    moves: WithId<MoveEntry[]>[]
 
     /**
      * The Pokemon's held items indexed by version ID.
@@ -74,11 +74,11 @@ export class PokemonEntry {
         displayNames: LocalString[],
         spriteUrl: string,
         shinySpriteUrl: string,
-        forms: PokemonForm[],
-        types: WithId<Type[]>[],
-        abilities: Ability[],
+        forms: PokemonFormEntry[],
+        types: WithId<TypeEntry[]>[],
+        abilities: AbilityEntry[],
         baseStats: WithId<number[]>[],
-        moves: WithId<Move[]>[],
+        moves: WithId<MoveEntry[]>[],
         heldItems: WithId<VersionHeldItemContext[]>[]
     ) {
         this.pokemonId = pokemonId
@@ -144,7 +144,7 @@ export class PokemonEntry {
     /**
      * Returns the Pokemon's types in the version group with the given ID.
      */
-    getTypes(versionGroupId: number): Type[] {
+    getTypes(versionGroupId: number): TypeEntry[] {
         let types = this.types
         if (types.length <= 0) {
             throw new Error(`Pokemon ${this.pokemonId} has no type entries`)
@@ -156,7 +156,7 @@ export class PokemonEntry {
         let matchFunc = (searchId: number) => types.find(e => e.id === searchId)
 
         let searchId = versionGroupId
-        let matchingEntry: WithId<Type[]> | undefined = undefined
+        let matchingEntry: WithId<TypeEntry[]> | undefined = undefined
         while (matchingEntry === undefined && searchId <= newestVersionGroupId) {
             matchingEntry = matchFunc(searchId)
             searchId++

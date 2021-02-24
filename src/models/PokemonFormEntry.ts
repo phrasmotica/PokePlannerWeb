@@ -1,6 +1,6 @@
 import { LocalString } from "./LocalString"
-import { Type } from "./Type"
-import { VersionGroup } from "./VersionGroup"
+import { TypeEntry } from "./TypeEntry"
+import { VersionGroupEntry } from "./VersionGroupEntry"
 import { WithId } from "./WithId"
 
 /**
@@ -30,7 +30,7 @@ export class PokemonFormEntry {
     /**
      * The version group in which the Pokemon form was introduced.
      */
-    versionGroup: VersionGroup
+    versionGroup: VersionGroupEntry
 
     /**
      * The URL of the Pokemon form's front default sprite.
@@ -45,7 +45,7 @@ export class PokemonFormEntry {
     /**
      * The Pokemon form's types indexed by version group ID.
     */
-    types: WithId<Type[]>[]
+    types: WithId<TypeEntry[]>[]
 
     /**
      * The IDs of the version groups where this Pokemon form is valid.
@@ -60,10 +60,10 @@ export class PokemonFormEntry {
         name: string,
         isMega: boolean,
         displayNames: LocalString[],
-        versionGroup: VersionGroup,
+        versionGroup: VersionGroupEntry,
         spriteUrl: string,
         shinySpriteUrl: string,
-        types: WithId<Type[]>[],
+        types: WithId<TypeEntry[]>[],
         validity: number[]
     ) {
         this.formId = formId
@@ -125,7 +125,7 @@ export class PokemonFormEntry {
     /**
      * Returns the form's types in the version group with the given ID.
      */
-    getTypes(versionGroupId: number): Type[] {
+    getTypes(versionGroupId: number): TypeEntry[] {
         let types = this.types
         if (types.length <= 0) {
             // defer to Pokemon's types
@@ -138,7 +138,7 @@ export class PokemonFormEntry {
         let matchFunc = (searchId: number) => types.find(e => e.id === searchId)
 
         let searchId = versionGroupId
-        let matchingEntry: WithId<Type[]> | undefined = undefined
+        let matchingEntry: WithId<TypeEntry[]> | undefined = undefined
         while (matchingEntry === undefined && searchId <= newestVersionGroupId) {
             matchingEntry = matchFunc(searchId)
             searchId++

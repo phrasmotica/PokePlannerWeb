@@ -12,7 +12,7 @@ interface IEvolutionChainProps extends IHasIndex {
     /**
      * The ID of the species this chain is being shown for.
      */
-    speciesId: number | undefined
+    pokemonSpeciesId: number | undefined
 
     /**
      * The IDs of the species available in the parent selector.
@@ -32,7 +32,7 @@ interface IEvolutionChainProps extends IHasIndex {
     /**
      * Handler for setting the species in the parent component.
      */
-    setSpecies: (speciesId: number) => void
+    setSpecies: (pokemonSpeciesId: number) => void
 }
 
 interface IEvolutionChainState {
@@ -71,8 +71,8 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             return
         }
 
-        let previousSpeciesId = previousProps.speciesId
-        let speciesId = this.props.speciesId
+        let previousSpeciesId = previousProps.pokemonSpeciesId
+        let speciesId = this.props.pokemonSpeciesId
         let speciesChanged = previousSpeciesId !== speciesId
 
         // species is the same, don't fetch
@@ -150,10 +150,10 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             <EvolutionTree
                 chain={chain}
                 index={this.props.index}
-                speciesId={this.props.speciesId}
+                pokemonSpeciesId={this.props.pokemonSpeciesId}
                 availableSpeciesIds={this.props.availableSpeciesIds}
                 showShinySprites={this.props.showShinySprites}
-                setSpecies={(speciesId: number) => this.props.setSpecies(speciesId)} />
+                setSpecies={(pokemonSpeciesId: number) => this.props.setSpecies(pokemonSpeciesId)} />
         )
     }
 
@@ -161,7 +161,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
      * Fetches the evolution chain of the species.
      */
     fetchEvolutionChain() {
-        let speciesId = this.props.speciesId
+        let speciesId = this.props.pokemonSpeciesId
         if (speciesId !== undefined) {
             console.log(`Evolution chain ${this.props.index}: getting evolution chain for species ${speciesId}...`)
 
@@ -200,7 +200,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
      * Returns the endpoint to use when fetching the evolution chain of the species with the given
      * ID.
      */
-    constructEndpointUrl(speciesId: number): string {
-        return `${process.env.REACT_APP_API_URL}/evolutionChain/${speciesId}`
+    constructEndpointUrl(pokemonSpeciesId: number): string {
+        return `${process.env.REACT_APP_API_URL}/evolutionChain/${pokemonSpeciesId}`
     }
 }

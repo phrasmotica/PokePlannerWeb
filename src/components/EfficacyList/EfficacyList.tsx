@@ -126,8 +126,8 @@ export class EfficacyList extends Component<IEfficacyListProps, IEfficacyListSta
                 )
             }
             else {
-                let generationId = this.props.versionGroup?.generation.id ?? 0
-                let typeIsPresent = types[index].generation.id <= generationId
+                let generationId = this.props.versionGroup?.generation.generationId ?? 0
+                let typeIsPresent = types[index].generation.generationId <= generationId
                 if (typeIsPresent) {
                     let matchingData = efficacy.efficacyMultipliers.find(m => m.id === typeId)
 

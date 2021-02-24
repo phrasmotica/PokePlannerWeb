@@ -61,7 +61,7 @@ interface IPokedexPanelState {
     /**
      * The ID of the Pokemon species.
      */
-    speciesId: number | undefined
+    pokemonSpeciesId: number | undefined
 
     /**
      * The species variety.
@@ -86,7 +86,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
     constructor(props: IPokedexPanelProps) {
         super(props)
         this.state = {
-            speciesId: undefined,
+            pokemonSpeciesId: undefined,
             variety: undefined,
             form: undefined,
             showShinySprite: false
@@ -98,7 +98,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      */
     render() {
         // handlers
-        const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
+        const setSpecies = (pokemonSpeciesId: number | undefined) => this.setSpecies(pokemonSpeciesId)
         const clearPokemon = () => this.clearPokemon()
         const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
@@ -112,7 +112,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         index={this.props.index}
                         versionGroupId={this.props.versionGroup?.versionGroupId}
                         species={this.props.species}
-                        defaultSpeciesId={this.state.speciesId}
+                        defaultSpeciesId={this.state.pokemonSpeciesId}
                         generations={this.props.generations}
                         types={this.props.types}
                         baseStats={this.props.baseStats}
@@ -146,7 +146,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
                         versionGroup={this.props.versionGroup}
                         hideTooltips={this.props.hideTooltips}
                         species={this.props.species}
-                        speciesId={this.state.speciesId}
+                        pokemonSpeciesId={this.state.pokemonSpeciesId}
                         variety={this.state.variety}
                         form={this.state.form}
                         shouldShowPokemon={this.shouldShowPokemon()}
@@ -181,15 +181,15 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      * Returns the data object for the selected species.
      */
     getSpecies() {
-        let speciesId = this.state.speciesId
-        return this.props.species.find(s => s.speciesId === speciesId)
+        let speciesId = this.state.pokemonSpeciesId
+        return this.props.species.find(s => s.pokemonSpeciesId === speciesId)
     }
 
     /**
      * Returns whether we have a species.
      */
     hasSpecies() {
-        return this.state.speciesId !== undefined
+        return this.state.pokemonSpeciesId !== undefined
     }
 
     /**
@@ -220,12 +220,12 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
     /**
      * Sets the species ID.
      */
-    setSpecies(speciesId: number | undefined) {
-        if (speciesId === undefined) {
+    setSpecies(pokemonSpeciesId: number | undefined) {
+        if (pokemonSpeciesId === undefined) {
             this.clearPokemon()
         }
         else {
-            this.setState({ speciesId: speciesId })
+            this.setState({ pokemonSpeciesId: pokemonSpeciesId })
         }
     }
 
@@ -234,7 +234,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      */
     clearPokemon() {
         this.setState({
-            speciesId: undefined,
+            pokemonSpeciesId: undefined,
             variety: undefined,
             form: undefined
         })

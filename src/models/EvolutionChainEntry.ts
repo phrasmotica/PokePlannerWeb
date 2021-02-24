@@ -111,11 +111,11 @@ export class ChainLinkEntry {
      */
     getSpeciesIds(): number[] {
         if (this.evolvesTo.length <= 0) {
-            return [this.species.speciesId]
+            return [this.species.pokemonSpeciesId]
         }
 
         let nextSpeciesIds = this.evolvesTo.flatMap(e => e.getSpeciesIds())
-        return [this.species.speciesId, ...nextSpeciesIds]
+        return [this.species.pokemonSpeciesId, ...nextSpeciesIds]
     }
 
     /**

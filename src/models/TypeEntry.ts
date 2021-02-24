@@ -1,5 +1,5 @@
 import { EfficacyMap } from "./EfficacyMap"
-import { Generation } from "./Generation"
+import { GenerationEntry } from "./GenerationEntry"
 import { LocalString } from "./LocalString"
 
 /**
@@ -29,7 +29,7 @@ export class TypeEntry {
     /**
      * The generation in which the type was introduced.
      */
-    generation: Generation
+    generation: GenerationEntry
 
     /**
      * The type's efficacy indexed by version group ID and then type ID.
@@ -44,7 +44,7 @@ export class TypeEntry {
         name: string,
         displayNames: LocalString[],
         isConcrete: boolean,
-        generation: Generation,
+        generation: GenerationEntry,
         efficacyMap: EfficacyMap
     ) {
         this.typeId = typeId

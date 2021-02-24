@@ -201,7 +201,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
      */
     renderGenerationFilter() {
         let species = this.props.species
-        let generationIds = species.map(s => s.generation.id).distinct()
+        let generationIds = species.map(s => s.generation.generationId).distinct()
 
         let generations = this.props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
@@ -237,7 +237,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
 
         let species = this.props.species
         let typeIds = species.flatMap(s => s.getTypes(versionGroupId!)
-                             .map(t => t.id))
+                             .map(t => t.typeId))
                              .distinct()
                              .sort((i, j) => i - j) // ascending order
 

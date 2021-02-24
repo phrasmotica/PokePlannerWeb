@@ -1,11 +1,11 @@
 import { ItemEntry } from "./ItemEntry"
 import { LocalString } from "./LocalString"
 import { Machine } from "./Machine"
-import { MoveCategory } from "./MoveCategory"
-import { MoveDamageClass } from "./MoveDamageClass"
+import { MoveCategoryEntry } from "./MoveCategoryEntry"
+import { MoveDamageClassEntry } from "./MoveDamageClassEntry"
 import { MoveLearnMethodEntry } from "./MoveLearnMethodEntry"
-import { MoveTarget } from "./MoveTarget"
-import { Type } from "./Type"
+import { MoveTargetEntry } from "./MoveTargetEntry"
+import { TypeEntry } from "./TypeEntry"
 import { WithId } from "./WithId"
 
 /**
@@ -35,12 +35,12 @@ export class MoveEntry {
     /**
      * The type of the move.
      */
-    type: Type
+    type: TypeEntry
 
     /**
      * The category of the move.
      */
-    category: MoveCategory
+    category: MoveCategoryEntry
 
     /**
      * The move's base power.
@@ -50,7 +50,7 @@ export class MoveEntry {
     /**
      * The damage class of the move.
      */
-    damageClass: MoveDamageClass
+    damageClass: MoveDamageClassEntry
 
     /**
      * The move's power.
@@ -70,7 +70,7 @@ export class MoveEntry {
     /**
      * The move's target.
      */
-    target: MoveTarget
+    target: MoveTargetEntry
 
     /**
      * The machines that teach the move, indexed by version group ID.
@@ -85,14 +85,14 @@ export class MoveEntry {
         name: string,
         displayNames: LocalString[],
         flavourTextEntries: WithId<LocalString[]>[],
-        type: Type,
-        category: MoveCategory,
+        type: TypeEntry,
+        category: MoveCategoryEntry,
         power: number | null,
-        damageClass: MoveDamageClass,
+        damageClass: MoveDamageClassEntry,
         accuracy: number | null,
         pp: number | null,
         priority: number,
-        target: MoveTarget,
+        target: MoveTargetEntry,
         machines: WithId<Machine[]>[]
     ) {
         this.moveId = moveId
@@ -144,7 +144,7 @@ export class MoveEntry {
             9, // one-hit KO
         ]
 
-        return damagingCategoryIds.includes(this.category.id)
+        return damagingCategoryIds.includes(this.category.moveCategoryId)
     }
 
     /**
@@ -227,14 +227,14 @@ export class PokemonMoveContext extends MoveEntry {
         name: string,
         displayNames: LocalString[],
         flavourTextEntries: WithId<LocalString[]>[],
-        type: Type,
-        category: MoveCategory,
+        type: TypeEntry,
+        category: MoveCategoryEntry,
         power: number | null,
-        damageClass: MoveDamageClass,
+        damageClass: MoveDamageClassEntry,
         accuracy: number | null,
         pp: number | null,
         priority: number,
-        target: MoveTarget,
+        target: MoveTargetEntry,
         machines: WithId<Machine[]>[],
         level: number,
         learnMachines: ItemEntry[] | null,

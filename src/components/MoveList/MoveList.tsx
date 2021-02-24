@@ -437,7 +437,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     </div>
                 )
 
-                let typeId = move.type.id
+                let typeId = move.type.typeId
                 let headerId = `movelist${this.props.index}move${move.moveId}type${typeId}`
                 let typeIcon = <img
                                 id={headerId}
@@ -445,7 +445,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                                 alt={`type${typeId}`}
                                 src={require(`../../images/typeIcons/${typeId}-small.png`)} />
 
-                let damageClassIcon = this.getDamageClassIcon(move.damageClass.id)
+                let damageClassIcon = this.getDamageClassIcon(move.damageClass.moveDamageClassId)
 
                 let isOpen = this.state.movesAreOpen.find(e => e.id === move.moveId)?.data ?? false
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
@@ -651,7 +651,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Returns whether the given move has a type that the current Pokemon has.
      */
     isSameType(move: MoveEntry) {
-        return this.props.typeIds.includes(move.type.id)
+        return this.props.typeIds.includes(move.type.typeId)
     }
 
     /**

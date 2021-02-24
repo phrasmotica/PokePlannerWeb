@@ -55,7 +55,7 @@ interface IPokemonPanelProps extends IHasCommon {
     /**
      * Handler for setting the species ID in the parent component.
      */
-    setSpecies: (speciesId: number | undefined) => void
+    setSpecies: (pokemonSpeciesId: number | undefined) => void
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
@@ -87,7 +87,7 @@ interface IPokemonPanelState {
     /**
      * The ID of the Pokemon species.
      */
-    speciesId: number | undefined
+    pokemonSpeciesId: number | undefined
 
     /**
      * The species variety.
@@ -135,7 +135,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     constructor(props: IPokemonPanelProps) {
         super(props)
         this.state = {
-            speciesId: undefined,
+            pokemonSpeciesId: undefined,
             variety: undefined,
             form: undefined,
             generationFilter: this.createGenerationFilterFromCookies(),
@@ -216,7 +216,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     render() {
         // handlers
         const clearPokemon = () => this.clearPokemon()
-        const setSpecies = (speciesId: number | undefined) => this.setSpecies(speciesId)
+        const setSpecies = (pokemonSpeciesId: number | undefined) => this.setSpecies(pokemonSpeciesId)
         const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
         const setForm = (form: PokemonFormEntry) => this.setForm(form)
 
@@ -353,8 +353,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         <img
                             key={key(type)}
                             className={"type-icon padded" + (shouldShowPokemon ? "" : " hidden")}
-                            alt={`type${type.id}`}
-                            src={require(`../../images/typeIcons/${type.id}-small.png`)} />
+                            alt={`type${type.typeId}`}
+                            src={require(`../../images/typeIcons/${type.typeId}-small.png`)} />
                     </div>
                 )
             })
@@ -449,8 +449,8 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns the data object for the selected species.
      */
     getSpecies() {
-        let speciesId = this.state.speciesId
-        let species = this.props.species.find(s => s.speciesId === speciesId)
+        let speciesId = this.state.pokemonSpeciesId
+        let species = this.props.species.find(s => s.pokemonSpeciesId === speciesId)
 
         if (species === undefined) {
             throw new Error(
@@ -465,7 +465,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns whether we have a species.
      */
     hasSpecies() {
-        return this.state.speciesId !== undefined
+        return this.state.pokemonSpeciesId !== undefined
     }
 
     /**
@@ -491,14 +491,14 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     /**
      * Sets the species ID.
      */
-    setSpecies(speciesId: number | undefined) {
-        if (speciesId === undefined) {
+    setSpecies(pokemonSpeciesId: number | undefined) {
+        if (pokemonSpeciesId === undefined) {
             this.clearPokemon()
         }
         else {
-            this.setState({ speciesId: speciesId })
+            this.setState({ pokemonSpeciesId: pokemonSpeciesId })
 
-            this.props.setSpecies(speciesId)
+            this.props.setSpecies(pokemonSpeciesId)
         }
     }
 
@@ -507,7 +507,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      */
     clearPokemon() {
         this.setState({
-            speciesId: undefined,
+            pokemonSpeciesId: undefined,
             variety: undefined,
             form: undefined
         })
@@ -540,10 +540,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ generationFilter: filter })
 
         // no longer have a valid species
-        let speciesId = this.state.speciesId
+        let speciesId = this.state.pokemonSpeciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
-            let generationId = species.generation.id
+            let generationId = species.generation.generationId
 
             let failsGenerationFilter = !filter.passesFilter([generationId])
             if (failsGenerationFilter) {
@@ -566,10 +566,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ typeFilter: filter })
 
         // no longer have a valid species
-        let speciesId = this.state.speciesId
+        let speciesId = this.state.pokemonSpeciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
-            let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+            let speciesTypes = species.getTypes(versionGroupId).map(t => t.typeId)
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
@@ -592,7 +592,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         this.setState({ baseStatFilter: filter })
 
         // no longer have a valid species
-        let speciesId = this.state.speciesId
+        let speciesId = this.state.pokemonSpeciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
             let speciesBaseStats = species.getBaseStats(versionGroupId)

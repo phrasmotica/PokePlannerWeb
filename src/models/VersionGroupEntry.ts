@@ -1,6 +1,6 @@
 import { LocalString } from "./LocalString"
-import { Generation } from "./Generation"
-import { Pokedex } from "./Pokedex"
+import { GenerationEntry } from "./GenerationEntry"
+import { PokedexEntry } from "./PokedexEntry"
 import { VersionEntry } from "./VersionEntry"
 
 /**
@@ -30,7 +30,7 @@ export class VersionGroupEntry {
     /**
      * The generation the version group belongs to.
      */
-    generation: Generation
+    generation: GenerationEntry
 
     /**
      * The versions belonging to the version group.
@@ -40,7 +40,7 @@ export class VersionGroupEntry {
     /**
      * The Pokedexes present in the version group.
      */
-    pokedexes: Pokedex[]
+    pokedexes: PokedexEntry[]
 
     /**
      * Constructor.
@@ -50,9 +50,9 @@ export class VersionGroupEntry {
         name: string,
         order: number,
         displayNames: LocalString[],
-        generation: Generation,
+        generation: GenerationEntry,
         versions: VersionEntry[],
-        pokedexes: Pokedex[]
+        pokedexes: PokedexEntry[]
     ) {
         this.versionGroupId = versionGroupId
         this.name = name

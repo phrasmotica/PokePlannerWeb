@@ -21,7 +21,7 @@ interface IEvolutionTreeProps extends IHasIndex {
     /**
      * The ID of the species this chain is being shown for.
      */
-    speciesId: number | undefined
+    pokemonSpeciesId: number | undefined
 
     /**
      * The IDs of the species available in the parent selector.
@@ -36,7 +36,7 @@ interface IEvolutionTreeProps extends IHasIndex {
     /**
      * Handler for setting the species in the parent component.
      */
-    setSpecies: (speciesId: number) => void
+    setSpecies: (pokemonSpeciesId: number) => void
 }
 
 interface IEvolutionTreeState {
@@ -147,11 +147,11 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders the name of the species.
      */
     renderSpeciesName(species: PokemonSpeciesEntry) {
-        let speciesId = species.speciesId
+        let speciesId = species.pokemonSpeciesId
         let speciesName = species.getDisplayName("en") ?? species.name
         let nameElement = <span>{speciesName}</span>
 
-        let isCurrentSpecies = speciesId === this.props.speciesId
+        let isCurrentSpecies = speciesId === this.props.pokemonSpeciesId
         if (isCurrentSpecies) {
             nameElement = <span><b>{speciesName}</b></span>
         }
@@ -167,8 +167,8 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      * Renders a button for opening the given species in the selector.
      */
     renderOpenButton(species: PokemonSpeciesEntry) {
-        let speciesId = species.speciesId
-        let isCurrentSpecies = speciesId === this.props.speciesId
+        let speciesId = species.pokemonSpeciesId
+        let isCurrentSpecies = speciesId === this.props.pokemonSpeciesId
         if (isCurrentSpecies) {
             return null
         }

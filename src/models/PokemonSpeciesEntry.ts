@@ -1,8 +1,8 @@
 import { EvolutionChain } from "./EvolutionChain"
-import { Generation } from "./Generation"
+import { GenerationEntry } from "./GenerationEntry"
 import { LocalString } from "./LocalString"
-import { Pokemon } from "./Pokemon"
-import { Type } from "./Type"
+import { PokemonEntry } from "./PokemonEntry"
+import { TypeEntry } from "./TypeEntry"
 import { WithId } from "./WithId"
 
 /**
@@ -12,7 +12,7 @@ export class PokemonSpeciesEntry {
     /**
      * The ID of the species.
      */
-    speciesId: number
+    pokemonSpeciesId: number
 
     /**
      * The name of the species.
@@ -47,7 +47,7 @@ export class PokemonSpeciesEntry {
     /**
      * The types of this species' primary variety indexed by version group ID.
     */
-    types: WithId<Type[]>[]
+    types: WithId<TypeEntry[]>[]
 
     /**
      * The base stats of this species' primary variety indexed by version group ID.
@@ -57,12 +57,12 @@ export class PokemonSpeciesEntry {
     /**
      * The Pokemon this species represents.
      */
-    varieties: Pokemon[]
+    varieties: PokemonEntry[]
 
     /**
      * The generation in which this species was introduced.
      */
-    generation: Generation
+    generation: GenerationEntry
 
     /**
      * The species' evolution chain.
@@ -83,22 +83,22 @@ export class PokemonSpeciesEntry {
      * Constructor.
      */
     constructor(
-        speciesId: number,
+        pokemonSpeciesId: number,
         name: string,
         spriteUrl: string,
         shinySpriteUrl: string,
         displayNames: LocalString[],
         genera: LocalString[],
         flavourTextEntries: WithId<LocalString[]>[],
-        types: WithId<Type[]>[],
+        types: WithId<TypeEntry[]>[],
         baseStats: WithId<number[]>[],
-        varieties: Pokemon[],
-        generation: Generation,
+        varieties: PokemonEntry[],
+        generation: GenerationEntry,
         evolutionChain: EvolutionChain,
         validity: number[],
         catchRate: number
     ) {
-        this.speciesId = speciesId
+        this.pokemonSpeciesId = pokemonSpeciesId
         this.name = name
         this.spriteUrl = spriteUrl
         this.shinySpriteUrl = shinySpriteUrl
@@ -119,7 +119,7 @@ export class PokemonSpeciesEntry {
      */
     static from(species: PokemonSpeciesEntry) {
         return new PokemonSpeciesEntry(
-            species.speciesId,
+            species.pokemonSpeciesId,
             species.name,
             species.spriteUrl,
             species.shinySpriteUrl,
@@ -144,7 +144,7 @@ export class PokemonSpeciesEntry {
         if (localName === undefined) {
             // species should have display names in every locale so throw an error
             throw new Error(
-                `Pokemon species ${this.speciesId} is missing display name in locale '${locale}'`
+                `Pokemon species ${this.pokemonSpeciesId} is missing display name in locale '${locale}'`
             )
         }
 
@@ -159,7 +159,7 @@ export class PokemonSpeciesEntry {
         if (localName === undefined) {
             // species should have genus in every locale so throw an error
             throw new Error(
-                `Species ${this.speciesId} is missing genus in locale '${locale}'`
+                `Species ${this.pokemonSpeciesId} is missing genus in locale '${locale}'`
             )
         }
 
@@ -172,7 +172,7 @@ export class PokemonSpeciesEntry {
     getFlavourText(versionId: number, locale: string): string | undefined {
         if (this.flavourTextEntries.length <= 0) {
             console.warn(
-                `Species ${this.speciesId} has no flavour text entries`
+                `Species ${this.pokemonSpeciesId} has no flavour text entries`
             )
 
             return undefined
@@ -197,7 +197,7 @@ export class PokemonSpeciesEntry {
         let localFlavourText = matchingEntry!.data.find(n => n.language === locale)
         if (localFlavourText === undefined) {
             console.warn(
-                `Species ${this.speciesId} is missing flavour text in locale '${locale}'`
+                `Species ${this.pokemonSpeciesId} is missing flavour text in locale '${locale}'`
             )
         }
 
@@ -207,10 +207,10 @@ export class PokemonSpeciesEntry {
     /**
      * Returns the species' types in the version group with the given ID.
      */
-    getTypes(versionGroupId: number): Type[] {
+    getTypes(versionGroupId: number): TypeEntry[] {
         let types = this.types
         if (types.length <= 0) {
-            throw new Error(`Species ${this.speciesId} has no type entries`)
+            throw new Error(`Species ${this.pokemonSpeciesId} has no type entries`)
         }
 
         let newestVersionGroupId = types.reduce((t1, t2) => t1.id > t2.id ? t1 : t2).id
@@ -219,7 +219,7 @@ export class PokemonSpeciesEntry {
         let matchFunc = (searchId: number) => types.find(e => e.id === searchId)
 
         let searchId = versionGroupId
-        let matchingEntry: WithId<Type[]> | undefined = undefined
+        let matchingEntry: WithId<TypeEntry[]> | undefined = undefined
         while (matchingEntry === undefined && searchId <= newestVersionGroupId) {
             matchingEntry = matchFunc(searchId)
             searchId++
@@ -227,7 +227,7 @@ export class PokemonSpeciesEntry {
 
         if (matchingEntry === undefined) {
             throw new Error(
-                `Species ${this.speciesId} has no type data for the newest version group (${newestVersionGroupId})`
+                `Species ${this.pokemonSpeciesId} has no type data for the newest version group (${newestVersionGroupId})`
             )
         }
 

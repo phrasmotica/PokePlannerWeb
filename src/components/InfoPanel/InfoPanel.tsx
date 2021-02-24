@@ -11,7 +11,6 @@ import { StatGraph } from "../StatGraph/StatGraph"
 import { PokemonEntry } from "../../models/PokemonEntry"
 import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 import { StatEntry } from "../../models/StatEntry"
-import { Type } from "../../models/Type"
 import { TypeEntry } from "../../models/TypeEntry"
 import { VersionEntry } from "../../models/VersionEntry"
 import { VersionGroupEntry } from "../../models/VersionGroupEntry"
@@ -43,7 +42,7 @@ interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The effective types.
      */
-    effectiveTypes: Type[]
+    effectiveTypes: TypeEntry[]
 
     /**
      * The types.
@@ -171,7 +170,7 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
         return (
             <EfficacyList
                 index={this.props.index}
-                typeIds={types.map(type => type.id)}
+                typeIds={types.map(type => type.typeId)}
                 types={this.props.types}
                 versionGroup={this.props.versionGroup}
                 showMultipliers={this.props.shouldShowPokemon}

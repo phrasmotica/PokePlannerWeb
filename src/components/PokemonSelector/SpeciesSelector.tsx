@@ -36,7 +36,7 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
     /**
      * Handler for setting the species ID in the parent component.
      */
-    setSpecies: (speciesId: number | undefined) => void
+    setSpecies: (pokemonSpeciesId: number | undefined) => void
 
     /**
      * Handler for toggling the species filter in the parent component.
@@ -87,7 +87,7 @@ export class SpeciesSelector
     createOptions(): Option[] {
         return this.getFilteredSpecies().map(species => ({
             label: species.getDisplayName("en") ?? "-",
-            value: species.speciesId
+            value: species.pokemonSpeciesId
         }))
     }
 
@@ -143,11 +143,11 @@ export class SpeciesSelector
         }
 
         // generation filter test
-        let generationId = species.generation.id
+        let generationId = species.generation.generationId
         let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
 
         // type filter test
-        let speciesTypes = species.getTypes(versionGroupId).map(t => t.id)
+        let speciesTypes = species.getTypes(versionGroupId).map(t => t.typeId)
         let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
 
         // base stat filter test
@@ -186,7 +186,7 @@ export class SpeciesSelector
      * Returns whether the given species has the given ID.
      */
     entryMatches(entry: PokemonSpeciesEntry, id: number): boolean {
-        return entry.speciesId === id
+        return entry.pokemonSpeciesId === id
     }
 
     /**

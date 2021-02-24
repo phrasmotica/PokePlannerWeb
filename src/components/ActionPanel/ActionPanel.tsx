@@ -31,7 +31,7 @@ interface IActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The ID of the Pokemon species.
      */
-    speciesId: number | undefined
+    pokemonSpeciesId: number | undefined
 
     /**
      * The species variety.
@@ -56,7 +56,7 @@ interface IActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * Handler for setting the species ID in the parent component.
      */
-    setSpecies: (speciesId: number | undefined) => void
+    setSpecies: (pokemonSpeciesId: number | undefined) => void
 }
 
 interface IActionPanelState {
@@ -111,7 +111,7 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
      * Renders the move list.
      */
     renderMoveList() {
-        let typeIds = this.getEffectiveTypes().map(t => t.id)
+        let typeIds = this.getEffectiveTypes().map(t => t.typeId)
 
         return (
             <MoveList
@@ -143,8 +143,8 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
      * Returns the data object for the selected species.
      */
     getSpecies() {
-        let speciesId = this.props.speciesId
-        return this.props.species.find(s => s.speciesId === speciesId)
+        let speciesId = this.props.pokemonSpeciesId
+        return this.props.species.find(s => s.pokemonSpeciesId === speciesId)
     }
 
     /**
@@ -162,14 +162,14 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
      * Renders the evolution chain.
      */
     renderEvolutionChain() {
-        const setSpecies = (speciesId: number) => this.props.setSpecies(speciesId)
+        const setSpecies = (pokemonSpeciesId: number) => this.props.setSpecies(pokemonSpeciesId)
 
         return (
             <div className="inherit-size">
                 <EvolutionChain
                     index={this.props.index}
-                    speciesId={this.props.speciesId}
-                    availableSpeciesIds={this.props.species.map(s => s.speciesId)}
+                    pokemonSpeciesId={this.props.pokemonSpeciesId}
+                    availableSpeciesIds={this.props.species.map(s => s.pokemonSpeciesId)}
                     showShinySprites={this.props.showShinySprite}
                     shouldShowChain={this.props.shouldShowPokemon}
                     setSpecies={setSpecies} />
