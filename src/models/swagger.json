@@ -1,0 +1,2722 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PokePlannerApi",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:17895"
+    }
+  ],
+  "paths": {
+    "/Efficacy/{typeId}": {
+      "get": {
+        "tags": [
+          "Efficacy"
+        ],
+        "parameters": [
+          {
+            "name": "typeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacyEntry"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacyEntry"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacyEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Efficacy": {
+      "get": {
+        "tags": [
+          "Efficacy"
+        ],
+        "parameters": [
+          {
+            "name": "versionGroup",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacySet"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacySet"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacySet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Encounter/{pokemonId}": {
+      "get": {
+        "tags": [
+          "Encounter"
+        ],
+        "parameters": [
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncountersEntry"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncountersEntry"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncountersEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/EvolutionChain/{speciesId}": {
+      "get": {
+        "tags": [
+          "EvolutionChain"
+        ],
+        "parameters": [
+          {
+            "name": "speciesId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvolutionChainEntry"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvolutionChainEntry"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvolutionChainEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Form/{formId}": {
+      "get": {
+        "tags": [
+          "Form"
+        ],
+        "parameters": [
+          {
+            "name": "formId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonFormEntry"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonFormEntry"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonFormEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Generation": {
+      "get": {
+        "tags": [
+          "Generation"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GenerationEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GenerationEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GenerationEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/HealthCheck": {
+      "get": {
+        "tags": [
+          "HealthCheck"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pokemon/{pokemonId}": {
+      "get": {
+        "tags": [
+          "Pokemon"
+        ],
+        "parameters": [
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonEntry"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonEntry"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pokemon/{pokemonId}/abilities": {
+      "get": {
+        "tags": [
+          "Pokemon"
+        ],
+        "parameters": [
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonAbilityContext"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonAbilityContext"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonAbilityContext"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pokemon/{pokemonId}/efficacy/{versionGroupId}": {
+      "get": {
+        "tags": [
+          "Pokemon"
+        ],
+        "parameters": [
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacySet"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacySet"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EfficacySet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pokemon/{pokemonId}/forms/{versionGroupId}": {
+      "get": {
+        "tags": [
+          "Pokemon"
+        ],
+        "parameters": [
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonFormEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonFormEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonFormEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Pokemon/{pokemonId}/moves/{versionGroupId}": {
+      "get": {
+        "tags": [
+          "Pokemon"
+        ],
+        "parameters": [
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonMoveContext"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonMoveContext"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonMoveContext"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Species": {
+      "get": {
+        "tags": [
+          "Species"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Species/{speciesId}/varieties/{versionGroupId}": {
+      "get": {
+        "tags": [
+          "Species"
+        ],
+        "parameters": [
+          {
+            "name": "speciesId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Species/{speciesId}/forms/{versionGroupId}": {
+      "get": {
+        "tags": [
+          "Species"
+        ],
+        "parameters": [
+          {
+            "name": "speciesId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonFormEntryListWithId"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonFormEntryListWithId"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonFormEntryListWithId"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Stat/{versionGroupId}": {
+      "get": {
+        "tags": [
+          "Stat"
+        ],
+        "parameters": [
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Type": {
+      "get": {
+        "tags": [
+          "Type"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/VersionGroup": {
+      "get": {
+        "tags": [
+          "VersionGroup"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionGroupEntry"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionGroupEntry"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionGroupEntry"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AbilityEntry": {
+        "required": [
+          "abilityId",
+          "creationTime",
+          "displayNames",
+          "flavourTextEntries",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "abilityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "flavourTextEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalStringListWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChainLink": {
+        "type": "object",
+        "properties": {
+          "isBaby": {
+            "type": "boolean"
+          },
+          "species": {
+            "$ref": "#/components/schemas/PokemonSpeciesNamedApiResource"
+          },
+          "evolutionDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvolutionDetail"
+            },
+            "nullable": true
+          },
+          "evolvesTo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChainLink"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChainLinkEntry": {
+        "required": [
+          "evolutionDetails",
+          "evolvesTo",
+          "isBaby",
+          "species"
+        ],
+        "type": "object",
+        "properties": {
+          "isBaby": {
+            "type": "boolean"
+          },
+          "species": {
+            "$ref": "#/components/schemas/PokemonSpeciesEntry"
+          },
+          "evolutionDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EvolutionDetailEntry"
+            }
+          },
+          "evolvesTo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChainLinkEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConditionValuesDetail": {
+        "required": [
+          "conditionValues",
+          "encounterDetails"
+        ],
+        "type": "object",
+        "properties": {
+          "conditionValues": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterConditionValueEntry"
+            }
+          },
+          "encounterDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterDetailEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "DoubleWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EfficacyEntry": {
+        "required": [
+          "creationTime",
+          "efficacySets",
+          "id",
+          "name",
+          "typeId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "efficacySets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EfficacySetWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EfficacySet": {
+        "required": [
+          "efficacyMultipliers"
+        ],
+        "type": "object",
+        "properties": {
+          "efficacyMultipliers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoubleWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EfficacySetWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "$ref": "#/components/schemas/EfficacySet"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterConditionValueEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "encounterConditionValueId",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "encounterConditionValueId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterDetailEntry": {
+        "required": [
+          "chance",
+          "maxLevel",
+          "minLevel"
+        ],
+        "type": "object",
+        "properties": {
+          "minLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chance": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterEntry": {
+        "required": [
+          "details",
+          "displayNames",
+          "locationAreaId"
+        ],
+        "type": "object",
+        "properties": {
+          "locationAreaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterMethodDetailsListWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterEntryListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterMethodDetails": {
+        "required": [
+          "conditionValuesDetails",
+          "method"
+        ],
+        "type": "object",
+        "properties": {
+          "method": {
+            "$ref": "#/components/schemas/EncounterMethodEntry"
+          },
+          "conditionValuesDetails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConditionValuesDetail"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterMethodDetailsListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterMethodDetails"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterMethodEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "encounterMethodId",
+          "id",
+          "name",
+          "order"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "encounterMethodId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncountersEntry": {
+        "required": [
+          "creationTime",
+          "encounters",
+          "id",
+          "name",
+          "pokemonId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pokemonId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "encounters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterEntryListWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvolutionChain": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "babyTriggerItem": {
+            "$ref": "#/components/schemas/ItemNamedApiResource"
+          },
+          "chain": {
+            "$ref": "#/components/schemas/ChainLink"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvolutionChainEntry": {
+        "required": [
+          "chain",
+          "creationTime",
+          "evolutionChainId",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evolutionChainId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chain": {
+            "$ref": "#/components/schemas/ChainLinkEntry"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvolutionDetail": {
+        "type": "object",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/ItemNamedApiResource"
+          },
+          "trigger": {
+            "$ref": "#/components/schemas/EvolutionTriggerNamedApiResource"
+          },
+          "gender": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "heldItem": {
+            "$ref": "#/components/schemas/ItemNamedApiResource"
+          },
+          "knownMove": {
+            "$ref": "#/components/schemas/MoveNamedApiResource"
+          },
+          "knownMoveType": {
+            "$ref": "#/components/schemas/TypeNamedApiResource"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationNamedApiResource"
+          },
+          "minLevel": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "minHappiness": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "minBeauty": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "minAffection": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "needsOverworldRain": {
+            "type": "boolean"
+          },
+          "partySpecies": {
+            "$ref": "#/components/schemas/PokemonSpeciesNamedApiResource"
+          },
+          "partyType": {
+            "$ref": "#/components/schemas/TypeNamedApiResource"
+          },
+          "relativePhysicalStats": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "timeOfDay": {
+            "type": "string",
+            "nullable": true
+          },
+          "tradeSpecies": {
+            "$ref": "#/components/schemas/PokemonSpeciesNamedApiResource"
+          },
+          "turnUpsideDown": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvolutionDetailEntry": {
+        "required": [
+          "gender",
+          "heldItem",
+          "item",
+          "knownMove",
+          "knownMoveType",
+          "location",
+          "minAffection",
+          "minBeauty",
+          "minHappiness",
+          "minLevel",
+          "needsOverworldRain",
+          "partySpecies",
+          "partyType",
+          "relativePhysicalStats",
+          "timeOfDay",
+          "tradeSpecies",
+          "trigger",
+          "turnUpsideDown"
+        ],
+        "type": "object",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/ItemEntry"
+          },
+          "trigger": {
+            "$ref": "#/components/schemas/EvolutionTriggerEntry"
+          },
+          "gender": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "heldItem": {
+            "$ref": "#/components/schemas/ItemEntry"
+          },
+          "knownMove": {
+            "$ref": "#/components/schemas/MoveEntry"
+          },
+          "knownMoveType": {
+            "$ref": "#/components/schemas/TypeEntry"
+          },
+          "location": {
+            "$ref": "#/components/schemas/LocationEntry"
+          },
+          "minLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minHappiness": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minBeauty": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minAffection": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "needsOverworldRain": {
+            "type": "boolean"
+          },
+          "partySpecies": {
+            "$ref": "#/components/schemas/PokemonSpeciesEntry"
+          },
+          "partyType": {
+            "$ref": "#/components/schemas/TypeEntry"
+          },
+          "relativePhysicalStats": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeOfDay": {
+            "type": "string"
+          },
+          "tradeSpecies": {
+            "$ref": "#/components/schemas/PokemonSpeciesEntry"
+          },
+          "turnUpsideDown": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvolutionTriggerEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "evolutionTriggerId",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evolutionTriggerId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EvolutionTriggerNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GenerationEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "generationId",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "generationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "Int32ListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "itemId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "itemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ItemNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocalString": {
+        "required": [
+          "language",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "language": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocalStringListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "locationId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "locationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MachineEntry": {
+        "required": [
+          "creationTime",
+          "id",
+          "item",
+          "machineId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "machineId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "item": {
+            "$ref": "#/components/schemas/ItemEntry"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MachineEntryListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveCategoryEntry": {
+        "required": [
+          "creationTime",
+          "descriptions",
+          "id",
+          "moveCategoryId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "moveCategoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "descriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveDamageClassEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "moveDamageClassId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "moveDamageClassId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveEntry": {
+        "required": [
+          "accuracy",
+          "category",
+          "creationTime",
+          "damageClass",
+          "displayNames",
+          "flavourTextEntries",
+          "id",
+          "machines",
+          "moveId",
+          "name",
+          "power",
+          "pp",
+          "priority",
+          "target",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "moveId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "flavourTextEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalStringListWithId"
+            }
+          },
+          "type": {
+            "$ref": "#/components/schemas/TypeEntry"
+          },
+          "category": {
+            "$ref": "#/components/schemas/MoveCategoryEntry"
+          },
+          "power": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "damageClass": {
+            "$ref": "#/components/schemas/MoveDamageClassEntry"
+          },
+          "accuracy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "target": {
+            "$ref": "#/components/schemas/MoveTargetEntry"
+          },
+          "machines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineEntryListWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveEntryListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MoveEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveLearnMethodEntry": {
+        "required": [
+          "creationTime",
+          "descriptions",
+          "displayNames",
+          "id",
+          "moveLearnMethodId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "moveLearnMethodId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "descriptions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveTargetEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "moveTargetId",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "moveTargetId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokedexEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "name",
+          "pokedexId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pokedexId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonAbilityContext": {
+        "required": [
+          "abilityId",
+          "creationTime",
+          "displayNames",
+          "flavourTextEntries",
+          "id",
+          "isHidden",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "abilityId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "flavourTextEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalStringListWithId"
+            }
+          },
+          "isHidden": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonEntry": {
+        "required": [
+          "abilities",
+          "baseStats",
+          "creationTime",
+          "displayNames",
+          "forms",
+          "heldItems",
+          "id",
+          "moves",
+          "name",
+          "pokemonId",
+          "shinySpriteUrl",
+          "spriteUrl",
+          "types"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pokemonId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spriteUrl": {
+            "type": "string"
+          },
+          "shinySpriteUrl": {
+            "type": "string"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "forms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokemonFormEntry"
+            }
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeEntryListWithId"
+            }
+          },
+          "abilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AbilityEntry"
+            }
+          },
+          "baseStats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Int32ListWithId"
+            }
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MoveEntryListWithId"
+            }
+          },
+          "heldItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionHeldItemContextListWithId"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonFormEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "formName",
+          "id",
+          "isMega",
+          "name",
+          "pokemonFormId",
+          "shinySpriteUrl",
+          "spriteUrl",
+          "types",
+          "validity",
+          "versionGroup"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pokemonFormId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "formName": {
+            "type": "string"
+          },
+          "isMega": {
+            "type": "boolean"
+          },
+          "versionGroup": {
+            "$ref": "#/components/schemas/VersionGroupEntry"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "spriteUrl": {
+            "type": "string"
+          },
+          "shinySpriteUrl": {
+            "type": "string"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeEntryListWithId"
+            }
+          },
+          "validity": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonFormEntryListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokemonFormEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonMoveContext": {
+        "required": [
+          "accuracy",
+          "category",
+          "creationTime",
+          "damageClass",
+          "displayNames",
+          "flavourTextEntries",
+          "id",
+          "learnMachines",
+          "level",
+          "machines",
+          "methods",
+          "moveId",
+          "name",
+          "power",
+          "pp",
+          "priority",
+          "target",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "moveId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "flavourTextEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalStringListWithId"
+            }
+          },
+          "type": {
+            "$ref": "#/components/schemas/TypeEntry"
+          },
+          "category": {
+            "$ref": "#/components/schemas/MoveCategoryEntry"
+          },
+          "power": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "damageClass": {
+            "$ref": "#/components/schemas/MoveDamageClassEntry"
+          },
+          "accuracy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "target": {
+            "$ref": "#/components/schemas/MoveTargetEntry"
+          },
+          "machines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MachineEntryListWithId"
+            }
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "learnMachines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemEntry"
+            }
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MoveLearnMethodEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonSpeciesEntry": {
+        "required": [
+          "baseStats",
+          "catchRate",
+          "creationTime",
+          "displayNames",
+          "evolutionChain",
+          "flavourTextEntries",
+          "genera",
+          "generation",
+          "id",
+          "name",
+          "pokemonSpeciesId",
+          "shinySpriteUrl",
+          "spriteUrl",
+          "types",
+          "validity",
+          "varieties"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pokemonSpeciesId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spriteUrl": {
+            "type": "string"
+          },
+          "shinySpriteUrl": {
+            "type": "string"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "genera": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "flavourTextEntries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalStringListWithId"
+            }
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeEntryListWithId"
+            }
+          },
+          "baseStats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Int32ListWithId"
+            }
+          },
+          "varieties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokemonEntry"
+            }
+          },
+          "generation": {
+            "$ref": "#/components/schemas/GenerationEntry"
+          },
+          "evolutionChain": {
+            "$ref": "#/components/schemas/EvolutionChain"
+          },
+          "validity": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "catchRate": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonSpeciesNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "isBattleOnly",
+          "name",
+          "statId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "isBattleOnly": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TypeEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "generation",
+          "id",
+          "isConcrete",
+          "name",
+          "typeId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "isConcrete": {
+            "type": "boolean"
+          },
+          "generation": {
+            "$ref": "#/components/schemas/GenerationEntry"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TypeEntryListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "TypeNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "name",
+          "versionId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "versionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionGroupEntry": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "generation",
+          "id",
+          "name",
+          "order",
+          "pokedexes",
+          "versionGroupId",
+          "versions"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "versionGroupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "generation": {
+            "$ref": "#/components/schemas/GenerationEntry"
+          },
+          "versions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionEntry"
+            }
+          },
+          "pokedexes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokedexEntry"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionHeldItemContext": {
+        "required": [
+          "creationTime",
+          "displayNames",
+          "id",
+          "itemId",
+          "name",
+          "rarity"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "creationTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "itemId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "displayNames": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocalString"
+            }
+          },
+          "rarity": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionHeldItemContextListWithId": {
+        "required": [
+          "data",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionHeldItemContext"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
