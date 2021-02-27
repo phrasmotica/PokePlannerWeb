@@ -3,8 +3,12 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { VersionGroupEntry } from "../../models/VersionGroupEntry"
+import { getDisplayName } from "../../models/Helpers"
+
+import {
+    PokemonEntry,
+    VersionGroupEntry
+} from "../../models/swagger"
 
 import "./HeldItemList.scss"
 
@@ -71,7 +75,7 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
 
         let versionElements = []
         for (let version of versions) {
-            let versionName = version.getDisplayName("en") ?? "version"
+            let versionName = getDisplayName(version, "en") ?? "version"
             let versionNameElement = (
                 <div className="versionName">
                     <b>
@@ -87,7 +91,7 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
                 // display items in descending order of rarity
                 let itemList = entry.data.sort((i1, i2) => i2.rarity - i1.rarity)
                 for (let item of itemList) {
-                    let itemName = item.getDisplayName("en") ?? "item"
+                    let itemName = getDisplayName(item, "en") ?? "item"
                     let itemRarity = `(${item.rarity}%)`
 
                     listElements.push(

@@ -6,11 +6,8 @@ import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
-import { GenerationEntry } from '../../models/GenerationEntry'
-import { PokemonSpeciesEntry } from '../../models/PokemonSpeciesEntry'
-import { StatEntry } from '../../models/StatEntry'
-import { TypeEntry } from '../../models/TypeEntry'
-import { VersionGroupEntry } from '../../models/VersionGroupEntry'
+import { getDisplayName } from '../../models/Helpers'
+import { GenerationEntry, PokemonSpeciesEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
@@ -150,7 +147,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
     renderVersionGroupMenu() {
         let options = this.state.versionGroups.map(vg => ({
-            label: vg.getDisplayName("en") ?? `(versionGroup${vg.versionGroupId})`,
+            label: getDisplayName(vg, "en") ?? `(versionGroup${vg.versionGroupId})`,
             value: vg.versionGroupId
         }))
 
@@ -238,8 +235,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         fetch(endpoint)
             .then((response) => response.json())
             .then((species: PokemonSpeciesEntry[]) => {
-                let concreteSpecies = species.map(PokemonSpeciesEntry.from)
-                this.setState({ species: concreteSpecies })
+                this.setState({ species: species })
             })
             .catch(error => console.error(error))
             .finally(() => this.setState({ loadingSpecies: false }))
@@ -274,9 +270,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
 
         fetch(`${process.env.REACT_APP_API_URL}/generation`)
             .then(response => response.json())
-            .then((groups: GenerationEntry[]) => {
-                let concreteGenerations = groups.map(GenerationEntry.from)
-                this.setState({ generations: concreteGenerations })
+            .then((generations: GenerationEntry[]) => {
+                this.setState({ generations: generations })
             })
             .catch(error => console.error(error))
             .finally(() => this.setState({ loadingGenerations: false }))
@@ -286,9 +281,8 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
     async getVersionGroups() {
         await fetch(`${process.env.REACT_APP_API_URL}/versionGroup`)
             .then(response => response.json())
-            .then((groups: VersionGroupEntry[]) => {
-                let concreteVersionGroups = groups.map(VersionGroupEntry.from)
-                this.setState({ versionGroups: concreteVersionGroups })
+            .then((versionGroups: VersionGroupEntry[]) => {
+                this.setState({ versionGroups: versionGroups })
             })
             .then(() => {
                 // try get version group ID from cookies
@@ -316,8 +310,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         fetch(`${process.env.REACT_APP_API_URL}/type`)
             .then(response => response.json())
             .then((types: TypeEntry[]) => {
-                let concreteTypes = types.map(TypeEntry.from)
-                this.setState({ types: concreteTypes })
+                this.setState({ types: types })
             })
             .catch(error => console.error(error))
             .finally(() => this.setState({ loadingTypes: false }))
@@ -348,8 +341,7 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
             })
             .then(response => response.json())
             .then((baseStats: StatEntry[]) => {
-                let concreteBaseStats = baseStats.map(StatEntry.from)
-                this.setState({ baseStats: concreteBaseStats })
+                this.setState({ baseStats: baseStats })
             })
             .catch(error => console.error(error))
             .then(() => this.setState({ loadingBaseStats: false }))

@@ -3,7 +3,8 @@ import key from "weak-key"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { PokemonAbilityContext } from "../../models/AbilityEntry"
+import { getDisplayName, getFlavourText } from "../../models/Helpers"
+import { PokemonAbilityContext } from "../../models/swagger"
 
 import "./AbilityList.scss"
 
@@ -97,7 +98,7 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
         let items = []
         if (this.props.showAbilities && abilities.length > 0) {
             for (let ability of abilities) {
-                let abilityName = ability.getDisplayName("en") ?? "ability"
+                let abilityName = getDisplayName(ability, "en") ?? "ability"
                 let hiddenText = ability.isHidden ? " (hidden)" : ""
 
                 let nameElement = (
@@ -111,7 +112,7 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
 
                 let flavourTextElement = (
                     <div className="abilityFlavourText">
-                        {ability.getFlavourText(this.props.versionGroupId!, "en")}
+                        {getFlavourText(ability, this.props.versionGroupId!, "en")}
                     </div>
                 )
 
@@ -158,8 +159,7 @@ export class AbilityList extends Component<IAbilityListProps, IAbilityListState>
                 })
                 .then(response => response.json())
                 .then((abilities: PokemonAbilityContext[]) => {
-                    let concreteAbilities = abilities.map(PokemonAbilityContext.from)
-                    this.setState({ abilities: concreteAbilities })
+                    this.setState({ abilities: abilities })
                 })
                 .catch(error => console.error(error))
                 .then(() => this.setState({ loadingAbilities: false }))

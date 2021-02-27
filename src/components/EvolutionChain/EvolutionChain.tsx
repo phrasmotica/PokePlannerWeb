@@ -4,7 +4,8 @@ import { EvolutionTree } from "./EvolutionTree"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { EvolutionChainEntry } from "../../models/EvolutionChainEntry"
+import { getSpeciesIds } from "../../models/Helpers"
+import { EvolutionChainEntry } from "../../models/swagger"
 
 import "./EvolutionChain.scss"
 
@@ -100,7 +101,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
         }
 
         // species has changed - only fetch if new one is in a different chain
-        let chainSpeciesIds = chain.getSpeciesIds()
+        let chainSpeciesIds = getSpeciesIds(chain)
         let previousSpeciesInChain = chainSpeciesIds.includes(previousSpeciesId!)
         let speciesInChain = chainSpeciesIds.includes(speciesId!)
         let chainChanged = previousSpeciesInChain !== speciesInChain
@@ -182,8 +183,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
                 })
                 .then(response => response.json())
                 .then((chain: EvolutionChainEntry) => {
-                    let concreteChain = EvolutionChainEntry.from(chain)
-                    this.setState({ evolutionChain: concreteChain })
+                    this.setState({ evolutionChain: chain })
                 })
                 .catch(error => {
                     console.error(error)

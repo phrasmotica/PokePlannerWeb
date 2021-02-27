@@ -9,15 +9,18 @@ import { BaseStatFilterModel, BaseStatFilterValue } from "../SpeciesFilter/BaseS
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { GenerationEntry } from "../../models/GenerationEntry"
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { PokemonFormEntry } from "../../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { StatEntry } from "../../models/StatEntry"
-import { TypeEntry } from "../../models/TypeEntry"
+import { getBaseStats, getDisplayName, getEffectiveTypes, getGenus, getTypes, hasDisplayNames, pokemonIsValid } from "../../models/Helpers"
+
+import {
+    GenerationEntry,
+    PokemonEntry,
+    PokemonFormEntry,
+    PokemonSpeciesEntry,
+    StatEntry,
+    TypeEntry
+} from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
-import { PokemonHelper } from "../../util/PokemonHelper"
 
 import "./PokemonPanel.scss"
 
@@ -312,11 +315,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      */
     getEffectiveDisplayName() {
         // default to species display name
-        let displayName = this.getSpecies().getDisplayName("en")
+        let displayName = getDisplayName(this.getSpecies(), "en")
 
         let form = this.state.form
-        if (form !== undefined && form.hasDisplayNames()) {
-            displayName = form.getDisplayName("en") ?? displayName
+        if (form !== undefined && hasDisplayNames(form)) {
+            displayName = getDisplayName(form, "en") ?? displayName
         }
 
         return displayName
@@ -328,7 +331,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     renderPokemonGenus() {
         let genusElement = "-"
         if (this.shouldShowPokemon()) {
-            genusElement = this.getSpecies().getGenus("en") ?? "-"
+            genusElement = getGenus(this.getSpecies(), "en") ?? "-"
         }
 
         return (
@@ -343,7 +346,11 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let typesElement: any = "-"
         let shouldShowPokemon = this.shouldShowPokemon()
         if (shouldShowPokemon) {
-            let types = this.getEffectiveTypes()
+            let types = getEffectiveTypes(
+                this.state.variety,
+                this.state.form,
+                this.props.versionGroupId
+            )
 
             typesElement = types.map(type => {
                 return (
@@ -364,17 +371,6 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
             <div className="flex-center type-pair">
                 {typesElement}
             </div>
-        )
-    }
-
-    /**
-     * Returns the Pokemon's effective types.
-     */
-    getEffectiveTypes() {
-        return PokemonHelper.getEffectiveTypes(
-            this.state.variety,
-            this.state.form,
-            this.props.versionGroupId
         )
     }
 
@@ -472,7 +468,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
      * Returns whether the Pokemon is valid.
      */
     pokemonIsValid() {
-        return PokemonHelper.pokemonIsValid(
+        return pokemonIsValid(
             this.getSpecies(),
             this.state.form,
             this.props.versionGroupId
@@ -569,7 +565,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let speciesId = this.state.pokemonSpeciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
-            let speciesTypes = species.getTypes(versionGroupId).map(t => t.typeId)
+            let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
@@ -595,7 +591,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         let speciesId = this.state.pokemonSpeciesId
         if (speciesId !== undefined) {
             let species = this.getSpecies()
-            let speciesBaseStats = species.getBaseStats(versionGroupId)
+            let speciesBaseStats = getBaseStats(species, versionGroupId)
 
             let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {

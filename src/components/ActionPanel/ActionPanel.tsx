@@ -7,12 +7,15 @@ import { CaptureLocations } from "../CaptureLocations/CaptureLocations"
 import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
 import { MoveList } from "../MoveList/MoveList"
 
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { PokemonFormEntry } from "../../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { VersionGroupEntry } from "../../models/VersionGroupEntry"
+import { getEffectiveTypes } from "../../models/Helpers"
 
-import { PokemonHelper } from "../../util/PokemonHelper"
+import {
+    PokemonEntry,
+    PokemonFormEntry,
+    PokemonSpeciesEntry,
+    VersionGroupEntry
+} from "../../models/swagger"
+
 import { CookieHelper } from "../../util/CookieHelper"
 
 import "./ActionPanel.scss"
@@ -111,7 +114,11 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
      * Renders the move list.
      */
     renderMoveList() {
-        let typeIds = this.getEffectiveTypes().map(t => t.typeId)
+        let typeIds = getEffectiveTypes(
+            this.props.variety,
+            this.props.form,
+            this.props.versionGroup?.versionGroupId
+        ).map(t => t.typeId)
 
         return (
             <MoveList
@@ -145,17 +152,6 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
     getSpecies() {
         let speciesId = this.props.pokemonSpeciesId
         return this.props.species.find(s => s.pokemonSpeciesId === speciesId)
-    }
-
-    /**
-     * Returns the Pokemon's effective types.
-     */
-    getEffectiveTypes() {
-        return PokemonHelper.getEffectiveTypes(
-            this.props.variety,
-            this.props.form,
-            this.props.versionGroup?.versionGroupId
-        )
     }
 
     /**

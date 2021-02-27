@@ -9,10 +9,14 @@ import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { GenerationEntry } from "../../models/GenerationEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { StatEntry } from "../../models/StatEntry"
-import { TypeEntry } from "../../models/TypeEntry"
+import { getBaseStats, getDisplayName, getShortDisplayName, getTypes } from "../../models/Helpers"
+
+import {
+    GenerationEntry,
+    PokemonSpeciesEntry,
+    StatEntry,
+    TypeEntry
+} from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -205,7 +209,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
 
         let generations = this.props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
-                                          .map(g => g.getShortDisplayName("en") ?? "-")
+                                          .map(g => getShortDisplayName(g, "en") ?? "-")
 
         let generationFilter = this.props.generationFilter
         if (generationFilter.isEmpty()) {
@@ -236,14 +240,14 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         }
 
         let species = this.props.species
-        let typeIds = species.flatMap(s => s.getTypes(versionGroupId!)
+        let typeIds = species.flatMap(s => getTypes(s, versionGroupId!)
                              .map(t => t.typeId))
                              .distinct()
                              .sort((i, j) => i - j) // ascending order
 
         let types = this.props.types
         let typeLabels = types.filter(t => typeIds.includes(t.typeId))
-                              .map(t => t.getDisplayName("en") ?? "-")
+                              .map(t => getDisplayName(t, "en") ?? "-")
 
         let typeFilter = this.props.typeFilter
         if (typeFilter.isEmpty()) {
@@ -276,7 +280,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
         let filter = this.props.baseStatFilter
         let baseStats = this.props.baseStats
 
-        let allSpeciesBaseStats = this.props.species.map(s => s.getBaseStats(versionGroupId!))
+        let allSpeciesBaseStats = this.props.species.map(s => getBaseStats(s, versionGroupId!))
 
         let minValues = []
         for (let i = 0; i < baseStats.length; i++) {
@@ -298,7 +302,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
             <BaseStatFilter
                 index={this.props.index}
                 baseStatFilter={filter}
-                baseStatLabels={baseStats.map(s => s.getDisplayName("en") ?? "stat")}
+                baseStatLabels={baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
                 minValues={minValues}
                 maxValues={maxValues}
                 setBaseStatFilter={setFilter} />

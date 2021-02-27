@@ -6,17 +6,23 @@ import key from "weak-key"
 
 import { IHasCommon, IHasSearch } from "../CommonMembers"
 
-import { ItemEntry } from "../../models/ItemEntry"
-import { MoveEntry, PokemonMoveContext } from "../../models/MoveEntry"
-import { MoveLearnMethodEntry } from "../../models/MoveLearnMethodEntry"
+import { getDisplayName, getFlavourText } from "../../models/Helpers"
+
+import {
+    ItemEntry,
+    MoveEntry,
+    MoveLearnMethodEntry,
+    PokemonMoveContext
+} from "../../models/swagger"
+
 import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
+import { CssHelper } from "../../util/CssHelper"
 
 import "./MoveList.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
-import { CssHelper } from "../../util/CssHelper"
 
 /**
  * Enum for selecting a move class.
@@ -352,7 +358,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             return entries
         }
 
-        let entryNames = entries.map(e => ({ id: e.moveId, name: e.getDisplayName("en") }))
+        let entryNames = entries.map(e => ({ id: e.moveId, name: getDisplayName(e, "en") }))
         const options = { key: 'name' }
         let results = fuzzysort.go(searchTerm, entryNames, options)
 
@@ -390,7 +396,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             let rows = []
             for (let row = 0; row < filteredMoves.length; row++) {
                 let move = filteredMoves[row]
-                let moveName = move.getDisplayName("en") ?? "move"
+                let moveName = getDisplayName(move, "en") ?? "move"
 
                 let moveNameElement = (
                     <span>
@@ -414,11 +420,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     moveMethod = `(level ${move.level})`
                 }
                 else if (move.learnMachines !== null) {
-                    let machinesSummary = move.learnMachines.map(m => m.getDisplayName("en") ?? "Machine").join(", ")
+                    let machinesSummary = move.learnMachines.map(m => getDisplayName(m, "en") ?? "Machine").join(", ")
                     moveMethod = `(${machinesSummary})`
                 }
                 else {
-                    let methodsSummary = move.methods.map(m => m.getDisplayName("en")).join(", ")
+                    let methodsSummary = move.methods.map(m => getDisplayName(m, "en")).join(", ")
                     moveMethod = `(${methodsSummary})`
                 }
 
@@ -484,7 +490,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             </div>
 
                             <div className="text-align-center flex-center">
-                                {move.getFlavourText(this.props.versionGroupId!, "en")}
+                                {getFlavourText(move, this.props.versionGroupId!, "en")}
                             </div>
                         </div>
                     </Collapse>
@@ -532,7 +538,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         let moves = this.state.moves
 
         if (this.state.moveClass === MoveClass.Damaging) {
-            moves = moves.filter(m => m.isDamaging())
+            moves = moves.filter(this.isDamaging)
 
             if (this.state.useMinPower) {
                 moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
@@ -540,11 +546,11 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         if (this.state.moveClass === MoveClass.NonDamaging) {
-            moves = moves.filter(m => !m.isDamaging())
+            moves = moves.filter(m => !this.isDamaging(m))
         }
 
         if (this.state.sameTypeOnly) {
-            moves = moves.filter(m => this.isSameType(m))
+            moves = moves.filter(this.isSameType)
         }
 
         if (this.state.levelUpOnly) {
@@ -648,6 +654,22 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     }
 
     /**
+     * Returns whether the given move is damaging.
+     */
+    isDamaging(move: MoveEntry) {
+        let damagingCategoryIds = [
+            0, // damage
+            4, // damage+ailment
+            6, // damage+lower
+            7, // damage+raise
+            8, // damage+heal
+            9, // one-hit KO
+        ]
+
+        return damagingCategoryIds.includes(move.category.moveCategoryId)
+    }
+
+    /**
      * Returns whether the given move has a type that the current Pokemon has.
      */
     isSameType(move: MoveEntry) {
@@ -658,7 +680,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
      * Returns whether the given move has STAB.
      */
     isStab(move: MoveEntry) {
-        return move.isDamaging() && this.isSameType(move)
+        return this.isDamaging(move) && this.isSameType(move)
     }
 
     /**
@@ -749,10 +771,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 })
                 .then(response => response.json())
                 .then((moves: PokemonMoveContext[]) => {
-                    let concreteMoves = moves.map(PokemonMoveContext.from)
                     this.setState({
-                        moves: concreteMoves,
-                        movesAreOpen: concreteMoves.map(m => new WithId<boolean>(m.moveId, false))
+                        moves: moves,
+                        movesAreOpen: moves.map(m => new WithId<boolean>(m.moveId, false))
                     })
                 })
                 .catch(error => console.error(error))

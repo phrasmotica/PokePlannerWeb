@@ -6,15 +6,17 @@ import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
-import { GenerationEntry } from "../../models/GenerationEntry"
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { PokemonFormEntry } from "../../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { StatEntry } from "../../models/StatEntry"
-import { TypeEntry } from "../../models/TypeEntry"
-import { VersionGroupEntry } from "../../models/VersionGroupEntry"
+import { getEffectiveTypes, pokemonIsValid } from "../../models/Helpers"
 
-import { PokemonHelper } from "../../util/PokemonHelper"
+import {
+    GenerationEntry,
+    PokemonEntry,
+    PokemonFormEntry,
+    PokemonSpeciesEntry,
+    StatEntry,
+    TypeEntry,
+    VersionGroupEntry
+} from "../../models/swagger"
 
 import "./PokedexPanel.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
@@ -161,7 +163,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
      * Returns the Pokemon's effective types.
      */
     getEffectiveTypes() {
-        return PokemonHelper.getEffectiveTypes(
+        return getEffectiveTypes(
             this.state.variety,
             this.state.form,
             this.props.versionGroup?.versionGroupId
@@ -201,7 +203,7 @@ export class PokedexPanel extends Component<IPokedexPanelProps, IPokedexPanelSta
             return true
         }
 
-        return PokemonHelper.pokemonIsValid(
+        return pokemonIsValid(
             species,
             this.state.form,
             this.props.versionGroup?.versionGroupId

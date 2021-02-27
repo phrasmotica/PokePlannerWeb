@@ -3,12 +3,19 @@ import fuzzysort from "fuzzysort"
 import { ListGroup, ListGroupItem, Button, Collapse, Input } from "reactstrap"
 import key from "weak-key"
 
-import { EncountersEntry, EncounterEntry, EncounterMethodDetails } from "../../models/EncountersEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { VersionGroupEntry } from "../../models/VersionGroupEntry"
 import { WithId } from "../../models/WithId"
 
 import { IHasIndex, IHasHideTooltips, IHasSearch } from "../CommonMembers"
+
+import { getDisplayName } from "../../models/Helpers"
+
+import {
+    EncounterEntry,
+    EncounterMethodDetails,
+    EncountersEntry,
+    PokemonSpeciesEntry,
+    VersionGroupEntry
+} from "../../models/swagger"
 
 import { NumberHelper, Interval } from "../../util/NumberHelper"
 
@@ -199,7 +206,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                 if (filteredData.length > 0) {
                     for (let row = 0; row < filteredData.length; row++) {
                         let encounter = filteredData[row]
-                        let encounterName = encounter.getDisplayName("en") ?? `encounter`
+                        let encounterName = getDisplayName(encounter, "en") ?? `encounter`
                         let encounterNameElement = (
                             <span className="center-text">
                                 <b>
@@ -221,7 +228,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
                         let versions = this.props.versionGroup?.versions ?? []
 
                         let versionElements = versions.map(v => {
-                            let versionName = v.getDisplayName("en") ?? "version"
+                            let versionName = getDisplayName(v, "en") ?? "version"
                             let versionNameElement = (
                                 <div className="captureLocationsVersionName">
                                     {versionName}
@@ -304,7 +311,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
      * Renders the encounter method details.
      */
     renderEncounterMethodDetails(details: EncounterMethodDetails, addSeparator = false) {
-        let methodName = details.method.getDisplayName("en") ?? details.method.name
+        let methodName = getDisplayName(details.method, "en") ?? details.method.name
         let methodElement = <div>{methodName}</div>
 
         // don't bother showing 100% chance for gift Pokemon
@@ -313,7 +320,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
         let conditionValueElements = details.conditionValuesDetails.map((cvd, i) => {
             let conditionsElement = undefined
             if (cvd.conditionValues.length > 0) {
-                let conditions = cvd.conditionValues.map(v => v.getDisplayName("en") ?? v.name)
+                let conditions = cvd.conditionValues.map(v => getDisplayName(v, "en") ?? v.name)
                                                     .join(", ")
                 conditionsElement = <div>{conditions}</div>
             }
@@ -387,7 +394,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             return entries
         }
 
-        let entryNames = entries.map(e => ({ id: e.locationAreaId, name: e.getDisplayName("en") }))
+        let entryNames = entries.map(e => ({ id: e.locationAreaId, name: getDisplayName(e, "en") }))
         const options = { key: 'name' }
         let results = fuzzysort.go(searchTerm, entryNames, options)
 
@@ -464,21 +471,13 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
             })
             .then(response => response.json())
             .then((encounters: EncountersEntry) => {
-                let concreteLocations = {
-                    pokemonId: encounters.pokemonId,
-                    encounters: encounters.encounters.map(e => ({
-                        id: e.id,
-                        data: e.data.map(EncounterEntry.from)
-                    }))
-                }
-
                 let versionGroupId = this.props.versionGroup?.versionGroupId
-                let relevantEncounters = concreteLocations.encounters.find(
+                let relevantEncounters = encounters.encounters.find(
                     e => e.id === versionGroupId
                 )?.data ?? []
 
                 this.setState({
-                    locations: concreteLocations,
+                    locations: encounters,
                     encountersAreOpen: relevantEncounters.map(e => new WithId<boolean>(e.locationAreaId, false))
                 })
             })

@@ -1,11 +1,16 @@
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { PokemonFormEntry } from "../../models/PokemonFormEntry"
+import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../models/Helpers"
+
+import {
+    PokemonEntry,
+    PokemonFormEntry,
+    PokemonSpeciesEntry
+} from "../../models/swagger"
+
 import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
 
 interface IVarietySelectorProps extends ISelectorBaseProps<PokemonEntry> {
     /**
@@ -86,10 +91,10 @@ export class VarietySelector
         }
 
         return this.props.entries.map(variety => {
-            let label = species?.getDisplayName("en") ?? "-"
+            let label = getDisplayName(species!, "en") ?? "-"
 
-            if (variety.hasDisplayNames()) {
-                label = variety.getDisplayName("en") ?? label
+            if (hasDisplayNames(variety)) {
+                label = getDisplayName(variety, "en") ?? label
             }
 
             return {
@@ -138,7 +143,7 @@ export class VarietySelector
         let form = forms[0]
 
         // set form cookie
-        CookieHelper.set(`formId${this.props.index}`, form.formId)
+        CookieHelper.set(`formId${this.props.index}`, form.pokemonFormId)
 
         this.props.setForm(form)
     }
@@ -162,12 +167,12 @@ export class VarietySelector
             )
         }
 
-        let pokemonIsValid = this.props.species.isValid(versionGroupId)
+        let pokemonIsValid = isValid(this.props.species, versionGroupId)
 
         let form = this.getSelectedForm()
-        if (form !== undefined && form.hasValidity()) {
+        if (form !== undefined && hasValidity(form)) {
             // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
+            pokemonIsValid = pokemonIsValid && isValid(form, versionGroupId)
         }
 
         return pokemonIsValid
@@ -219,7 +224,7 @@ export class VarietySelector
     getForm(formId: number) {
         let allForms = this.getFormsOfSelectedVariety()
 
-        let form = allForms.find(f => f.formId === formId)
+        let form = allForms.find(f => f.pokemonFormId === formId)
         if (form === undefined) {
             return undefined
         }

@@ -2,9 +2,12 @@
 import { Tooltip } from "reactstrap"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
-import { EfficacySet } from "../../models/EfficacyMap"
-import { TypeEntry } from "../../models/TypeEntry"
-import { VersionGroupEntry } from "../../models/VersionGroupEntry"
+
+import {
+    EfficacySet,
+    TypeEntry,
+    VersionGroupEntry
+} from "../../models/swagger"
 
 import "../../util/Extensions"
 

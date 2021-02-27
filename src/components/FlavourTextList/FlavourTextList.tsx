@@ -3,8 +3,12 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { VersionEntry } from "../../models/VersionEntry"
+import { getDisplayName, getFlavourText } from "../../models/Helpers"
+
+import {
+    PokemonSpeciesEntry,
+    VersionEntry
+} from "../../models/swagger"
 
 import "./FlavourTextList.scss"
 
@@ -57,14 +61,14 @@ export class FlavourTextList extends Component<IFlavourTextListProps, IFlavourTe
                 let versionNameElement = (
                     <div className="flavourTextVersionName">
                         <b>
-                            {v.getDisplayName("en") ?? "-"}
+                            {getDisplayName(v, "en") ?? "-"}
                         </b>
                     </div>
                 )
 
                 let flavourText = "-"
                 if (this.props.showFlavourText && species !== undefined) {
-                    flavourText = species.getFlavourText(v.versionId, "en") ?? "?"
+                    flavourText = getFlavourText(species, v.versionId, "en") ?? "?"
                 }
 
                 let flavourTextElement = (

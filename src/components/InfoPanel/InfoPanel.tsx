@@ -8,12 +8,16 @@ import { EfficacyList } from "../EfficacyList/EfficacyList"
 import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
 import { StatGraph } from "../StatGraph/StatGraph"
 
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
-import { StatEntry } from "../../models/StatEntry"
-import { TypeEntry } from "../../models/TypeEntry"
-import { VersionEntry } from "../../models/VersionEntry"
-import { VersionGroupEntry } from "../../models/VersionGroupEntry"
+import { getBaseStats, getDisplayName } from "../../models/Helpers"
+
+import {
+    PokemonEntry,
+    PokemonSpeciesEntry,
+    StatEntry,
+    TypeEntry,
+    VersionEntry,
+    VersionGroupEntry
+} from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
 import { HeldItemList } from "../HeldItemList/HeldItemList"
@@ -151,13 +155,13 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
                 throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
             }
 
-            baseStats = pokemon.getBaseStats(versionGroupId)
+            baseStats = getBaseStats(pokemon, versionGroupId)
         }
 
         return (
             <StatGraph
                 index={this.props.index}
-                statNames={this.props.baseStats.map(s => s.getDisplayName("en") ?? "stat")}
+                statNames={this.props.baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
                 statValues={baseStats}
                 shouldShowStats={this.props.shouldShowPokemon} />
         )

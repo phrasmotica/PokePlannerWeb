@@ -1,7 +1,11 @@
 import { SelectorBase, ISelectorBaseProps, ISelectorBaseState, Option } from "./SelectorBase"
 
-import { PokemonFormEntry } from "../../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../models/Helpers"
+
+import {
+    PokemonFormEntry,
+    PokemonSpeciesEntry
+} from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -61,15 +65,15 @@ export class FormSelector
         let forms = this.props.entries
         return forms.map(form => {
             // default varieties derive name from their species
-            let label = species?.getDisplayName("en") ?? "-"
+            let label = getDisplayName(species!, "en") ?? "-"
 
-            if (form.hasDisplayNames()) {
-                label = form.getDisplayName("en") ?? label
+            if (hasDisplayNames(form)) {
+                label = getDisplayName(form, "en") ?? label
             }
 
             return {
                 label: label,
-                value: form.formId
+                value: form.pokemonFormId
             }
         })
     }
@@ -128,12 +132,12 @@ export class FormSelector
             )
         }
 
-        let pokemonIsValid = species.isValid(versionGroupId)
+        let pokemonIsValid = isValid(species, versionGroupId)
 
         let form = this.getSelectedEntry()
-        if (form !== undefined && form.hasValidity()) {
+        if (form !== undefined && hasValidity(form)) {
             // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && form.isValid(versionGroupId)
+            pokemonIsValid = pokemonIsValid && isValid(form, versionGroupId)
         }
 
         return pokemonIsValid
@@ -157,7 +161,7 @@ export class FormSelector
      * Returns whether the given form has the given ID.
      */
     entryMatches(entry: PokemonFormEntry, id: number): boolean {
-        return entry.formId === id
+        return entry.pokemonFormId === id
     }
 
     /**

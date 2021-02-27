@@ -7,8 +7,12 @@ import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { GenerationEntry } from "../../models/GenerationEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { getBaseStats, getDisplayName, getTypes, isValid } from "../../models/Helpers"
+
+import {
+    GenerationEntry,
+    PokemonSpeciesEntry
+} from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -86,7 +90,7 @@ export class SpeciesSelector
      */
     createOptions(): Option[] {
         return this.getFilteredSpecies().map(species => ({
-            label: species.getDisplayName("en") ?? "-",
+            label: getDisplayName(species, "en") ?? "-",
             value: species.pokemonSpeciesId
         }))
     }
@@ -147,11 +151,11 @@ export class SpeciesSelector
         let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
 
         // type filter test
-        let speciesTypes = species.getTypes(versionGroupId).map(t => t.typeId)
+        let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
         let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
 
         // base stat filter test
-        let speciesBaseStats = species.getBaseStats(versionGroupId)
+        let speciesBaseStats = getBaseStats(species, versionGroupId)
         let passesBaseStatFilter = this.props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
@@ -172,7 +176,7 @@ export class SpeciesSelector
             )
         }
 
-        return this.getSelectedEntry().isValid(versionGroupId)
+        return isValid(this.getSelectedEntry(), versionGroupId)
     }
 
     /**

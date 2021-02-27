@@ -12,10 +12,15 @@ import { VarietySelector } from "./VarietySelector"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { GenerationEntry } from "../../models/GenerationEntry"
-import { PokemonEntry } from "../../models/PokemonEntry"
-import { PokemonFormEntry } from "../../models/PokemonFormEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { getBaseStats, getTypes } from "../../models/Helpers"
+
+import {
+    GenerationEntry,
+    PokemonEntry,
+    PokemonFormEntry,
+    PokemonSpeciesEntry
+} from "../../models/swagger"
+
 import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -457,11 +462,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
         let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
 
         // type filter test
-        let speciesTypes = species.getTypes(versionGroupId).map(t => t.typeId)
+        let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
         let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
 
         // base stat filter test
-        let speciesBaseStats = species.getBaseStats(versionGroupId)
+        let speciesBaseStats = getBaseStats(species, versionGroupId)
         let passesBaseStatFilter = this.props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
@@ -507,7 +512,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
      * Sets the form.
      */
     setForm(form: PokemonFormEntry) {
-        this.setState({ formId: form.formId })
+        this.setState({ formId: form.pokemonFormId })
         this.props.setForm(form)
     }
 
@@ -547,7 +552,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
     getForm(formId: number) {
         let allForms = this.getFormsOfSelectedVariety()
 
-        let form = allForms.find(f => f.formId === formId)
+        let form = allForms.find(f => f.pokemonFormId === formId)
         if (form === undefined) {
             throw new Error(`Selector ${this.props.index}: no form found with ID ${formId}!`)
         }
@@ -699,15 +704,14 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             })
             .then(response => response.json())
             .then((varieties: PokemonEntry[]) => {
-                let concreteVarieties = varieties.map(PokemonEntry.from)
-                this.setState({ varieties: concreteVarieties })
+                this.setState({ varieties: varieties })
 
-                let variety = concreteVarieties[0]
+                let variety = varieties[0]
 
                 // set variety from cookies if possible
                 let varietyId = CookieHelper.getNumber(`varietyId${this.props.index}`)
                 if (varietyId !== undefined) {
-                    let matchingVariety = concreteVarieties.find(p => p.pokemonId === varietyId)
+                    let matchingVariety = varieties.find(p => p.pokemonId === varietyId)
                     if (matchingVariety === undefined) {
                         throw new Error(`Selector ${this.props.index}: no variety found with ID ${varietyId}!`)
                     }
@@ -754,19 +758,11 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
             })
             .then(response => response.json())
             .then((formsDict: WithId<PokemonFormEntry[]>[]) => {
-                // construct form objects
-                let concreteFormsDict = formsDict.map(fd => {
-                    return {
-                        id: fd.id,
-                        data: fd.data.map(PokemonFormEntry.from),
-                    }
-                })
-
-                this.setState({ formsDict: concreteFormsDict })
+                this.setState({ formsDict: formsDict })
 
                 // set form of selected variety
                 let varietyId = this.state.varietyId
-                let matchingForm = concreteFormsDict.find(e => e.id === varietyId)
+                let matchingForm = formsDict.find(e => e.id === varietyId)
                 if (matchingForm === undefined) {
                     throw new Error(`Selector ${this.props.index}: no matching form found for variety ${varietyId}!`)
                 }
@@ -777,7 +773,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 // set form from cookies if possible
                 let formId = CookieHelper.getNumber(`formId${this.props.index}`)
                 if (formId !== undefined) {
-                    let matchingForm = forms.find(f => f.formId === formId)
+                    let matchingForm = forms.find(f => f.pokemonFormId === formId)
                     if (matchingForm === undefined) {
                         throw new Error(`Selector ${this.props.index}: no matching form found with ID ${formId}!`)
                     }
@@ -786,7 +782,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 }
                 else {
                     // set cookie if unset
-                    CookieHelper.set(`formId${this.props.index}`, form.formId)
+                    CookieHelper.set(`formId${this.props.index}`, form.pokemonFormId)
                 }
 
                 this.setForm(form)

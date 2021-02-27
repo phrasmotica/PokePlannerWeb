@@ -6,8 +6,13 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { ChainLinkEntry, EvolutionDetailEntry } from "../../models/EvolutionChainEntry"
-import { PokemonSpeciesEntry } from "../../models/PokemonSpeciesEntry"
+import { getDisplayName } from "../../models/Helpers"
+
+import {
+    ChainLinkEntry,
+    EvolutionDetailEntry,
+    PokemonSpeciesEntry
+} from "../../models/swagger"
 
 import "./EvolutionChain.scss"
 import "./EvolutionTree.scss"
@@ -61,7 +66,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     constructor(props: IEvolutionTreeProps) {
         super(props)
 
-        let nodeCount = this.props.chain.size()
+        let nodeCount = this.size(props.chain)
         this.state = {
             isExpanded: new Array(nodeCount).fill(false)
         }
@@ -148,7 +153,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
      */
     renderSpeciesName(species: PokemonSpeciesEntry) {
         let speciesId = species.pokemonSpeciesId
-        let speciesName = species.getDisplayName("en") ?? species.name
+        let speciesName = getDisplayName(species, "en") ?? species.name
         let nameElement = <span>{speciesName}</span>
 
         let isCurrentSpecies = speciesId === this.props.pokemonSpeciesId
@@ -252,13 +257,13 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             // only need extra info for certain triggers
             // use-item is clear from other details
             if (trigger.evolutionTriggerId === 1 && detail.minLevel === null) {
-                triggerElement = trigger.getDisplayName("en") ?? "level up"
+                triggerElement = getDisplayName(trigger, "en") ?? "level up"
             }
             else if (trigger.evolutionTriggerId === 2) {
-                triggerElement = trigger.getDisplayName("en") ?? "trade"
+                triggerElement = getDisplayName(trigger, "en") ?? "trade"
             }
             else if (trigger.evolutionTriggerId === 4) {
-                triggerElement = trigger.getDisplayName("en") ?? "shed"
+                triggerElement = getDisplayName(trigger, "en") ?? "shed"
             }
 
             if (triggerElement !== undefined) {
@@ -268,7 +273,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
 
         let item = detail.item
         if (item !== null) {
-            let itemName = item.getDisplayName("en") ?? item.name
+            let itemName = getDisplayName(item, "en") ?? item.name
             items.push(<span key={items.length}>use {itemName}</span>)
         }
 
@@ -288,25 +293,25 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
 
         let heldItem = detail.heldItem
         if (heldItem !== null) {
-            let itemName = heldItem.getDisplayName("en") ?? heldItem.name
+            let itemName = getDisplayName(heldItem, "en") ?? heldItem.name
             items.push(<span key={items.length}>holding {itemName}</span>)
         }
 
         let knownMove = detail.knownMove
         if (knownMove !== null) {
-            let moveName = knownMove.getDisplayName("en") ?? knownMove.name
+            let moveName = getDisplayName(knownMove, "en") ?? knownMove.name
             items.push(<span key={items.length}>knowing {moveName}</span>)
         }
 
         let knownMoveType = detail.knownMoveType
         if (knownMoveType !== null) {
-            let typeName = knownMoveType.getDisplayName("en") ?? knownMoveType.name
+            let typeName = getDisplayName(knownMoveType, "en") ?? knownMoveType.name
             items.push(<span key={items.length}>knowing a {typeName}-type move</span>)
         }
 
         let location = detail.location
         if (location !== null) {
-            let locationName = location.getDisplayName("en") ?? location.name
+            let locationName = getDisplayName(location, "en") ?? location.name
             items.push(<span key={items.length}>at {locationName}</span>)
         }
 
@@ -332,13 +337,13 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
 
         let partySpecies = detail.partySpecies
         if (partySpecies !== null) {
-            let speciesName = partySpecies.getDisplayName("en") ?? partySpecies.name
+            let speciesName = getDisplayName(partySpecies, "en") ?? partySpecies.name
             items.push(<span key={items.length}>with {speciesName} in the party</span>)
         }
 
         let partyType = detail.partyType
         if (partyType !== null) {
-            let typeName = partyType.getDisplayName("en") ?? partyType.name
+            let typeName = getDisplayName(partyType, "en") ?? partyType.name
             items.push(<span key={items.length}>with a {typeName}-type in the party</span>)
         }
 
@@ -361,7 +366,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
 
         let tradeSpecies = detail.tradeSpecies
         if (tradeSpecies !== null) {
-            let speciesName = tradeSpecies.getDisplayName("en") ?? tradeSpecies.name
+            let speciesName = getDisplayName(tradeSpecies, "en") ?? tradeSpecies.name
             items.push(<span key={items.length}>trade with {speciesName}</span>)
         }
 
@@ -389,5 +394,16 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         })
 
         this.setState({ isExpanded: newShowEvolutionDetails })
+    }
+
+    /**
+     * Returns the number of links in this chain.
+     */
+    size(chain: ChainLinkEntry): number {
+        if (chain.evolvesTo.length <= 0) {
+            return 1
+        }
+
+        return 1 + chain.evolvesTo.map(this.size).reduce((x, y) => x + y)
     }
 }
