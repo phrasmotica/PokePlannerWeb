@@ -47,6 +47,7 @@
     "extends": "react-app"
   },
   "scripts": {
+    "gen": "npx swagger-typescript-api -p src/models/swagger.json -o src/models/ -n swagger.ts --no-client",
     "start": "rimraf ./build && react-scripts start",
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom --watch",
