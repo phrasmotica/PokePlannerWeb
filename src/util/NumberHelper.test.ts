@@ -1,10 +1,8 @@
-import { NumberHelper } from "./NumberHelper"
+import { Interval, NumberHelper } from "./NumberHelper"
 
 describe("mergeIntRanges()", () => {
     it("leaves a single range alone", () => {
-        let ranges = [
-            { start: 1, end: 3 },
-        ]
+        let ranges = [new Interval(1, 3)]
 
         let mergedRanges = NumberHelper.mergeIntRanges(ranges)
         expect(mergedRanges).toEqual(ranges)
@@ -12,8 +10,8 @@ describe("mergeIntRanges()", () => {
 
     it("merges neighbouring ranges correctly", () => {
         let ranges = [
-            { start: 1, end: 2 },
-            { start: 3, end: 4 },
+            new Interval(1, 2),
+            new Interval(3, 4),
         ]
 
         let mergedRanges = NumberHelper.mergeIntRanges(ranges)
@@ -23,8 +21,8 @@ describe("mergeIntRanges()", () => {
 
     it("merges overlapping ranges correctly", () => {
         let ranges = [
-            { start: 1, end: 3 },
-            { start: 2, end: 4 },
+            new Interval(1, 3),
+            new Interval(2, 4),
         ]
 
         let mergedRanges = NumberHelper.mergeIntRanges(ranges)
@@ -34,8 +32,8 @@ describe("mergeIntRanges()", () => {
 
     it("leaves distinct ranges alone", () => {
         let ranges = [
-            { start: 1, end: 2 },
-            { start: 4, end: 5 },
+            new Interval(1, 2),
+            new Interval(4, 5),
         ]
 
         let mergedRanges = NumberHelper.mergeIntRanges(ranges)
@@ -46,7 +44,7 @@ describe("mergeIntRanges()", () => {
 
 describe("mergeIntervals()", () => {
     it("leaves a single interval alone", () => {
-        let intervals = [{ start: 1, end: 3 }]
+        let intervals = [new Interval(1, 3)]
 
         let mergedIntervals = NumberHelper.mergeIntervals(intervals)
         expect(mergedIntervals).toEqual(intervals)
@@ -54,8 +52,8 @@ describe("mergeIntervals()", () => {
 
     it("merges neighbouring intervals correctly", () => {
         let intervals = [
-            { start: 1, end: 2 },
-            { start: 2, end: 3 },
+            new Interval(1, 2),
+            new Interval(2, 3),
         ]
 
         let mergedIntervals = NumberHelper.mergeIntervals(intervals)
@@ -65,8 +63,8 @@ describe("mergeIntervals()", () => {
 
     it("merges overlapping intervals correctly", () => {
         let intervals = [
-            { start: 1, end: 3 },
-            { start: 2, end: 4 },
+            new Interval(1, 3),
+            new Interval(2, 4),
         ]
 
         let mergedIntervals = NumberHelper.mergeIntervals(intervals)
@@ -76,8 +74,8 @@ describe("mergeIntervals()", () => {
 
     it("leaves distinct intervals alone", () => {
         let intervals = [
-            { start: 1, end: 2 },
-            { start: 3, end: 4 },
+            new Interval(1, 2),
+            new Interval(3, 4),
         ]
 
         let mergedIntervals = NumberHelper.mergeIntervals(intervals)
