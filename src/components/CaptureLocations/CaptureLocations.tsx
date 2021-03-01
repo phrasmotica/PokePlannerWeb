@@ -3,8 +3,6 @@ import fuzzysort from "fuzzysort"
 import { ListGroup, ListGroupItem, Button, Collapse, Input } from "reactstrap"
 import key from "weak-key"
 
-import { WithId } from "../../models/WithId"
-
 import { IHasIndex, IHasHideTooltips, IHasSearch } from "../CommonMembers"
 
 import { getDisplayName } from "../../models/Helpers"
@@ -63,7 +61,10 @@ interface ICaptureLocationsState extends IHasSearch {
     /**
      * Whether each encounter's info pane is open.
      */
-    encountersAreOpen: WithId<boolean>[]
+    encountersAreOpen: {
+        id: number
+        data: boolean
+    }[]
 }
 
 /**
@@ -107,7 +108,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
                 return {
                     encountersAreOpen: encounters.map(
-                        e => new WithId<boolean>(e.locationAreaId, false)
+                        e => ({ id: e.locationAreaId, data: false })
                     )
                 }
             })
@@ -423,7 +424,7 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
     toggleEncounterOpen(id: number) {
         let newEncountersAreOpen = this.state.encountersAreOpen.map(item => {
             if (item.id === id) {
-                return new WithId<boolean>(id, !item.data)
+                return { id: id, data: !item.data }
             }
 
             return item
@@ -478,7 +479,9 @@ export class CaptureLocations extends Component<ICaptureLocationsProps, ICapture
 
                 this.setState({
                     locations: encounters,
-                    encountersAreOpen: relevantEncounters.map(e => new WithId<boolean>(e.locationAreaId, false))
+                    encountersAreOpen: relevantEncounters.map(
+                        e => ({ id: e.locationAreaId, data: false })
+                    )
                 })
             })
             .catch(error => console.error(error))

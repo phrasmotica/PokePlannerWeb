@@ -12,6 +12,7 @@ import { VarietySelector } from "./VarietySelector"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
+import { FormsDict } from "../../models/FormsDict"
 import { getBaseStats, getTypes } from "../../models/Helpers"
 
 import {
@@ -20,8 +21,6 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry
 } from "../../models/swagger"
-
-import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
 import { CssHelper } from "../../util/CssHelper"
@@ -126,7 +125,7 @@ interface IPokemonSelectorState {
     /**
      * List of objects mapping variety IDs to the variety's forms.
      */
-    formsDict: WithId<PokemonFormEntry[]>[]
+    formsDict: FormsDict
 
     /**
      * Whether we're loading the Pokemon's forms.
@@ -757,7 +756,7 @@ export class PokemonSelector extends Component<IPokemonSelectorProps, IPokemonSe
                 throw new Error(`Selector ${this.props.index}: tried to fetch forms for varieties of Pokemon species ${pokemonSpeciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
-            .then((formsDict: WithId<PokemonFormEntry[]>[]) => {
+            .then((formsDict: FormsDict) => {
                 this.setState({ formsDict: formsDict })
 
                 // set form of selected variety

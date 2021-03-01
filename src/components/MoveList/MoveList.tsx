@@ -15,8 +15,6 @@ import {
     PokemonMoveContext
 } from "../../models/swagger"
 
-import { WithId } from "../../models/WithId"
-
 import { CookieHelper } from "../../util/CookieHelper"
 import { CssHelper } from "../../util/CssHelper"
 
@@ -100,7 +98,10 @@ interface IMoveListState extends IHasSearch {
     /**
      * Whether each move's info pane is open.
      */
-    movesAreOpen: WithId<boolean>[]
+    movesAreOpen: {
+        id: number
+        data: boolean
+    }[]
 }
 
 /**
@@ -699,7 +700,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     toggleMoveOpen(id: number) {
         let newMovesAreOpen = this.state.movesAreOpen.map(item => {
             if (item.id === id) {
-                return new WithId<boolean>(id, !item.data)
+                return ({ id: id, data: !item.data })
             }
 
             return item
@@ -773,7 +774,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 .then((moves: PokemonMoveContext[]) => {
                     this.setState({
                         moves: moves,
-                        movesAreOpen: moves.map(m => new WithId<boolean>(m.moveId, false))
+                        movesAreOpen: moves.map(
+                            m => ({ id: m.moveId, data: false })
+                        )
                     })
                 })
                 .catch(error => console.error(error))

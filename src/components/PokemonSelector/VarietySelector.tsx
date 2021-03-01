@@ -1,5 +1,6 @@
 import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
+import { FormsDict } from "../../models/FormsDict"
 import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../models/Helpers"
 
 import {
@@ -7,8 +8,6 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry
 } from "../../models/swagger"
-
-import { WithId } from "../../models/WithId"
 
 import { CookieHelper } from "../../util/CookieHelper"
 
@@ -21,7 +20,7 @@ interface IVarietySelectorProps extends ISelectorBaseProps<PokemonEntry> {
     /**
      * List of objects mapping variety IDs to the variety's forms.
      */
-    formsDict: WithId<PokemonFormEntry[]>[]
+    formsDict: FormsDict
 
     /**
      * The ID of the selected form.
