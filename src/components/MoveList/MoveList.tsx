@@ -539,7 +539,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         let moves = this.state.moves
 
         if (this.state.moveClass === MoveClass.Damaging) {
-            moves = moves.filter(this.isDamaging)
+            moves = moves.filter(m => this.isDamaging(m))
 
             if (this.state.useMinPower) {
                 moves = moves.filter(m => m.power !== undefined && m.power >= this.state.minPower)
@@ -551,7 +551,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         if (this.state.sameTypeOnly) {
-            moves = moves.filter(this.isSameType)
+            moves = moves.filter(m => this.isSameType(m))
         }
 
         if (this.state.levelUpOnly) {
