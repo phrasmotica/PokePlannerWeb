@@ -404,6 +404,6 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             return 1
         }
 
-        return 1 + chain.evolvesTo.map(this.size).reduce((x, y) => x + y)
+        return 1 + chain.evolvesTo.map(e => this.size(e)).reduce((x, y) => x + y)
     }
 }
