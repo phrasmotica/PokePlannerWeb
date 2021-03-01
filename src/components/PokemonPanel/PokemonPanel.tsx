@@ -386,7 +386,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                     : dataObject.spriteUrl
             }
 
-            if (spriteUrl === null || spriteUrl === "") {
+            if (!spriteUrl) {
                 return (
                     <div className="flex-center sprite-large margin-auto-horiz">
                         (no sprite)

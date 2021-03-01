@@ -23,10 +23,10 @@ export interface AbilityEntry {
 }
 
 export interface ChainLink {
-  isBaby?: boolean;
+  isBaby: boolean;
   species?: PokemonSpeciesNamedApiResource;
-  evolutionDetails?: EvolutionDetail[] | null;
-  evolvesTo?: ChainLink[] | null;
+  evolutionDetails: EvolutionDetail[];
+  evolvesTo: ChainLink[];
 }
 
 export interface ChainLinkEntry {
@@ -147,7 +147,7 @@ export interface EncountersEntry {
 
 export interface EvolutionChain {
   /** @format int32 */
-  id?: number;
+  id: number;
   babyTriggerItem?: ItemNamedApiResource;
   chain?: ChainLink;
 }
@@ -169,64 +169,64 @@ export interface EvolutionDetail {
   trigger?: EvolutionTriggerNamedApiResource;
 
   /** @format int32 */
-  gender?: number | null;
+  gender?: number;
   heldItem?: ItemNamedApiResource;
   knownMove?: MoveNamedApiResource;
   knownMoveType?: TypeNamedApiResource;
   location?: LocationNamedApiResource;
 
   /** @format int32 */
-  minLevel?: number | null;
+  minLevel?: number;
 
   /** @format int32 */
-  minHappiness?: number | null;
+  minHappiness?: number;
 
   /** @format int32 */
-  minBeauty?: number | null;
+  minBeauty?: number;
 
   /** @format int32 */
-  minAffection?: number | null;
-  needsOverworldRain?: boolean;
+  minAffection?: number;
+  needsOverworldRain: boolean;
   partySpecies?: PokemonSpeciesNamedApiResource;
   partyType?: TypeNamedApiResource;
 
   /** @format int32 */
-  relativePhysicalStats?: number | null;
-  timeOfDay?: string | null;
+  relativePhysicalStats?: number;
+  timeOfDay?: string;
   tradeSpecies?: PokemonSpeciesNamedApiResource;
-  turnUpsideDown?: boolean;
+  turnUpsideDown: boolean;
 }
 
 export interface EvolutionDetailEntry {
-  item: ItemEntry;
-  trigger: EvolutionTriggerEntry;
+  item?: ItemEntry;
+  trigger?: EvolutionTriggerEntry;
 
   /** @format int32 */
-  gender: number;
-  heldItem: ItemEntry;
-  knownMove: MoveEntry;
-  knownMoveType: TypeEntry;
-  location: LocationEntry;
+  gender?: number;
+  heldItem?: ItemEntry;
+  knownMove?: MoveEntry;
+  knownMoveType?: TypeEntry;
+  location?: LocationEntry;
 
   /** @format int32 */
-  minLevel: number;
+  minLevel?: number;
 
   /** @format int32 */
-  minHappiness: number;
+  minHappiness?: number;
 
   /** @format int32 */
-  minBeauty: number;
+  minBeauty?: number;
 
   /** @format int32 */
-  minAffection: number;
+  minAffection?: number;
   needsOverworldRain: boolean;
-  partySpecies: PokemonSpeciesEntry;
-  partyType: TypeEntry;
+  partySpecies?: PokemonSpeciesEntry;
+  partyType?: TypeEntry;
 
   /** @format int32 */
-  relativePhysicalStats: number;
-  timeOfDay: string;
-  tradeSpecies: PokemonSpeciesEntry;
+  relativePhysicalStats?: number;
+  timeOfDay?: string;
+  tradeSpecies?: PokemonSpeciesEntry;
   turnUpsideDown: boolean;
 }
 
@@ -243,8 +243,8 @@ export interface EvolutionTriggerEntry {
 }
 
 export interface EvolutionTriggerNamedApiResource {
-  url?: string | null;
-  name?: string | null;
+  url?: string;
+  name?: string;
 }
 
 export interface GenerationEntry {
@@ -278,8 +278,8 @@ export interface ItemEntry {
 }
 
 export interface ItemNamedApiResource {
-  url?: string | null;
-  name?: string | null;
+  url?: string;
+  name?: string;
 }
 
 export interface LocalString {
@@ -306,8 +306,8 @@ export interface LocationEntry {
 }
 
 export interface LocationNamedApiResource {
-  url?: string | null;
-  name?: string | null;
+  url?: string;
+  name?: string;
 }
 
 export interface MachineEntry {
@@ -367,14 +367,14 @@ export interface MoveEntry {
   category: MoveCategoryEntry;
 
   /** @format int32 */
-  power: number;
+  power?: number;
   damageClass: MoveDamageClassEntry;
 
   /** @format int32 */
-  accuracy: number;
+  accuracy?: number;
 
   /** @format int32 */
-  pp: number;
+  pp?: number;
 
   /** @format int32 */
   priority: number;
@@ -402,8 +402,8 @@ export interface MoveLearnMethodEntry {
 }
 
 export interface MoveNamedApiResource {
-  url?: string | null;
-  name?: string | null;
+  url?: string;
+  name?: string;
 }
 
 export interface MoveTargetEntry {
@@ -504,14 +504,14 @@ export interface PokemonMoveContext {
   category: MoveCategoryEntry;
 
   /** @format int32 */
-  power: number;
+  power?: number;
   damageClass: MoveDamageClassEntry;
 
   /** @format int32 */
-  accuracy: number;
+  accuracy?: number;
 
   /** @format int32 */
-  pp: number;
+  pp?: number;
 
   /** @format int32 */
   priority: number;
@@ -550,8 +550,8 @@ export interface PokemonSpeciesEntry {
 }
 
 export interface PokemonSpeciesNamedApiResource {
-  url?: string | null;
-  name?: string | null;
+  url?: string;
+  name?: string;
 }
 
 export interface StatEntry {
@@ -588,8 +588,8 @@ export interface TypeEntryListWithId {
 }
 
 export interface TypeNamedApiResource {
-  url?: string | null;
-  name?: string | null;
+  url?: string;
+  name?: string;
 }
 
 export interface VersionEntry {

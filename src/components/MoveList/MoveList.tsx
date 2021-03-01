@@ -166,7 +166,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     renderFilters() {
         let minPowerId = "minPowerCheckbox" + this.props.index
 
-        let movePowers = this.state.moves.filter(m => m.power !== null)
+        let movePowers = this.state.moves.filter(m => m.power !== undefined)
                                          .map(m => m.power!)
         let lowestPower = 0
         let highestPower = 0
@@ -420,7 +420,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 if (move.level > 0) {
                     moveMethod = `(level ${move.level})`
                 }
-                else if (move.learnMachines !== null) {
+                else if (move.learnMachines.length > 0) {
                     let machinesSummary = move.learnMachines.map(m => getDisplayName(m, "en") ?? "Machine").join(", ")
                     moveMethod = `(${machinesSummary})`
                 }
@@ -458,7 +458,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
 
                 // some moves damage but don't have a constant base power, e.g. Low Kick
-                if (isStab && move.power !== null) {
+                if (isStab && move.power !== undefined) {
                     let sameTypeElement = (
                         <abbr title="same-type attack bonus">
                             <b>{move.power * 1.5}</b>
@@ -542,7 +542,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             moves = moves.filter(this.isDamaging)
 
             if (this.state.useMinPower) {
-                moves = moves.filter(m => m.power !== null && m.power >= this.state.minPower)
+                moves = moves.filter(m => m.power !== undefined && m.power >= this.state.minPower)
             }
         }
 
@@ -568,15 +568,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         // level-up moves in ascending order first, then the rest
         if (m1.level === 0 && m2.level === 0) {
             // then machines in ascending order
-            if (m1.learnMachines === null && m2.learnMachines === null) {
+            if (m1.learnMachines.length <= 0 && m2.learnMachines.length <= 0) {
                 return this.sortLearnMethods(m1.methods, m2.methods)
             }
 
-            if (m1.learnMachines === null) {
+            if (m1.learnMachines.length <= 0) {
                 return 1
             }
 
-            if (m2.learnMachines === null) {
+            if (m2.learnMachines.length <= 0) {
                 return -1
             }
 

@@ -201,7 +201,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
                       ? species.shinySpriteUrl
                       : species.spriteUrl
 
-        if (spriteUrl === null || spriteUrl === "") {
+        if (!spriteUrl) {
             return (
                 <div className="evolutionTreeSprite">
                     (no sprite)
@@ -251,12 +251,12 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         let items = []
 
         let trigger = detail.trigger
-        if (trigger !== null) {
+        if (trigger !== undefined) {
             let triggerElement = undefined
 
             // only need extra info for certain triggers
             // use-item is clear from other details
-            if (trigger.evolutionTriggerId === 1 && detail.minLevel === null) {
+            if (trigger.evolutionTriggerId === 1 && detail.minLevel === undefined) {
                 triggerElement = getDisplayName(trigger, "en") ?? "level up"
             }
             else if (trigger.evolutionTriggerId === 2) {
@@ -272,13 +272,13 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         }
 
         let item = detail.item
-        if (item !== null) {
+        if (item !== undefined) {
             let itemName = getDisplayName(item, "en") ?? item.name
             items.push(<span key={items.length}>use {itemName}</span>)
         }
 
         let gender = detail.gender
-        if (gender !== null) {
+        if (gender !== undefined) {
             // TODO: add gender entry to EvolutionDetailEntry (but no localised names yet...)
             let genderName = "female"
             if (gender === 2) {
@@ -292,42 +292,42 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         }
 
         let heldItem = detail.heldItem
-        if (heldItem !== null) {
+        if (heldItem !== undefined) {
             let itemName = getDisplayName(heldItem, "en") ?? heldItem.name
             items.push(<span key={items.length}>holding {itemName}</span>)
         }
 
         let knownMove = detail.knownMove
-        if (knownMove !== null) {
+        if (knownMove !== undefined) {
             let moveName = getDisplayName(knownMove, "en") ?? knownMove.name
             items.push(<span key={items.length}>knowing {moveName}</span>)
         }
 
         let knownMoveType = detail.knownMoveType
-        if (knownMoveType !== null) {
+        if (knownMoveType !== undefined) {
             let typeName = getDisplayName(knownMoveType, "en") ?? knownMoveType.name
             items.push(<span key={items.length}>knowing a {typeName}-type move</span>)
         }
 
         let location = detail.location
-        if (location !== null) {
+        if (location !== undefined) {
             let locationName = getDisplayName(location, "en") ?? location.name
             items.push(<span key={items.length}>at {locationName}</span>)
         }
 
-        if (detail.minLevel !== null) {
+        if (detail.minLevel !== undefined) {
             items.push(<span key={items.length}>level {detail.minLevel}</span>)
         }
 
-        if (detail.minHappiness !== null) {
+        if (detail.minHappiness !== undefined) {
             items.push(<span key={items.length}>at least {detail.minHappiness} happiness</span>)
         }
 
-        if (detail.minBeauty !== null) {
+        if (detail.minBeauty !== undefined) {
             items.push(<span key={items.length}>at least {detail.minBeauty} beauty</span>)
         }
 
-        if (detail.minAffection !== null) {
+        if (detail.minAffection !== undefined) {
             items.push(<span key={items.length}>at least {detail.minAffection} affection</span>)
         }
 
@@ -336,19 +336,19 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
         }
 
         let partySpecies = detail.partySpecies
-        if (partySpecies !== null) {
+        if (partySpecies !== undefined) {
             let speciesName = getDisplayName(partySpecies, "en") ?? partySpecies.name
             items.push(<span key={items.length}>with {speciesName} in the party</span>)
         }
 
         let partyType = detail.partyType
-        if (partyType !== null) {
+        if (partyType !== undefined) {
             let typeName = getDisplayName(partyType, "en") ?? partyType.name
             items.push(<span key={items.length}>with a {typeName}-type in the party</span>)
         }
 
         let relativePhysicalStats = detail.relativePhysicalStats
-        if (relativePhysicalStats !== null) {
+        if (relativePhysicalStats !== undefined) {
             let relationElement = "Attack = Defense"
             if (relativePhysicalStats === -1) {
                 relationElement = "Attack < Defense"
@@ -360,12 +360,12 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             items.push(<span key={items.length}>with {relationElement}</span>)
         }
 
-        if (detail.timeOfDay !== null) {
+        if (detail.timeOfDay !== undefined) {
             items.push(<span key={items.length}>during {detail.timeOfDay}</span>)
         }
 
         let tradeSpecies = detail.tradeSpecies
-        if (tradeSpecies !== null) {
+        if (tradeSpecies !== undefined) {
             let speciesName = getDisplayName(tradeSpecies, "en") ?? tradeSpecies.name
             items.push(<span key={items.length}>trade with {speciesName}</span>)
         }

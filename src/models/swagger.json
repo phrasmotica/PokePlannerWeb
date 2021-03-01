@@ -882,6 +882,11 @@
         "additionalProperties": false
       },
       "ChainLink": {
+        "required": [
+          "evolutionDetails",
+          "evolvesTo",
+          "isBaby"
+        ],
         "type": "object",
         "properties": {
           "isBaby": {
@@ -894,15 +899,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EvolutionDetail"
-            },
-            "nullable": true
+            }
           },
           "evolvesTo": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ChainLink"
-            },
-            "nullable": true
+            }
           }
         },
         "additionalProperties": false
@@ -1256,6 +1259,9 @@
         "additionalProperties": false
       },
       "EvolutionChain": {
+        "required": [
+          "id"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1302,6 +1308,10 @@
         "additionalProperties": false
       },
       "EvolutionDetail": {
+        "required": [
+          "needsOverworldRain",
+          "turnUpsideDown"
+        ],
         "type": "object",
         "properties": {
           "item": {
@@ -1312,8 +1322,7 @@
           },
           "gender": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "heldItem": {
             "$ref": "#/components/schemas/ItemNamedApiResource"
@@ -1329,23 +1338,19 @@
           },
           "minLevel": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "minHappiness": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "minBeauty": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "minAffection": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "needsOverworldRain": {
             "type": "boolean"
@@ -1358,12 +1363,10 @@
           },
           "relativePhysicalStats": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "timeOfDay": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "tradeSpecies": {
             "$ref": "#/components/schemas/PokemonSpeciesNamedApiResource"
@@ -1376,23 +1379,7 @@
       },
       "EvolutionDetailEntry": {
         "required": [
-          "gender",
-          "heldItem",
-          "item",
-          "knownMove",
-          "knownMoveType",
-          "location",
-          "minAffection",
-          "minBeauty",
-          "minHappiness",
-          "minLevel",
           "needsOverworldRain",
-          "partySpecies",
-          "partyType",
-          "relativePhysicalStats",
-          "timeOfDay",
-          "tradeSpecies",
-          "trigger",
           "turnUpsideDown"
         ],
         "type": "object",
@@ -1497,12 +1484,10 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1598,12 +1583,10 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1681,12 +1664,10 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1809,7 +1790,6 @@
       },
       "MoveEntry": {
         "required": [
-          "accuracy",
           "category",
           "creationTime",
           "damageClass",
@@ -1819,8 +1799,6 @@
           "machines",
           "moveId",
           "name",
-          "power",
-          "pp",
           "priority",
           "target",
           "type"
@@ -1954,12 +1932,10 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2247,7 +2223,6 @@
       },
       "PokemonMoveContext": {
         "required": [
-          "accuracy",
           "category",
           "creationTime",
           "damageClass",
@@ -2260,8 +2235,6 @@
           "methods",
           "moveId",
           "name",
-          "power",
-          "pp",
           "priority",
           "target",
           "type"
@@ -2448,12 +2421,10 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2560,12 +2531,10 @@
         "type": "object",
         "properties": {
           "url": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
