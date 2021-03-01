@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import { Tabs, Tab } from "react-bootstrap"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
@@ -20,7 +20,7 @@ import { CookieHelper } from "../../util/CookieHelper"
 
 import "./ActionPanel.scss"
 
-interface IActionPanelProps extends IHasIndex, IHasHideTooltips {
+interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
      */
@@ -62,112 +62,72 @@ interface IActionPanelProps extends IHasIndex, IHasHideTooltips {
     setSpecies: (pokemonSpeciesId: number | undefined) => void
 }
 
-interface IActionPanelState {
-    /**
-     * The key of the active move tab.
-     */
-    activeMoveTabKey: string | undefined
-}
-
 /**
- * Component for displaying moves, evolution trees, encounters, etc.
+ * Renders moves, evolution trees, encounters, etc.
  */
-export class ActionPanel extends Component<IActionPanelProps, IActionPanelState> {
-    /**
-     * Constructor.
-     */
-    constructor(props: IActionPanelProps) {
-        super(props)
-        this.state = {
-            activeMoveTabKey: CookieHelper.get(`panel${this.props.index}activeMoveTabKey`)
-        }
-    }
-
-    /**
-     * Renders the component.
-     */
-    render() {
-        return (
-            <Tabs
-                className="tabpane-small"
-                id="movesTabs"
-                transition={false}
-                activeKey={this.state.activeMoveTabKey}
-                defaultActiveKey="moves"
-                onSelect={(k: string) => this.setActiveMoveTabKey(k)}>
-                <Tab eventKey="locations" title="Capture Locations">
-                    {this.renderCaptureLocations()}
-                </Tab>
-
-                <Tab eventKey="moves" title="Moves">
-                    {this.renderMoveList()}
-                </Tab>
-
-                <Tab eventKey="evolution" title="Evolution">
-                    {this.renderEvolutionChain()}
-                </Tab>
-            </Tabs>
-        )
-    }
+export const ActionPanel = (props: ActionPanelProps) => {
+    const [activeMoveTabKey, setActiveMoveTabKey] = useState<string | undefined>(
+        CookieHelper.get(`panel${props.index}activeMoveTabKey`)
+    )
 
     /**
      * Renders the move list.
      */
-    renderMoveList() {
+    const renderMoveList = () => {
         let typeIds = getEffectiveTypes(
-            this.props.variety,
-            this.props.form,
-            this.props.versionGroup?.versionGroupId
+            props.variety,
+            props.form,
+            props.versionGroup?.versionGroupId
         ).map(t => t.typeId)
 
         return (
             <MoveList
-                index={this.props.index}
-                versionGroupId={this.props.versionGroup?.versionGroupId}
-                pokemonId={this.props.variety?.pokemonId}
+                index={props.index}
+                versionGroupId={props.versionGroup?.versionGroupId}
+                pokemonId={props.variety?.pokemonId}
                 typeIds={typeIds}
-                showMoves={this.props.shouldShowPokemon}
-                hideTooltips={this.props.hideTooltips} />
+                showMoves={props.shouldShowPokemon}
+                hideTooltips={props.hideTooltips} />
         )
     }
 
     /**
      * Renders the capture locations.
      */
-    renderCaptureLocations() {
+    const renderCaptureLocations = () => {
         return (
             <CaptureLocations
-                index={this.props.index}
-                pokemonId={this.props.variety?.pokemonId}
-                versionGroup={this.props.versionGroup}
-                species={this.getSpecies()}
-                showLocations={this.props.shouldShowPokemon}
-                hideTooltips={this.props.hideTooltips} />
+                index={props.index}
+                pokemonId={props.variety?.pokemonId}
+                versionGroup={props.versionGroup}
+                species={getSpecies()}
+                showLocations={props.shouldShowPokemon}
+                hideTooltips={props.hideTooltips} />
         )
     }
 
     /**
      * Returns the data object for the selected species.
      */
-    getSpecies() {
-        let speciesId = this.props.pokemonSpeciesId
-        return this.props.species.find(s => s.pokemonSpeciesId === speciesId)
+    const getSpecies = () => {
+        let speciesId = props.pokemonSpeciesId
+        return props.species.find(s => s.pokemonSpeciesId === speciesId)
     }
 
     /**
      * Renders the evolution chain.
      */
-    renderEvolutionChain() {
-        const setSpecies = (pokemonSpeciesId: number) => this.props.setSpecies(pokemonSpeciesId)
+    const renderEvolutionChain = () => {
+        const setSpecies = (pokemonSpeciesId: number) => props.setSpecies(pokemonSpeciesId)
 
         return (
             <div className="inherit-size">
                 <EvolutionChain
-                    index={this.props.index}
-                    pokemonSpeciesId={this.props.pokemonSpeciesId}
-                    availableSpeciesIds={this.props.species.map(s => s.pokemonSpeciesId)}
-                    showShinySprites={this.props.showShinySprite}
-                    shouldShowChain={this.props.shouldShowPokemon}
+                    index={props.index}
+                    pokemonSpeciesId={props.pokemonSpeciesId}
+                    availableSpeciesIds={props.species.map(s => s.pokemonSpeciesId)}
+                    showShinySprites={props.showShinySprite}
+                    shouldShowChain={props.shouldShowPokemon}
                     setSpecies={setSpecies} />
             </div>
         )
@@ -176,8 +136,30 @@ export class ActionPanel extends Component<IActionPanelProps, IActionPanelState>
     /**
      * Sets the key of the active move tab.
      */
-    setActiveMoveTabKey(key: string) {
-        CookieHelper.set(`panel${this.props.index}activeMoveTabKey`, key)
-        this.setState({ activeMoveTabKey: key })
+    const setMoveTab = (key: string) => {
+        CookieHelper.set(`panel${props.index}activeMoveTabKey`, key)
+        setActiveMoveTabKey(key)
     }
+
+    return (
+        <Tabs
+            className="tabpane-small"
+            id="movesTabs"
+            transition={false}
+            activeKey={activeMoveTabKey}
+            defaultActiveKey="moves"
+            onSelect={(k: string) => setMoveTab(k)}>
+            <Tab eventKey="locations" title="Capture Locations">
+                {renderCaptureLocations()}
+            </Tab>
+
+            <Tab eventKey="moves" title="Moves">
+                {renderMoveList()}
+            </Tab>
+
+            <Tab eventKey="evolution" title="Evolution">
+                {renderEvolutionChain()}
+            </Tab>
+        </Tabs>
+    )
 }

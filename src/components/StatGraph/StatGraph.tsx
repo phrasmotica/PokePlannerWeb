@@ -1,9 +1,10 @@
-﻿import React, { Component } from "react"
+﻿import React from "react"
 
-import "./StatGraph.scss"
 import { IHasIndex } from "../CommonMembers"
 
-interface IStatGraphProps extends IHasIndex {
+import "./StatGraph.scss"
+
+interface StatGraphProps extends IHasIndex {
     /**
      * The stat names.
      */
@@ -21,64 +22,52 @@ interface IStatGraphProps extends IHasIndex {
 }
 
 /**
- * Component for showing a set of stats as a graph.
+ * Renders a set of stats as a graph.
  */
-export class StatGraph extends Component<IStatGraphProps, any> {
-    render() {
-        return this.renderStatGraph()
-    }
+export const StatGraph = (props: StatGraphProps) => {
+    const statNames = (
+        <div className="stat-names">
+            {props.statNames.map((name, i) => {
+                return (
+                    <div key={i}>
+                        {name}
+                    </div>
+                )
+            })}
+        </div>
+    )
 
-    renderStatGraph() {
-        return (
-            <div style={{ margin: 4 }}>
-                <div className="stat-graph">
-                    {this.renderStatNames()}
+    const statBars = (
+        <div>
+            {props.statNames.map((name, i) => {
+                let values = props.statValues
+                let value = 0
+                if (props.shouldShowStats && values.length > i) {
+                    value = values[i]
+                }
 
-                    {this.renderStatBars()}
-                </div>
-            </div>
-        )
-    }
+                let shortName = name.replace(" ", "-").toLowerCase()
+                return (
+                    <div key={i} className="flex">
+                        <div
+                            className={"stat-bar " + shortName}
+                            style={{ width: value }} />
 
-    renderStatNames() {
-        return (
-            <div className="stat-names">
-                {this.props.statNames.map((name, i) => {
-                    return (
-                        <div key={i}>
-                            {name}
+                        <div className="stat-value">
+                            {value > 0 ? value : "-"}
                         </div>
-                    )
-                })}
+                    </div>
+                )
+            })}
+        </div>
+    )
+
+    return (
+        <div style={{ margin: 4 }}>
+            <div className="stat-graph">
+                {statNames}
+                {statBars}
             </div>
-        )
-    }
-
-    renderStatBars() {
-        let shouldShowStats = this.props.shouldShowStats
-        return (
-            <div>
-                {this.props.statNames.map((name, i) => {
-                    let values = this.props.statValues
-                    let value = 0
-                    if (shouldShowStats && values.length > i) {
-                        value = values[i]
-                    }
-
-                    let shortName = name.replace(" ", "-").toLowerCase()
-                    return (
-                        <div key={i} className="flex">
-                            <div
-                                className={"stat-bar " + shortName}
-                                style={{ width: value }} />
-
-                            <div className="stat-value">
-                                {value > 0 ? value : "-"}
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-        )
-    }
+        </div>
+    )
 }

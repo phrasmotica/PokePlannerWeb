@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input, FormGroup, Label } from 'reactstrap'
 import Select from 'react-select'
 
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
-
-import { IHasVersionGroup, IHasHideTooltips } from '../CommonMembers'
 
 import { getDisplayName } from '../../models/Helpers'
 import { GenerationEntry, PokemonSpeciesEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
@@ -16,119 +14,153 @@ import { CookieHelper } from '../../util/CookieHelper'
  * */
 const TEAM_SIZE: number = 1
 
-interface ITeamBuilderState extends IHasVersionGroup, IHasHideTooltips {
-    /**
-     * List of Pokemon species.
-     */
-    species: PokemonSpeciesEntry[]
-
-    /**
-     * Whether the Pokemon species are loading.
-     */
-    loadingSpecies: boolean
-
-    /**
-     * List of generations.
-     */
-    generations: GenerationEntry[]
-
-    /**
-     * Whether the generations are loading.
-     */
-    loadingGenerations: boolean
-
-    /**
-     * List of version groups.
-     */
-    versionGroups: VersionGroupEntry[]
-
-    /**
-     * Whether the version groups are loading.
-     */
-    loadingVersionGroups: boolean
-
-    /**
-     * List of types.
-     */
-    types: TypeEntry[]
-
-    /**
-     * Whether the types are loading.
-     */
-    loadingTypes: boolean
-
-    /**
-     * The base stats.
-     */
-    baseStats: StatEntry[]
-
-    /**
-     * Whether the base stat names are loading.
-     */
-    loadingBaseStats: boolean
-
-    /**
-     * Whether Pokemon validity in the selected version group should be ignored.
-     */
-    ignoreValidity: boolean
-}
-
 /**
  * Component for building a Pokemon team.
  */
-export class TeamBuilder extends Component<any, ITeamBuilderState> {
-    constructor(props: any) {
-        super(props)
-        this.state = {
-            species: [],
-            loadingSpecies: true,
-            generations: [],
-            loadingGenerations: true,
-            versionGroups: [],
-            loadingVersionGroups: true,
-            types: [],
-            loadingTypes: true,
-            versionGroupId: undefined,
-            baseStats: [],
-            loadingBaseStats: true,
-            ignoreValidity: CookieHelper.getFlag("ignoreValidity"),
-            hideTooltips: CookieHelper.getFlag("hideTooltips")
+export const TeamBuilder = () => {
+    const [versionGroupId, setVersionGroupId] = useState<number>()
+
+    const [species, setSpecies] = useState<PokemonSpeciesEntry[]>([])
+    const [loadingSpecies, setLoadingSpecies] = useState(false)
+    const [generations, setGenerations] = useState<GenerationEntry[]>([])
+    const [loadingGenerations, setLoadingGenerations] = useState(false)
+    const [versionGroups, setVersionGroups] = useState<VersionGroupEntry[]>([])
+    const [loadingVersionGroups, setLoadingVersionGroups] = useState(false)
+    const [types, setTypes] = useState<TypeEntry[]>([])
+    const [loadingTypes, setLoadingTypes] = useState(false)
+    const [baseStats, setBaseStats] = useState<StatEntry[]>([])
+    const [loadingBaseStats, setLoadingBaseStats] = useState(false)
+
+    const [ignoreValidity, setIgnoreValidity] = useState(
+        CookieHelper.getFlag("ignoreValidity")
+    )
+
+    const [hideTooltips, setHideTooltips] = useState(
+        CookieHelper.getFlag("hideTooltips")
+    )
+
+    // fetch species, generations, types and version groups on mount
+    useEffect(() => {
+        const fetchSpecies = () => {
+            setLoadingSpecies(true)
+
+            fetch(constructSpeciesEndpoint())
+                .then((response) => response.json())
+                .then((species: PokemonSpeciesEntry[]) => setSpecies(species))
+                .catch(error => console.error(error))
+                .finally(() => setLoadingSpecies(false))
         }
-    }
 
-    componentDidMount() {
-        this.getSpecies()
-        this.fetchGenerations()
-        this.fetchTypes()
-        this.getVersionGroups()
-            .then(() => {
-                this.getBaseStats(this.state.versionGroupId)
-            })
-    }
+        const constructSpeciesEndpoint = () => {
+            let apiUrl = process.env.REACT_APP_API_URL
+            let endpoint = `${apiUrl}/species`
 
-    render() {
-        let menu = this.renderMenu()
+            let speciesLimit = process.env.REACT_APP_SPECIES_LIMIT
+            let speciesOffset = process.env.REACT_APP_SPECIES_OFFSET
 
-        let pokedexPanels = this.pageIsLoading()
-            ? <p><em>Loading...</em></p>
-            : this.renderPokedexPanels()
+            if (speciesLimit !== undefined && speciesOffset !== undefined) {
+                let startId = Number(speciesOffset) + 1
+                let endId = Number(speciesOffset) + Number(speciesLimit)
+                console.log(`Fetching ${speciesLimit} species (${startId} - ${endId})`)
 
-        return (
-            <div>
-                <p>Build your Pokemon team!</p>
-                {menu}
-                {pokedexPanels}
-            </div>
-        )
-    }
+                endpoint += `?limit=${speciesLimit}&offset=${speciesOffset}`
+            }
 
-    renderMenu() {
-        if (this.pageIsLoading()) {
+            return endpoint
+        }
+
+        const fetchGenerations = () => {
+            setLoadingGenerations(true)
+
+            fetch(`${process.env.REACT_APP_API_URL}/generation`)
+                .then(response => response.json())
+                .then((generations: GenerationEntry[]) => setGenerations(generations))
+                .catch(error => console.error(error))
+                .finally(() => setLoadingGenerations(false))
+        }
+
+        const fetchTypes = () => {
+            setLoadingTypes(true)
+
+            fetch(`${process.env.REACT_APP_API_URL}/type`)
+                .then(response => response.json())
+                .then((types: TypeEntry[]) => setTypes(types))
+                .catch(error => console.error(error))
+                .finally(() => setLoadingTypes(false))
+        }
+
+        const fetchVersionGroups = () => {
+            setLoadingVersionGroups(true)
+
+            fetch(`${process.env.REACT_APP_API_URL}/versionGroup`)
+                .then(response => response.json())
+                .then((versionGroups: VersionGroupEntry[]) => {
+                    setVersionGroups(versionGroups)
+
+                    // try get version group ID from cookies
+                    let versionGroupId = CookieHelper.getNumber("versionGroupId")
+                    if (versionGroupId === undefined) {
+                        // fall back to latest one
+                        versionGroupId = versionGroups[versionGroups.length - 1].versionGroupId
+                    }
+
+                    setVersionGroup(versionGroupId)
+                })
+                .catch(error => console.error(error))
+                .finally(() => setLoadingVersionGroups(false))
+        }
+
+        fetchSpecies()
+        fetchGenerations()
+        fetchTypes()
+        fetchVersionGroups()
+
+        return () => {
+            setSpecies([])
+            setGenerations([])
+            setTypes([])
+            setVersionGroups([])
+        }
+    }, [])
+
+    // fetch base stats if the version group ID changes
+    useEffect(() => {
+        const fetchBaseStats = (versionGroupId: number | undefined) => {
+            if (versionGroupId === undefined) {
+                return
+            }
+
+            console.log(`Team builder: getting base stats for version group ${versionGroupId}...`)
+            setLoadingBaseStats(true)
+
+            fetch(`${process.env.REACT_APP_API_URL}/stat/${versionGroupId}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response
+                    }
+
+                    // concrete types endpoint couldn't be found
+                    throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
+                })
+                .then(response => response.json())
+                .then((baseStats: StatEntry[]) => setBaseStats(baseStats))
+                .catch(error => console.error(error))
+                .then(() => setLoadingBaseStats(false))
+        }
+
+        fetchBaseStats(versionGroupId)
+
+        return () => {
+            setBaseStats([])
+        }
+    }, [versionGroupId])
+
+    const renderMenu = () => {
+        if (pageIsLoading) {
             return null
         }
 
-        let versionGroupMenu = this.renderVersionGroupMenu()
-        let toggleSet = this.renderToggleSet()
+        let versionGroupMenu = renderVersionGroupMenu()
 
         return (
             <div className="flex">
@@ -145,13 +177,13 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         )
     }
 
-    renderVersionGroupMenu() {
-        let options = this.state.versionGroups.map(vg => ({
+    const renderVersionGroupMenu = () => {
+        let options = versionGroups.map(vg => ({
             label: getDisplayName(vg, "en") ?? `(versionGroup${vg.versionGroupId})`,
             value: vg.versionGroupId
         }))
 
-        let defaultOption = options.filter(o => o.value === this.state.versionGroupId)
+        let defaultOption = options.filter(o => o.value === versionGroupId)
 
         return (
             <FormGroup>
@@ -161,42 +193,40 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                     id="versionGroupSelect"
                     className="version-group-select"
                     defaultValue={defaultOption}
-                    onChange={(option: any) => this.setVersionGroup(option.value)}
+                    onChange={(option: any) => setVersionGroup(option.value)}
                     options={options} />
             </FormGroup>
         )
     }
 
     // returns the set of toggles for the menu
-    renderToggleSet() {
-        return (
-            <div>
-                <FormGroup check>
-                    <Input
-                        type="checkbox"
-                        id="ignoreValidityCheckbox"
-                        checked={this.state.ignoreValidity}
-                        onChange={() => this.toggleIgnoreValidity()} />
-                    <Label for="ignoreValidityCheckbox" check>
-                        Ignore Pokemon validity in game version
-                    </Label>
-                </FormGroup>
+    const toggleSet = (
+        <div>
+            <FormGroup check>
+                <Input
+                    type="checkbox"
+                    id="ignoreValidityCheckbox"
+                    checked={ignoreValidity}
+                    onChange={() => toggleIgnoreValidity()} />
+                <Label for="ignoreValidityCheckbox" check>
+                    Ignore Pokemon validity in game version
+                </Label>
+            </FormGroup>
 
-                <FormGroup check>
-                    <Input
-                        type="checkbox"
-                        id="hideTooltipsCheckbox"
-                        checked={this.state.hideTooltips}
-                        onChange={() => this.toggleHideTooltips()} />
-                    <Label for="hideTooltipsCheckbox" check>
-                        Hide tooltips
-                    </Label>
-                </FormGroup>
-            </div>
-        )
-    }
+            <FormGroup check>
+                <Input
+                    type="checkbox"
+                    id="hideTooltipsCheckbox"
+                    checked={hideTooltips}
+                    onChange={() => toggleHideTooltips()} />
+                <Label for="hideTooltipsCheckbox" check>
+                    Hide tooltips
+                </Label>
+            </FormGroup>
+        </div>
+    )
 
-    renderPokedexPanels() {
+    const renderPokedexPanels = () => {
         let items = []
 
         for (let i = 0; i < TEAM_SIZE; i++) {
@@ -204,14 +234,14 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
                 <PokedexPanel
                     key={i}
                     index={i}
-                    versionGroup={this.getVersionGroup()}
-                    ignoreValidity={this.state.ignoreValidity}
-                    toggleIgnoreValidity={() => this.toggleIgnoreValidity()}
-                    hideTooltips={this.state.hideTooltips}
-                    species={this.state.species}
-                    generations={this.state.generations}
-                    types={this.state.types}
-                    baseStats={this.state.baseStats} />
+                    versionGroup={versionGroup}
+                    ignoreValidity={ignoreValidity}
+                    toggleIgnoreValidity={toggleIgnoreValidity}
+                    hideTooltips={hideTooltips}
+                    species={species}
+                    generations={generations}
+                    types={types}
+                    baseStats={baseStats} />
             )
 
             if (i < TEAM_SIZE - 1) {
@@ -222,167 +252,39 @@ export class TeamBuilder extends Component<any, ITeamBuilderState> {
         return <div>{items}</div>
     }
 
-    /**
-     * Returns the entry for the selected version group.
-     */
-    getVersionGroup() {
-        return this.state.versionGroups.find(g => g.versionGroupId === this.state.versionGroupId)
-    }
+    const versionGroup = versionGroups.find(g => g.versionGroupId === versionGroupId)
 
-    // load all species
-    getSpecies() {
-        let endpoint = this.constructSpeciesEndpoint()
-        fetch(endpoint)
-            .then((response) => response.json())
-            .then((species: PokemonSpeciesEntry[]) => {
-                this.setState({ species: species })
-            })
-            .catch(error => console.error(error))
-            .finally(() => this.setState({ loadingSpecies: false }))
-    }
-
-    /**
-     * Constructs the endpoint for requesting species data.
-     */
-    constructSpeciesEndpoint() {
-        let apiUrl = process.env.REACT_APP_API_URL
-        let endpoint = `${apiUrl}/species`
-
-        let speciesLimit = process.env.REACT_APP_SPECIES_LIMIT
-        let speciesOffset = process.env.REACT_APP_SPECIES_OFFSET
-
-        if (speciesLimit !== undefined && speciesOffset !== undefined) {
-            let startId = Number(speciesOffset) + 1
-            let endId = Number(speciesOffset) + Number(speciesLimit)
-            console.log(`Fetching ${speciesLimit} species (${startId} - ${endId})`)
-
-            endpoint += `?limit=${speciesLimit}&offset=${speciesOffset}`
-        }
-
-        return endpoint
-    }
-
-    /**
-     * Fetches all generations.
-     */
-    fetchGenerations() {
-        this.setState({ loadingGenerations: true })
-
-        fetch(`${process.env.REACT_APP_API_URL}/generation`)
-            .then(response => response.json())
-            .then((generations: GenerationEntry[]) => {
-                this.setState({ generations: generations })
-            })
-            .catch(error => console.error(error))
-            .finally(() => this.setState({ loadingGenerations: false }))
-    }
-
-    // load all version groups
-    async getVersionGroups() {
-        await fetch(`${process.env.REACT_APP_API_URL}/versionGroup`)
-            .then(response => response.json())
-            .then((versionGroups: VersionGroupEntry[]) => {
-                this.setState({ versionGroups: versionGroups })
-            })
-            .then(() => {
-                // try get version group ID from cookies
-                let versionGroupId = CookieHelper.getNumber("versionGroupId")
-                if (versionGroupId === undefined) {
-                    // fall back to latest one
-                    let groups = this.state.versionGroups
-                    versionGroupId = groups[groups.length - 1].versionGroupId
-                }
-
-                this.setState({
-                    versionGroupId: versionGroupId
-                })
-            })
-            .catch(error => console.error(error))
-            .finally(() => this.setState({ loadingVersionGroups: false }))
-    }
-
-    /**
-     * Fetches all types.
-     */
-    fetchTypes() {
-        this.setState({ loadingTypes: true })
-
-        fetch(`${process.env.REACT_APP_API_URL}/type`)
-            .then(response => response.json())
-            .then((types: TypeEntry[]) => {
-                this.setState({ types: types })
-            })
-            .catch(error => console.error(error))
-            .finally(() => this.setState({ loadingTypes: false }))
-    }
-
-    /**
-     * Retrieves the stats for the given version group from TypeController.
-     */
-    getBaseStats(versionGroupId: number | undefined) {
-        if (versionGroupId === undefined) {
-            return
-        }
-
-        console.log(`Team builder: getting base stats for version group ${versionGroupId}...`)
-
-        // loading begins
-        this.setState({ loadingBaseStats: true })
-
-        // get base stat names
-        fetch(`${process.env.REACT_APP_API_URL}/stat/${versionGroupId}`)
-            .then(response => {
-                if (response.status === 200) {
-                    return response
-                }
-
-                // concrete types endpoint couldn't be found
-                throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
-            })
-            .then(response => response.json())
-            .then((baseStats: StatEntry[]) => {
-                this.setState({ baseStats: baseStats })
-            })
-            .catch(error => console.error(error))
-            .then(() => this.setState({ loadingBaseStats: false }))
-    }
-
-    // set selected version group
-    setVersionGroup(versionGroupId: number) {
-        this.setState({ versionGroupId: versionGroupId })
+    const setVersionGroup = (versionGroupId: number) => {
+        setVersionGroupId(versionGroupId)
 
         // set cookie
         CookieHelper.set("versionGroupId", versionGroupId)
-
-        // reload base stat names
-        this.getBaseStats(versionGroupId)
     }
 
-    // toggle validity check on Pokemon
-    toggleIgnoreValidity() {
-        CookieHelper.set("ignoreValidity", !this.state.ignoreValidity)
-
-        this.setState(previousState => ({
-            ignoreValidity: !previousState.ignoreValidity
-        }))
+    const toggleIgnoreValidity = () => {
+        CookieHelper.set("ignoreValidity", !ignoreValidity)
+        setIgnoreValidity(!ignoreValidity)
     }
 
-    // toggle tooltip hiding
-    toggleHideTooltips() {
-        CookieHelper.set("hideTooltips", !this.state.hideTooltips)
-
-        this.setState(previousState => ({
-            hideTooltips: !previousState.hideTooltips
-        }))
+    const toggleHideTooltips = () => {
+        CookieHelper.set("hideTooltips", !hideTooltips)
+        setHideTooltips(!hideTooltips)
     }
 
-    /**
-     * Returns whether the page is loading.
-     */
-    pageIsLoading() {
-        return this.state.loadingSpecies
-            || this.state.loadingVersionGroups
-            || this.state.loadingGenerations
-            || this.state.loadingTypes
-    }
+    const pageIsLoading = loadingSpecies
+                    || loadingVersionGroups
+                    || loadingGenerations
+                    || loadingTypes
+
+    let pokedexPanels = pageIsLoading
+        ? <p><em>Loading...</em></p>
+        : renderPokedexPanels()
+
+    return (
+        <div>
+            <p>Build your Pokemon team!</p>
+            {renderMenu()}
+            {pokedexPanels}
+        </div>
+    )
 }

@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useEffect, useState } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 import key from "weak-key"
 
@@ -24,7 +24,7 @@ import { CookieHelper } from "../../util/CookieHelper"
 
 import "./PokemonPanel.scss"
 
-interface IPokemonPanelProps extends IHasCommon {
+interface PokemonPanelProps extends IHasCommon {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
@@ -63,17 +63,12 @@ interface IPokemonPanelProps extends IHasCommon {
     /**
      * Handler for setting the Pokemon variety in the parent component.
      */
-    setVariety: (variety: PokemonEntry) => void
-
-    /**
-     * Handler for clearing the Pokemon in the parent component.
-     */
-    clearPokemon: () => void
+    setVariety: (variety: PokemonEntry | undefined) => void
 
     /**
      * Handler for setting the Pokemon form in the parent component.
      */
-    setForm: (form: PokemonFormEntry) => void
+    setForm: (form: PokemonFormEntry | undefined) => void
 
     /**
      * Handler for toggling the shiny sprite.
@@ -86,78 +81,23 @@ interface IPokemonPanelProps extends IHasCommon {
     toggleIgnoreValidity: () => void | null
 }
 
-interface IPokemonPanelState {
-    /**
-     * The ID of the Pokemon species.
-     */
-    pokemonSpeciesId: number | undefined
-
-    /**
-     * The species variety.
-     */
-    variety: PokemonEntry | undefined
-
-    /**
-     * The Pokemon form.
-     */
-    form: PokemonFormEntry | undefined
-
-    /**
-     * The generation filter.
-     */
-    generationFilter: GenerationFilterModel
-
-    /**
-     * The type filter.
-     */
-    typeFilter: TypeFilterModel
-
-    /**
-     * The base stat filter.
-     */
-    baseStatFilter: BaseStatFilterModel
-
-    /**
-     * Whether to show the shiny sprite.
-     */
-    showShinySprite: boolean
-
-    /**
-     * Whether to show the species filter.
-     */
-    showSpeciesFilter: boolean
-}
-
 /**
- * Component for selecting a Pokemon and viewing basic information about it.
+ * Renders a Pokemon and basic information about it.
  */
-export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelState> {
-    /**
-     * Constructor.
-     */
-    constructor(props: IPokemonPanelProps) {
-        super(props)
-        this.state = {
-            pokemonSpeciesId: undefined,
-            variety: undefined,
-            form: undefined,
-            generationFilter: this.createGenerationFilterFromCookies(),
-            typeFilter: this.createTypeFilterFromCookies(),
-            baseStatFilter: this.createBaseStatFilterFromCookies(),
-            showShinySprite: false,
-            showSpeciesFilter: false
-        }
-    }
+export const PokemonPanel = (props: PokemonPanelProps) => {
+    const [pokemonSpeciesId, setPokemonSpeciesId] = useState<number>()
+    const [variety, setVariety] = useState<PokemonEntry>()
+    const [form, setForm] = useState<PokemonFormEntry>()
 
     /**
      * Creates a generation filter from the browser cookies.
      */
-    createGenerationFilterFromCookies() {
-        let isEnabled = CookieHelper.getFlag(`generationFilter${this.props.index}enabled`)
+    const createGenerationFilterFromCookies = () => {
+        let isEnabled = CookieHelper.getFlag(`generationFilter${props.index}enabled`)
 
         let cookieGenerationIds = []
-        for (let id of this.props.generations.map(g => g.generationId)) {
-            let cookieName = `generationFilter${this.props.index}active${id}`
+        for (let id of props.generations.map(g => g.generationId)) {
+            let cookieName = `generationFilter${props.index}active${id}`
             let active = CookieHelper.getFlag(cookieName)
             if (active) {
                 cookieGenerationIds.push(id)
@@ -170,12 +110,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     /**
      * Creates a type filter from the browser cookies.
      */
-    createTypeFilterFromCookies() {
-        let isEnabled = CookieHelper.getFlag(`typeFilter${this.props.index}enabled`)
+    const createTypeFilterFromCookies = () => {
+        let isEnabled = CookieHelper.getFlag(`typeFilter${props.index}enabled`)
 
         let cookieTypeIds = []
-        for (let id of this.props.types.map(t => t.typeId)) {
-            let cookieName = `typeFilter${this.props.index}active${id}`
+        for (let id of props.types.map(t => t.typeId)) {
+            let cookieName = `typeFilter${props.index}active${id}`
             let active = CookieHelper.getFlag(cookieName)
             if (active) {
                 cookieTypeIds.push(id)
@@ -188,119 +128,38 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
     /**
      * Creates a base stat filter from the browser cookies.
      */
-    createBaseStatFilterFromCookies() {
-        let isEnabled = CookieHelper.getFlag(`baseStatFilter${this.props.index}enabled`)
+    const createBaseStatFilterFromCookies = () => {
+        let isEnabled = CookieHelper.getFlag(`baseStatFilter${props.index}enabled`)
 
         let cookieFilterValues = []
-        for (let i = 0; i < this.props.baseStats.length; i++) {
-            let active = CookieHelper.getFlag(`baseStatFilter${this.props.index}active${i}`)
-            let value = CookieHelper.getNumber(`baseStatFilter${this.props.index}value${i}`)
+        for (let i = 0; i < props.baseStats.length; i++) {
+            let active = CookieHelper.getFlag(`baseStatFilter${props.index}active${i}`)
+            let value = CookieHelper.getNumber(`baseStatFilter${props.index}value${i}`)
             cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
         }
 
         return new BaseStatFilterModel(isEnabled, cookieFilterValues)
     }
 
-    /**
-     * Refresh minimum base stat values for the species filter.
-     */
-    componentDidUpdate(props: IPokemonPanelProps) {
-        let oldBaseStats = props.baseStats.map(s => s.statId)
-        let newBaseStats = this.props.baseStats.map(s => s.statId)
-        if (!oldBaseStats.equals(newBaseStats)) {
-            let newFilter = BaseStatFilterModel.createEmpty(newBaseStats.length)
-            this.setState({ baseStatFilter: newFilter })
-        }
-    }
+    const [generationFilter, setGenerationFilter] = useState<GenerationFilterModel>(
+        createGenerationFilterFromCookies()
+    )
 
-    /**
-     * Renders the component.
-     */
-    render() {
-        // handlers
-        const clearPokemon = () => this.clearPokemon()
-        const setSpecies = (pokemonSpeciesId: number | undefined) => this.setSpecies(pokemonSpeciesId)
-        const setVariety = (variety: PokemonEntry) => this.setVariety(variety)
-        const setForm = (form: PokemonFormEntry) => this.setForm(form)
+    const [typeFilter, setTypeFilter] = useState<TypeFilterModel>(
+        createTypeFilterFromCookies()
+    )
 
-        const toggleIgnoreValidity = () => this.props.toggleIgnoreValidity()
-        const toggleSpeciesFilter = () => this.toggleSpeciesFilter()
+    const [baseStatFilter, setBaseStatFilter] = useState<BaseStatFilterModel>(
+        createBaseStatFilterFromCookies()
+    )
 
-        return (
-            <div className="flex debug-border hhalf">
-                <div className="flex-center w60 debug-border">
-                    <PokemonSelector
-                        index={this.props.index}
-                        versionGroupId={this.props.versionGroupId}
-                        species={this.props.species}
-                        defaultSpeciesId={this.props.defaultSpeciesId}
-                        ignoreValidity={this.props.ignoreValidity}
-                        generations={this.props.generations}
-                        hideTooltips={this.props.hideTooltips}
-                        clearPokemon={clearPokemon}
-                        setSpecies={setSpecies}
-                        setVariety={setVariety}
-                        setForm={setForm}
-                        generationFilter={this.state.generationFilter}
-                        typeFilter={this.state.typeFilter}
-                        baseStatFilter={this.state.baseStatFilter}
-                        toggleIgnoreValidity={toggleIgnoreValidity}
-                        toggleSpeciesFilter={toggleSpeciesFilter} />
-                </div>
+    const [showShinySprite, setShowShinySprite] = useState(false)
+    const [showSpeciesFilter, setShowSpeciesFilter] = useState(false)
 
-                <div className="flex-center w40 debug-border">
-                    {this.state.showSpeciesFilter ? this.renderSpeciesFilter() : this.renderPokemonInfo()}
-                </div>
-            </div>
-        )
-    }
-
-    /**
-     * Renders the Pokemon info.
-     */
-    renderPokemonInfo() {
-        return (
-            <div>
-                <div className="margin-bottom-small">
-                    {this.renderPokemonName()}
-                    {this.renderPokemonGenus()}
-                </div>
-
-                <div>
-                    {this.renderPokemonTypes()}
-                    {this.renderPokemonSprite()}
-                    {this.renderShinySpriteSwitch()}
-                </div>
-            </div>
-        )
-    }
-
-    /**
-     * Renders the species filter.
-     */
-    renderSpeciesFilter() {
-        return (
-            <SpeciesFilter
-                index={this.props.index}
-                versionGroupId={this.props.versionGroupId}
-                species={this.props.species}
-                generations={this.props.generations}
-                generationFilter={this.state.generationFilter}
-                types={this.props.types}
-                typeFilter={this.state.typeFilter}
-                baseStats={this.props.baseStats}
-                baseStatFilter={this.state.baseStatFilter}
-                setGenerationFilter={filter => this.setGenerationFilter(filter)}
-                setTypeFilter={filter => this.setTypeFilter(filter)}
-                setBaseStatFilter={filter => this.setBaseStatFilter(filter)} />
-        )
-    }
-
-    // returns the Pokemon's name
-    renderPokemonName() {
+    const renderPokemonName = () => {
         let displayNameElement = "-"
-        if (this.shouldShowPokemon()) {
-            displayNameElement = this.getEffectiveDisplayName() ?? "-"
+        if (shouldShowPokemon()) {
+            displayNameElement = getEffectiveDisplayName() ?? "-"
         }
 
         return (
@@ -310,14 +169,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    /**
-     * Returns the Pokemon's effective display name.
-     */
-    getEffectiveDisplayName() {
+    const getEffectiveDisplayName = () => {
         // default to species display name
-        let displayName = getDisplayName(this.getSpecies(), "en")
+        let displayName = getDisplayName(getSpecies(), "en")
 
-        let form = this.state.form
         if (form !== undefined && hasDisplayNames(form)) {
             displayName = getDisplayName(form, "en") ?? displayName
         }
@@ -325,13 +180,10 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return displayName
     }
 
-    /**
-     * Renders the Pokemon's genus.
-     */
-    renderPokemonGenus() {
+    const renderPokemonGenus = () => {
         let genusElement = "-"
-        if (this.shouldShowPokemon()) {
-            genusElement = getGenus(this.getSpecies(), "en") ?? "-"
+        if (shouldShowPokemon()) {
+            genusElement = getGenus(getSpecies(), "en") ?? "-"
         }
 
         return (
@@ -341,15 +193,13 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    // returns the Pokemon's types
-    renderPokemonTypes() {
+    const renderPokemonTypes = () => {
         let typesElement: any = "-"
-        let shouldShowPokemon = this.shouldShowPokemon()
-        if (shouldShowPokemon) {
+        if (shouldShowPokemon()) {
             let types = getEffectiveTypes(
-                this.state.variety,
-                this.state.form,
-                this.props.versionGroupId
+                variety,
+                form,
+                props.versionGroupId
             )
 
             typesElement = types.map(type => {
@@ -359,7 +209,7 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
                         className="flex-center fill-parent">
                         <img
                             key={key(type)}
-                            className={"type-icon padded" + (shouldShowPokemon ? "" : " hidden")}
+                            className={"type-icon padded" + (shouldShowPokemon() ? "" : " hidden")}
                             alt={`type${type.typeId}`}
                             src={require(`../../images/typeIcons/${type.typeId}-small.png`)} />
                     </div>
@@ -374,14 +224,12 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         )
     }
 
-    // returns the Pokemon's sprite
-    renderPokemonSprite() {
+    const renderPokemonSprite = () => {
         let spriteUrl = ""
-        let shouldShowPokemon = this.shouldShowPokemon()
-        if (shouldShowPokemon) {
-            let dataObject = this.state.form ?? this.state.variety
+        if (shouldShowPokemon()) {
+            let dataObject = form ?? variety
             if (dataObject !== undefined) {
-                spriteUrl = this.state.showShinySprite
+                spriteUrl = showShinySprite
                     ? dataObject.shinySpriteUrl
                     : dataObject.spriteUrl
             }
@@ -398,205 +246,198 @@ export class PokemonPanel extends Component<IPokemonPanelProps, IPokemonPanelSta
         return (
             <div className="sprite-large margin-auto-horiz">
                 <img
-                    className={"inherit-size" + (shouldShowPokemon ? "" : " hidden")}
-                    alt={`sprite${this.props.index}`}
+                    className={"inherit-size" + (shouldShowPokemon() ? "" : " hidden")}
+                    alt={`sprite${props.index}`}
                     src={spriteUrl} />
             </div>
         )
     }
 
-    // returns a switch that toggles between default and shiny sprites
-    renderShinySpriteSwitch() {
-        return (
-            <FormGroup
-                className="flex-center"
-                style={{ marginBottom: 0 }}>
-                <CustomInput
-                    type="switch"
-                    id={"toggleShinySpriteSwitch" + this.props.index}
-                    checked={this.state.showShinySprite}
-                    label={this.state.showShinySprite ? "Shiny" : "Default"}
-                    onChange={() => this.toggleShowShinySprite()} />
-            </FormGroup>
-        )
-    }
+    const shinySpriteSwitch = (
+        <FormGroup
+            className="flex-center"
+            style={{ marginBottom: 0 }}>
+            <CustomInput
+                type="switch"
+                id={"toggleShinySpriteSwitch" + props.index}
+                checked={showShinySprite}
+                label={showShinySprite ? "Shiny" : "Default"}
+                onChange={() => toggleShowShinySprite()} />
+        </FormGroup>
+    )
 
-    /**
-     * Toggles the shiny sprite.
-     */
-    toggleShowShinySprite() {
-        this.setState(previousState => ({
-            showShinySprite: !previousState.showShinySprite
-        }))
-
-        this.props.toggleShowShinySprite()
-    }
-
-    /**
-     * Toggles the species filter.
-     */
-    toggleSpeciesFilter() {
-        this.setState(previousState => ({
-            showSpeciesFilter: !previousState.showSpeciesFilter
-        }))
+    const toggleShowShinySprite = () => {
+        setShowShinySprite(!showShinySprite)
+        props.toggleShowShinySprite()
     }
 
     /**
      * Returns the data object for the selected species.
      */
-    getSpecies() {
-        let speciesId = this.state.pokemonSpeciesId
-        let species = this.props.species.find(s => s.pokemonSpeciesId === speciesId)
-
+    const getSpecies = () => {
+        let species = props.species.find(s => s.pokemonSpeciesId === pokemonSpeciesId)
         if (species === undefined) {
             throw new Error(
-                `Panel ${this.props.index}: no species found with ID ${speciesId}!`
+                `Panel ${props.index}: no species found with ID ${pokemonSpeciesId}!`
             )
         }
 
         return species
     }
 
-    /**
-     * Returns whether we have a species.
-     */
-    hasSpecies() {
-        return this.state.pokemonSpeciesId !== undefined
-    }
+    const hasSpecies = pokemonSpeciesId !== undefined
 
-    /**
-     * Returns whether the Pokemon is valid.
-     */
-    pokemonIsValid() {
-        return pokemonIsValid(
-            this.getSpecies(),
-            this.state.form,
-            this.props.versionGroupId
-        )
-    }
+    const selectedPokemonIsValid = () => pokemonIsValid(
+        getSpecies(), form, props.versionGroupId
+    )
 
     /**
      * Returns whether the Pokemon should be displayed.
      */
-    shouldShowPokemon() {
-        return this.hasSpecies()
-            && this.state.form !== undefined
-            && (this.props.ignoreValidity || this.pokemonIsValid())
-    }
+    const shouldShowPokemon = () => hasSpecies
+            && form !== undefined
+            && (props.ignoreValidity || selectedPokemonIsValid())
 
     /**
      * Sets the species ID.
      */
-    setSpecies(pokemonSpeciesId: number | undefined) {
+    const setSpecies = (pokemonSpeciesId: number | undefined) => {
+        console.log(`PokemonPanel setSpecies: ${pokemonSpeciesId}`)
+        setPokemonSpeciesId(pokemonSpeciesId)
+
         if (pokemonSpeciesId === undefined) {
-            this.clearPokemon()
+            setVariety(undefined)
+            props.setVariety(undefined)
+
+            setForm(undefined)
+            props.setForm(undefined)
         }
-        else {
-            this.setState({ pokemonSpeciesId: pokemonSpeciesId })
 
-            this.props.setSpecies(pokemonSpeciesId)
-        }
+        props.setSpecies(pokemonSpeciesId)
     }
 
-    /**
-     * Clears all Pokemon state.
-     */
-    clearPokemon() {
-        this.setState({
-            pokemonSpeciesId: undefined,
-            variety: undefined,
-            form: undefined
-        })
-
-        this.props.clearPokemon()
-    }
-
-    /**
-     * Sets the species variety.
-     */
-    setVariety(variety: PokemonEntry) {
-        this.setState({ variety: variety })
-
-        this.props.setVariety(variety)
-    }
-
-    /**
-     * Sets the Pokemon form.
-     */
-    setForm(form: PokemonFormEntry) {
-        this.setState({ form: form })
-
-        this.props.setForm(form)
-    }
-
-    /**
-     * Sets the generation filter.
-     */
-    setGenerationFilter(filter: GenerationFilterModel) {
-        this.setState({ generationFilter: filter })
+    const setGenerationFilterAndUpdate = (filter: GenerationFilterModel) => {
+        setGenerationFilter(filter)
 
         // no longer have a valid species
-        let speciesId = this.state.pokemonSpeciesId
-        if (speciesId !== undefined) {
-            let species = this.getSpecies()
+        if (pokemonSpeciesId !== undefined) {
+            let species = getSpecies()
             let generationId = species.generation.generationId
 
             let failsGenerationFilter = !filter.passesFilter([generationId])
             if (failsGenerationFilter) {
-                this.setSpecies(undefined)
+                setSpecies(undefined)
             }
         }
     }
 
-    /**
-     * Sets the type filter.
-     */
-    setTypeFilter(filter: TypeFilterModel) {
-        let versionGroupId = this.props.versionGroupId
+    const setTypeFilterAndUpdate = (filter: TypeFilterModel) => {
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Pokemon panel ${this.props.index}: version group ID is undefined!`
+                `Pokemon panel ${props.index}: version group ID is undefined!`
             )
         }
 
-        this.setState({ typeFilter: filter })
+        setTypeFilter(filter)
 
         // no longer have a valid species
-        let speciesId = this.state.pokemonSpeciesId
-        if (speciesId !== undefined) {
-            let species = this.getSpecies()
+        if (pokemonSpeciesId !== undefined) {
+            let species = getSpecies()
             let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
-                this.setSpecies(undefined)
+                setSpecies(undefined)
             }
         }
     }
 
-    /**
-     * Sets the base stat filter.
-     */
-    setBaseStatFilter(filter: BaseStatFilterModel) {
-        let versionGroupId = this.props.versionGroupId
+    const setBaseStatFilterAndUpdate = (filter: BaseStatFilterModel) => {
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Pokemon panel ${this.props.index}: version group ID is undefined!`
+                `Pokemon panel ${props.index}: version group ID is undefined!`
             )
         }
 
-        this.setState({ baseStatFilter: filter })
+        setBaseStatFilter(filter)
 
         // no longer have a valid species
-        let speciesId = this.state.pokemonSpeciesId
-        if (speciesId !== undefined) {
-            let species = this.getSpecies()
+        if (pokemonSpeciesId !== undefined) {
+            let species = getSpecies()
             let speciesBaseStats = getBaseStats(species, versionGroupId)
 
             let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {
-                this.setSpecies(undefined)
+                setSpecies(undefined)
             }
         }
     }
+
+    const speciesFilter = (
+        <SpeciesFilter
+            index={props.index}
+            versionGroupId={props.versionGroupId}
+            species={props.species}
+            generations={props.generations}
+            generationFilter={generationFilter}
+            types={props.types}
+            typeFilter={typeFilter}
+            baseStats={props.baseStats}
+            baseStatFilter={baseStatFilter}
+            setGenerationFilter={filter => setGenerationFilterAndUpdate(filter)}
+            setTypeFilter={filter => setTypeFilterAndUpdate(filter)}
+            setBaseStatFilter={filter => setBaseStatFilterAndUpdate(filter)} />
+    )
+
+    const pokemonInfo = (
+        <div>
+            <div className="margin-bottom-small">
+                {renderPokemonName()}
+                {renderPokemonGenus()}
+            </div>
+
+            <div>
+                {renderPokemonTypes()}
+                {renderPokemonSprite()}
+                {shinySpriteSwitch}
+            </div>
+        </div>
+    )
+
+    useEffect(() => {
+        setBaseStatFilter(BaseStatFilterModel.createEmpty(props.baseStats.length))
+        return () => setBaseStatFilter(BaseStatFilterModel.createEmpty(0))
+    }, [props.baseStats])
+
+    const toggleIgnoreValidity = () => props.toggleIgnoreValidity()
+    const toggleSpeciesFilter = () => setShowSpeciesFilter(!showSpeciesFilter)
+
+    return (
+        <div className="flex debug-border hhalf">
+            <div className="flex-center w60 debug-border">
+                <PokemonSelector
+                    index={props.index}
+                    versionGroupId={props.versionGroupId}
+                    species={props.species}
+                    defaultSpeciesId={props.defaultSpeciesId}
+                    ignoreValidity={props.ignoreValidity}
+                    generations={props.generations}
+                    hideTooltips={props.hideTooltips}
+                    setSpecies={setSpecies}
+                    setVariety={setVariety}
+                    setForm={setForm}
+                    generationFilter={generationFilter}
+                    typeFilter={typeFilter}
+                    baseStatFilter={baseStatFilter}
+                    toggleIgnoreValidity={toggleIgnoreValidity}
+                    toggleSpeciesFilter={toggleSpeciesFilter} />
+            </div>
+
+            <div className="flex-center w40 debug-border">
+                {showSpeciesFilter ? speciesFilter : pokemonInfo}
+            </div>
+        </div>
+    )
 }

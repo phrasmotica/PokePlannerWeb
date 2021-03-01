@@ -1,4 +1,4 @@
-﻿import React, { Component } from "react"
+﻿import React from "react"
 import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
@@ -12,7 +12,7 @@ import {
 
 import "./HeldItemList.scss"
 
-interface IHeldItemListProps extends IHasIndex {
+interface HeldItemListProps extends IHasIndex {
     /**
      * The version group.
      */
@@ -29,38 +29,12 @@ interface IHeldItemListProps extends IHasIndex {
     showHeldItems: boolean
 }
 
-interface IHeldItemListState {
-
-}
-
 /**
- * Component for displaying a Pokemon's abilities.
+ * Renders a Pokemon's held items.
  */
-export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListState> {
-    constructor(props: IHeldItemListProps) {
-        super(props)
-        this.state = {
-            abilities: [],
-            loadingAbilities: false
-        }
-    }
-
-    render() {
-        return (
-            <div className="heldItemListContainer">
-                <div className="heldItemList" style={{ marginTop: 4 }}>
-                    {this.renderHeldItems()}
-                </div>
-            </div>
-        )
-    }
-
-    /**
-     * Renders the Pokemon's held items.
-     */
-    renderHeldItems() {
-        let versionGroup = this.props.versionGroup
-        let pokemon = this.props.pokemon
+export const HeldItemList = (props: HeldItemListProps) => {
+    const renderHeldItems = () => {
+        let versionGroup = props.versionGroup
         if (versionGroup === undefined) {
             return (
                 <div className="flex-center margin-bottom-small">
@@ -71,7 +45,7 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
 
         let versions = versionGroup.versions
         let versionIds = versions.map(v => v.versionId)
-        let heldItems = pokemon?.heldItems.filter(e => versionIds.includes(e.id)) ?? []
+        let heldItems = props.pokemon?.heldItems.filter(e => versionIds.includes(e.id)) ?? []
 
         let versionElements = []
         for (let version of versions) {
@@ -127,4 +101,12 @@ export class HeldItemList extends Component<IHeldItemListProps, IHeldItemListSta
             </div>
         )
     }
+
+    return (
+        <div className="heldItemListContainer">
+            <div className="heldItemList" style={{ marginTop: 4 }}>
+                {renderHeldItems()}
+            </div>
+        </div>
+    )
 }

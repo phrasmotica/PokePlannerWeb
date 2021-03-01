@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import { Tabs, Tab } from "react-bootstrap"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
@@ -6,6 +6,7 @@ import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 import { AbilityList } from "../AbilityList/AbilityList"
 import { EfficacyList } from "../EfficacyList/EfficacyList"
 import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
+import { HeldItemList } from "../HeldItemList/HeldItemList"
 import { StatGraph } from "../StatGraph/StatGraph"
 
 import { getBaseStats, getDisplayName } from "../../models/Helpers"
@@ -20,9 +21,8 @@ import {
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
-import { HeldItemList } from "../HeldItemList/HeldItemList"
 
-interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
+interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
      */
@@ -64,95 +64,38 @@ interface IInfoPanelProps extends IHasIndex, IHasHideTooltips {
     shouldShowPokemon: boolean
 }
 
-interface IInfoPanelState {
-    /**
-     * The key of the active info tab.
-     */
-    activeInfoTabKey: string | undefined
-}
-
 /**
- * Component for displaying base stats, type efficacy, abilities, flavour text, etc.
+ * Renders base stats, type efficacy, abilities, flavour text, etc.
  */
-export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
-    constructor(props: IInfoPanelProps) {
-        super(props)
-        this.state = {
-            activeInfoTabKey: CookieHelper.get(`panel${this.props.index}activeInfoTabKey`)
-        }
-    }
-    /**
-     * Renders the component.
-     */
-    render() {
-        return (
-            <div>
-                <Tabs
-                    className="tabpane-small"
-                    transition={false}
-                    activeKey={this.state.activeInfoTabKey}
-                    defaultActiveKey="flavourText"
-                    onSelect={(k: string) => this.setActiveInfoTabKey(k)}
-                    id="infoTabs">
-                    <Tab eventKey="flavourText" title="Flavour Text">
-                        {this.renderFlavourTextList()}
-                    </Tab>
+export const InfoPanel = (props: InfoPanelProps) => {
+    const [activeInfoTabKey, setActiveInfoTabKey] = useState<string | undefined>(
+        CookieHelper.get(`panel${props.index}activeInfoTabKey`)
+    )
 
-                    <Tab eventKey="abilities" title="Abilities">
-                        {this.renderAbilityList()}
-                    </Tab>
+    const flavourTextList = (
+        <FlavourTextList
+            index={props.index}
+            species={props.species}
+            versions={props.versions}
+            showFlavourText={props.shouldShowPokemon} />
+    )
 
-                    <Tab eventKey="stats" title="Base Stats">
-                        {this.renderStatsGraph()}
-                    </Tab>
+    const abilityList = (
+        <AbilityList
+            index={props.index}
+            versionGroupId={props.versionGroup?.versionGroupId}
+            pokemonId={props.pokemon?.pokemonId}
+            showAbilities={props.shouldShowPokemon} />
+    )
 
-                    <Tab eventKey="efficacy" title="Efficacy">
-                        {this.renderEfficacyList()}
-                    </Tab>
-
-                    <Tab eventKey="heldItems" title="Held Items">
-                        {this.renderHeldItems()}
-                    </Tab>
-                </Tabs>
-            </div>
-        )
-    }
-
-    /**
-     * Renders the species' flavour text entries.
-     */
-    renderFlavourTextList() {
-        return (
-            <FlavourTextList
-                index={this.props.index}
-                species={this.props.species}
-                versions={this.props.versions}
-                showFlavourText={this.props.shouldShowPokemon} />
-        )
-    }
-
-    /**
-     * Renders the Pokemon's abilities.
-     */
-    renderAbilityList() {
-        return (
-            <AbilityList
-                index={this.props.index}
-                versionGroupId={this.props.versionGroup?.versionGroupId}
-                pokemonId={this.props.pokemon?.pokemonId}
-                showAbilities={this.props.shouldShowPokemon} />
-        )
-    }
-
-    // returns a graph of the Pokemon's base stats
-    renderStatsGraph() {
+    const renderStatsGraph = () => {
         let baseStats: number[] = []
 
-        let pokemon = this.props.pokemon
+        let pokemon = props.pokemon
         if (pokemon !== undefined) {
-            let versionGroupId = this.props.versionGroup?.versionGroupId
+            let versionGroupId = props.versionGroup?.versionGroupId
             if (versionGroupId === undefined) {
-                throw new Error(`Panel ${this.props.index}: version group ID is undefined!`)
+                throw new Error(`Panel ${props.index}: version group ID is undefined!`)
             }
 
             baseStats = getBaseStats(pokemon, versionGroupId)
@@ -160,46 +103,68 @@ export class InfoPanel extends Component<IInfoPanelProps, IInfoPanelState> {
 
         return (
             <StatGraph
-                index={this.props.index}
-                statNames={this.props.baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
+                index={props.index}
+                statNames={props.baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
                 statValues={baseStats}
-                shouldShowStats={this.props.shouldShowPokemon} />
+                shouldShowStats={props.shouldShowPokemon} />
         )
     }
 
-    // returns the efficacy list
-    renderEfficacyList() {
-        let types = this.props.effectiveTypes
+    const efficacyList = (
+        <EfficacyList
+            index={props.index}
+            typeIds={props.effectiveTypes.map(type => type.typeId)}
+            types={props.types}
+            versionGroup={props.versionGroup}
+            showMultipliers={props.shouldShowPokemon}
+            hideTooltips={props.hideTooltips} />
+    )
 
-        return (
-            <EfficacyList
-                index={this.props.index}
-                typeIds={types.map(type => type.typeId)}
-                types={this.props.types}
-                versionGroup={this.props.versionGroup}
-                showMultipliers={this.props.shouldShowPokemon}
-                hideTooltips={this.props.hideTooltips} />
-        )
-    }
-
-    /**
-     * Renders the held items.
-     */
-    renderHeldItems() {
-        return (
-            <HeldItemList
-                index={this.props.index}
-                versionGroup={this.props.versionGroup}
-                pokemon={this.props.pokemon}
-                showHeldItems={this.props.shouldShowPokemon} />
-        )
-    }
+    const heldItems = (
+        <HeldItemList
+            index={props.index}
+            versionGroup={props.versionGroup}
+            pokemon={props.pokemon}
+            showHeldItems={props.shouldShowPokemon} />
+    )
 
     /**
      * Sets the key of the active info tab.
      */
-    setActiveInfoTabKey(key: string) {
-        CookieHelper.set(`panel${this.props.index}activeInfoTabKey`, key)
-        this.setState({ activeInfoTabKey: key })
+    const setInfoTab = (key: string) => {
+        CookieHelper.set(`panel${props.index}activeInfoTabKey`, key)
+        setActiveInfoTabKey(key)
     }
+
+    return (
+        <div>
+            <Tabs
+                className="tabpane-small"
+                transition={false}
+                activeKey={activeInfoTabKey}
+                defaultActiveKey="flavourText"
+                onSelect={(k: string) => setInfoTab(k)}
+                id="infoTabs">
+                <Tab eventKey="flavourText" title="Flavour Text">
+                    {flavourTextList}
+                </Tab>
+
+                <Tab eventKey="abilities" title="Abilities">
+                    {abilityList}
+                </Tab>
+
+                <Tab eventKey="stats" title="Base Stats">
+                    {renderStatsGraph()}
+                </Tab>
+
+                <Tab eventKey="efficacy" title="Efficacy">
+                    {efficacyList}
+                </Tab>
+
+                <Tab eventKey="heldItems" title="Held Items">
+                    {heldItems}
+                </Tab>
+            </Tabs>
+        </div>
+    )
 }

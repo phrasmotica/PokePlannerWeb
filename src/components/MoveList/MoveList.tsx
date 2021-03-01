@@ -1,10 +1,10 @@
-﻿import React, { Component } from "react"
+﻿import React, { useEffect, useState } from "react"
 import fuzzysort from "fuzzysort"
 import { ListGroup, ListGroupItem, Button, Collapse, Input, Label, ButtonGroup } from "reactstrap"
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
-import { IHasCommon, IHasSearch } from "../CommonMembers"
+import { IHasCommon, IsOpenDict } from "../CommonMembers"
 
 import { getDisplayName, getFlavourText } from "../../models/Helpers"
 
@@ -42,7 +42,7 @@ enum MoveClass {
     NonDamaging = 'non-damaging'
 }
 
-interface IMoveListProps extends IHasCommon {
+interface MoveListProps extends IHasCommon {
     /**
      * The ID of the Pokemon to show moves for.
      */
@@ -59,115 +59,81 @@ interface IMoveListProps extends IHasCommon {
     showMoves: boolean
 }
 
-interface IMoveListState extends IHasSearch {
-    /**
-     * The class of moves to show.
-     */
-    moveClass: MoveClass
-
-    /**
-     * Whether to only show moves with at least a minimum base power.
-     */
-    useMinPower: boolean
-
-    /**
-     * The minimum power a move must have to be shown.
-     */
-    minPower: number
-
-    /**
-     * Whether to only show moves with one of the current Pokemon's types.
-     */
-    sameTypeOnly: boolean
-
-    /**
-     * Whether to only show moves learnt by level-up.
-     */
-    levelUpOnly: boolean
-
-    /**
-     * The moves to show.
-     */
-    moves: PokemonMoveContext[]
-
-    /**
-     * Whether we're loading the moves.
-     */
-    loadingMoves: boolean
-
-    /**
-     * Whether each move's info pane is open.
-     */
-    movesAreOpen: {
-        id: number
-        data: boolean
-    }[]
-}
-
 /**
  * Component for displaying a Pokemon's moves.
  */
-export class MoveList extends Component<IMoveListProps, IMoveListState> {
-    constructor(props: IMoveListProps) {
-        super(props)
+export const MoveList = (props: MoveListProps) => {
+    let index = props.index
 
-        let index= this.props.index
-        this.state = {
-            moveClass: (CookieHelper.get(`moveClass${index}`) as MoveClass) ?? MoveClass.All,
-            useMinPower: CookieHelper.getFlag(`useMinPower${index}`),
-            minPower: CookieHelper.getNumber(`minPower${index}`) ?? 0,
-            sameTypeOnly: CookieHelper.getFlag(`sameTypeOnly${index}`),
-            levelUpOnly: CookieHelper.getFlag(`levelUpOnly${index}`),
-            moves: [],
-            loadingMoves: false,
-            movesAreOpen: [],
-            searchTerm: ""
+    const [moveClass, setMoveClass] = useState(
+        (CookieHelper.get(`moveClass${index}`) as MoveClass) ?? MoveClass.All,
+    )
+
+    const [useMinPower, setUseMinPower] = useState(
+        CookieHelper.getFlag(`useMinPower${index}`)
+    )
+
+    const [minPower, setMinPower] = useState(
+        CookieHelper.getNumber(`minPower${index}`) ?? 0
+    )
+
+    const [sameTypeOnly, setSameTypeOnly] = useState(
+        CookieHelper.getFlag(`sameTypeOnly${index}`)
+    )
+
+    const [levelUpOnly, setLevelUpOnly] = useState(
+        CookieHelper.getFlag(`levelUpOnly${index}`)
+    )
+
+    const [moves, setMoves] = useState<PokemonMoveContext[]>([])
+    const [loadingMoves, setLoadingMoves] = useState(false)
+    const [movesAreOpen, setMovesAreOpen] = useState<IsOpenDict>([])
+    const [searchTerm, setSearchTerm] = useState("")
+
+    useEffect(() => {
+        const fetchMoves = () => {
+            let versionGroupId = props.versionGroupId
+            if (versionGroupId === undefined) {
+                return
+            }
+
+            let pokemonId = props.pokemonId
+            if (pokemonId !== undefined) {
+                console.log(`Move list ${props.index}: getting moves for Pokemon ${pokemonId}...`)
+                setLoadingMoves(true)
+
+                // get moves
+                fetch(`${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/moves/${versionGroupId}`)
+                    .then(response => {
+                        if (response.status === 200) {
+                            return response
+                        }
+
+                        throw new Error(`Move list ${props.index}: tried to get moves for Pokemon ${pokemonId} but failed with status ${response.status}!`)
+                    })
+                    .then(response => response.json())
+                    .then((moves: PokemonMoveContext[]) => {
+                        setMoves(moves)
+                        setMovesAreOpen(moves.map(m => ({ id: m.moveId, data: false })))
+                    })
+                    .catch(error => console.error(error))
+                    .then(() => setLoadingMoves(false))
+            }
         }
-    }
 
-    componentDidMount() {
-        this.fetchMoves()
-    }
+        fetchMoves()
 
-    componentDidUpdate(previousProps: IMoveListProps) {
-        // refresh move list if the version group changed...
-        let previousVersionGroupId = previousProps.versionGroupId
-        let versionGroupId = this.props.versionGroupId
-        let versionGroupChanged = versionGroupId !== previousVersionGroupId
-
-        // ...or if the Pokemon ID changed
-        let previousPokemonId = previousProps.pokemonId
-        let pokemonId = this.props.pokemonId
-        let pokemonChanged = pokemonId !== previousPokemonId
-
-        if (versionGroupChanged || pokemonChanged) {
-            this.fetchMoves()
-        }
-    }
-
-    render() {
-        return (
-            <div className="move-list-container">
-                <div className="flex margin-top-small">
-                    {this.renderFilters()}
-                    {this.renderSearchBar()}
-                </div>
-
-                <div className="move-list margin-top-small">
-                    {this.renderMoves()}
-                </div>
-            </div>
-        )
-    }
+        return () => setMoves([])
+    }, [props.index, props.pokemonId, props.versionGroupId])
 
     /**
      * Renders the filters.
      */
-    renderFilters() {
-        let minPowerId = "minPowerCheckbox" + this.props.index
+    const renderFilters = () => {
+        let minPowerId = "minPowerCheckbox" + props.index
 
-        let movePowers = this.state.moves.filter(m => m.power !== undefined)
-                                         .map(m => m.power!)
+        let movePowers = moves.filter(m => m.power !== undefined)
+                              .map(m => m.power!)
         let lowestPower = 0
         let highestPower = 0
         if (movePowers.length > 0) {
@@ -175,16 +141,16 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             highestPower = Math.max(...movePowers)
         }
 
-        let minPower = Math.min(Math.max(this.state.minPower, lowestPower), highestPower)
+        let actualMinPower = Math.min(Math.max(minPower, lowestPower), highestPower)
 
-        let sameTypeId = "sameTypeCheckbox" + this.props.index
-        let levelUpId = "levelUpCheckbox" + this.props.index
+        let sameTypeId = "sameTypeCheckbox" + props.index
+        let levelUpId = "levelUpCheckbox" + props.index
 
         return (
             <div className="moveFilter">
                 <div className="separate-right">
                     <div>
-                        {this.renderClassButtonGroup()}
+                        {renderClassButtonGroup()}
                     </div>
 
                     <div className="flex-center margin-top-small">
@@ -192,15 +158,15 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             className="filterCheckbox"
                             type="checkbox"
                             id={minPowerId}
-                            checked={this.state.useMinPower}
-                            disabled={!this.props.showMoves || this.state.moveClass !== MoveClass.Damaging}
-                            onChange={() => this.toggleUseMinPower()} />
+                            checked={useMinPower}
+                            disabled={!props.showMoves || moveClass !== MoveClass.Damaging}
+                            onChange={() => toggleUseMinPowerWithCookie()} />
 
                         <Label
                             check
                             for={minPowerId}
                             className="margin-right-small">
-                            <span title={`Only show moves with at least ${minPower} power`}>
+                            <span title={`Only show moves with at least ${actualMinPower} power`}>
                                 minimum power
                             </span>
                         </Label>
@@ -208,10 +174,10 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                         <Input
                             type="number"
                             className="minPowerFilterInput"
-                            disabled={!this.props.showMoves || this.state.moveClass !== MoveClass.Damaging || !this.state.useMinPower}
-                            onChange={e => this.setMinPower(+e.target.value)}
+                            disabled={!props.showMoves || moveClass !== MoveClass.Damaging || !useMinPower}
+                            onChange={e => setMinPowerWithCookie(+e.target.value)}
                             min={lowestPower}
-                            value={minPower}
+                            value={actualMinPower}
                             max={highestPower} />
                     </div>
                 </div>
@@ -222,9 +188,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             className="filterCheckbox"
                             type="checkbox"
                             id={sameTypeId}
-                            checked={this.state.sameTypeOnly}
-                            disabled={!this.props.showMoves}
-                            onChange={() => this.toggleSameTypeOnly()} />
+                            checked={sameTypeOnly}
+                            disabled={!props.showMoves}
+                            onChange={() => toggleSameTypeOnlyWithCookie()} />
 
                         <Label for={sameTypeId} check>
                             <span title="Only show moves of the Pokemon's type">
@@ -238,9 +204,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             className="filterCheckbox"
                             type="checkbox"
                             id={levelUpId}
-                            checked={this.state.levelUpOnly}
-                            disabled={!this.props.showMoves}
-                            onChange={() => this.toggleLevelUpOnly()} />
+                            checked={levelUpOnly}
+                            disabled={!props.showMoves}
+                            onChange={() => toggleLevelUpOnlyWithCookie()} />
 
                         <Label for={levelUpId} check>
                             <span title="Only show moves learnt by level-up">
@@ -256,17 +222,17 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Renders the button group for selecting the class of move to display.
      */
-    renderClassButtonGroup() {
+    const renderClassButtonGroup = () => {
         let buttons = []
         for (let c of Object.values(MoveClass)){
             buttons.push(
                 <Button
                     key={c}
                     className="moveClassButton"
-                    color={this.state.moveClass === c ? "success" : "secondary"}
-                    disabled={!this.props.showMoves}
-                    style={CssHelper.defaultCursorIf(!this.props.showMoves)}
-                    onClick={() => this.setClass(c)}>
+                    color={moveClass === c ? "success" : "secondary"}
+                    disabled={!props.showMoves}
+                    style={CssHelper.defaultCursorIf(!props.showMoves)}
+                    onClick={() => setMoveClassWithCookie(c)}>
                     {c}
                 </Button>
             )
@@ -282,79 +248,57 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Sets the move class.
      */
-    setClass(moveClass: MoveClass) {
-        CookieHelper.set(`moveClass${this.props.index}`, moveClass)
-        this.setState({ moveClass: moveClass })
+    const setMoveClassWithCookie = (moveClass: MoveClass) => {
+        CookieHelper.set(`moveClass${props.index}`, moveClass)
+        setMoveClass(moveClass)
     }
 
     /**
      * Toggles the minimum power filter.
      */
-    toggleUseMinPower() {
-        CookieHelper.set(`useMinPower${this.props.index}`, !this.state.useMinPower)
-
-        this.setState(previousState => ({
-            useMinPower: !previousState.useMinPower
-        }))
+    const toggleUseMinPowerWithCookie = () => {
+        CookieHelper.set(`useMinPower${props.index}`, !useMinPower)
+        setUseMinPower(!useMinPower)
     }
 
     /**
      * Sets the minimum power.
      */
-    setMinPower(minPower: number) {
-        CookieHelper.set(`minPower${this.props.index}`, minPower)
-        this.setState({ minPower: minPower })
+    const setMinPowerWithCookie = (minPower: number) => {
+        CookieHelper.set(`minPower${props.index}`, minPower)
+        setMinPower(minPower)
     }
 
     /**
      * Toggles the same type only filter.
      */
-    toggleSameTypeOnly() {
-        CookieHelper.set(`sameTypeOnly${this.props.index}`, !this.state.sameTypeOnly)
-
-        this.setState(previousState => ({
-            sameTypeOnly: !previousState.sameTypeOnly
-        }))
+    const toggleSameTypeOnlyWithCookie = () => {
+        CookieHelper.set(`sameTypeOnly${props.index}`, !sameTypeOnly)
+        setSameTypeOnly(!sameTypeOnly)
     }
 
     /**
      * Toggles the level-up only filter.
      */
-    toggleLevelUpOnly() {
-        CookieHelper.set(`levelUpOnly${this.props.index}`, !this.state.levelUpOnly)
-
-        this.setState(previousState => ({
-            levelUpOnly: !previousState.levelUpOnly
-        }))
+    const toggleLevelUpOnlyWithCookie = () => {
+        CookieHelper.set(`levelUpOnly${props.index}`, !levelUpOnly)
+        setLevelUpOnly(!levelUpOnly)
     }
 
-    /**
-     * Renders the search bar.
-     */
-    renderSearchBar() {
-        return (
-            <div className="movesSearchBarContainer flex-center">
-                <Input
-                    className="movesSearchBar"
-                    placeholder="search"
-                    disabled={!this.props.showMoves}
-                    onChange={e => this.setSearchTerm(e.target.value)} />
-            </div>
-        )
-    }
-
-    /**
-     * Sets the search term.
-     */
-    setSearchTerm(term: string) {
-        this.setState({ searchTerm: term })
-    }
+    const searchBar = (
+        <div className="movesSearchBarContainer flex-center">
+            <Input
+                className="movesSearchBar"
+                placeholder="search"
+                disabled={!props.showMoves}
+                onChange={e => setSearchTerm(e.target.value)} />
+        </div>
+    )
 
     /**
      * Filters the given list of moves according to the current search term.
      */
-    filterMoveEntries(entries: PokemonMoveContext[]) {
-        let searchTerm = this.state.searchTerm
+    const filterMoveEntries = (entries: PokemonMoveContext[]) => {
         if (searchTerm === "") {
             return entries
         }
@@ -370,8 +314,8 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Renders the moves.
      */
-    renderMoves() {
-        if (this.props.pokemonId === undefined) {
+    const renderMoves = () => {
+        if (props.pokemonId === undefined) {
             return (
                 <ListGroup className="movesListGroup">
                     <ListGroupItem>
@@ -381,7 +325,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             )
         }
 
-        if (this.state.loadingMoves) {
+        if (loadingMoves) {
             return (
                 <ListGroup className="movesListGroup">
                     <ListGroupItem>
@@ -391,9 +335,9 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             )
         }
 
-        let moves = this.getMovesToShow()
-        let filteredMoves = this.filterMoveEntries(moves)
-        if (this.props.showMoves && filteredMoves.length > 0) {
+        let moves = getMovesToShow()
+        let filteredMoves = filterMoveEntries(moves)
+        if (props.showMoves && filteredMoves.length > 0) {
             let rows = []
             for (let row = 0; row < filteredMoves.length; row++) {
                 let move = filteredMoves[row]
@@ -405,8 +349,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     </span>
                 )
 
-                let isStab = this.isStab(move)
-                if (isStab) {
+                if (isStab(move)) {
                     moveNameElement = (
                         <span>
                             <b>
@@ -429,7 +372,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                     moveMethod = `(${methodsSummary})`
                 }
 
-                const openInfoPane = () => this.toggleMoveOpen(move.moveId)
+                const openInfoPane = () => toggleMoveOpen(move.moveId)
                 let moveNameButton = (
                     <div className="flex">
                         <Button
@@ -445,16 +388,16 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 )
 
                 let typeId = move.type.typeId
-                let headerId = `movelist${this.props.index}move${move.moveId}type${typeId}`
+                let headerId = `movelist${props.index}move${move.moveId}type${typeId}`
                 let typeIcon = <img
                                 id={headerId}
                                 className="type-icon padded"
                                 alt={`type${typeId}`}
                                 src={require(`../../images/typeIcons/${typeId}-small.png`)} />
 
-                let damageClassIcon = this.getDamageClassIcon(move.damageClass.moveDamageClassId)
+                let damageClassIcon = getDamageClassIcon(move.damageClass.moveDamageClassId)
 
-                let isOpen = this.state.movesAreOpen.find(e => e.id === move.moveId)?.data ?? false
+                let isOpen = movesAreOpen.find(e => e.id === move.moveId)?.data ?? false
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
 
                 // some moves damage but don't have a constant base power, e.g. Low Kick
@@ -491,7 +434,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                             </div>
 
                             <div className="text-align-center flex-center">
-                                {getFlavourText(move, this.props.versionGroupId!, "en")}
+                                {getFlavourText(move, props.versionGroupId!, "en")}
                             </div>
                         </div>
                     </Collapse>
@@ -513,7 +456,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
         }
 
         // no moves to show...
-        if (this.hasFilters()) {
+        if (hasFilters()) {
             return (
                 <ListGroup className="movesListGroup">
                     <ListGroupItem>
@@ -535,41 +478,41 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Returns the moves to display.
      */
-    getMovesToShow() {
-        let moves = this.state.moves
+    const getMovesToShow = () => {
+        let filteredMoves = moves
 
-        if (this.state.moveClass === MoveClass.Damaging) {
-            moves = moves.filter(m => this.isDamaging(m))
+        if (moveClass === MoveClass.Damaging) {
+            filteredMoves = filteredMoves.filter(m => isDamaging(m))
 
-            if (this.state.useMinPower) {
-                moves = moves.filter(m => m.power !== undefined && m.power >= this.state.minPower)
+            if (useMinPower) {
+                filteredMoves = filteredMoves.filter(m => m.power !== undefined && m.power >= minPower)
             }
         }
 
-        if (this.state.moveClass === MoveClass.NonDamaging) {
-            moves = moves.filter(m => !this.isDamaging(m))
+        if (moveClass === MoveClass.NonDamaging) {
+            filteredMoves = filteredMoves.filter(m => !isDamaging(m))
         }
 
-        if (this.state.sameTypeOnly) {
-            moves = moves.filter(m => this.isSameType(m))
+        if (sameTypeOnly) {
+            filteredMoves = filteredMoves.filter(m => isSameType(m))
         }
 
-        if (this.state.levelUpOnly) {
-            moves = moves.filter(m => m.level > 0)
+        if (levelUpOnly) {
+            filteredMoves = filteredMoves.filter(m => m.level > 0)
         }
 
-        return moves.sort((m1, m2) => this.sortMoves(m1, m2))
+        return filteredMoves.sort((m1, m2) => sortMoves(m1, m2))
     }
 
     /**
      * Sorts moves into ascending order.
      */
-    sortMoves(m1: PokemonMoveContext, m2: PokemonMoveContext) {
+    const sortMoves = (m1: PokemonMoveContext, m2: PokemonMoveContext) => {
         // level-up moves in ascending order first, then the rest
         if (m1.level === 0 && m2.level === 0) {
             // then machines in ascending order
             if (m1.learnMachines.length <= 0 && m2.learnMachines.length <= 0) {
-                return this.sortLearnMethods(m1.methods, m2.methods)
+                return sortLearnMethods(m1.methods, m2.methods)
             }
 
             if (m1.learnMachines.length <= 0) {
@@ -581,7 +524,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             }
 
             // ordering by item ID doesn't work so do it by item name
-            return this.sortMachines(m1.learnMachines, m2.learnMachines)
+            return sortMachines(m1.learnMachines, m2.learnMachines)
         }
 
         if (m1.level === 0) {
@@ -598,7 +541,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Sorts ordered lists of move learn methods into ascending order.
      */
-    sortLearnMethods(m1: MoveLearnMethodEntry[], m2: MoveLearnMethodEntry[]) {
+    const sortLearnMethods = (m1: MoveLearnMethodEntry[], m2: MoveLearnMethodEntry[]) => {
         // order of importance for move learn methods
         const order = [1, 4, 3, 2, 5, 6, 7, 8, 9, 10]
 
@@ -621,7 +564,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Sorts ordered lists of machines into ascending order.
      */
-    sortMachines(machines1: ItemEntry[], machines2: ItemEntry[]) {
+    const sortMachines = (machines1: ItemEntry[], machines2: ItemEntry[]) => {
         let commonLength = Math.min(machines1.length, machines2.length)
         for (let i = 0; i < commonLength; i++) {
             let m1 = machines1[i], m2 = machines2[i]
@@ -657,7 +600,7 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Returns whether the given move is damaging.
      */
-    isDamaging(move: MoveEntry) {
+    const isDamaging = (move: MoveEntry) => {
         let damagingCategoryIds = [
             0, // damage
             4, // damage+ailment
@@ -673,32 +616,32 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
     /**
      * Returns whether the given move has a type that the current Pokemon has.
      */
-    isSameType(move: MoveEntry) {
-        return this.props.typeIds.includes(move.type.typeId)
+    const isSameType = (move: MoveEntry) => {
+        return props.typeIds.includes(move.type.typeId)
     }
 
     /**
      * Returns whether the given move has STAB.
      */
-    isStab(move: MoveEntry) {
-        return this.isDamaging(move) && this.isSameType(move)
+    const isStab = (move: MoveEntry) => {
+        return isDamaging(move) && isSameType(move)
     }
 
     /**
      * Returns whether any filters are active.
      */
-    hasFilters() {
-        return this.state.moveClass !== MoveClass.All
-            || this.state.useMinPower
-            || this.state.sameTypeOnly
-            || this.state.levelUpOnly
+    const hasFilters = () => {
+        return moveClass !== MoveClass.All
+            || useMinPower
+            || sameTypeOnly
+            || levelUpOnly
     }
 
     /**
      * Toggles the move info pane with the given index.
      */
-    toggleMoveOpen(id: number) {
-        let newMovesAreOpen = this.state.movesAreOpen.map(item => {
+    const toggleMoveOpen = (id: number) => {
+        let newMovesAreOpen = movesAreOpen.map(item => {
             if (item.id === id) {
                 return ({ id: id, data: !item.data })
             }
@@ -706,13 +649,13 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
             return item
         })
 
-        this.setState({ movesAreOpen: newMovesAreOpen })
+        setMovesAreOpen(newMovesAreOpen)
     }
 
     /**
      * Returns an icon for the damage class with the given ID.
      */
-    getDamageClassIcon(damageClassId: number) {
+    const getDamageClassIcon = (damageClassId: number) => {
         switch (damageClassId) {
             case 1:
                 // status
@@ -737,57 +680,21 @@ export class MoveList extends Component<IMoveListProps, IMoveListState> {
                 )
             default:
                 throw new Error(
-                    `Move list ${this.props.index}: no move damage class with ID ${damageClassId} exists!`
+                    `Move list ${props.index}: no move damage class with ID ${damageClassId} exists!`
                 )
         }
     }
 
-    /**
-     * Retrieves the Pokemon's moves from PokemonController.
-     */
-    fetchMoves() {
-        let versionGroupId = this.props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(`Move list ${this.props.index}: version group ID is undefined!`)
-        }
+    return (
+        <div className="move-list-container">
+            <div className="flex margin-top-small">
+                {renderFilters()}
+                {searchBar}
+            </div>
 
-        let pokemonId = this.props.pokemonId
-        if (pokemonId !== undefined) {
-            console.log(`Move list ${this.props.index}: getting moves for Pokemon ${pokemonId}...`)
-
-            // loading begins
-            this.setState({ loadingMoves: true })
-
-            // construct endpoint URL
-            let endpointUrl = this.constructEndpointUrl(pokemonId, versionGroupId)
-
-            // get moves
-            fetch(endpointUrl)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response
-                    }
-
-                    throw new Error(`Move list ${this.props.index}: tried to get moves for Pokemon ${pokemonId} but failed with status ${response.status}!`)
-                })
-                .then(response => response.json())
-                .then((moves: PokemonMoveContext[]) => {
-                    this.setState({
-                        moves: moves,
-                        movesAreOpen: moves.map(
-                            m => ({ id: m.moveId, data: false })
-                        )
-                    })
-                })
-                .catch(error => console.error(error))
-                .then(() => this.setState({ loadingMoves: false }))
-        }
-    }
-
-    /**
-     * Returns the endpoint to use when fetching moves of the Pokemon with the given ID.
-     */
-    constructEndpointUrl(pokemonId: number, versionGroupId: number): string {
-        return `${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/moves/${versionGroupId}`
-    }
+            <div className="move-list margin-top-small">
+                {renderMoves()}
+            </div>
+        </div>
+    )
 }

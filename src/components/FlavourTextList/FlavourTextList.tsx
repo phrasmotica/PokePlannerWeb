@@ -1,4 +1,4 @@
-﻿import React, { Component } from "react"
+﻿import React from "react"
 import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
@@ -12,7 +12,7 @@ import {
 
 import "./FlavourTextList.scss"
 
-interface IFlavourTextListProps extends IHasIndex {
+interface FlavourTextListProps extends IHasIndex {
     /**
      * The species to show flavour text for.
      */
@@ -29,31 +29,13 @@ interface IFlavourTextListProps extends IHasIndex {
     showFlavourText: boolean
 }
 
-interface IFlavourTextListState {
-
-}
-
 /**
- * Component for displaying a species' flavour text entries.
+ * Renders a species' flavour text entries.
  */
-export class FlavourTextList extends Component<IFlavourTextListProps, IFlavourTextListState> {
-    /**
-     * Renders the component.
-     */
-    render() {
-        return (
-            <div className="flavourTextContainer">
-                {this.renderFlavourText()}
-            </div>
-        )
-    }
-
-    /**
-     * Renders the flavour text entries.
-     */
-    renderFlavourText() {
-        let species = this.props.species
-        let versions = this.props.versions.sort((v1, v2) => v1.versionId - v2.versionId)
+export const FlavourTextList = (props: FlavourTextListProps) => {
+    const renderFlavourText = () => {
+        let species = props.species
+        let versions = props.versions.sort((v1, v2) => v1.versionId - v2.versionId)
 
         let items = []
         if (versions.length > 0) {
@@ -61,13 +43,13 @@ export class FlavourTextList extends Component<IFlavourTextListProps, IFlavourTe
                 let versionNameElement = (
                     <div className="flavourTextVersionName">
                         <b>
-                            {getDisplayName(v, "en") ?? "-"}
+                            {getDisplayName(v, "en") ?? "version"}
                         </b>
                     </div>
                 )
 
                 let flavourText = "-"
-                if (this.props.showFlavourText && species !== undefined) {
+                if (props.showFlavourText && species !== undefined) {
                     flavourText = getFlavourText(species, v.versionId, "en") ?? "?"
                 }
 
@@ -94,4 +76,10 @@ export class FlavourTextList extends Component<IFlavourTextListProps, IFlavourTe
             </div>
         )
     }
+
+    return (
+        <div className="flavourTextContainer">
+            {renderFlavourText()}
+        </div>
+    )
 }

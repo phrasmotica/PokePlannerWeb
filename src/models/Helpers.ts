@@ -236,3 +236,14 @@ export const pokemonIsValid = (
 
     return pokemonIsValid
 }
+
+/**
+ * Returns the number of links in this chain.
+ */
+export const size = (chain: ChainLinkEntry): number => {
+    if (chain.evolvesTo.length <= 0) {
+        return 1
+    }
+
+    return 1 + chain.evolvesTo.map(size).reduce((x, y) => x + y)
+}

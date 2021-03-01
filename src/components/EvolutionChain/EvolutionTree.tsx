@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import { Button } from "reactstrap"
 import { FaSistrix } from "react-icons/fa"
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io"
@@ -6,7 +6,7 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { getDisplayName } from "../../models/Helpers"
+import { getDisplayName, size } from "../../models/Helpers"
 
 import {
     ChainLinkEntry,
@@ -17,7 +17,7 @@ import {
 import "./EvolutionChain.scss"
 import "./EvolutionTree.scss"
 
-interface IEvolutionTreeProps extends IHasIndex {
+interface EvolutionTreeProps extends IHasIndex {
     /**
      * The chain to render.
      */
@@ -44,75 +44,42 @@ interface IEvolutionTreeProps extends IHasIndex {
     setSpecies: (pokemonSpeciesId: number) => void
 }
 
-interface IEvolutionTreeState {
-    /**
-     * Whether each chain link is expanded.
-     */
-    isExpanded: boolean[]
-}
-
 /**
  * Component for rendering an evolution chain as a tree.
  */
-export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTreeState> {
-    /**
-     * The number of expansion buttons rendered so far.
-     */
-    expandButtonCount: number = 0
+export const EvolutionTree = (props: EvolutionTreeProps) => {
+    const [isExpanded, setIsExpanded] = useState<boolean[]>(new Array(size(props.chain)).fill(false))
 
-    /**
-     * Constructor.
-     */
-    constructor(props: IEvolutionTreeProps) {
-        super(props)
-
-        let nodeCount = this.size(props.chain)
-        this.state = {
-            isExpanded: new Array(nodeCount).fill(false)
-        }
-    }
-
-    /**
-     * Renders the component.
-     */
-    render() {
-        this.expandButtonCount = 0
-
-        return (
-            <div className="evolutionTree">
-                {this.renderChainLink(this.props.chain)}
-            </div>
-        )
-    }
+    let expandButtonCount = 0
 
     /**
      * Renders the chain link.
      */
-    renderChainLink(link: ChainLinkEntry) {
+    const renderChainLink = (link: ChainLinkEntry) => {
         let isRoot = link.evolutionDetails.length <= 0
         let className = isRoot ? "" : "evolutionTreeNode"
 
-        let expandButton = this.renderExpandButton(link)
+        let expandButton = renderExpandButton(link)
 
         let speciesElement = (
             <div className="evolutionTreeSpeciesContainer">
                 {expandButton}
-                {this.renderSpeciesName(link.species)}
-                {this.renderOpenButton(link.species)}
+                {renderSpeciesName(link.species)}
+                {renderOpenButton(link.species)}
             </div>
         )
 
-        let isExpanded = this.state.isExpanded[this.expandButtonCount - 1]
+        let middleElement = null
 
-        let middleElement = undefined
-        if (isExpanded) {
+        let linkIsExpanded = isExpanded[expandButtonCount - 1]
+        if (linkIsExpanded) {
             middleElement = (
                 <div className="flex">
                     <div className="separate-right">
-                        {this.renderSpeciesSprite(link.species)}
+                        {renderSpeciesSprite(link.species)}
                     </div>
 
-                    {this.renderTransition(link)}
+                    {renderTransition(link)}
                 </div>
             )
         }
@@ -123,7 +90,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
                 className={className}>
                 {speciesElement}
                 {middleElement}
-                {link.evolvesTo.map(l => this.renderChainLink(l))}
+                {link.evolvesTo.map(l => renderChainLink(l))}
             </div>
         )
     }
@@ -131,12 +98,12 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Renders an expand button for this chain link.
      */
-    renderExpandButton(link: ChainLinkEntry) {
-        let index = this.expandButtonCount
-        const onClick = () => this.toggleShowEvolutionDetails(index)
+    const renderExpandButton = (link: ChainLinkEntry) => {
+        let index = expandButtonCount
+        const onClick = () => toggleIsExpanded(index)
 
-        let isExpanded = this.state.isExpanded[this.expandButtonCount++]
-        let buttonIcon = isExpanded ? <IoIosArrowDown /> : <IoIosArrowForward />
+        let linkIsExpanded = isExpanded[expandButtonCount++]
+        let buttonIcon = linkIsExpanded ? <IoIosArrowDown /> : <IoIosArrowForward />
 
         return (
             <Button
@@ -151,12 +118,12 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Renders the name of the species.
      */
-    renderSpeciesName(species: PokemonSpeciesEntry) {
+    const renderSpeciesName = (species: PokemonSpeciesEntry) => {
         let speciesId = species.pokemonSpeciesId
         let speciesName = getDisplayName(species, "en") ?? species.name
         let nameElement = <span>{speciesName}</span>
 
-        let isCurrentSpecies = speciesId === this.props.pokemonSpeciesId
+        let isCurrentSpecies = speciesId === props.pokemonSpeciesId
         if (isCurrentSpecies) {
             nameElement = <span><b>{speciesName}</b></span>
         }
@@ -171,21 +138,21 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Renders a button for opening the given species in the selector.
      */
-    renderOpenButton(species: PokemonSpeciesEntry) {
+    const renderOpenButton = (species: PokemonSpeciesEntry) => {
         let speciesId = species.pokemonSpeciesId
-        let isCurrentSpecies = speciesId === this.props.pokemonSpeciesId
+        let isCurrentSpecies = speciesId === props.pokemonSpeciesId
         if (isCurrentSpecies) {
             return null
         }
 
-        let speciesAvailable = this.props.availableSpeciesIds.includes(speciesId)
+        let speciesAvailable = props.availableSpeciesIds.includes(speciesId)
 
         return (
             <Button
                 color="success"
                 disabled={!speciesAvailable}
                 className="evolutionTreeOpenButton"
-                onMouseUp={() => this.props.setSpecies(speciesId)}>
+                onMouseUp={() => props.setSpecies(speciesId)}>
                 <div className="flex-center">
                     <FaSistrix />
                 </div>
@@ -196,8 +163,8 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Renders the species' sprite.
      */
-    renderSpeciesSprite(species: PokemonSpeciesEntry) {
-        let spriteUrl = this.props.showShinySprites
+    const renderSpeciesSprite = (species: PokemonSpeciesEntry) => {
+        let spriteUrl = props.showShinySprites
                       ? species.shinySpriteUrl
                       : species.spriteUrl
 
@@ -213,7 +180,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             <div className="evolutionTreeSprite">
                 <img
                     className="inherit-size"
-                    alt={`sprite${this.props.index}`}
+                    alt={`sprite${props.index}`}
                     src={spriteUrl} />
             </div>
         )
@@ -222,7 +189,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Renders the transition from this chain link to the next one.
      */
-    renderTransition(link: ChainLinkEntry) {
+    const renderTransition = (link: ChainLinkEntry) => {
         if (link.evolutionDetails.length <= 0) {
             return (
                 <div
@@ -233,7 +200,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             )
         }
 
-        let details = link.evolutionDetails.map(d => this.renderEvolutionDetail(d))
+        let details = link.evolutionDetails.map(d => renderEvolutionDetail(d))
 
         return (
             <div
@@ -247,7 +214,7 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Renders the evolution detail.
      */
-    renderEvolutionDetail(detail: EvolutionDetailEntry) {
+    const renderEvolutionDetail = (detail: EvolutionDetailEntry) => {
         let items = []
 
         let trigger = detail.trigger
@@ -384,8 +351,8 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
     /**
      * Toggles showing the evolution details with the given index.
      */
-    toggleShowEvolutionDetails(index: number) {
-        let newShowEvolutionDetails = this.state.isExpanded.map((item, j) => {
+    const toggleIsExpanded = (index: number) => {
+        let newIsExpanded = isExpanded.map((item, j) => {
             if (j === index) {
                 return !item
             }
@@ -393,17 +360,12 @@ export class EvolutionTree extends Component<IEvolutionTreeProps, IEvolutionTree
             return item
         })
 
-        this.setState({ isExpanded: newShowEvolutionDetails })
+        setIsExpanded(newIsExpanded)
     }
 
-    /**
-     * Returns the number of links in this chain.
-     */
-    size(chain: ChainLinkEntry): number {
-        if (chain.evolvesTo.length <= 0) {
-            return 1
-        }
-
-        return 1 + chain.evolvesTo.map(e => this.size(e)).reduce((x, y) => x + y)
-    }
+    return (
+        <div className="evolutionTree">
+            {renderChainLink(props.chain)}
+        </div>
+    )
 }

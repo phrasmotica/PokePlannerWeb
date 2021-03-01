@@ -43,3 +43,8 @@ export interface IHasSearch {
  */
 export interface IHasCommon extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
 }
+
+export type IsOpenDict = {
+    id: number
+    data: boolean
+}[]

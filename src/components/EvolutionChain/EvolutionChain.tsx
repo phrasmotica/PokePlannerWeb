@@ -1,15 +1,14 @@
-﻿import React, { Component } from "react"
+﻿import React, { useEffect, useState } from "react"
 
 import { EvolutionTree } from "./EvolutionTree"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { getSpeciesIds } from "../../models/Helpers"
 import { EvolutionChainEntry } from "../../models/swagger"
 
 import "./EvolutionChain.scss"
 
-interface IEvolutionChainProps extends IHasIndex {
+interface EvolutionChainProps extends IHasIndex {
     /**
      * The ID of the species this chain is being shown for.
      */
@@ -36,93 +35,53 @@ interface IEvolutionChainProps extends IHasIndex {
     setSpecies: (pokemonSpeciesId: number) => void
 }
 
-interface IEvolutionChainState {
-    /**
-     * The evolution chain.
-     */
-    evolutionChain: EvolutionChainEntry | undefined
-
-    /**
-     * Whether we're loading the evolution chain.
-     */
-    loadingChain: boolean
-}
-
 /**
- * Component for showing a set of stats as a graph.
+ * Renders a species' evolution chain.
  */
-export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionChainState> {
-    /**
-     * Constructor.
-     */
-    constructor(props: IEvolutionChainProps) {
-        super(props)
-        this.state = {
-            evolutionChain: undefined,
-            loadingChain: false
-        }
-    }
+export const EvolutionChain = (props: EvolutionChainProps) => {
+    const [evolutionChain, setEvolutionChain] = useState<EvolutionChainEntry>()
+    const [loadingChain, setLoadingChain] = useState(false)
 
-    /**
-     * Fetch the evolution chain if necessary.
-     */
-    componentDidUpdate(previousProps: IEvolutionChainProps) {
-        // don't fetch if we're loading
-        if (this.state.loadingChain) {
-            return
-        }
+    useEffect(() => {
+        const fetchEvolutionChain = () => {
+            let speciesId = props.pokemonSpeciesId
+            if (speciesId !== undefined) {
+                console.log(`Evolution chain ${props.index}: getting evolution chain for species ${speciesId}...`)
+                setLoadingChain(true)
 
-        let previousSpeciesId = previousProps.pokemonSpeciesId
-        let speciesId = this.props.pokemonSpeciesId
-        let speciesChanged = previousSpeciesId !== speciesId
+                // get evolution chain
+                fetch(`${process.env.REACT_APP_API_URL}/evolutionChain/${speciesId}`)
+                    .then(response => {
+                        if (response.status === 200) {
+                            return response
+                        }
 
-        // species is the same, don't fetch
-        if (!speciesChanged) {
-            return
-        }
-
-        // species has changed, fetch chain if we don't have one
-        let chain = this.state.evolutionChain
-        if (chain === undefined) {
-            this.fetchEvolutionChain()
-            return
+                        throw new Error(`Evolution chain ${props.index}: tried to get evolution chain for species ${speciesId} but failed with status ${response.status}!`)
+                    })
+                    .then(response => response.json())
+                    .then((chain: EvolutionChainEntry) => setEvolutionChain(chain))
+                    .catch(error => {
+                        console.error(error)
+                        setEvolutionChain(undefined)
+                    })
+                    .finally(() => setLoadingChain(false))
+            }
+            else {
+                setEvolutionChain(undefined)
+            }
         }
 
-        // if we've got a new species, fetch chain
-        if (previousSpeciesId === undefined && speciesId !== undefined) {
-            this.fetchEvolutionChain()
-            return
-        }
+        // TODO: implement logic for deciding whether we fetch the evolution chain
+        fetchEvolutionChain()
 
-        // if we've now got no species, clear chain
-        if (previousSpeciesId !== undefined && speciesId === undefined) {
-            this.fetchEvolutionChain()
-            return
-        }
-
-        // species has changed - only fetch if new one is in a different chain
-        let chainSpeciesIds = getSpeciesIds(chain)
-        let previousSpeciesInChain = chainSpeciesIds.includes(previousSpeciesId!)
-        let speciesInChain = chainSpeciesIds.includes(speciesId!)
-        let chainChanged = previousSpeciesInChain !== speciesInChain
-
-        if (chainChanged) {
-            this.fetchEvolutionChain()
-        }
-    }
-
-    /**
-     * Renders the component.
-     */
-    render() {
-        return this.renderEvolutionChain()
-    }
+        return () => setEvolutionChain(undefined)
+    }, [props.index, props.pokemonSpeciesId])
 
     /**
      * Renders the evolution chain.
      */
-    renderEvolutionChain() {
-        if (!this.props.shouldShowChain) {
+    const renderEvolutionChain = () => {
+        if (!props.shouldShowChain) {
             return (
                 <div className="flex-center evolution-chain">
                     -
@@ -130,7 +89,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             )
         }
 
-        if (this.state.loadingChain) {
+        if (loadingChain) {
             return (
                 <div className="flex-center evolution-chain">
                     Loading...
@@ -138,7 +97,7 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
             )
         }
 
-        let chain = this.state.evolutionChain?.chain
+        let chain = evolutionChain?.chain
         if (chain === undefined) {
             return (
                 <div className="flex-center evolution-chain">
@@ -150,57 +109,13 @@ export class EvolutionChain extends Component<IEvolutionChainProps, IEvolutionCh
         return (
             <EvolutionTree
                 chain={chain}
-                index={this.props.index}
-                pokemonSpeciesId={this.props.pokemonSpeciesId}
-                availableSpeciesIds={this.props.availableSpeciesIds}
-                showShinySprites={this.props.showShinySprites}
-                setSpecies={(pokemonSpeciesId: number) => this.props.setSpecies(pokemonSpeciesId)} />
+                index={props.index}
+                pokemonSpeciesId={props.pokemonSpeciesId}
+                availableSpeciesIds={props.availableSpeciesIds}
+                showShinySprites={props.showShinySprites}
+                setSpecies={(pokemonSpeciesId: number) => props.setSpecies(pokemonSpeciesId)} />
         )
     }
 
-    /**
-     * Fetches the evolution chain of the species.
-     */
-    fetchEvolutionChain() {
-        let speciesId = this.props.pokemonSpeciesId
-        if (speciesId !== undefined) {
-            console.log(`Evolution chain ${this.props.index}: getting evolution chain for species ${speciesId}...`)
-
-            // loading begins
-            this.setState({ loadingChain: true })
-
-            // construct endpoint URL
-            let endpointUrl = this.constructEndpointUrl(speciesId)
-
-            // get evolution chain
-            fetch(endpointUrl)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response
-                    }
-
-                    throw new Error(`Evolution chain ${this.props.index}: tried to get evolution chain for species ${speciesId} but failed with status ${response.status}!`)
-                })
-                .then(response => response.json())
-                .then((chain: EvolutionChainEntry) => {
-                    this.setState({ evolutionChain: chain })
-                })
-                .catch(error => {
-                    console.error(error)
-                    this.setState({ evolutionChain: undefined })
-                })
-                .finally(() => this.setState({ loadingChain: false }))
-        }
-        else {
-            this.setState({ evolutionChain: undefined })
-        }
-    }
-
-    /**
-     * Returns the endpoint to use when fetching the evolution chain of the species with the given
-     * ID.
-     */
-    constructEndpointUrl(pokemonSpeciesId: number): string {
-        return `${process.env.REACT_APP_API_URL}/evolutionChain/${pokemonSpeciesId}`
-    }
+    return renderEvolutionChain()
 }
