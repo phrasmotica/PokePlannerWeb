@@ -149,10 +149,10 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         }
 
         return props.varieties.map(variety => {
-            let label = getDisplayName(species!, "en") ?? "-"
+            let label = getDisplayName(species!, "en") ?? species!.name
 
             if (hasDisplayNames(variety)) {
-                label = getDisplayName(variety, "en") ?? label
+                label = getDisplayName(variety, "en") ?? variety.name
             }
 
             return {

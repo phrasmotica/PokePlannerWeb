@@ -104,7 +104,7 @@ export const InfoPanel = (props: InfoPanelProps) => {
         return (
             <StatGraph
                 index={props.index}
-                statNames={props.baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
+                statNames={props.baseStats.map(s => getDisplayName(s, "en") ?? s.name)}
                 statValues={baseStats}
                 shouldShowStats={props.shouldShowPokemon} />
         )

@@ -179,7 +179,7 @@ export const TeamBuilder = () => {
 
     const renderVersionGroupMenu = () => {
         let options = versionGroups.map(vg => ({
-            label: getDisplayName(vg, "en") ?? `(versionGroup${vg.versionGroupId})`,
+            label: getDisplayName(vg, "en") ?? vg.name,
             value: vg.versionGroupId
         }))
 

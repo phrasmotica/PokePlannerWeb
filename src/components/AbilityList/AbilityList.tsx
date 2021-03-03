@@ -75,7 +75,7 @@ export const AbilityList = (props: AbilityListProps) => {
         let items = []
         if (props.showAbilities && abilities.length > 0) {
             for (let ability of abilities) {
-                let abilityName = getDisplayName(ability, "en") ?? "ability"
+                let abilityName = getDisplayName(ability, "en") ?? ability.name
                 let hiddenText = ability.isHidden ? " (hidden)" : ""
 
                 let nameElement = (

@@ -129,10 +129,10 @@ export const FormSelector = (props: FormSelectorProps) => {
         let forms = props.forms
         return forms.map(form => {
             // default varieties derive name from their species
-            let label = getDisplayName(species!, "en") ?? "-"
+            let label = getDisplayName(species!, "en") ?? species!.name
 
             if (hasDisplayNames(form)) {
-                label = getDisplayName(form, "en") ?? label
+                label = getDisplayName(form, "en") ?? form.name
             }
 
             return {

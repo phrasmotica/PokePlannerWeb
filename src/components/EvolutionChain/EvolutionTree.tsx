@@ -224,13 +224,13 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
             // only need extra info for certain triggers
             // use-item is clear from other details
             if (trigger.evolutionTriggerId === 1 && detail.minLevel === undefined) {
-                triggerElement = getDisplayName(trigger, "en") ?? "level up"
+                triggerElement = getDisplayName(trigger, "en") ?? trigger.name
             }
             else if (trigger.evolutionTriggerId === 2) {
-                triggerElement = getDisplayName(trigger, "en") ?? "trade"
+                triggerElement = getDisplayName(trigger, "en") ?? trigger.name
             }
             else if (trigger.evolutionTriggerId === 4) {
-                triggerElement = getDisplayName(trigger, "en") ?? "shed"
+                triggerElement = getDisplayName(trigger, "en") ?? trigger.name
             }
 
             if (triggerElement !== undefined) {

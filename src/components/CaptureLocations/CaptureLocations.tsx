@@ -209,7 +209,7 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
                         let versions = props.versionGroup?.versions ?? []
 
                         let versionElements = versions.map(v => {
-                            let versionName = getDisplayName(v, "en") ?? "version"
+                            let versionName = getDisplayName(v, "en") ?? v.name
                             let versionNameElement = (
                                 <div className="captureLocationsVersionName">
                                     {versionName}

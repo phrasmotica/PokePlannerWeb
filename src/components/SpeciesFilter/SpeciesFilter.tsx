@@ -181,7 +181,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
 
         let generations = props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
-                                          .map(g => getShortDisplayName(g, "en") ?? "-")
+                                          .map(g => getShortDisplayName(g, "en") ?? g.name)
 
         let generationFilter = props.generationFilter
         if (generationFilter.isEmpty()) {
@@ -219,7 +219,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
 
         let types = props.types
         let typeLabels = types.filter(t => typeIds.includes(t.typeId))
-                              .map(t => getDisplayName(t, "en") ?? "-")
+                              .map(t => getDisplayName(t, "en") ?? t.name)
 
         let typeFilter = props.typeFilter
         if (typeFilter.isEmpty()) {
@@ -274,7 +274,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
             <BaseStatFilter
                 index={props.index}
                 baseStatFilter={filter}
-                baseStatLabels={baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
+                baseStatLabels={baseStats.map(s => getDisplayName(s, "en") ?? s.name)}
                 minValues={minValues}
                 maxValues={maxValues}
                 setBaseStatFilter={setFilter} />

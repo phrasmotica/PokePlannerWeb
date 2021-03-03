@@ -341,7 +341,7 @@ export const MoveList = (props: MoveListProps) => {
             let rows = []
             for (let row = 0; row < filteredMoves.length; row++) {
                 let move = filteredMoves[row]
-                let moveName = getDisplayName(move, "en") ?? "move"
+                let moveName = getDisplayName(move, "en") ?? move.name
 
                 let moveNameElement = (
                     <span>
@@ -364,7 +364,7 @@ export const MoveList = (props: MoveListProps) => {
                     moveMethod = `(level ${move.level})`
                 }
                 else if (move.learnMachines.length > 0) {
-                    let machinesSummary = move.learnMachines.map(m => getDisplayName(m, "en") ?? "Machine").join(", ")
+                    let machinesSummary = move.learnMachines.map(m => getDisplayName(m, "en") ?? m.name).join(", ")
                     moveMethod = `(${machinesSummary})`
                 }
                 else {

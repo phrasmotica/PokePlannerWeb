@@ -43,7 +43,7 @@ export const FlavourTextList = (props: FlavourTextListProps) => {
                 let versionNameElement = (
                     <div className="flavourTextVersionName">
                         <b>
-                            {getDisplayName(v, "en") ?? "version"}
+                            {getDisplayName(v, "en") ?? v.name}
                         </b>
                     </div>
                 )

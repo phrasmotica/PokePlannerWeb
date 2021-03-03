@@ -49,7 +49,7 @@ export const HeldItemList = (props: HeldItemListProps) => {
 
         let versionElements = []
         for (let version of versions) {
-            let versionName = getDisplayName(version, "en") ?? "version"
+            let versionName = getDisplayName(version, "en") ?? version.name
             let versionNameElement = (
                 <div className="versionName">
                     <b>
@@ -65,7 +65,7 @@ export const HeldItemList = (props: HeldItemListProps) => {
                 // display items in descending order of rarity
                 let itemList = entry.data.sort((i1, i2) => i2.rarity - i1.rarity)
                 for (let item of itemList) {
-                    let itemName = getDisplayName(item, "en") ?? "item"
+                    let itemName = getDisplayName(item, "en") ?? item.name
                     let itemRarity = `(${item.rarity}%)`
 
                     listElements.push(

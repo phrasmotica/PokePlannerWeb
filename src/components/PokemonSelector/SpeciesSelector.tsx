@@ -156,7 +156,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      */
     const createOptions = () => {
         return getFilteredSpecies().map(species => ({
-            label: getDisplayName(species, "en") ?? "-",
+            label: getDisplayName(species, "en") ?? species.name,
             value: species.pokemonSpeciesId
         }))
     }
