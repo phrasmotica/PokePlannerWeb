@@ -156,6 +156,11 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const [showShinySprite, setShowShinySprite] = useState(false)
     const [showSpeciesFilter, setShowSpeciesFilter] = useState(false)
 
+    useEffect(() => {
+        setBaseStatFilter(BaseStatFilterModel.createEmpty(props.baseStats.length))
+        return () => setBaseStatFilter(BaseStatFilterModel.createEmpty(0))
+    }, [props.baseStats])
+
     const renderPokemonName = () => {
         let displayNameElement = "-"
         if (shouldShowPokemon()) {
@@ -406,12 +411,6 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         </div>
     )
 
-    useEffect(() => {
-        setBaseStatFilter(BaseStatFilterModel.createEmpty(props.baseStats.length))
-        return () => setBaseStatFilter(BaseStatFilterModel.createEmpty(0))
-    }, [props.baseStats])
-
-    const toggleIgnoreValidity = () => props.toggleIgnoreValidity()
     const toggleSpeciesFilter = () => setShowSpeciesFilter(!showSpeciesFilter)
 
     return (
@@ -431,7 +430,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     generationFilter={generationFilter}
                     typeFilter={typeFilter}
                     baseStatFilter={baseStatFilter}
-                    toggleIgnoreValidity={toggleIgnoreValidity}
+                    toggleIgnoreValidity={props.toggleIgnoreValidity}
                     toggleSpeciesFilter={toggleSpeciesFilter} />
             </div>
 

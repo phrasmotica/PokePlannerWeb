@@ -166,15 +166,15 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 index={props.index}
                 versionGroupId={props.versionGroupId}
                 hideTooltips={props.hideTooltips}
-                entries={props.species}
-                entryId={pokemonSpeciesId}
+                species={props.species}
+                speciesId={pokemonSpeciesId}
                 loading={false}
                 generations={props.generations}
                 generationFilter={props.generationFilter}
                 typeFilter={props.typeFilter}
                 baseStatFilter={props.baseStatFilter}
-                setSpecies={id => setSpecies(id)}
-                toggleFilter={() => props.toggleSpeciesFilter()}
+                setSpecies={setSpecies}
+                toggleFilter={props.toggleSpeciesFilter}
                 shouldMarkInvalid={!props.ignoreValidity && hasNoVariants} />
         )
     }
@@ -193,13 +193,13 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 index={props.index}
                 versionGroupId={props.versionGroupId}
                 hideTooltips={props.hideTooltips}
-                entries={varieties}
-                entryId={varietyId}
+                varieties={varieties}
+                varietyId={varietyId}
                 species={species}
                 formsDict={formsDict}
                 formId={formId}
-                setVariety={(variety: PokemonEntry) => setVariety(variety)}
-                setForm={(form: PokemonFormEntry) => setForm(form)}
+                setVariety={setVariety}
+                setForm={setForm}
                 loading={loadingVarieties}
                 shouldMarkInvalid={!props.ignoreValidity && varieties.length >= 2} />
         )
@@ -221,10 +221,10 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 index={props.index}
                 versionGroupId={props.versionGroupId}
                 hideTooltips={props.hideTooltips}
-                entries={forms}
-                entryId={formId}
+                forms={forms}
+                formId={formId}
                 species={species}
-                setForm={(form: PokemonFormEntry) => setForm(form)}
+                setForm={setForm}
                 loading={loadingForms}
                 shouldMarkInvalid={!props.ignoreValidity && forms.length >= 2} />
         )

@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 import { Input, Label } from "reactstrap"
 import key from "weak-key"
 
@@ -10,7 +10,7 @@ import { CookieHelper } from "../../util/CookieHelper"
 
 import "./BaseStatFilter.scss"
 
-interface IBaseStatFilterProps extends IHasIndex {
+interface BaseStatFilterProps extends IHasIndex {
     /**
      * The base stat filter.
      */
@@ -37,31 +37,15 @@ interface IBaseStatFilterProps extends IHasIndex {
     setBaseStatFilter: (values: BaseStatFilterModel) => void
 }
 
-interface IBaseStatFilterState {
-
-}
-
 /**
  * Component for filtering a list of species stored in the parent component by type.
  */
-export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFilterState> {
-    /**
-     * Renders the component.
-     */
-    render() {
-        return (
-            <div>
-                {this.renderToggle()}
-                {this.renderFilter()}
-            </div>
-        )
-    }
-
+export const BaseStatFilter = (props: BaseStatFilterProps) => {
     /**
      * Renders the filter toggle.
      */
-    renderToggle() {
-        let toggleId = `baseStatFilter${this.props.index}toggle`
+    const renderToggle = () => {
+        let toggleId = `baseStatFilter${props.index}toggle`
 
         return (
             <div className="flex-center margin-bottom">
@@ -69,8 +53,8 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                     id={toggleId}
                     type="checkbox"
                     className="toggleCheckbox"
-                    checked={this.props.baseStatFilter.isEnabled()}
-                    onChange={_ => this.toggleFilter()} />
+                    checked={props.baseStatFilter.isEnabled()}
+                    onChange={_ => toggleFilter()} />
 
                 <Label
                     className="toggleLabel"
@@ -84,18 +68,18 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
     /**
      * Renders the filter.
      */
-    renderFilter() {
-        let filter = this.props.baseStatFilter
+    const renderFilter = () => {
+        let filter = props.baseStatFilter
 
         let items = filter.values.map((e, index) => {
-            let label = this.props.baseStatLabels[index]
+            let label = props.baseStatLabels[index]
             let disabled = !filter.isEnabled()
 
-            let checkboxId = `baseStatFilter${this.props.index}activeCheckbox${index}`
+            let checkboxId = `baseStatFilter${props.index}activeCheckbox${index}`
             let active = e.active
 
-            let minValue = this.props.minValues[index]
-            let maxValue = this.props.maxValues[index]
+            let minValue = props.minValues[index]
+            let maxValue = props.maxValues[index]
 
             let constrainedValue = Math.min(Math.max(e.value, minValue), maxValue)
 
@@ -115,7 +99,7 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                         id={checkboxId}
                         type="checkbox"
                         className="activeCheckbox margin-right-small"
-                        onChange={_ => this.toggleFilterActive(index)}
+                        onChange={_ => toggleFilterActive(index)}
                         disabled={disabled}
                         checked={active} />
 
@@ -126,7 +110,7 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
                         disabled={disabled || !active}
 
                         // + before a variable converts it to its numeric representation!
-                        onChange={e => this.setFilterValue(+e.target.value, index)}
+                        onChange={e => setFilterValue(+e.target.value, index)}
 
                         min={minValue}
                         value={constrainedValue}
@@ -145,39 +129,46 @@ export class BaseStatFilter extends Component<IBaseStatFilterProps, IBaseStatFil
     /**
      * Toggles the filter.
      */
-    toggleFilter() {
-        let filter = this.props.baseStatFilter
+    const toggleFilter = () => {
+        let filter = props.baseStatFilter
         let isEnabled = filter.toggle()
 
-        let cookieName = `baseStatFilter${this.props.index}enabled`
+        let cookieName = `baseStatFilter${props.index}enabled`
         CookieHelper.set(cookieName, isEnabled)
 
-        this.props.setBaseStatFilter(filter)
+        props.setBaseStatFilter(filter)
     }
 
     /**
      * Sets the given minimum base stat value at the given index.
      */
-    toggleFilterActive(index: number) {
-        let filter = this.props.baseStatFilter
+    const toggleFilterActive = (index: number) => {
+        let filter = props.baseStatFilter
 
-        let cookieName = `baseStatFilter${this.props.index}active${index}`
+        let cookieName = `baseStatFilter${props.index}active${index}`
         let isActive = filter.values[index].active
         CookieHelper.set(cookieName, !isActive)
 
         filter.toggleActive(index)
-        this.props.setBaseStatFilter(filter)
+        props.setBaseStatFilter(filter)
     }
 
     /**
      * Sets the given minimum base stat value at the given index.
      */
-    setFilterValue(value: number, index: number) {
-        let cookieName = `baseStatFilter${this.props.index}value${index}`
+    const setFilterValue = (value: number, index: number) => {
+        let cookieName = `baseStatFilter${props.index}value${index}`
         CookieHelper.set(cookieName, value)
 
-        let filter = this.props.baseStatFilter
+        let filter = props.baseStatFilter
         filter.setValue(value, index)
-        this.props.setBaseStatFilter(filter)
+        props.setBaseStatFilter(filter)
     }
+
+    return (
+        <div>
+            {renderToggle()}
+            {renderFilter()}
+        </div>
+    )
 }

@@ -44,6 +44,53 @@ export const EfficacyList = (props: EfficacyListProps) => {
     const [loadingEfficacy, setLoadingEfficacy] = useState(false)
     const [typeTooltipOpen, setTypeTooltipOpen] = useState<boolean[]>([])
 
+    const hasTypes = props.typeIds.length > 0
+
+    useEffect(() => {
+        const getEfficacy = () => {
+            if (hasTypes) {
+                let typeIds = props.typeIds
+                let typesStr = typeIds.join("/")
+                console.log(`Efficacy list ${props.index}: getting efficacy for ${typesStr}...`)
+
+                // loading begins
+                setLoadingEfficacy(true)
+
+                // construct endpoint URL
+                let endpointUrl = constructEndpointUrl(typeIds)
+
+                // get efficacy data
+                fetch(endpointUrl)
+                    .then(response => {
+                        if (response.status === 200) {
+                            return response
+                        }
+
+                        throw new Error(`Efficacy list ${props.index}: tried to get efficacy for ${typesStr} but failed with status ${response.status}!`)
+                    })
+                    .then(response => response.json())
+                    .then((efficacy: EfficacySet) => setEfficacy(efficacy))
+                    .catch(error => console.error(error))
+                    .then(() => setLoadingEfficacy(false))
+            }
+        }
+
+
+        const constructEndpointUrl = (typeIds: number[]) => {
+            let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroup=${props.versionGroup?.versionGroupId}`
+            for (var i = 0; i < typeIds.length; i++) {
+                endpointUrl += `&type=${typeIds[i]}`
+            }
+
+            return endpointUrl
+        }
+
+        getEfficacy()
+        setTypeTooltipOpen(props.types.map(_ => false))
+
+        return () => setEfficacy(undefined)
+    }, [props.index, props.versionGroup, props.types, props.typeIds, hasTypes])
+
     const renderTypeEfficacy = () => {
         let items = []
         let types = props.types
@@ -182,56 +229,6 @@ export const EfficacyList = (props: EfficacyListProps) => {
 
         setTypeTooltipOpen(newTypeTooltipOpen)
     }
-
-    const hasTypes = props.typeIds.length > 0
-
-    // retrieves the types' efficacy from EfficacyController
-
-
-    useEffect(() => {
-        const getEfficacy = () => {
-            if (hasTypes) {
-                let typeIds = props.typeIds
-                let typesStr = typeIds.join("/")
-                console.log(`Efficacy list ${props.index}: getting efficacy for ${typesStr}...`)
-
-                // loading begins
-                setLoadingEfficacy(true)
-
-                // construct endpoint URL
-                let endpointUrl = constructEndpointUrl(typeIds)
-
-                // get efficacy data
-                fetch(endpointUrl)
-                    .then(response => {
-                        if (response.status === 200) {
-                            return response
-                        }
-
-                        throw new Error(`Efficacy list ${props.index}: tried to get efficacy for ${typesStr} but failed with status ${response.status}!`)
-                    })
-                    .then(response => response.json())
-                    .then((efficacy: EfficacySet) => setEfficacy(efficacy))
-                    .catch(error => console.error(error))
-                    .then(() => setLoadingEfficacy(false))
-            }
-        }
-
-
-        const constructEndpointUrl = (typeIds: number[]) => {
-            let endpointUrl = `${process.env.REACT_APP_API_URL}/efficacy?versionGroup=${props.versionGroup?.versionGroupId}`
-            for (var i = 0; i < typeIds.length; i++) {
-                endpointUrl += `&type=${typeIds[i]}`
-            }
-
-            return endpointUrl
-        }
-
-        getEfficacy()
-        setTypeTooltipOpen(props.types.map(_ => false))
-
-        return () => setEfficacy(undefined)
-    }, [props.index, props.versionGroup, props.types, props.typeIds, hasTypes])
 
     return (
         <div style={{ marginTop: 4 }}>

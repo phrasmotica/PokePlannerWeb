@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 import { Button, ButtonGroup, Input, Label } from "reactstrap"
 
 import { GenerationFilterModel } from "./IdFilterModel"
@@ -8,7 +8,7 @@ import { IHasIndex } from "../CommonMembers"
 import { CookieHelper } from "../../util/CookieHelper"
 import { CssHelper } from "../../util/CssHelper"
 
-interface IGenerationFilterProps extends IHasIndex {
+interface GenerationFilterProps extends IHasIndex {
     /**
      * The IDs of the generations to filter.
      */
@@ -30,31 +30,15 @@ interface IGenerationFilterProps extends IHasIndex {
     setGenerationFilter: (filter: GenerationFilterModel) => void
 }
 
-interface IGenerationFilterState {
-
-}
-
 /**
  * Component for filtering a list of species stored in the parent component by generation.
  */
-export class GenerationFilter extends Component<IGenerationFilterProps, IGenerationFilterState> {
-    /**
-     * Renders the component.
-     */
-    render() {
-        return (
-            <div>
-                {this.renderToggle()}
-                {this.renderFilter()}
-            </div>
-        )
-    }
-
+export const GenerationFilter = (props: GenerationFilterProps) => {
     /**
      * Renders the filter toggle.
      */
-    renderToggle() {
-        let toggleId = `generationFilter${this.props.index}toggle`
+    const renderToggle = () => {
+        let toggleId = `generationFilter${props.index}toggle`
 
         return (
             <div className="flex-center margin-bottom">
@@ -62,8 +46,8 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
                     id={toggleId}
                     type="checkbox"
                     className="toggleCheckbox"
-                    checked={this.props.generationFilter.isEnabled()}
-                    onChange={_ => this.toggleFilter()} />
+                    checked={props.generationFilter.isEnabled()}
+                    onChange={_ => toggleFilter()} />
 
                 <Label
                     className="toggleLabel"
@@ -77,11 +61,11 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
     /**
      * Renders the filter.
      */
-    renderFilter() {
-        let items = this.props.generationIds.map((id, index) => {
-            let label = this.props.generationLabels[index]
+    const renderFilter = () => {
+        let items = props.generationIds.map((id, index) => {
+            let label = props.generationLabels[index]
 
-            let filter = this.props.generationFilter
+            let filter = props.generationFilter
             let isPresent = filter.isInFilter([id])
             let disabled = !filter.isEnabled()
             let style = CssHelper.defaultCursorIf(disabled)
@@ -93,7 +77,7 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
                     color={isPresent ? "success" : "secondary"}
                     disabled={disabled}
                     style={style}
-                    onMouseUp={() => this.toggleFilterId(id)}>
+                    onMouseUp={() => toggleFilterId(id)}>
                     <span title={`Filter to species from generation ${label}`}>
                         {label}
                     </span>
@@ -111,26 +95,33 @@ export class GenerationFilter extends Component<IGenerationFilterProps, IGenerat
     /**
      * Toggles the filter.
      */
-    toggleFilter() {
-        let generationFilter = this.props.generationFilter
+    const toggleFilter = () => {
+        let generationFilter = props.generationFilter
         let isEnabled = generationFilter.toggle()
 
-        let cookieName = `generationFilter${this.props.index}enabled`
+        let cookieName = `generationFilter${props.index}enabled`
         CookieHelper.set(cookieName, isEnabled)
 
-        this.props.setGenerationFilter(generationFilter)
+        props.setGenerationFilter(generationFilter)
     }
 
     /**
      * Toggles the given ID in the filter.
      */
-    toggleFilterId(id: number) {
-        let generationFilter = this.props.generationFilter
+    const toggleFilterId = (id: number) => {
+        let generationFilter = props.generationFilter
         let isActive = generationFilter.toggleId(id)
 
-        let cookieName = `generationFilter${this.props.index}active${id}`
+        let cookieName = `generationFilter${props.index}active${id}`
         CookieHelper.set(cookieName, isActive)
 
-        this.props.setGenerationFilter(generationFilter)
+        props.setGenerationFilter(generationFilter)
     }
+
+    return (
+        <div>
+            {renderToggle()}
+            {renderFilter()}
+        </div>
+    )
 }

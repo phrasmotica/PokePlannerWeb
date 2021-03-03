@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { useState } from "react"
 import { Collapse, Button } from "reactstrap"
 
 import { BaseStatFilter } from "./BaseStatFilter"
@@ -22,7 +22,7 @@ import { CookieHelper } from "../../util/CookieHelper"
 
 import "./SpeciesFilter.scss"
 
-interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
+interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The species to filter.
      */
@@ -74,53 +74,29 @@ interface ISpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     setBaseStatFilter: (filter: BaseStatFilterModel) => void
 }
 
-interface ISpeciesFilterState {
-    /**
-     * Whether the generation filter is open.
-     */
-    generationFilterOpen: boolean
-
-    /**
-     * Whether the type filter is open.
-     */
-    typeFilterOpen: boolean
-
-    /**
-     * Whether the base stat filter is open.
-     */
-    baseStatFilterOpen: boolean
-}
-
 /**
  * Component for filtering a list of species stored in the parent component.
  */
-export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilterState> {
-    /**
-     * Constructor.
-     */
-    constructor(props: ISpeciesFilterProps) {
-        super(props)
-        this.state = {
-            generationFilterOpen: CookieHelper.getFlag(`generationFilter${this.props.index}open`),
-            typeFilterOpen: CookieHelper.getFlag(`typeFilter${this.props.index}open`),
-            baseStatFilterOpen: CookieHelper.getFlag(`baseStatFilter${this.props.index}open`)
-        }
-    }
+export const SpeciesFilter = (props: SpeciesFilterProps) => {
+    const [generationFilterOpen, setGenerationFilterOpen] = useState(
+        CookieHelper.getFlag(`generationFilter${props.index}open`)
+    )
 
-    /**
-     * Renders the component.
-     */
-    render() {
-        return this.renderFilters()
-    }
+    const [typeFilterOpen, setTypeFilterOpen] = useState(
+        CookieHelper.getFlag(`typeFilter${props.index}open`)
+    )
+
+    const [baseStatFilterOpen, setBaseStatFilterOpen] = useState(
+        CookieHelper.getFlag(`baseStatFilter${props.index}open`)
+    )
 
     /**
      * Renders the filter.
      */
-    renderFilters() {
+    const renderFilters = () => {
         let generationFilterLabel = "Filter by generation"
         let generationFilterColour = "info"
-        let generationFilter = this.props.generationFilter
+        let generationFilter = props.generationFilter
         if (generationFilter.isEnabled() && !generationFilter.isEmpty()) {
             generationFilterLabel += ` (${generationFilter.count()})`
             generationFilterColour = "success"
@@ -128,7 +104,7 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
 
         let typeFilterLabel = "Filter by type"
         let typeFilterColour = "info"
-        let typeFilter = this.props.typeFilter
+        let typeFilter = props.typeFilter
         if (typeFilter.isEnabled() && !typeFilter.isEmpty()) {
             typeFilterLabel += ` (${typeFilter.count()})`
             typeFilterColour = "success"
@@ -136,15 +112,11 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
 
         let baseStatFilterLabel = "Filter by base stats"
         let baseStatFilterColour = "info"
-        let baseStatFilter = this.props.baseStatFilter
+        let baseStatFilter = props.baseStatFilter
         if (baseStatFilter.isEnabled() && !baseStatFilter.isEmpty()) {
             baseStatFilterLabel += ` (${baseStatFilter.count()})`
             baseStatFilterColour = "success"
         }
-
-        const toggleGenerationFilter = () => this.toggleGenerationFilter()
-        const toggleTypeFilter = () => this.toggleTypeFilter()
-        const toggleBaseStatFilter = () => this.toggleBaseStatFilter()
 
         return (
             <div className="fill-parent padding overflow-y">
@@ -158,8 +130,8 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         {generationFilterLabel}
                     </Button>
 
-                    <Collapse isOpen={this.state.generationFilterOpen}>
-                        {this.renderGenerationFilter()}
+                    <Collapse isOpen={generationFilterOpen}>
+                        {renderGenerationFilter()}
                     </Collapse>
                 </div>
 
@@ -175,8 +147,8 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         {typeFilterLabel}
                     </Button>
 
-                    <Collapse isOpen={this.state.typeFilterOpen}>
-                        {this.renderTypeFilter()}
+                    <Collapse isOpen={typeFilterOpen}>
+                        {renderTypeFilter()}
                     </Collapse>
                 </div>
 
@@ -192,8 +164,8 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
                         {baseStatFilterLabel}
                     </Button>
 
-                    <Collapse isOpen={this.state.baseStatFilterOpen}>
-                        {this.renderBaseStatFilter()}
+                    <Collapse isOpen={baseStatFilterOpen}>
+                        {renderBaseStatFilter()}
                     </Collapse>
                 </div>
             </div>
@@ -203,24 +175,24 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
     /**
      * Renders the generation filter.
      */
-    renderGenerationFilter() {
-        let species = this.props.species
+    const renderGenerationFilter = () => {
+        let species = props.species
         let generationIds = species.map(s => s.generation.generationId).distinct()
 
-        let generations = this.props.generations
+        let generations = props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
                                           .map(g => getShortDisplayName(g, "en") ?? "-")
 
-        let generationFilter = this.props.generationFilter
+        let generationFilter = props.generationFilter
         if (generationFilter.isEmpty()) {
             generationFilter.ids = generationIds
         }
 
-        const setFilter = (filter: GenerationFilterModel) => this.props.setGenerationFilter(filter)
+        const setFilter = (filter: GenerationFilterModel) => props.setGenerationFilter(filter)
 
         return (
             <GenerationFilter
-                index={this.props.index}
+                index={props.index}
                 generationIds={generationIds}
                 generationLabels={generationLabels}
                 generationFilter={generationFilter}
@@ -231,34 +203,34 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
     /**
      * Renders the type filter.
      */
-    renderTypeFilter() {
-        let versionGroupId = this.props.versionGroupId
+    const renderTypeFilter = () => {
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Species filter ${this.props.index}: version group ID is undefined!`
+                `Species filter ${props.index}: version group ID is undefined!`
             )
         }
 
-        let species = this.props.species
+        let species = props.species
         let typeIds = species.flatMap(s => getTypes(s, versionGroupId!)
                              .map(t => t.typeId))
                              .distinct()
                              .sort((i, j) => i - j) // ascending order
 
-        let types = this.props.types
+        let types = props.types
         let typeLabels = types.filter(t => typeIds.includes(t.typeId))
                               .map(t => getDisplayName(t, "en") ?? "-")
 
-        let typeFilter = this.props.typeFilter
+        let typeFilter = props.typeFilter
         if (typeFilter.isEmpty()) {
             typeFilter.ids = typeIds
         }
 
-        const setTypeFilter = (filter: TypeFilterModel) => this.props.setTypeFilter(filter)
+        const setTypeFilter = (filter: TypeFilterModel) => props.setTypeFilter(filter)
 
         return (
             <TypeFilter
-                index={this.props.index}
+                index={props.index}
                 typeIds={typeIds}
                 typeLabels={typeLabels}
                 typeFilter={typeFilter}
@@ -269,18 +241,18 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
     /**
      * Renders the base stat filter.
      */
-    renderBaseStatFilter() {
-        let versionGroupId = this.props.versionGroupId
+    const renderBaseStatFilter = () => {
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Species filter ${this.props.index}: version group ID is undefined!`
+                `Species filter ${props.index}: version group ID is undefined!`
             )
         }
 
-        let filter = this.props.baseStatFilter
-        let baseStats = this.props.baseStats
+        let filter = props.baseStatFilter
+        let baseStats = props.baseStats
 
-        let allSpeciesBaseStats = this.props.species.map(s => getBaseStats(s, versionGroupId!))
+        let allSpeciesBaseStats = props.species.map(s => getBaseStats(s, versionGroupId!))
 
         let minValues = []
         for (let i = 0; i < baseStats.length; i++) {
@@ -296,11 +268,11 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
             maxValues.push(maxValue)
         }
 
-        const setFilter = (values: BaseStatFilterModel) => this.props.setBaseStatFilter(values)
+        const setFilter = (values: BaseStatFilterModel) => props.setBaseStatFilter(values)
 
         return (
             <BaseStatFilter
-                index={this.props.index}
+                index={props.index}
                 baseStatFilter={filter}
                 baseStatLabels={baseStats.map(s => getDisplayName(s, "en") ?? "stat")}
                 minValues={minValues}
@@ -312,33 +284,26 @@ export class SpeciesFilter extends Component<ISpeciesFilterProps, ISpeciesFilter
     /**
      * Toggles the generation filter.
      */
-    toggleGenerationFilter() {
-        CookieHelper.set(`generationFilter${this.props.index}open`, !this.state.generationFilterOpen)
-
-        this.setState(previousState => ({
-            generationFilterOpen: !previousState.generationFilterOpen
-        }))
+    const toggleGenerationFilter = () => {
+        CookieHelper.set(`generationFilter${props.index}open`, !generationFilterOpen)
+        setGenerationFilterOpen(!generationFilterOpen)
     }
 
     /**
      * Toggles the type filter.
      */
-    toggleTypeFilter() {
-        CookieHelper.set(`typeFilter${this.props.index}open`, !this.state.typeFilterOpen)
-
-        this.setState(previousState => ({
-            typeFilterOpen: !previousState.typeFilterOpen
-        }))
+    const toggleTypeFilter = () => {
+        CookieHelper.set(`typeFilter${props.index}open`, !typeFilterOpen)
+        setTypeFilterOpen(!typeFilterOpen)
     }
 
     /**
      * Toggles the base stat filter.
      */
-    toggleBaseStatFilter() {
-        CookieHelper.set(`baseStatFilter${this.props.index}open`, !this.state.baseStatFilterOpen)
-
-        this.setState(previousState => ({
-            baseStatFilterOpen: !previousState.baseStatFilterOpen
-        }))
+    const toggleBaseStatFilter = () => {
+        CookieHelper.set(`baseStatFilter${props.index}open`, !baseStatFilterOpen)
+        setBaseStatFilterOpen(!baseStatFilterOpen)
     }
+
+    return renderFilters()
 }

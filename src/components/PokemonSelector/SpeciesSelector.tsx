@@ -1,8 +1,7 @@
-import React from "react"
-import { Button } from "reactstrap"
+import React, { useState } from "react"
+import Select from "react-select"
+import { Button, Tooltip } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
-
-import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
 
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
@@ -16,7 +15,37 @@ import {
 
 import { CookieHelper } from "../../util/CookieHelper"
 
-interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> {
+interface SpeciesSelectorProps {
+    /**
+     * The index of this component.
+     */
+    index: number
+
+    /**
+     * The index of the version group.
+     */
+    versionGroupId: number | undefined
+
+    /**
+     * List of species to select from.
+     */
+    species: PokemonSpeciesEntry[]
+
+    /**
+     * The ID of the selected species.
+     */
+    speciesId: number | undefined
+
+    /**
+     * Whether the parent component is loading data to be passed to this component.
+     */
+    loading: boolean
+
+    /**
+     * Whether the species should be marked as invalid.
+     */
+    shouldMarkInvalid: boolean
+
     /**
      * List of generations.
      */
@@ -46,117 +75,161 @@ interface ISpeciesSelectorProps extends ISelectorBaseProps<PokemonSpeciesEntry> 
      * Handler for toggling the species filter in the parent component.
      */
     toggleFilter: () => void
-}
 
-interface ISpeciesSelectorState extends ISelectorBaseState {
-
+    /**
+     * Whether tooltips should be hidden.
+     */
+    hideTooltips: boolean
 }
 
 /**
  * Component for selecting a Pokemon species.
  */
-export class SpeciesSelector
-    extends SelectorBase<PokemonSpeciesEntry, ISpeciesSelectorProps, ISpeciesSelectorState> {
+export const SpeciesSelector = (props: SpeciesSelectorProps) => {
+    const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
+    const [filterOpen, setFilterOpen] = useState(false)
+
     /**
-     * Initialises the component's state.
+     * Renders the species select.
      */
-    initState(): ISpeciesSelectorState {
-        return {
-            filterOpen: false,
-            validityTooltipOpen: false
+    const renderSpeciesSelect = () => {
+        let options = createOptions()
+
+        let selectedOption = null
+        let speciesId = props.speciesId
+        if (speciesId !== undefined) {
+            // undefined doesn't clear stored state so coalesce to null
+            // https://github.com/JedWatson/react-select/issues/3066
+            selectedOption = options.find(o => o.value === speciesId) ?? null
         }
+
+        // attach red border if necessary
+        let customStyles = createSelectStyles()
+
+        let selectId = "speciesSelect" + props.index
+        let searchBox = (
+            <Select
+                isSearchable
+                blurInputOnSelect
+                width="230px"
+                isLoading={props.loading}
+                isDisabled={isDisabled()}
+                className="margin-right-small"
+                id={selectId}
+                styles={customStyles}
+                placeholder={isDisabled() ? "-" : "Select a species!"}
+                onChange={(option: any) => onChange(option)}
+                value={selectedOption}
+                options={options} />
+        )
+
+        // attach validity tooltip if necessary
+        let validityTooltip = renderValidityTooltip(selectId)
+
+        let filterButton = renderFilterButton()
+
+        return (
+            <div className="flex margin-bottom-small">
+                {searchBox}
+                {validityTooltip}
+                {filterButton}
+            </div>
+        )
     }
 
     /**
      * Renders the filter button.
      */
-    renderFilterButton(): any {
-        let filterOpen = this.state.filterOpen
-
-        return (
-            <span title="Filter species">
-                <Button
-                    color={filterOpen ? "success" : "info"}
-                    className="filter-button"
-                    onMouseUp={() => {this.toggleFilter()}}>
-                    <FaFilter className="selector-button-icon" />
-                </Button>
-            </span>
-        )
-    }
+    const renderFilterButton = () => (
+        <span title="Filter species">
+            <Button
+                color={filterOpen ? "success" : "info"}
+                className="filter-button"
+                onMouseUp={toggleFilter}>
+                <FaFilter className="selector-button-icon" />
+            </Button>
+        </span>
+    )
 
     /**
      * Returns options for the species select.
      */
-    createOptions(): Option[] {
-        return this.getFilteredSpecies().map(species => ({
+    const createOptions = () => {
+        return getFilteredSpecies().map(species => ({
             label: getDisplayName(species, "en") ?? "-",
             value: species.pokemonSpeciesId
         }))
     }
 
     /**
-     * Returns a string describing the type of entry being displayed.
+     * Returns a custom style for the select box.
      */
-    getEntryType(): string {
-        return "species"
+    const createSelectStyles = () => {
+        let shouldMarkInvalid = props.shouldMarkInvalid
+
+        return {
+            container: (provided: any, state: any) => ({
+                ...provided,
+                minWidth: state.selectProps.width
+            }),
+
+            control: (provided: any, state: any) => ({
+                ...provided,
+                minWidth: state.selectProps.width,
+                border: shouldMarkInvalid && !speciesIsValid() ? "1px solid #dc3545" : ""
+            }),
+
+            menu: (provided: any, state: any) => ({
+                ...provided,
+                minWidth: state.selectProps.width
+            })
+        }
     }
 
     /**
      * Returns whether the select box should be disabled.
      */
-    isDisabled(): boolean {
-        return this.getFilteredSpecies().length <= 0
-    }
-
-    /**
-     * Returns the placeholder for the select box.
-     */
-    getPlaceholder(): string {
-        return "Select a species!"
-    }
+    const isDisabled = () => getFilteredSpecies().length <= 0
 
     /**
      * Handler for when the selected species changes.
      */
-    onChange(option: any): void {
+    const onChange = (option: any) => {
         let speciesId = option.value
 
         // set cookie
-        CookieHelper.set(`speciesId${this.props.index}`, speciesId)
+        CookieHelper.set(`speciesId${props.index}`, speciesId)
 
-        this.props.setSpecies(speciesId)
+        props.setSpecies(speciesId)
     }
 
     /**
      * Returns the species that match the species filter.
      */
-    getFilteredSpecies() {
-        return this.props.entries.filter(s => this.isPresent(s))
-    }
+    const getFilteredSpecies = () => props.species.filter(isPresent)
 
     /**
      * Returns whether the species passes the filter.
      */
-    isPresent(species: PokemonSpeciesEntry) {
-        let versionGroupId = this.props.versionGroupId
+    const isPresent = (species: PokemonSpeciesEntry) => {
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Species selector ${this.props.index}: version group ID is undefined!`
+                `Species selector ${props.index}: version group ID is undefined!`
             )
         }
 
         // generation filter test
         let generationId = species.generation.generationId
-        let passesGenerationFilter = this.props.generationFilter.passesFilter([generationId])
+        let passesGenerationFilter = props.generationFilter.passesFilter([generationId])
 
         // type filter test
         let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
-        let passesTypeFilter = this.props.typeFilter.passesFilter(speciesTypes)
+        let passesTypeFilter = props.typeFilter.passesFilter(speciesTypes)
 
         // base stat filter test
         let speciesBaseStats = getBaseStats(species, versionGroupId)
-        let passesBaseStatFilter = this.props.baseStatFilter.passesFilter(speciesBaseStats)
+        let passesBaseStatFilter = props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
     }
@@ -164,50 +237,75 @@ export class SpeciesSelector
     /**
      * Returns whether the species is valid in the selected version group.
      */
-    entryIsValid(): boolean {
-        if (this.props.entryId === undefined) {
+    const speciesIsValid = () => {
+        if (props.speciesId === undefined) {
             return true
         }
 
-        let versionGroupId = this.props.versionGroupId
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Species selector ${this.props.index}: version group ID is undefined!`
+                `Species selector ${props.index}: version group ID is undefined!`
             )
         }
 
-        return isValid(this.getSelectedEntry(), versionGroupId)
+        return isValid(getSelectedSpecies(), versionGroupId)
     }
 
     /**
-     * Returns a message indicating the species ID is undefined.
+     * Renders a tooltip indicating the validity of the species.
      */
-    getEntryIdUndefinedMessage(): string {
-        return `Species selector ${this.props.index}: species ID is undefined!`
+    const renderValidityTooltip = (targetId: string) => {
+        let shouldRender = !props.hideTooltips
+                        && props.shouldMarkInvalid
+                        && !speciesIsValid()
+
+        if (shouldRender) {
+            return (
+                <Tooltip
+                    isOpen={validityTooltipOpen}
+                    toggle={() => setValidityTooltipOpen(!validityTooltipOpen)}
+                    placement="bottom"
+                    target={targetId}>
+                    Cannot be obtained in this game version!
+                </Tooltip>
+            )
+        }
+
+        return null
     }
 
     /**
-     * Returns whether the given species has the given ID.
+     * Returns the selected species.
      */
-    entryMatches(entry: PokemonSpeciesEntry, id: number): boolean {
-        return entry.pokemonSpeciesId === id
+    const getSelectedSpecies = () => {
+        let speciesId = props.speciesId
+        if (speciesId === undefined) {
+            throw new Error(`Species selector ${props.index}: species ID is undefined!`)
+        }
+
+        return getSpecies(speciesId)
     }
 
     /**
-     * Returns a message indicating the species with the given ID is missing.
+     * Returns the species matching the given ID.
      */
-    getEntryMissingMessage(id: number): string {
-        return `Species selector ${this.props.index}: no species found with ID ${id}!`
+    const getSpecies = (id: number) => {
+        let species = props.species.find(e => e.pokemonSpeciesId === id)
+        if (species === undefined) {
+            throw new Error(`Species selector ${props.index}: no species found with ID ${id}!`)
+        }
+
+        return species
     }
 
     /**
      * Toggles the species filter.
      */
-    toggleFilter() {
-        this.setState(previousState => ({
-            filterOpen: !previousState.filterOpen
-        }))
-
-        this.props.toggleFilter()
+    const toggleFilter = () => {
+        setFilterOpen(!filterOpen)
+        props.toggleFilter()
     }
+
+    return renderSpeciesSelect()
 }

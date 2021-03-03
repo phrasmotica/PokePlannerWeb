@@ -52,6 +52,63 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
     const [searchTerm, setSearchTerm] = useState("")
     const [encountersAreOpen, setEncountersAreOpen] = useState<IsOpenDict>([])
 
+    // refresh capture locations if the Pokemon ID changed
+    useEffect(() => {
+        const fetchCaptureLocations = () => {
+            let pokemonId = props.pokemonId
+            if (pokemonId === undefined) {
+                setLocations(undefined)
+                return
+            }
+
+            console.log(`Capture locations ${props.index}: getting capture locations for Pokemon ${pokemonId}...`)
+            setLoadingLocations(true)
+
+            // get encounter data
+            fetch(`${process.env.REACT_APP_API_URL}/encounter/${pokemonId}`)
+                .then(response => {
+                    if (response.status === 200) {
+                        return response
+                    }
+
+                    throw new Error(`Capture locations ${props.index}: tried to get capture locations for Pokemon ${pokemonId} but failed with status ${response.status}!`)
+                })
+                .then(response => response.json())
+                .then((encounters: EncountersEntry) => {
+                    let versionGroupId = props.versionGroup?.versionGroupId
+                    let relevantEncounters = encounters.encounters.find(
+                        e => e.id === versionGroupId
+                    )?.data ?? []
+
+                    setLocations(encounters)
+                    setEncountersAreOpen(relevantEncounters.map(
+                        e => ({ id: e.locationAreaId, data: false })
+                    ))
+                })
+                .catch(error => console.error(error))
+                .then(() => setLoadingLocations(false))
+        }
+
+        fetchCaptureLocations()
+
+        return () => setLocations(undefined)
+    }, [props.index, props.versionGroup, props.pokemonId])
+
+    // close all encounters components if the version group ID changes
+    useEffect(() => {
+        const closeEncounterComponents = () => {
+            let encounters = locations?.encounters?.find(
+                e => e.id === props.versionGroup?.versionGroupId
+            )?.data ?? []
+
+            setEncountersAreOpen(encounters.map(e => ({ id: e.locationAreaId, data: false })))
+        }
+
+        closeEncounterComponents()
+
+        return () => setEncountersAreOpen([])
+    }, [props.versionGroup, locations])
+
     /**
      * Renders the species' catch rate.
      */
@@ -357,63 +414,6 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
     const hasFilters = () => {
         return searchTerm.length > 0
     }
-
-    // refresh capture locations if the Pokemon ID changed
-    useEffect(() => {
-        const fetchCaptureLocations = () => {
-            let pokemonId = props.pokemonId
-            if (pokemonId === undefined) {
-                setLocations(undefined)
-                return
-            }
-
-            console.log(`Capture locations ${props.index}: getting capture locations for Pokemon ${pokemonId}...`)
-            setLoadingLocations(true)
-
-            // get encounter data
-            fetch(`${process.env.REACT_APP_API_URL}/encounter/${pokemonId}`)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response
-                    }
-
-                    throw new Error(`Capture locations ${props.index}: tried to get capture locations for Pokemon ${pokemonId} but failed with status ${response.status}!`)
-                })
-                .then(response => response.json())
-                .then((encounters: EncountersEntry) => {
-                    let versionGroupId = props.versionGroup?.versionGroupId
-                    let relevantEncounters = encounters.encounters.find(
-                        e => e.id === versionGroupId
-                    )?.data ?? []
-
-                    setLocations(encounters)
-                    setEncountersAreOpen(relevantEncounters.map(
-                        e => ({ id: e.locationAreaId, data: false })
-                    ))
-                })
-                .catch(error => console.error(error))
-                .then(() => setLoadingLocations(false))
-        }
-
-        fetchCaptureLocations()
-
-        return () => setLocations(undefined)
-    }, [props.index, props.versionGroup, props.pokemonId])
-
-    // close all encounters components if the version group ID changes
-    useEffect(() => {
-        const closeEncounterComponents = () => {
-            let encounters = locations?.encounters?.find(
-                e => e.id === props.versionGroup?.versionGroupId
-            )?.data ?? []
-
-            setEncountersAreOpen(encounters.map(e => ({ id: e.locationAreaId, data: false })))
-        }
-
-        closeEncounterComponents()
-
-        return () => setEncountersAreOpen([])
-    }, [props.versionGroup, locations])
 
     return (
         <div style={{ marginTop: 5 }}>

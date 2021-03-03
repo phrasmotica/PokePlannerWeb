@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 import { Input, Label } from "reactstrap"
 
 import { TypeFilterModel } from "./IdFilterModel"
@@ -9,7 +9,7 @@ import { CookieHelper } from "../../util/CookieHelper"
 
 import "./TypeFilter.scss"
 
-interface ITypeFilterProps extends IHasIndex {
+interface TypeFilterProps extends IHasIndex {
     /**
      * The IDs of the types to filter.
      */
@@ -31,31 +31,15 @@ interface ITypeFilterProps extends IHasIndex {
     setTypeFilter: (filter: TypeFilterModel) => void
 }
 
-interface ITypeFilterState {
-
-}
-
 /**
  * Component for filtering a list of species stored in the parent component by type.
  */
-export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
-    /**
-     * Renders the component.
-     */
-    render() {
-        return (
-            <div>
-                {this.renderToggle()}
-                {this.renderFilter()}
-            </div>
-        )
-    }
-
+export const TypeFilter = (props: TypeFilterProps) => {
     /**
      * Renders the filter toggle.
      */
-    renderToggle() {
-        let toggleId = `typeFilter${this.props.index}toggle`
+    const renderToggle = () => {
+        let toggleId = `typeFilter${props.index}toggle`
 
         return (
             <div className="flex-center margin-bottom">
@@ -63,8 +47,8 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
                     id={toggleId}
                     type="checkbox"
                     className="toggleCheckbox"
-                    checked={this.props.typeFilter.isEnabled()}
-                    onChange={_ => this.toggleFilter()} />
+                    checked={props.typeFilter.isEnabled()}
+                    onChange={_ => toggleFilter()} />
 
                 <Label
                     className="toggleLabel"
@@ -78,15 +62,15 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
     /**
      * Renders the filter.
      */
-    renderFilter() {
-        let items = this.props.typeIds.map((id, index) => {
-            let label = this.props.typeLabels[index]
+    const renderFilter = () => {
+        let items = props.typeIds.map((id, index) => {
+            let label = props.typeLabels[index]
 
-            let filter = this.props.typeFilter
+            let filter = props.typeFilter
             let active = filter.isInFilter([id])
             let disabled = !filter.isEnabled()
 
-            let headerId = `list${this.props.index}type${index}`
+            let headerId = `list${props.index}type${index}`
 
             let typeHeader = <img
                                 id={headerId}
@@ -94,7 +78,7 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
                                 alt={`type${id}`}
                                 src={require(`../../images/typeIcons/${id}-small.png`)} />
 
-            let checkboxId = `typeFilter${this.props.index}checkbox${index}`
+            let checkboxId = `typeFilter${props.index}checkbox${index}`
 
             return (
                 <div
@@ -112,7 +96,7 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
                             type="checkbox"
                             className="activeCheckbox"
                             disabled={disabled}
-                            onChange={_ => this.toggleFilterId(id)}
+                            onChange={_ => toggleFilterId(id)}
                             checked={active} />
                     </span>
                 </div>
@@ -129,26 +113,33 @@ export class TypeFilter extends Component<ITypeFilterProps, ITypeFilterState> {
     /**
      * Toggles the filter.
      */
-    toggleFilter() {
-        let typeFilter = this.props.typeFilter
+    const toggleFilter = () => {
+        let typeFilter = props.typeFilter
         let isEnabled = typeFilter.toggle()
 
-        let cookieName = `typeFilter${this.props.index}enabled`
+        let cookieName = `typeFilter${props.index}enabled`
         CookieHelper.set(cookieName, isEnabled)
 
-        this.props.setTypeFilter(typeFilter)
+        props.setTypeFilter(typeFilter)
     }
 
     /**
      * Toggles the given ID in the filter.
      */
-    toggleFilterId(id: number) {
-        let typeFilter = this.props.typeFilter
+    const toggleFilterId = (id: number) => {
+        let typeFilter = props.typeFilter
         let isActive = typeFilter.toggleId(id)
 
-        let cookieName = `typeFilter${this.props.index}active${id}`
+        let cookieName = `typeFilter${props.index}active${id}`
         CookieHelper.set(cookieName, isActive)
 
-        this.props.setTypeFilter(typeFilter)
+        props.setTypeFilter(typeFilter)
     }
+
+    return (
+        <div>
+            {renderToggle()}
+            {renderFilter()}
+        </div>
+    )
 }

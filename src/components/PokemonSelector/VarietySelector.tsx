@@ -1,4 +1,6 @@
-import { ISelectorBaseProps, ISelectorBaseState, SelectorBase, Option } from "./SelectorBase"
+import React, { useState } from "react"
+import { Tooltip } from "reactstrap"
+import Select from "react-select"
 
 import { FormsDict } from "../../models/FormsDict"
 import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../models/Helpers"
@@ -11,7 +13,27 @@ import {
 
 import { CookieHelper } from "../../util/CookieHelper"
 
-interface IVarietySelectorProps extends ISelectorBaseProps<PokemonEntry> {
+interface VarietySelectorProps {
+    /**
+     * The index of this component.
+     */
+    index: number
+
+    /**
+     * The index of the version group.
+     */
+    versionGroupId: number | undefined
+
+    /**
+     * List of varieties to select from.
+     */
+    varieties: PokemonEntry[]
+
+    /**
+     * The ID of the selected variety.
+     */
+    varietyId: number | undefined
+
     /**
      * The species of the selected variety.
      */
@@ -46,50 +68,87 @@ interface IVarietySelectorProps extends ISelectorBaseProps<PokemonEntry> {
      * Whether the variety should be marked as invalid.
      */
     shouldMarkInvalid: boolean
-}
 
-interface IVarietySelectorState extends ISelectorBaseState {
-
+    /**
+     * Whether tooltips should be hidden.
+     */
+    hideTooltips: boolean
 }
 
 /**
  * Component for selecting a species variety.
  */
-export class VarietySelector
-    extends SelectorBase<PokemonEntry, IVarietySelectorProps, IVarietySelectorState> {
+export const VarietySelector = (props: VarietySelectorProps) => {
+    const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
+
     /**
-     * Initialises the component's state.
+     * Renders the variety select.
      */
-    initState(): IVarietySelectorState {
-        return {
-            validityTooltipOpen: false,
-            filterOpen: false
+    const renderVarietySelect = () => {
+        let options = createOptions()
+
+        let selectedOption = null
+        let varietyId = props.varietyId
+        if (varietyId !== undefined) {
+            // undefined doesn't clear stored state so coalesce to null
+            // https://github.com/JedWatson/react-select/issues/3066
+            selectedOption = options.find(o => o.value === varietyId) ?? null
         }
+
+        // attach red border if necessary
+        let customStyles = createSelectStyles()
+
+        let selectId = "varietySelect" + props.index
+        let searchBox = (
+            <Select
+                isSearchable
+                blurInputOnSelect
+                width="230px"
+                isLoading={props.loading}
+                isDisabled={isDisabled()}
+                className="margin-right-small"
+                id={selectId}
+                styles={customStyles}
+                placeholder={isDisabled() ? "-" : "Select a variety!"}
+                onChange={(option: any) => onChange(option)}
+                value={selectedOption}
+                options={options} />
+        )
+
+        // attach validity tooltip if necessary
+        let validityTooltip = renderValidityTooltip(selectId)
+
+        return (
+            <div className="flex margin-bottom-small">
+                {searchBox}
+                {validityTooltip}
+            </div>
+        )
     }
 
     /**
      * Returns options for the variety select.
      */
-    createOptions(): Option[] {
-        let species = this.props.species
+    const createOptions = () => {
+        let species = props.species
         if (species === undefined) {
             return []
         }
 
-        if (this.props.formId === undefined) {
+        if (props.formId === undefined) {
             return []
         }
 
-        let varietyId = this.props.entryId
+        let varietyId = props.varietyId
         if (varietyId === undefined) {
             return []
         }
 
-        if (this.isDisabled()) {
+        if (isDisabled()) {
             return []
         }
 
-        return this.props.entries.map(variety => {
+        return props.varieties.map(variety => {
             let label = getDisplayName(species!, "en") ?? "-"
 
             if (hasDisplayNames(variety)) {
@@ -104,71 +163,80 @@ export class VarietySelector
     }
 
     /**
-     * Returns a string describing the type of entry being displayed.
+     * Returns a custom style for the select box.
      */
-    getEntryType(): string {
-        return "variety"
+    const createSelectStyles = () => {
+        let shouldMarkInvalid = props.shouldMarkInvalid
+
+        return {
+            container: (provided: any, state: any) => ({
+                ...provided,
+                minWidth: state.selectProps.width
+            }),
+
+            control: (provided: any, state: any) => ({
+                ...provided,
+                minWidth: state.selectProps.width,
+                border: shouldMarkInvalid && !varietyIsValid() ? "1px solid #dc3545" : ""
+            }),
+
+            menu: (provided: any, state: any) => ({
+                ...provided,
+                minWidth: state.selectProps.width
+            })
+        }
     }
 
     /**
      * Returns whether the select box should be disabled.
      */
-    isDisabled(): boolean {
-        return this.props.entries.length <= 1
-    }
-
-    /**
-     * Returns the placeholder for the select box.
-     */
-    getPlaceholder(): string {
-        return "Select a variety!"
-    }
+    const isDisabled = () => props.varieties.length <= 1
 
     /**
      * Handler for when the selected variety changes.
      */
-    onChange(option: any): void {
+    const onChange = (option: any) => {
         let varietyId = option.value
 
         // set variety cookie and remove old form cookie
-        CookieHelper.set(`varietyId${this.props.index}`, varietyId)
-        CookieHelper.remove(`formId${this.props.index}`)
+        CookieHelper.set(`varietyId${props.index}`, varietyId)
+        CookieHelper.remove(`formId${props.index}`)
 
-        let variety = this.getEntry(varietyId)
-        this.props.setVariety(variety)
+        let variety = getVariety(varietyId)
+        props.setVariety(variety)
 
         // set first form
-        let forms = this.getFormsOfVariety(varietyId)
+        let forms = getFormsOfVariety(varietyId)
         let form = forms[0]
 
         // set form cookie
-        CookieHelper.set(`formId${this.props.index}`, form.pokemonFormId)
+        CookieHelper.set(`formId${props.index}`, form.pokemonFormId)
 
-        this.props.setForm(form)
+        props.setForm(form)
     }
 
     /**
      * Returns whether the variety is valid in the selected version group.
      */
-    entryIsValid(): boolean {
-        if (this.props.species === undefined) {
+    const varietyIsValid = () => {
+        if (props.species === undefined) {
             return true
         }
 
-        if (this.props.formId === undefined) {
+        if (props.formId === undefined) {
             return true
         }
 
-        let versionGroupId = this.props.versionGroupId
+        let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
-                `Variety selector ${this.props.index}: version group ID is undefined!`
+                `Variety selector ${props.index}: version group ID is undefined!`
             )
         }
 
-        let pokemonIsValid = isValid(this.props.species, versionGroupId)
+        let pokemonIsValid = isValid(props.species, versionGroupId)
 
-        let form = this.getSelectedForm()
+        let form = getSelectedForm()
         if (form !== undefined && hasValidity(form)) {
             // can only obtain form if base species is obtainable
             pokemonIsValid = pokemonIsValid && isValid(form, versionGroupId)
@@ -178,50 +246,57 @@ export class VarietySelector
     }
 
     /**
-     * Renders the filter button.
+     * Renders a tooltip indicating the validity of the variety.
      */
-    renderFilterButton(): any {
+    const renderValidityTooltip = (targetId: string) => {
+        let shouldRender = !props.hideTooltips
+                        && props.shouldMarkInvalid
+                        && !varietyIsValid()
+
+        if (shouldRender) {
+            return (
+                <Tooltip
+                    isOpen={validityTooltipOpen}
+                    toggle={() => setValidityTooltipOpen(!validityTooltipOpen)}
+                    placement="bottom"
+                    target={targetId}>
+                    Cannot be obtained in this game version!
+                </Tooltip>
+            )
+        }
+
         return null
     }
 
     /**
-     * Returns a message indicating the variety ID is undefined.
+     * Returns the variety matching the given ID.
      */
-    getEntryIdUndefinedMessage(): string {
-        return `Variety selector ${this.props.index}: variety ID is undefined!`
-    }
+    const getVariety = (id: number) => {
+        let variety = props.varieties.find(e => e.pokemonId === id)
+        if (variety === undefined) {
+            throw new Error(`Variety selector ${props.index}: no variety found with ID ${id}!`)
+        }
 
-    /**
-     * Returns whether the given variety has the given ID.
-     */
-    entryMatches(entry: PokemonEntry, id: number): boolean {
-        return entry.pokemonId === id
-    }
-
-    /**
-     * Returns a message indicating the variety with the given ID is missing.
-     */
-    getEntryMissingMessage(id: number): string {
-        return `Variety selector ${this.props.index}: no variety found with ID ${id}!`
+        return variety
     }
 
     /**
      * Returns the data object for the selected Pokemon form.
      */
-    getSelectedForm() {
-        let selectedFormId = this.props.formId
+    const getSelectedForm = () => {
+        let selectedFormId = props.formId
         if (selectedFormId === undefined) {
             return undefined
         }
 
-        return this.getForm(selectedFormId)
+        return getForm(selectedFormId)
     }
 
     /**
      * Returns the data object for the Pokemon form with the given ID.
      */
-    getForm(formId: number) {
-        let allForms = this.getFormsOfSelectedVariety()
+    const getForm = (formId: number) => {
+        let allForms = getFormsOfSelectedVariety()
 
         let form = allForms.find(f => f.pokemonFormId === formId)
         if (form === undefined) {
@@ -234,9 +309,9 @@ export class VarietySelector
     /**
      * Returns the forms of the selected variety.
      */
-    getFormsOfVariety(varietyId: number) {
+    const getFormsOfVariety = (varietyId: number) => {
         // TODO: remove formsDict and formId from this component's props
-        let formsDict = this.props.formsDict
+        let formsDict = props.formsDict
         if (formsDict.length <= 0) {
             return []
         }
@@ -252,12 +327,14 @@ export class VarietySelector
     /**
      * Returns the forms of the selected variety.
      */
-    getFormsOfSelectedVariety() {
-        let varietyId = this.props.entryId
+    const getFormsOfSelectedVariety = () => {
+        let varietyId = props.varietyId
         if (varietyId === undefined) {
             return []
         }
 
-        return this.getFormsOfVariety(varietyId)
+        return getFormsOfVariety(varietyId)
     }
+
+    return renderVarietySelect()
 }
