@@ -420,6 +420,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     index={props.index}
                     versionGroupId={props.versionGroupId}
                     species={props.species}
+                    speciesId={pokemonSpeciesId}
                     defaultSpeciesId={props.defaultSpeciesId}
                     ignoreValidity={props.ignoreValidity}
                     generations={props.generations}

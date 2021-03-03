@@ -81,6 +81,11 @@ interface VarietySelectorProps {
 export const VarietySelector = (props: VarietySelectorProps) => {
     const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
 
+    console.log(`VarietySelector: varieties`)
+    console.log(props.species)
+    console.log(props.varieties)
+    console.log(props.formId)
+
     /**
      * Renders the variety select.
      */

@@ -35,6 +35,8 @@ interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTool
      */
     species: PokemonSpeciesEntry[]
 
+    speciesId: number | undefined
+
     /**
      * The ID of the species to be selected by default.
      */
@@ -100,7 +102,8 @@ type SpeciesRatingsDict = {
  * Component for selecting a Pokemon.
  */
 export const PokemonSelector = (props: PokemonSelectorProps) => {
-    const [pokemonSpeciesId, setPokemonSpeciesId] = useState<number>()
+    // TODO: make PokedexPanel hold all of the state for the currently selected
+    // species/variety/form
     const [varietyId, setVarietyId] = useState<number>()
     const [formId, setFormId] = useState<number>()
 
@@ -167,7 +170,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 versionGroupId={props.versionGroupId}
                 hideTooltips={props.hideTooltips}
                 species={props.species}
-                speciesId={pokemonSpeciesId}
+                speciesId={props.speciesId}
                 loading={false}
                 generations={props.generations}
                 generationFilter={props.generationFilter}
@@ -184,7 +187,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      */
     const renderVarietySelect = () => {
         let species = undefined
-        if (pokemonSpeciesId !== undefined) {
+        if (props.speciesId !== undefined) {
             species = getSelectedSpecies()
         }
 
@@ -210,7 +213,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      */
     const renderFormSelect = () => {
         let species = undefined
-        if (pokemonSpeciesId !== undefined) {
+        if (props.speciesId !== undefined) {
             species = getSelectedSpecies()
         }
 
@@ -237,11 +240,11 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         let randomDisabled = getFilteredSpecies().length <= 0
         let randomStyle = CssHelper.defaultCursorIf(randomDisabled)
 
-        let speciesIsReady = !pokemonSpeciesId === undefined && !isLoading()
+        let speciesId = props.speciesId
+        let speciesIsReady = !speciesId === undefined && !isLoading()
         let clearStyle = CssHelper.defaultCursorIf(!speciesIsReady)
         let faveStyle = CssHelper.defaultCursorIf(!speciesIsReady)
 
-        let speciesId = pokemonSpeciesId
         let isFavourite = speciesId !== undefined && favouriteSpecies.includes(speciesId)
 
         let faveTooltip = "Add Pokemon to favourites"
@@ -295,7 +298,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                         style={faveStyle}
                         className="selector-button"
                         disabled={!speciesIsReady}
-                        onMouseUp={() => toggleFavouriteSpecies(pokemonSpeciesId)}>
+                        onMouseUp={() => toggleFavouriteSpecies(speciesId)}>
                         <span title={speciesId ? faveTooltip : undefined}>
                             {faveIcon}
                         </span>
@@ -388,16 +391,15 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      */
     const setSpecies = (newSpeciesId: number | undefined) => {
         // only fetch if we need to
-        let selectedSpeciesId = pokemonSpeciesId
-        let speciesChanged = newSpeciesId !== selectedSpeciesId
-        if (selectedSpeciesId === undefined || speciesChanged) {
-            setPokemonSpeciesId(undefined)
+        let speciesId = props.speciesId
+        let speciesChanged = newSpeciesId !== speciesId
+        if (speciesId === undefined || speciesChanged) {
             setVarietyId(undefined)
             setFormId(undefined)
             setVarieties([])
             setFormsDict([])
 
-            if (selectedSpeciesId !== undefined && speciesChanged) {
+            if (speciesId !== undefined && speciesChanged) {
                 // invalidate cookies from previous species
                 let index = props.index
                 CookieHelper.remove(`varietyId${index}`)
@@ -421,6 +423,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Sets the form.
      */
     const setForm = (form: PokemonFormEntry) => {
+        console.log(`setForm ${form.pokemonFormId}`)
         setFormId(form.pokemonFormId)
         props.setForm(form)
     }
@@ -445,7 +448,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Returns the data object for the selected species.
      */
     const getSelectedSpecies = () => {
-        let speciesId = pokemonSpeciesId
+        let speciesId = props.speciesId
         if (speciesId === undefined) {
             throw new Error(
                 `Selector ${props.index}: species ID is undefined!`
@@ -507,7 +510,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         CookieHelper.remove(`varietyId${index}`)
         CookieHelper.remove(`formId${index}`)
 
-        setPokemonSpeciesId(undefined)
         setVarietyId(undefined)
         setFormId(undefined)
         setVarieties([])
@@ -520,7 +522,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Returns the rating of the selected species.
      */
     const getSpeciesRating = () => {
-        let speciesId = pokemonSpeciesId
+        let speciesId = props.speciesId
         if (speciesId === undefined) {
             return null
         }
@@ -532,7 +534,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Sets a new rating for the selected species.
      */
     const setSpeciesRating = (newRating: number | null) => {
-        let speciesId = pokemonSpeciesId
+        let speciesId = props.speciesId
         if (speciesId === undefined) {
             return
         }
