@@ -57,9 +57,9 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     showShinySprite: boolean
 
     /**
-     * Handler for setting the species ID in the parent component.
+     * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (pokemonSpeciesId: number | undefined) => void
+    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
 }
 
 /**
@@ -117,21 +117,17 @@ export const ActionPanel = (props: ActionPanelProps) => {
     /**
      * Renders the evolution chain.
      */
-    const renderEvolutionChain = () => {
-        const setSpecies = (pokemonSpeciesId: number) => props.setSpecies(pokemonSpeciesId)
-
-        return (
-            <div className="inherit-size">
-                <EvolutionChain
-                    index={props.index}
-                    pokemonSpeciesId={props.pokemonSpeciesId}
-                    availableSpeciesIds={props.species.map(s => s.pokemonSpeciesId)}
-                    showShinySprites={props.showShinySprite}
-                    shouldShowChain={props.shouldShowPokemon}
-                    setSpecies={setSpecies} />
-            </div>
-        )
-    }
+    const renderEvolutionChain = () => (
+        <div className="inherit-size">
+            <EvolutionChain
+                index={props.index}
+                pokemonSpeciesId={props.pokemonSpeciesId}
+                availableSpeciesIds={props.species.map(s => s.pokemonSpeciesId)}
+                showShinySprites={props.showShinySprite}
+                shouldShowChain={props.shouldShowPokemon}
+                setSpecies={props.setSpecies} />
+        </div>
+    )
 
     /**
      * Sets the key of the active move tab.

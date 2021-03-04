@@ -38,7 +38,7 @@ interface PokemonPanelProps extends IHasCommon {
     /**
      * List of Pokemon species.
      */
-    species: PokemonSpeciesEntry[]
+    speciesList: PokemonSpeciesEntry[]
 
     /**
      * List of generations.
@@ -55,15 +55,21 @@ interface PokemonPanelProps extends IHasCommon {
      */
     baseStats: StatEntry[]
 
+    species: PokemonSpeciesEntry | undefined
+
     /**
-     * Handler for setting the species ID in the parent component.
+     * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (pokemonSpeciesId: number | undefined) => void
+    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+
+    variety: PokemonEntry | undefined
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
      */
     setVariety: (variety: PokemonEntry | undefined) => void
+
+    form: PokemonFormEntry | undefined
 
     /**
      * Handler for setting the Pokemon form in the parent component.
@@ -280,7 +286,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
      * Returns the data object for the selected species.
      */
     const getSpecies = () => {
-        let species = props.species.find(s => s.pokemonSpeciesId === pokemonSpeciesId)
+        let species = props.speciesList.find(s => s.pokemonSpeciesId === pokemonSpeciesId)
         if (species === undefined) {
             throw new Error(
                 `Panel ${props.index}: no species found with ID ${pokemonSpeciesId}!`
@@ -303,24 +309,6 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
             && form !== undefined
             && (props.ignoreValidity || selectedPokemonIsValid())
 
-    /**
-     * Sets the species ID.
-     */
-    const setSpecies = (pokemonSpeciesId: number | undefined) => {
-        console.log(`PokemonPanel setSpecies: ${pokemonSpeciesId}`)
-        setPokemonSpeciesId(pokemonSpeciesId)
-
-        if (pokemonSpeciesId === undefined) {
-            setVariety(undefined)
-            props.setVariety(undefined)
-
-            setForm(undefined)
-            props.setForm(undefined)
-        }
-
-        props.setSpecies(pokemonSpeciesId)
-    }
-
     const setGenerationFilterAndUpdate = (filter: GenerationFilterModel) => {
         setGenerationFilter(filter)
 
@@ -331,7 +319,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
             let failsGenerationFilter = !filter.passesFilter([generationId])
             if (failsGenerationFilter) {
-                setSpecies(undefined)
+                props.setSpecies(undefined)
             }
         }
     }
@@ -353,7 +341,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
-                setSpecies(undefined)
+                props.setSpecies(undefined)
             }
         }
     }
@@ -375,7 +363,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
             let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {
-                setSpecies(undefined)
+                props.setSpecies(undefined)
             }
         }
     }
@@ -384,7 +372,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         <SpeciesFilter
             index={props.index}
             versionGroupId={props.versionGroupId}
-            species={props.species}
+            species={props.speciesList}
             generations={props.generations}
             generationFilter={generationFilter}
             types={props.types}
@@ -411,28 +399,26 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         </div>
     )
 
-    const toggleSpeciesFilter = () => setShowSpeciesFilter(!showSpeciesFilter)
-
     return (
         <div className="flex debug-border hhalf">
             <div className="flex-center w60 debug-border">
                 <PokemonSelector
                     index={props.index}
                     versionGroupId={props.versionGroupId}
-                    species={props.species}
+                    species={props.speciesList}
                     speciesId={pokemonSpeciesId}
                     defaultSpeciesId={props.defaultSpeciesId}
                     ignoreValidity={props.ignoreValidity}
                     generations={props.generations}
                     hideTooltips={props.hideTooltips}
-                    setSpecies={setSpecies}
-                    setVariety={setVariety}
-                    setForm={setForm}
+                    setSpecies={props.setSpecies}
+                    setVariety={props.setVariety}
+                    setForm={props.setForm}
                     generationFilter={generationFilter}
                     typeFilter={typeFilter}
                     baseStatFilter={baseStatFilter}
                     toggleIgnoreValidity={props.toggleIgnoreValidity}
-                    toggleSpeciesFilter={toggleSpeciesFilter} />
+                    toggleSpeciesFilter={() => setShowSpeciesFilter(!showSpeciesFilter)} />
             </div>
 
             <div className="flex-center w40 debug-border">

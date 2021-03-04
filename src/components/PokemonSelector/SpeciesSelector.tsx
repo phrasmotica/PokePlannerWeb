@@ -67,9 +67,9 @@ interface SpeciesSelectorProps {
     baseStatFilter: BaseStatFilterModel
 
     /**
-     * Handler for setting the species ID in the parent component.
+     * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (pokemonSpeciesId: number | undefined) => void
+    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
 
     /**
      * Handler for toggling the species filter in the parent component.
@@ -200,7 +200,8 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         // set cookie
         CookieHelper.set(`speciesId${props.index}`, speciesId)
 
-        props.setSpecies(speciesId)
+        let species = getSpecies(speciesId)
+        props.setSpecies(species)
     }
 
     /**

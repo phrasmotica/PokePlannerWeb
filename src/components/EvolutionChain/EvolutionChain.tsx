@@ -4,7 +4,10 @@ import { EvolutionTree } from "./EvolutionTree"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { EvolutionChainEntry } from "../../models/swagger"
+import {
+    EvolutionChainEntry,
+    PokemonSpeciesEntry
+} from "../../models/swagger"
 
 import "./EvolutionChain.scss"
 
@@ -30,9 +33,9 @@ interface EvolutionChainProps extends IHasIndex {
     shouldShowChain: boolean
 
     /**
-     * Handler for setting the species in the parent component.
+     * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (pokemonSpeciesId: number) => void
+    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
 }
 
 /**
@@ -113,7 +116,7 @@ export const EvolutionChain = (props: EvolutionChainProps) => {
                 pokemonSpeciesId={props.pokemonSpeciesId}
                 availableSpeciesIds={props.availableSpeciesIds}
                 showShinySprites={props.showShinySprites}
-                setSpecies={(pokemonSpeciesId: number) => props.setSpecies(pokemonSpeciesId)} />
+                setSpecies={props.setSpecies} />
         )
     }
 

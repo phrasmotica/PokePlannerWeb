@@ -68,9 +68,9 @@ interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTool
     baseStatFilter: BaseStatFilterModel
 
     /**
-     * Handler for setting the species ID in the parent component.
+     * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (pokemonSpeciesId: number | undefined) => void
+    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
@@ -117,6 +117,8 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     const [speciesRatings, setSpeciesRatings] = useState<SpeciesRatingsDict>([])
     const [favouriteSpecies, setFavouriteSpecies] = useState<number[]>([])
 
+    console.log("PokemonSelector RENDER")
+
     // set species from cookie on mount
     useEffect(() => {
         let index = props.index
@@ -126,7 +128,8 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             let speciesIds = props.species.map(s => s.pokemonSpeciesId)
             if (speciesIds.includes(speciesId)) {
                 // cascades to set variety and form
-                setSpecies(speciesId)
+                let species = getSpecies(speciesId)
+                setSpecies(species)
             }
             else {
                 // remove cookies for species that isn't available
@@ -142,7 +145,8 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         let defaultSpeciesId = props.defaultSpeciesId
         let speciesIds = props.species.map(s => s.pokemonSpeciesId)
         if (defaultSpeciesId !== undefined && speciesIds.includes(defaultSpeciesId)) {
-            setSpecies(defaultSpeciesId)
+            let species = getSpecies(defaultSpeciesId)
+            setSpecies(species)
 
             // set cookie
             CookieHelper.set(`speciesId${props.index}`, defaultSpeciesId)
@@ -389,10 +393,10 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     /**
      * Set this selector to the species with the given ID.
      */
-    const setSpecies = (newSpeciesId: number | undefined) => {
+    const setSpecies = (species: PokemonSpeciesEntry | undefined) => {
         // only fetch if we need to
         let speciesId = props.speciesId
-        let speciesChanged = newSpeciesId !== speciesId
+        let speciesChanged = species?.pokemonSpeciesId !== speciesId
         if (speciesId === undefined || speciesChanged) {
             setVarietyId(undefined)
             setFormId(undefined)
@@ -406,8 +410,8 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 CookieHelper.remove(`formId${index}`)
             }
 
-            props.setSpecies(newSpeciesId)
-            fetchVarieties(newSpeciesId)
+            props.setSpecies(species)
+            fetchVarieties(species)
         }
     }
 
@@ -487,7 +491,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         let randomIndex = randomInt(0, max)
         let species = speciesList[randomIndex]
 
-        setSpecies(species.pokemonSpeciesId)
+        setSpecies(species)
 
         // set cookie
         CookieHelper.set(`speciesId${props.index}`, species.pokemonSpeciesId)
@@ -593,22 +597,23 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     /**
      * Fetches the species varieties from SpeciesController.
      */
-    const fetchVarieties = async (pokemonSpeciesId: number | undefined) => {
-        if (pokemonSpeciesId === undefined) {
+    const fetchVarieties = async (species: PokemonSpeciesEntry | undefined) => {
+        if (species === undefined) {
             return
         }
 
-        console.log(`Selector ${props.index}: fetching varieties for Pokemon species ${pokemonSpeciesId}...`)
+        let speciesId = species.pokemonSpeciesId
+        console.log(`Selector ${props.index}: fetching varieties for Pokemon species ${speciesId}...`)
 
         setLoadingVarieties(true)
 
-        await fetch(`${process.env.REACT_APP_API_URL}/species/${pokemonSpeciesId}/varieties/${props.versionGroupId}`)
+        await fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}/varieties/${props.versionGroupId}`)
             .then((response: Response) => {
                 if (response.status === 200) {
                     return response
                 }
 
-                throw new Error(`Selector ${props.index}: tried to fetch varieties for Pokemon species ${pokemonSpeciesId} but failed with status ${response.status}!`)
+                throw new Error(`Selector ${props.index}: tried to fetch varieties for Pokemon species ${speciesId} but failed with status ${response.status}!`)
             })
             .then(response => response.json())
             .then((varieties: PokemonEntry[]) => {
@@ -636,8 +641,8 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             .catch(error => console.error(error))
             .then(() => setLoadingVarieties(false))
             .then(() => {
-                if (pokemonSpeciesId !== undefined) {
-                    fetchForms(pokemonSpeciesId)
+                if (speciesId !== undefined) {
+                    fetchForms(speciesId)
                 }
             })
     }
@@ -667,7 +672,11 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             .then((formsDict: FormsDict) => {
                 setFormsDict(formsDict)
 
+                console.log("FORMS")
+                console.log(formsDict)
+
                 // set form of selected variety
+                // TODO: varietyId is undefined when this is called
                 let matchingForm = formsDict.find(e => e.id === varietyId)
                 if (matchingForm === undefined) {
                     throw new Error(`Selector ${props.index}: no matching form found for variety ${varietyId}!`)
@@ -675,6 +684,9 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
 
                 let forms = matchingForm.data
                 let form = forms[0]
+
+                console.log("FORM")
+                console.log(form)
 
                 // set form from cookies if possible
                 let formId = CookieHelper.getNumber(`formId${props.index}`)

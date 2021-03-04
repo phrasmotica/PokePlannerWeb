@@ -39,9 +39,9 @@ interface EvolutionTreeProps extends IHasIndex {
     showShinySprites: boolean
 
     /**
-     * Handler for setting the species in the parent component.
+     * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (pokemonSpeciesId: number) => void
+    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
 }
 
 /**
@@ -152,7 +152,7 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
                 color="success"
                 disabled={!speciesAvailable}
                 className="evolutionTreeOpenButton"
-                onMouseUp={() => props.setSpecies(speciesId)}>
+                onMouseUp={() => props.setSpecies(species)}>
                 <div className="flex-center">
                     <FaSistrix />
                 </div>
