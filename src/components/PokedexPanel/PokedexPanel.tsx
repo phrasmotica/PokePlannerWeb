@@ -13,6 +13,8 @@ import {
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
+    PokemonSpeciesInfoEntry,
     StatEntry,
     TypeEntry,
     VersionGroupEntry
@@ -37,6 +39,8 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
      * List of Pokemon species.
      */
     species: PokemonSpeciesEntry[]
+
+    speciesInfo: PokemonSpeciesInfo[]
 
     /**
      * List of generations.
@@ -104,6 +108,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     index={props.index}
                     versionGroupId={props.versionGroup?.versionGroupId}
                     speciesList={props.species}
+                    speciesInfo={props.speciesInfo}
                     defaultSpeciesId={species?.pokemonSpeciesId}
                     generations={props.generations}
                     types={props.types}

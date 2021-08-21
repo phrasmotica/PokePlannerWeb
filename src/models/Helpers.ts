@@ -7,6 +7,7 @@ import {
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     TypeEntryListWithId
 } from "./swagger"
 
@@ -158,6 +159,21 @@ export const getTypes = (
 }
 
 /**
+ * Returns the species' types in the version group with the given ID.
+ */
+export const getTypesOfSpecies = (
+    speciesInfo: PokemonSpeciesInfo,
+) => {
+    let varieties = speciesInfo.species?.varieties ?? []
+    if (varieties.length <= 0) {
+        return []
+    }
+
+    let types = varieties[0].types
+    return types.map(t => t.typeId)
+}
+
+/**
  * Returns the Pokemon's base stats in the version group with the given ID.
  */
 export const getBaseStats = (
@@ -166,6 +182,21 @@ export const getBaseStats = (
 ) => {
     let baseStats = pokemon.baseStats.find(t => t.id === versionGroupId)
     return baseStats?.data ?? []
+}
+
+/**
+ * Returns the species' base stats in the version group with the given ID.
+ */
+export const getBaseStatsOfSpecies = (
+    speciesInfo: PokemonSpeciesInfo,
+) => {
+    let varieties = speciesInfo.species?.varieties ?? []
+    if (varieties.length <= 0) {
+        return []
+    }
+
+    let baseStats = varieties[0].baseStats
+    return baseStats.map(bs => bs.baseValue)
 }
 
 /**

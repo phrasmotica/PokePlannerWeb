@@ -16,6 +16,8 @@ import {
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
+    PokemonSpeciesInfoEntry,
     StatEntry,
     TypeEntry
 } from "../../models/swagger"
@@ -39,6 +41,8 @@ interface PokemonPanelProps extends IHasCommon {
      * List of Pokemon species.
      */
     speciesList: PokemonSpeciesEntry[]
+
+    speciesInfo: PokemonSpeciesInfo[]
 
     /**
      * List of generations.
@@ -406,6 +410,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     index={props.index}
                     versionGroupId={props.versionGroupId}
                     species={props.speciesList}
+                    speciesInfo={props.speciesInfo}
                     speciesId={pokemonSpeciesId}
                     defaultSpeciesId={props.defaultSpeciesId}
                     ignoreValidity={props.ignoreValidity}

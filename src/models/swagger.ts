@@ -22,6 +22,14 @@ export interface AbilityEntry {
   flavourTextEntries: LocalStringListWithId[];
 }
 
+export interface BaseStatInfo {
+  /** @format int32 */
+  statId: number;
+
+  /** @format int32 */
+  baseValue: number;
+}
+
 export interface ChainLink {
   isBaby: boolean;
   species?: PokemonSpeciesNamedApiResource;
@@ -549,9 +557,40 @@ export interface PokemonSpeciesEntry {
   catchRate: number;
 }
 
+export interface PokemonSpeciesInfo {
+  /** @format int32 */
+  pokemonSpeciesId: number;
+  name?: string;
+  species?: SpeciesInfo;
+}
+
+export interface PokemonSpeciesInfoEntry {
+  id: string;
+  name: string;
+
+  /** @format date-time */
+  creationTime: string;
+
+  /** @format int32 */
+  languageId: number;
+
+  /** @format int32 */
+  generationId: number;
+  species: PokemonSpeciesInfo[];
+}
+
 export interface PokemonSpeciesNamedApiResource {
   url?: string;
   name?: string;
+}
+
+export interface SpeciesInfo {
+  /** @format int32 */
+  order: number;
+
+  /** @format int32 */
+  generationId: number;
+  varieties: VarietyInfo[];
 }
 
 export interface StatEntry {
@@ -587,9 +626,20 @@ export interface TypeEntryListWithId {
   data: TypeEntry[];
 }
 
+export interface TypeInfo {
+  /** @format int32 */
+  typeId: number;
+}
+
 export interface TypeNamedApiResource {
   url?: string;
   name?: string;
+}
+
+export interface VarietyInfo {
+  isDefault: boolean;
+  types: TypeInfo[];
+  baseStats: BaseStatInfo[];
 }
 
 export interface VersionEntry {

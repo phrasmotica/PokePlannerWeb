@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { getDisplayName } from '../../models/Helpers'
-import { GenerationEntry, PokemonSpeciesEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
+import { GenerationEntry, PokemonSpeciesEntry, PokemonSpeciesInfoEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
@@ -22,6 +22,8 @@ export const TeamBuilder = () => {
 
     const [species, setSpecies] = useState<PokemonSpeciesEntry[]>([])
     const [loadingSpecies, setLoadingSpecies] = useState(false)
+    const [speciesInfo, setSpeciesInfo] = useState<PokemonSpeciesInfoEntry>()
+    const [loadingSpeciesInfo, setLoadingSpeciesInfo] = useState(false)
     const [generations, setGenerations] = useState<GenerationEntry[]>([])
     const [loadingGenerations, setLoadingGenerations] = useState(false)
     const [versionGroups, setVersionGroups] = useState<VersionGroupEntry[]>([])
@@ -42,29 +44,25 @@ export const TeamBuilder = () => {
     // fetch species, generations, types and version groups on mount
     useEffect(() => {
         const fetchSpecies = () => {
-            setLoadingSpecies(true)
+            console.log(`${new Date().toLocaleTimeString()} Fetching species info...`)
+            setLoadingSpeciesInfo(true)
 
-            fetch(constructSpeciesEndpoint())
-                .then((response) => response.json())
-                .then((species: PokemonSpeciesEntry[]) => setSpecies(species))
+            fetch(constructSpeciesInfoEndpoint())
+                .then(response => response.json())
+                .then((speciesInfo: PokemonSpeciesInfoEntry) => setSpeciesInfo(speciesInfo))
                 .catch(error => console.error(error))
-                .finally(() => setLoadingSpecies(false))
+                .finally(() => {
+                    console.log(`${new Date().toLocaleTimeString()} Finished fetching species info!`)
+                    setLoadingSpeciesInfo(false)
+                })
         }
 
-        const constructSpeciesEndpoint = () => {
+        const constructSpeciesInfoEndpoint = () => {
             let apiUrl = process.env.REACT_APP_API_URL
-            let endpoint = `${apiUrl}/species`
 
-            let speciesLimit = process.env.REACT_APP_SPECIES_LIMIT
-            let speciesOffset = process.env.REACT_APP_SPECIES_OFFSET
-
-            if (speciesLimit !== undefined && speciesOffset !== undefined) {
-                let startId = Number(speciesOffset) + 1
-                let endId = Number(speciesOffset) + Number(speciesLimit)
-                console.log(`Fetching ${speciesLimit} species (${startId} - ${endId})`)
-
-                endpoint += `?limit=${speciesLimit}&offset=${speciesOffset}`
-            }
+            let generationId = 8
+            let languageId = 9
+            let endpoint = `${apiUrl}/speciesInfo/${generationId}/${languageId}`
 
             return endpoint
         }
@@ -239,6 +237,7 @@ export const TeamBuilder = () => {
                     toggleIgnoreValidity={toggleIgnoreValidity}
                     hideTooltips={hideTooltips}
                     species={species}
+                    speciesInfo={speciesInfo?.species ?? []}
                     generations={generations}
                     types={types}
                     baseStats={baseStats} />

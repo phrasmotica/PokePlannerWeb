@@ -19,7 +19,9 @@ import {
     GenerationEntry,
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry
+    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
+    PokemonSpeciesInfoEntry
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -34,6 +36,8 @@ interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTool
      * List of Pokemon species.
      */
     species: PokemonSpeciesEntry[]
+
+    speciesInfo: PokemonSpeciesInfo[]
 
     speciesId: number | undefined
 
@@ -173,7 +177,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 index={props.index}
                 versionGroupId={props.versionGroupId}
                 hideTooltips={props.hideTooltips}
-                species={props.species}
+                speciesInfo={props.speciesInfo}
                 speciesId={props.speciesId}
                 loading={false}
                 generations={props.generations}
