@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import Select from "react-select"
 import { Button, Tooltip } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
@@ -6,13 +6,12 @@ import { FaFilter } from "react-icons/fa"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { getBaseStats, getBaseStatsOfSpecies, getDisplayName, getTypes, getTypesOfSpecies, isValid } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
 
 import {
     GenerationEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
-    PokemonSpeciesInfoEntry
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -202,8 +201,10 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         // set cookie
         CookieHelper.set(`speciesId${props.index}`, speciesId)
 
-        let species = getSpecies(speciesId)
-        props.setSpecies(species)
+        fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}`)
+            .then(response => response.json())
+            .then((species: PokemonSpeciesEntry) => props.setSpecies(species))
+            .catch(error => console.error(error))
     }
 
     /**
@@ -252,8 +253,8 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
             )
         }
 
-        // TODO: create isValidSpecies() that uses validity of species info
-        return isValid(getSelectedSpecies(), versionGroupId)
+        let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.speciesId)[0]
+        return isValid(speciesInfo.species!, versionGroupId)
     }
 
     /**
@@ -277,31 +278,6 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         }
 
         return null
-    }
-
-    /**
-     * Returns the selected species.
-     */
-    const getSelectedSpecies = () => {
-        let speciesId = props.speciesId
-        if (speciesId === undefined) {
-            throw new Error(`Species selector ${props.index}: species ID is undefined!`)
-        }
-
-        return getSpecies(speciesId)
-    }
-
-    /**
-     * Returns the species matching the given ID.
-     */
-    const getSpecies = (id: number) => {
-        // TODO: fetch full species entry instead
-        let species = props.speciesInfo.find(e => e.pokemonSpeciesId === id)
-        if (species === undefined) {
-            throw new Error(`Species selector ${props.index}: no species found with ID ${id}!`)
-        }
-
-        return species
     }
 
     /**

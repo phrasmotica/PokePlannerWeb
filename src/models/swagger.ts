@@ -438,6 +438,11 @@ export interface PokedexEntry {
   displayNames: LocalString[];
 }
 
+export interface PokedexInfo {
+  /** @format int32 */
+  pokedexId: number;
+}
+
 export interface PokemonAbilityContext {
   id: string;
   name: string;
@@ -590,7 +595,9 @@ export interface SpeciesInfo {
 
   /** @format int32 */
   generationId: number;
+  pokedexes: PokedexInfo[];
   varieties: VarietyInfo[];
+  validity: number[];
 }
 
 export interface StatEntry {

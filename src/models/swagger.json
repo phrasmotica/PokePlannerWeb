@@ -2073,6 +2073,19 @@
         },
         "additionalProperties": false
       },
+      "PokedexInfo": {
+        "required": [
+          "pokedexId"
+        ],
+        "type": "object",
+        "properties": {
+          "pokedexId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "PokemonAbilityContext": {
         "required": [
           "abilityId",
@@ -2557,6 +2570,8 @@
         "required": [
           "generationId",
           "order",
+          "pokedexes",
+          "validity",
           "varieties"
         ],
         "type": "object",
@@ -2569,10 +2584,23 @@
             "type": "integer",
             "format": "int32"
           },
+          "pokedexes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokedexInfo"
+            }
+          },
           "varieties": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VarietyInfo"
+            }
+          },
+          "validity": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         },
