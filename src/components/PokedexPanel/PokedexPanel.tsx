@@ -34,11 +34,6 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
      */
     versionGroup: VersionGroupInfo | undefined
 
-    /**
-     * List of Pokemon species.
-     */
-    species: PokemonSpeciesEntry[]
-
     speciesInfo: PokemonSpeciesInfo[]
 
     /**
@@ -89,24 +84,12 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
             && form !== undefined
             && (props.ignoreValidity || selectedPokemonIsValid)
 
-    const setSpeciesAndCascade = (species: PokemonSpeciesEntry | undefined) => {
-        setSpecies(species)
-
-        if (species === undefined) {
-            setVariety(undefined)
-            setForm(undefined)
-        }
-
-        // TODO: set default variety and form of selected species to fix shouldShowPokemon bug
-    }
-
     return (
         <div className="flex pokedex-panel debug-border">
             <div className="debug-border whalf">
                 <PokemonPanel
                     index={props.index}
                     versionGroupId={props.versionGroup?.versionGroupId}
-                    speciesList={props.species}
                     speciesInfo={props.speciesInfo}
                     defaultSpeciesId={species?.pokemonSpeciesId}
                     generations={props.generations}
@@ -115,7 +98,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     hideTooltips={props.hideTooltips}
                     ignoreValidity={props.ignoreValidity}
                     species={species}
-                    setSpecies={setSpeciesAndCascade}
+                    setSpecies={setSpecies}
                     variety={variety}
                     setVariety={setVariety}
                     form={form}
@@ -143,13 +126,12 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     index={props.index}
                     versionGroup={props.versionGroup}
                     hideTooltips={props.hideTooltips}
-                    species={props.species}
                     pokemonSpeciesId={species?.pokemonSpeciesId}
                     variety={variety}
                     form={form}
                     shouldShowPokemon={shouldShowPokemon}
                     showShinySprite={showShinySprite}
-                    setSpecies={setSpeciesAndCascade} />
+                    setSpecies={setSpecies} />
             </div>
         </div>
     )

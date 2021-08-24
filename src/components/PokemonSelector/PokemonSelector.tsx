@@ -13,7 +13,7 @@ import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { FormsDict } from "../../models/FormsDict"
-import { getBaseStats, getTypes } from "../../models/Helpers"
+import { getBaseStats, getBaseStatsOfSpecies, getTypes, getTypesOfSpecies } from "../../models/Helpers"
 
 import {
     GenerationInfo,
@@ -31,14 +31,11 @@ import "./PokemonSelector.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 
 interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
-    /**
-     * List of Pokemon species.
-     */
-    species: PokemonSpeciesEntry[]
-
     speciesInfo: PokemonSpeciesInfo[]
 
-    speciesId: number | undefined
+    species: PokemonSpeciesEntry | undefined
+
+    variety: PokemonEntry | undefined
 
     /**
      * The ID of the species to be selected by default.
@@ -128,7 +125,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
 
         let speciesId = CookieHelper.getNumber(`speciesId${index}`)
         if (speciesId !== undefined) {
-            let speciesIds = props.species.map(s => s.pokemonSpeciesId)
+            let speciesIds = props.speciesInfo.map(s => s.pokemonSpeciesId)
             if (speciesIds.includes(speciesId)) {
                 // cascades to set variety and form
                 let species = getSpecies(speciesId)
@@ -146,7 +143,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     // set species from props if necessary
     useEffect(() => {
         let defaultSpeciesId = props.defaultSpeciesId
-        let speciesIds = props.species.map(s => s.pokemonSpeciesId)
+        let speciesIds = props.speciesInfo.map(s => s.pokemonSpeciesId)
         if (defaultSpeciesId !== undefined && speciesIds.includes(defaultSpeciesId)) {
             let species = getSpecies(defaultSpeciesId)
             setSpecies(species)
@@ -182,7 +179,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 generationFilter={props.generationFilter}
                 typeFilter={props.typeFilter}
                 baseStatFilter={props.baseStatFilter}
-                setSpecies={setSpecies}
+                setSpecies={props.setSpecies}
                 toggleFilter={props.toggleSpeciesFilter}
                 shouldMarkInvalid={!props.ignoreValidity && hasNoVariants} />
         )
@@ -204,7 +201,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 hideTooltips={props.hideTooltips}
                 varieties={varieties}
                 varietyId={varietyId}
-                species={species}
+                species={props.species}
                 formsDict={formsDict}
                 formId={formId}
                 setVariety={setVariety}
@@ -232,7 +229,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 hideTooltips={props.hideTooltips}
                 forms={forms}
                 formId={formId}
-                species={species}
+                variety={props.variety}
                 setForm={setForm}
                 loading={loadingForms}
                 shouldMarkInvalid={!props.ignoreValidity && forms.length >= 2} />
@@ -363,13 +360,13 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Returns the species that match the species filter.
      */
     const getFilteredSpecies = () => {
-        return props.species.filter(s => isPresent(s))
+        return props.speciesInfo.filter(isPresent)
     }
 
     /**
      * Returns whether the species passes the filter.
      */
-    const isPresent = (species: PokemonSpeciesEntry) => {
+    const isPresent = (species: PokemonSpeciesInfo) => {
         let versionGroupId = props.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
@@ -378,15 +375,15 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         }
 
         // generation filter test
-        let generationId = species.generation.generationId
+        let generationId = species.species!.generationId
         let passesGenerationFilter = props.generationFilter.passesFilter([generationId])
 
         // type filter test
-        let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
+        let speciesTypes = getTypesOfSpecies(species)
         let passesTypeFilter = props.typeFilter.passesFilter(speciesTypes)
 
         // base stat filter test
-        let speciesBaseStats = getBaseStats(species, versionGroupId)
+        let speciesBaseStats = getBaseStatsOfSpecies(species)
         let passesBaseStatFilter = props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
@@ -438,7 +435,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Returns the data object for the species with the given ID.
      */
     const getSpecies = (pokemonSpeciesId: number) => {
-        let allSpecies = props.species
+        let allSpecies = props.speciesInfo
 
         let species = allSpecies.find(s => s.pokemonSpeciesId === pokemonSpeciesId)
         if (species === undefined) {

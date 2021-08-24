@@ -5,6 +5,7 @@ import Select from "react-select"
 import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../models/Helpers"
 
 import {
+    PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry
 } from "../../models/swagger"
@@ -46,6 +47,11 @@ interface FormSelectorProps {
      * The species of the selected variety.
      */
     species: PokemonSpeciesEntry | undefined
+
+    /**
+     * The selected variety.
+     */
+    variety: PokemonEntry | undefined
 
     /**
      * Handler for setting the form in the parent component.
@@ -181,8 +187,10 @@ export const FormSelector = (props: FormSelectorProps) => {
         // set cookie
         CookieHelper.set(`formId${props.index}`, formId)
 
-        let form = getForm(formId)
-        props.setForm(form)
+        fetch(`${process.env.REACT_APP_API_URL}/form/${formId}`)
+            .then(response => response.json())
+            .then((form: PokemonFormEntry) => props.setForm(form))
+            .catch(error => console.error(error))
     }
 
     /**
@@ -237,30 +245,6 @@ export const FormSelector = (props: FormSelectorProps) => {
         }
 
         return null
-    }
-
-    /**
-     * Returns the selected form.
-     */
-    const getSelectedForm = () => {
-        let formId = props.formId
-        if (formId === undefined) {
-            throw new Error(`Form selector ${props.index}: form ID is undefined!`)
-        }
-
-        return getForm(formId)
-    }
-
-    /**
-     * Returns the form matching the given ID.
-     */
-    const getForm = (id: number) => {
-        let form = props.forms.find(e => e.pokemonFormId === id)
-        if (form === undefined) {
-            throw new Error(`Form selector ${props.index}: no form found with ID ${id}!`)
-        }
-
-        return form
     }
 
     return renderFormSelect()

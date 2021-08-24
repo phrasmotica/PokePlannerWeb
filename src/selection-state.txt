@@ -1,0 +1,27 @@
+species selector chooses a species and fetches it
+species selector passes fetched species up to pokemon selector
+pokemon selector passes fetched species up to pokemon panel
+pokemon panel passes fetched species up to pokedex panel
+pokedex panel stores fetched species in its state
+
+pokedex panel passes fetched species down to pokemon panel
+pokemon panel passes fetched species down to pokemon selector
+pokemon selector passes fetched species down to variety selector
+variety selector fetches varieties of the species and displays them as options
+
+variety selector chooses a variety and fetches it
+variety selector passes fetched variety up to pokemon selector
+pokemon selector passes fetched variety up to pokemon panel
+pokemon panel passes fetched variety up to pokedex panel
+pokedex panel stores fetched variety in its state
+
+pokedex panel passes fetched variety down to pokemon panel
+pokemon panel passes fetched variety down to pokemon selector
+pokemon selector passes fetched variety down to form selector
+variety selector fetches forms of the variety and displays them as options
+
+form selector chooses a form and fetches it
+form selector passes fetched form up to pokemon selector
+pokemon selector passes fetched form up to pokemon panel
+pokemon panel passes fetched form up to pokedex panel
+pokedex panel stores fetched form in its state

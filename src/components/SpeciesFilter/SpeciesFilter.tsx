@@ -9,11 +9,11 @@ import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { getBaseStats, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypes } from "../../models/Helpers"
+import { getBaseStats, getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypes, getTypesOfSpecies } from "../../models/Helpers"
 
 import {
     GenerationInfo,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     StatEntry,
     TypeInfo
 } from "../../models/swagger"
@@ -26,7 +26,7 @@ interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The species to filter.
      */
-    species: PokemonSpeciesEntry[]
+    species: PokemonSpeciesInfo[]
 
     /**
      * The generations.
@@ -177,7 +177,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
      */
     const renderGenerationFilter = () => {
         let species = props.species
-        let generationIds = species.map(s => s.generation.generationId).distinct()
+        let generationIds = species.map(s => s.species!.generationId).distinct()
 
         let generations = props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
@@ -212,8 +212,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
         }
 
         let species = props.species
-        let typeIds = species.flatMap(s => getTypes(s, versionGroupId!)
-                             .map(t => t.typeId))
+        let typeIds = species.flatMap(getTypesOfSpecies)
                              .distinct()
                              .sort((i, j) => i - j) // ascending order
 
@@ -252,7 +251,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
         let filter = props.baseStatFilter
         let baseStats = props.baseStats
 
-        let allSpeciesBaseStats = props.species.map(s => getBaseStats(s, versionGroupId!))
+        let allSpeciesBaseStats = props.species.map(getBaseStatsOfSpecies)
 
         let minValues = []
         for (let i = 0; i < baseStats.length; i++) {

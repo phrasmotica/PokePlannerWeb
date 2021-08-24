@@ -25,11 +25,8 @@ const TEAM_SIZE: number = 1
  * Component for building a Pokemon team.
  */
 export const TeamBuilder = () => {
-    const [versionGroupId,
-        setVersionGroupId] = useState<number>()
+    const [versionGroupId, setVersionGroupId] = useState<number>()
 
-    const [species, setSpecies] = useState<PokemonSpeciesEntry[]>([])
-    const [loadingSpecies, setLoadingSpecies] = useState(false)
     const [speciesInfo, setSpeciesInfo] = useState<PokemonSpeciesInfo[]>([])
     const [loadingSpeciesInfo, setLoadingSpeciesInfo] = useState(false)
     const [generations, setGenerations] = useState<GenerationInfo[]>([])
@@ -49,32 +46,8 @@ export const TeamBuilder = () => {
         CookieHelper.getFlag("hideTooltips")
     )
 
-    // fetch species, generations, types and version groups on mount
+    // fetch generations, types and version groups on mount
     useEffect(() => {
-        const fetchSpecies = () => {
-            console.log(`${new Date().toLocaleTimeString()} Fetching species info...`)
-            setLoadingSpeciesInfo(true)
-
-            fetch(constructSpeciesInfoEndpoint())
-                .then(response => response.json())
-                .then((speciesInfo: PokemonSpeciesInfo[]) => setSpeciesInfo(speciesInfo))
-                .catch(error => console.error(error))
-                .finally(() => {
-                    console.log(`${new Date().toLocaleTimeString()} Finished fetching species info!`)
-                    setLoadingSpeciesInfo(false)
-                })
-        }
-
-        const constructSpeciesInfoEndpoint = () => {
-            let apiUrl = process.env.REACT_APP_API_URL
-
-            let generationId = 8
-            let languageId = 9
-            let endpoint = `${apiUrl}/speciesInfo/${generationId}/${languageId}`
-
-            return endpoint
-        }
-
         const fetchGenerations = () => {
             setLoadingGenerations(true)
 
@@ -119,20 +92,18 @@ export const TeamBuilder = () => {
                 .finally(() => setLoadingVersionGroups(false))
         }
 
-        fetchSpecies()
         fetchGenerations()
         fetchTypes()
         fetchVersionGroups()
 
         return () => {
-            setSpecies([])
             setGenerations([])
             setTypes([])
             setVersionGroups([])
         }
     }, [])
 
-    // fetch base stats if the version group ID changes
+    // fetch species and base stats if the version group ID changes
     useEffect(() => {
         const fetchBaseStats = (versionGroupId: number | undefined) => {
             if (versionGroupId === undefined) {
@@ -157,10 +128,31 @@ export const TeamBuilder = () => {
                 .then(() => setLoadingBaseStats(false))
         }
 
+        const fetchSpeciesInfo = (versionGroupId: number | undefined) => {
+            if (versionGroupId === undefined) {
+                return
+            }
+
+            console.log(`Team builder: getting species info for version group ${versionGroupId}...`)
+            setLoadingSpeciesInfo(true)
+
+            let versionGroup = versionGroups.find(vg => vg.versionGroupId === versionGroupId)!
+            let generationId = versionGroup.generationId
+            let languageId = 9
+
+            fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/${generationId}/${languageId}`)
+                .then(response => response.json())
+                .then((speciesInfo: PokemonSpeciesInfo[]) => setSpeciesInfo(speciesInfo))
+                .catch(error => console.error(error))
+                .finally(() => setLoadingSpeciesInfo(false))
+        }
+
         fetchBaseStats(versionGroupId)
+        fetchSpeciesInfo(versionGroupId)
 
         return () => {
             setBaseStats([])
+            setSpeciesInfo([])
         }
     }, [versionGroupId])
 
@@ -247,7 +239,6 @@ export const TeamBuilder = () => {
                     ignoreValidity={ignoreValidity}
                     toggleIgnoreValidity={toggleIgnoreValidity}
                     hideTooltips={hideTooltips}
-                    species={species}
                     speciesInfo={speciesInfo}
                     generations={generations}
                     types={types}
@@ -281,8 +272,7 @@ export const TeamBuilder = () => {
         setHideTooltips(!hideTooltips)
     }
 
-    const pageIsLoading = loadingSpecies
-                    || loadingVersionGroups
+    const pageIsLoading = loadingVersionGroups
                     || loadingGenerations
                     || loadingTypes
 

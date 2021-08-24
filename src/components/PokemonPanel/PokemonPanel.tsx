@@ -36,11 +36,6 @@ interface PokemonPanelProps extends IHasCommon {
      */
     defaultSpeciesId: number | undefined
 
-    /**
-     * List of Pokemon species.
-     */
-    speciesList: PokemonSpeciesEntry[]
-
     speciesInfo: PokemonSpeciesInfo[]
 
     /**
@@ -375,7 +370,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         <SpeciesFilter
             index={props.index}
             versionGroupId={props.versionGroupId}
-            species={props.speciesList}
+            species={props.speciesInfo}
             generations={props.generations}
             generationFilter={generationFilter}
             types={props.types}
@@ -408,14 +403,14 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                 <PokemonSelector
                     index={props.index}
                     versionGroupId={props.versionGroupId}
-                    species={props.speciesList}
                     speciesInfo={props.speciesInfo}
-                    speciesId={pokemonSpeciesId}
                     defaultSpeciesId={props.defaultSpeciesId}
                     ignoreValidity={props.ignoreValidity}
                     generations={props.generations}
                     hideTooltips={props.hideTooltips}
+                    species={props.species}
                     setSpecies={props.setSpecies}
+                    variety={props.variety}
                     setVariety={props.setVariety}
                     setForm={props.setForm}
                     generationFilter={generationFilter}
