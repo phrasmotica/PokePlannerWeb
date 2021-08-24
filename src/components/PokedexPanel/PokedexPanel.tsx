@@ -14,10 +14,9 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
-    PokemonSpeciesInfoEntry,
     StatEntry,
     TypeEntry,
-    VersionGroupEntry
+    VersionGroupInfo
 } from "../../models/swagger"
 
 import "./PokedexPanel.scss"
@@ -33,7 +32,7 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
      */
-    versionGroup: VersionGroupEntry | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * List of Pokemon species.
@@ -129,7 +128,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                         index={props.index}
                         versionGroup={props.versionGroup}
                         hideTooltips={props.hideTooltips}
-                        versions={props.versionGroup?.versions ?? []}
+                        versions={props.versionGroup?.versionInfo ?? []}
                         species={species}
                         pokemon={variety}
                         effectiveTypes={effectiveTypes}

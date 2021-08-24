@@ -17,7 +17,6 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
-    PokemonSpeciesInfoEntry,
     StatEntry,
     TypeEntry
 } from "../../models/swagger"

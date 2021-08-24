@@ -4,8 +4,8 @@ import Select from 'react-select'
 
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
-import { getDisplayName } from '../../models/Helpers'
-import { GenerationEntry, PokemonSpeciesEntry, PokemonSpeciesInfo, PokemonSpeciesInfoEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
+import { getDisplayNameOfVersionGroup } from '../../models/Helpers'
+import { GenerationEntry, PokemonSpeciesEntry, PokemonSpeciesInfo, StatEntry, TypeEntry, VersionGroupInfo } from '../../models/swagger'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
@@ -26,7 +26,7 @@ export const TeamBuilder = () => {
     const [loadingSpeciesInfo, setLoadingSpeciesInfo] = useState(false)
     const [generations, setGenerations] = useState<GenerationEntry[]>([])
     const [loadingGenerations, setLoadingGenerations] = useState(false)
-    const [versionGroups, setVersionGroups] = useState<VersionGroupEntry[]>([])
+    const [versionGroups, setVersionGroups] = useState<VersionGroupInfo[]>([])
     const [loadingVersionGroups, setLoadingVersionGroups] = useState(false)
     const [types, setTypes] = useState<TypeEntry[]>([])
     const [loadingTypes, setLoadingTypes] = useState(false)
@@ -90,9 +90,10 @@ export const TeamBuilder = () => {
         const fetchVersionGroups = () => {
             setLoadingVersionGroups(true)
 
-            fetch(`${process.env.REACT_APP_API_URL}/versionGroup`)
+            let languageId = 9
+            fetch(`${process.env.REACT_APP_API_URL}/versionGroupInfo/${languageId}`)
                 .then(response => response.json())
-                .then((versionGroups: VersionGroupEntry[]) => {
+                .then((versionGroups: VersionGroupInfo[]) => {
                     setVersionGroups(versionGroups)
 
                     // try get version group ID from cookies
@@ -177,7 +178,7 @@ export const TeamBuilder = () => {
 
     const renderVersionGroupMenu = () => {
         let options = versionGroups.map(vg => ({
-            label: getDisplayName(vg, "en") ?? vg.name,
+            label: getDisplayNameOfVersionGroup(vg),
             value: vg.versionGroupId
         }))
 

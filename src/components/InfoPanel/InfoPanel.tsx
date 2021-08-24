@@ -16,8 +16,8 @@ import {
     PokemonSpeciesEntry,
     StatEntry,
     TypeEntry,
-    VersionEntry,
-    VersionGroupEntry
+    VersionGroupInfo,
+    VersionInfo
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -26,12 +26,12 @@ interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
      */
-    versionGroup: VersionGroupEntry | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * The versions.
      */
-    versions: VersionEntry[]
+    versions: VersionInfo[]
 
     /**
      * The species.

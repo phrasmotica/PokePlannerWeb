@@ -8,7 +8,9 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
-    TypeEntryListWithId
+    TypeEntryListWithId,
+    VersionGroupInfo,
+    VersionInfo
 } from "./swagger"
 
 /**
@@ -20,6 +22,25 @@ export const getDisplayName = (
 ) => {
     let localName = resource.displayNames.find(n => n.language === locale)
     return localName?.value
+}
+
+/**
+ * Returns the given version group's display name.
+ */
+export const getDisplayNameOfVersionGroup = (
+    versionGroup: VersionGroupInfo,
+) => {
+    let versionNames = versionGroup.versionInfo.map(getDisplayNameOfVersion)
+    return versionNames.join("/")
+}
+
+/**
+ * Returns the given version's display name.
+ */
+export const getDisplayNameOfVersion = (
+    version: VersionInfo,
+) => {
+    return version.versionNamesInfo[0]?.name ?? `version${version.versionId}`
 }
 
 /**

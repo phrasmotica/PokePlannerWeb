@@ -5,14 +5,14 @@ import key from "weak-key"
 
 import { IHasIndex, IHasHideTooltips, IsOpenDict } from "../CommonMembers"
 
-import { getDisplayName } from "../../models/Helpers"
+import { getDisplayName, getDisplayNameOfVersion } from "../../models/Helpers"
 
 import {
     EncounterEntry,
     EncounterMethodDetails,
     EncountersEntry,
     PokemonSpeciesEntry,
-    VersionGroupEntry
+    VersionGroupInfo
 } from "../../models/swagger"
 
 import { NumberHelper, Interval } from "../../util/NumberHelper"
@@ -24,7 +24,7 @@ interface CaptureLocationsProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
      */
-    versionGroup: VersionGroupEntry | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * The version group.
@@ -206,10 +206,10 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
                             </Button>
                         )
 
-                        let versions = props.versionGroup?.versions ?? []
+                        let versions = props.versionGroup?.versionInfo ?? []
 
                         let versionElements = versions.map(v => {
-                            let versionName = getDisplayName(v, "en") ?? v.name
+                            let versionName = getDisplayNameOfVersion(v)
                             let versionNameElement = (
                                 <div className="captureLocationsVersionName">
                                     {versionName}

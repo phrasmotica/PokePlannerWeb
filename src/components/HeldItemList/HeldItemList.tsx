@@ -3,11 +3,11 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { getDisplayName } from "../../models/Helpers"
+import { getDisplayName, getDisplayNameOfVersion } from "../../models/Helpers"
 
 import {
     PokemonEntry,
-    VersionGroupEntry
+    VersionGroupInfo
 } from "../../models/swagger"
 
 import "./HeldItemList.scss"
@@ -16,7 +16,7 @@ interface HeldItemListProps extends IHasIndex {
     /**
      * The version group.
      */
-    versionGroup: VersionGroupEntry | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * The Pokemon to show held items for.
@@ -43,13 +43,13 @@ export const HeldItemList = (props: HeldItemListProps) => {
             )
         }
 
-        let versions = versionGroup.versions
+        let versions = versionGroup.versionInfo
         let versionIds = versions.map(v => v.versionId)
         let heldItems = props.pokemon?.heldItems.filter(e => versionIds.includes(e.id)) ?? []
 
         let versionElements = []
         for (let version of versions) {
-            let versionName = getDisplayName(version, "en") ?? version.name
+            let versionName = getDisplayNameOfVersion(version)
             let versionNameElement = (
                 <div className="versionName">
                     <b>

@@ -569,21 +569,6 @@ export interface PokemonSpeciesInfo {
   species?: SpeciesInfo;
 }
 
-export interface PokemonSpeciesInfoEntry {
-  id: string;
-  name: string;
-
-  /** @format date-time */
-  creationTime: string;
-
-  /** @format int32 */
-  languageId: number;
-
-  /** @format int32 */
-  generationId: number;
-  species: PokemonSpeciesInfo[];
-}
-
 export interface PokemonSpeciesNamedApiResource {
   url?: string;
   name?: string;
@@ -679,6 +664,16 @@ export interface VersionGroupEntry {
   pokedexes: PokedexEntry[];
 }
 
+export interface VersionGroupInfo {
+  /** @format int32 */
+  versionGroupId: number;
+
+  /** @format int32 */
+  generationId: number;
+  versionInfo: VersionInfo[];
+  pokedexes: PokedexInfo[];
+}
+
 export interface VersionHeldItemContext {
   id: string;
   name: string;
@@ -698,4 +693,14 @@ export interface VersionHeldItemContextListWithId {
   /** @format int32 */
   id: number;
   data: VersionHeldItemContext[];
+}
+
+export interface VersionInfo {
+  /** @format int32 */
+  versionId: number;
+  versionNamesInfo: VersionNamesInfo[];
+}
+
+export interface VersionNamesInfo {
+  name?: string;
 }

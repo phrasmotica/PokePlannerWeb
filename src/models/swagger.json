@@ -935,6 +935,55 @@
           }
         }
       }
+    },
+    "/VersionGroupInfo/{languageId}": {
+      "get": {
+        "tags": [
+          "VersionGroupInfo"
+        ],
+        "parameters": [
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionGroupInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionGroupInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VersionGroupInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2855,6 +2904,38 @@
         },
         "additionalProperties": false
       },
+      "VersionGroupInfo": {
+        "required": [
+          "generationId",
+          "pokedexes",
+          "versionGroupId",
+          "versionInfo"
+        ],
+        "type": "object",
+        "properties": {
+          "versionGroupId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "generationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "versionInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionInfo"
+            }
+          },
+          "pokedexes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokedexInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "VersionHeldItemContext": {
         "required": [
           "creationTime",
@@ -2909,6 +2990,35 @@
             "items": {
               "$ref": "#/components/schemas/VersionHeldItemContext"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionInfo": {
+        "required": [
+          "versionId",
+          "versionNamesInfo"
+        ],
+        "type": "object",
+        "properties": {
+          "versionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "versionNamesInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionNamesInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false

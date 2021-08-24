@@ -21,7 +21,6 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
-    PokemonSpeciesInfoEntry
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
