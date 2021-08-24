@@ -1,7 +1,7 @@
 import {
     ChainLinkEntry,
     EvolutionChainEntry,
-    GenerationEntry,
+    GenerationInfo,
     LocalString,
     LocalStringListWithId,
     PokemonEntry,
@@ -106,18 +106,13 @@ export const getChainLinkSpeciesIds = (
  * Returns the generation's short display name in the given locale.
  */
 export const getShortDisplayName = (
-    generation: GenerationEntry,
+    generation: GenerationInfo,
     locale: string
 ) => {
-    let localName = generation.displayNames.find(n => n.language === locale)
-    if (localName === undefined) {
-        console.warn(
-            `Generation ${generation.generationId} is missing display name in locale '${locale}'`
-        )
-    }
+    let localName = generation.generationNamesInfo[0]?.name
 
     if (locale === "en") {
-        let shortName = localName?.value.replace("Generation ", "")
+        let shortName = localName?.replace("Generation ", "")
         return shortName
     }
 
@@ -125,7 +120,7 @@ export const getShortDisplayName = (
         `Message to the developer: figure out generation short names in locale '${locale}'`
     )
 
-    return localName?.value
+    return localName
 }
 
 /**

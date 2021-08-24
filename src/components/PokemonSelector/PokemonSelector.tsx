@@ -16,7 +16,7 @@ import { FormsDict } from "../../models/FormsDict"
 import { getBaseStats, getTypes } from "../../models/Helpers"
 
 import {
-    GenerationEntry,
+    GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
@@ -53,7 +53,7 @@ interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTool
     /**
      * List of generations.
      */
-    generations: GenerationEntry[]
+    generations: GenerationInfo[]
 
     /**
      * The generation filter.
@@ -179,7 +179,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 speciesInfo={props.speciesInfo}
                 speciesId={props.speciesId}
                 loading={false}
-                generations={props.generations}
                 generationFilter={props.generationFilter}
                 typeFilter={props.typeFilter}
                 baseStatFilter={props.baseStatFilter}

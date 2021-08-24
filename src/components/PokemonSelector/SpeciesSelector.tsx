@@ -9,7 +9,6 @@ import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilte
 import { getBaseStatsOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
 
 import {
-    GenerationEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
 } from "../../models/swagger"
@@ -46,11 +45,6 @@ interface SpeciesSelectorProps {
      * Whether the species should be marked as invalid.
      */
     shouldMarkInvalid: boolean
-
-    /**
-     * List of generations.
-     */
-    generations: GenerationEntry[]
 
     /**
      * The generation filter.

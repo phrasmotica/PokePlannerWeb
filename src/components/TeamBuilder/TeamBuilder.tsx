@@ -5,7 +5,14 @@ import Select from 'react-select'
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { getDisplayNameOfVersionGroup } from '../../models/Helpers'
-import { GenerationEntry, PokemonSpeciesEntry, PokemonSpeciesInfo, StatEntry, TypeEntry, VersionGroupInfo } from '../../models/swagger'
+import {
+    GenerationInfo,
+    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
+    StatEntry,
+    TypeEntry,
+    VersionGroupInfo
+} from '../../models/swagger'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
@@ -18,13 +25,14 @@ const TEAM_SIZE: number = 1
  * Component for building a Pokemon team.
  */
 export const TeamBuilder = () => {
-    const [versionGroupId, setVersionGroupId] = useState<number>()
+    const [versionGroupId,
+        setVersionGroupId] = useState<number>()
 
     const [species, setSpecies] = useState<PokemonSpeciesEntry[]>([])
     const [loadingSpecies, setLoadingSpecies] = useState(false)
     const [speciesInfo, setSpeciesInfo] = useState<PokemonSpeciesInfo[]>([])
     const [loadingSpeciesInfo, setLoadingSpeciesInfo] = useState(false)
-    const [generations, setGenerations] = useState<GenerationEntry[]>([])
+    const [generations, setGenerations] = useState<GenerationInfo[]>([])
     const [loadingGenerations, setLoadingGenerations] = useState(false)
     const [versionGroups, setVersionGroups] = useState<VersionGroupInfo[]>([])
     const [loadingVersionGroups, setLoadingVersionGroups] = useState(false)
@@ -70,9 +78,10 @@ export const TeamBuilder = () => {
         const fetchGenerations = () => {
             setLoadingGenerations(true)
 
-            fetch(`${process.env.REACT_APP_API_URL}/generation`)
+            let languageId = 9
+            fetch(`${process.env.REACT_APP_API_URL}/generationInfo/${languageId}`)
                 .then(response => response.json())
-                .then((generations: GenerationEntry[]) => setGenerations(generations))
+                .then((generations: GenerationInfo[]) => setGenerations(generations))
                 .catch(error => console.error(error))
                 .finally(() => setLoadingGenerations(false))
         }

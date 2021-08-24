@@ -12,7 +12,7 @@ import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilte
 import { getBaseStats, getDisplayName, getEffectiveTypes, getGenus, getTypes, hasDisplayNames, pokemonIsValid } from "../../models/Helpers"
 
 import {
-    GenerationEntry,
+    GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
@@ -46,7 +46,7 @@ interface PokemonPanelProps extends IHasCommon {
     /**
      * List of generations.
      */
-    generations: GenerationEntry[]
+    generations: GenerationInfo[]
 
     /**
      * List of types.

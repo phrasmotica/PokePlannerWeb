@@ -9,7 +9,7 @@ import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 import { getEffectiveTypes, pokemonIsValid } from "../../models/Helpers"
 
 import {
-    GenerationEntry,
+    GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
@@ -44,7 +44,7 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * List of generations.
      */
-    generations: GenerationEntry[]
+    generations: GenerationInfo[]
 
     /**
      * List of types.

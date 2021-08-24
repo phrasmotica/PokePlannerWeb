@@ -267,6 +267,17 @@ export interface GenerationEntry {
   displayNames: LocalString[];
 }
 
+export interface GenerationInfo {
+  /** @format int32 */
+  generationId: number;
+  name?: string;
+  generationNamesInfo: GenerationNamesInfo[];
+}
+
+export interface GenerationNamesInfo {
+  name?: string;
+}
+
 export interface Int32ListWithId {
   /** @format int32 */
   id: number;

@@ -12,7 +12,7 @@ import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 import { getBaseStats, getDisplayName, getShortDisplayName, getTypes } from "../../models/Helpers"
 
 import {
-    GenerationEntry,
+    GenerationInfo,
     PokemonSpeciesEntry,
     StatEntry,
     TypeEntry
@@ -31,7 +31,7 @@ interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The generations.
      */
-    generations: GenerationEntry[]
+    generations: GenerationInfo[]
 
     /**
      * The types.
@@ -181,7 +181,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
 
         let generations = props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))
-                                          .map(g => getShortDisplayName(g, "en") ?? g.name)
+                                          .map(g => getShortDisplayName(g, "en") ?? g.name!)
 
         let generationFilter = props.generationFilter
         if (generationFilter.isEmpty()) {
