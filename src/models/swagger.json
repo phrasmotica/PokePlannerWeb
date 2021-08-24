@@ -947,6 +947,55 @@
         }
       }
     },
+    "/TypeInfo/{languageId}": {
+      "get": {
+        "tags": [
+          "TypeInfo"
+        ],
+        "parameters": [
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TypeInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/VersionGroup": {
       "get": {
         "tags": [
@@ -2847,13 +2896,28 @@
       },
       "TypeInfo": {
         "required": [
-          "typeId"
+          "generationId",
+          "typeId",
+          "typeNamesInfo"
         ],
         "type": "object",
         "properties": {
           "typeId": {
             "type": "integer",
             "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "generationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "typeNamesInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeNamesInfo"
+            }
           }
         },
         "additionalProperties": false
@@ -2864,6 +2928,15 @@
           "url": {
             "type": "string"
           },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TypeNamesInfo": {
+        "type": "object",
+        "properties": {
           "name": {
             "type": "string"
           }
@@ -2884,7 +2957,7 @@
           "types": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TypeInfo"
+              "$ref": "#/components/schemas/VarietyTypeInfo"
             }
           },
           "baseStats": {
@@ -2892,6 +2965,19 @@
             "items": {
               "$ref": "#/components/schemas/BaseStatInfo"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VarietyTypeInfo": {
+        "required": [
+          "typeId"
+        ],
+        "type": "object",
+        "properties": {
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

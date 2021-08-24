@@ -632,6 +632,11 @@ export interface TypeEntryListWithId {
 export interface TypeInfo {
   /** @format int32 */
   typeId: number;
+  name?: string;
+
+  /** @format int32 */
+  generationId: number;
+  typeNamesInfo: TypeNamesInfo[];
 }
 
 export interface TypeNamedApiResource {
@@ -639,10 +644,19 @@ export interface TypeNamedApiResource {
   name?: string;
 }
 
+export interface TypeNamesInfo {
+  name?: string;
+}
+
 export interface VarietyInfo {
   isDefault: boolean;
-  types: TypeInfo[];
+  types: VarietyTypeInfo[];
   baseStats: BaseStatInfo[];
+}
+
+export interface VarietyTypeInfo {
+  /** @format int32 */
+  typeId: number;
 }
 
 export interface VersionEntry {

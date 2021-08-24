@@ -9,13 +9,13 @@ import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { getBaseStats, getDisplayName, getShortDisplayName, getTypes } from "../../models/Helpers"
+import { getBaseStats, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypes } from "../../models/Helpers"
 
 import {
     GenerationInfo,
     PokemonSpeciesEntry,
     StatEntry,
-    TypeEntry
+    TypeInfo
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -36,7 +36,7 @@ interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The types.
      */
-    types: TypeEntry[]
+    types: TypeInfo[]
 
     /**
      * The generation filter.
@@ -219,7 +219,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
 
         let types = props.types
         let typeLabels = types.filter(t => typeIds.includes(t.typeId))
-                              .map(t => getDisplayName(t, "en") ?? t.name)
+                              .map(getDisplayNameOfType)
 
         let typeFilter = props.typeFilter
         if (typeFilter.isEmpty()) {

@@ -10,7 +10,7 @@ import {
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     StatEntry,
-    TypeEntry,
+    TypeInfo,
     VersionGroupInfo
 } from '../../models/swagger'
 
@@ -36,7 +36,7 @@ export const TeamBuilder = () => {
     const [loadingGenerations, setLoadingGenerations] = useState(false)
     const [versionGroups, setVersionGroups] = useState<VersionGroupInfo[]>([])
     const [loadingVersionGroups, setLoadingVersionGroups] = useState(false)
-    const [types, setTypes] = useState<TypeEntry[]>([])
+    const [types, setTypes] = useState<TypeInfo[]>([])
     const [loadingTypes, setLoadingTypes] = useState(false)
     const [baseStats, setBaseStats] = useState<StatEntry[]>([])
     const [loadingBaseStats, setLoadingBaseStats] = useState(false)
@@ -89,9 +89,10 @@ export const TeamBuilder = () => {
         const fetchTypes = () => {
             setLoadingTypes(true)
 
-            fetch(`${process.env.REACT_APP_API_URL}/type`)
+            let languageId = 9
+            fetch(`${process.env.REACT_APP_API_URL}/typeInfo/${languageId}`)
                 .then(response => response.json())
-                .then((types: TypeEntry[]) => setTypes(types))
+                .then((types: TypeInfo[]) => setTypes(types))
                 .catch(error => console.error(error))
                 .finally(() => setLoadingTypes(false))
         }

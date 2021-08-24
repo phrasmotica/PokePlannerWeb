@@ -15,7 +15,7 @@ import {
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     StatEntry,
-    TypeEntry,
+    TypeInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -49,7 +49,7 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * List of types.
      */
-    types: TypeEntry[]
+    types: TypeInfo[]
 
     /**
      * The base stats.

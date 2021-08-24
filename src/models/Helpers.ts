@@ -9,6 +9,7 @@ import {
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     TypeEntryListWithId,
+    TypeInfo,
     VersionGroupInfo,
     VersionInfo
 } from "./swagger"
@@ -22,6 +23,15 @@ export const getDisplayName = (
 ) => {
     let localName = resource.displayNames.find(n => n.language === locale)
     return localName?.value
+}
+
+/**
+ * Returns the given type's display name.
+ */
+export const getDisplayNameOfType = (
+    type: TypeInfo,
+) => {
+    return type.typeNamesInfo[0]?.name ?? type.name!
 }
 
 /**

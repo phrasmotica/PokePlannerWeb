@@ -18,7 +18,7 @@ import {
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     StatEntry,
-    TypeEntry
+    TypeInfo
 } from "../../models/swagger"
 
 import { CookieHelper } from "../../util/CookieHelper"
@@ -51,7 +51,7 @@ interface PokemonPanelProps extends IHasCommon {
     /**
      * List of types.
      */
-    types: TypeEntry[]
+    types: TypeInfo[]
 
     /**
      * The base stats.

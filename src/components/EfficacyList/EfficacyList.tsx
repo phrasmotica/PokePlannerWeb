@@ -5,7 +5,7 @@ import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import {
     EfficacySet,
-    TypeEntry,
+    TypeInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -28,7 +28,7 @@ interface EfficacyListProps extends IHasIndex, IHasHideTooltips {
     /**
      * The types.
      */
-    types: TypeEntry[]
+    types: TypeInfo[]
 
     /**
      * Whether to show the multipliers.
@@ -119,7 +119,7 @@ export const EfficacyList = (props: EfficacyListProps) => {
             }
             else {
                 let generationId = props.versionGroup?.generationId ?? 0
-                let typeIsPresent = types[index].generation.generationId <= generationId
+                let typeIsPresent = types[index].generationId <= generationId
                 if (typeIsPresent) {
                     let matchingData = efficacy.efficacyMultipliers.find(m => m.id === typeId)
 
