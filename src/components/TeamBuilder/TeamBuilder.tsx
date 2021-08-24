@@ -5,7 +5,7 @@ import Select from 'react-select'
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { getDisplayName } from '../../models/Helpers'
-import { GenerationEntry, PokemonSpeciesEntry, PokemonSpeciesInfoEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
+import { GenerationEntry, PokemonSpeciesEntry, PokemonSpeciesInfo, PokemonSpeciesInfoEntry, StatEntry, TypeEntry, VersionGroupEntry } from '../../models/swagger'
 
 import { CookieHelper } from '../../util/CookieHelper'
 
@@ -22,7 +22,7 @@ export const TeamBuilder = () => {
 
     const [species, setSpecies] = useState<PokemonSpeciesEntry[]>([])
     const [loadingSpecies, setLoadingSpecies] = useState(false)
-    const [speciesInfo, setSpeciesInfo] = useState<PokemonSpeciesInfoEntry>()
+    const [speciesInfo, setSpeciesInfo] = useState<PokemonSpeciesInfo[]>([])
     const [loadingSpeciesInfo, setLoadingSpeciesInfo] = useState(false)
     const [generations, setGenerations] = useState<GenerationEntry[]>([])
     const [loadingGenerations, setLoadingGenerations] = useState(false)
@@ -49,7 +49,7 @@ export const TeamBuilder = () => {
 
             fetch(constructSpeciesInfoEndpoint())
                 .then(response => response.json())
-                .then((speciesInfo: PokemonSpeciesInfoEntry) => setSpeciesInfo(speciesInfo))
+                .then((speciesInfo: PokemonSpeciesInfo[]) => setSpeciesInfo(speciesInfo))
                 .catch(error => console.error(error))
                 .finally(() => {
                     console.log(`${new Date().toLocaleTimeString()} Finished fetching species info!`)
@@ -237,7 +237,7 @@ export const TeamBuilder = () => {
                     toggleIgnoreValidity={toggleIgnoreValidity}
                     hideTooltips={hideTooltips}
                     species={species}
-                    speciesInfo={speciesInfo?.species ?? []}
+                    speciesInfo={speciesInfo}
                     generations={generations}
                     types={types}
                     baseStats={baseStats} />

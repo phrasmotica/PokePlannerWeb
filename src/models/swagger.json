@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:17895"
+      "url": "https://localhost:44347"
     }
   ],
   "paths": {
@@ -597,6 +597,46 @@
         }
       }
     },
+    "/Species/{speciesId}": {
+      "get": {
+        "tags": [
+          "Species"
+        ],
+        "parameters": [
+          {
+            "name": "speciesId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonSpeciesEntry"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonSpeciesEntry"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonSpeciesEntry"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Species/{speciesId}/varieties/{versionGroupId}": {
       "get": {
         "tags": [
@@ -744,17 +784,26 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/PokemonSpeciesInfoEntry"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
+                  }
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PokemonSpeciesInfoEntry"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
+                  }
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PokemonSpeciesInfoEntry"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
+                  }
                 }
               }
             }
@@ -2512,44 +2561,6 @@
           },
           "species": {
             "$ref": "#/components/schemas/SpeciesInfo"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PokemonSpeciesInfoEntry": {
-        "required": [
-          "creationTime",
-          "generationId",
-          "id",
-          "languageId",
-          "name",
-          "species"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "creationTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "languageId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "generationId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "species": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PokemonSpeciesInfo"
-            }
           }
         },
         "additionalProperties": false
