@@ -34,7 +34,7 @@ interface SpeciesSelectorProps {
     /**
      * Whether the parent component is loading data to be passed to this component.
      */
-    loadingSpeciesInfo: boolean
+    loading: boolean
 
     /**
      * The selected species.
@@ -107,7 +107,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
                 isSearchable
                 blurInputOnSelect
                 width="230px"
-                isLoading={props.loadingSpeciesInfo}
+                isLoading={props.loading}
                 isDisabled={isDisabled()}
                 className="margin-right-small"
                 id={selectId}
@@ -184,7 +184,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     /**
      * Returns whether the select box should be disabled.
      */
-    const isDisabled = () => props.loadingSpeciesInfo || getFilteredSpecies().length <= 0
+    const isDisabled = () => props.loading || getFilteredSpecies().length <= 0
 
     /**
      * Handler for when the selected species changes.

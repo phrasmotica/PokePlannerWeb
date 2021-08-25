@@ -116,51 +116,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
     const [speciesRatings, setSpeciesRatings] = useState<SpeciesRatingsDict>([])
     const [favouriteSpecies, setFavouriteSpecies] = useState<number[]>([])
-
-    // set species from cookie on mount
-    // TODO: move this to SpeciesSelector
-    // useEffect(() => {
-    //     let index = props.index
-
-    //     let speciesId = CookieHelper.getNumber(`speciesId${index}`)
-    //     if (speciesId !== undefined) {
-    //         let speciesIds = props.speciesInfo.map(s => s.pokemonSpeciesId)
-    //         if (speciesIds.includes(speciesId)) {
-    //             // cascades to set variety and form
-    //             // let species = getSpecies(speciesId)
-    //             // setSpecies(species)
-    //         }
-    //         else {
-    //             // remove cookies for species that isn't available
-    //             CookieHelper.remove(`speciesId${index}`)
-    //             CookieHelper.remove(`varietyId${index}`)
-    //             CookieHelper.remove(`formId${index}`)
-    //         }
-    //     }
-    // }, [])
-
-    // set species from props if necessary
-    // TODO: move this to SpeciesSelector
-    // useEffect(() => {
-    //     let defaultSpeciesId = props.defaultSpeciesId
-    //     let speciesIds = props.speciesInfo.map(s => s.pokemonSpeciesId)
-    //     if (defaultSpeciesId !== undefined && speciesIds.includes(defaultSpeciesId)) {
-    //         let species = getSpecies(defaultSpeciesId)
-    //         setSpecies(species)
-
-    //         // set cookie
-    //         CookieHelper.set(`speciesId${props.index}`, defaultSpeciesId)
-    //     }
-    //     else {
-    //         // remove cookies for species that isn't available
-    //         setSpecies(undefined)
-
-    //         let index = props.index
-    //         CookieHelper.remove(`speciesId${index}`)
-    //         CookieHelper.remove(`varietyId${index}`)
-    //         CookieHelper.remove(`formId${index}`)
-    //     }
-    // }, [props.defaultSpeciesId])
+    const [loadingRandomSpecies, setLoadingRandomSpecies] = useState(false)
 
     /**
      * Renders the species select box.
@@ -175,7 +131,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 hideTooltips={props.hideTooltips}
                 speciesInfo={props.speciesInfo}
                 species={props.species}
-                loadingSpeciesInfo={props.loadingSpeciesInfo}
+                loading={props.loadingSpeciesInfo || loadingRandomSpecies}
                 generationFilter={props.generationFilter}
                 typeFilter={props.typeFilter}
                 baseStatFilter={props.baseStatFilter}
@@ -296,23 +252,17 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     /**
      * Returns whether the species has secondary varieties.
      */
-    const hasSecondaryVarieties = () => {
-        return props.varieties.length >= 2
-    }
+    const hasSecondaryVarieties = () => props.varieties.length >= 2
 
     /**
      * Returns whether the variety has secondary forms.
      */
-    const hasSecondaryForms = () => {
-        return props.forms.length >= 2
-    }
+    const hasSecondaryForms = () => props.forms.length >= 2
 
     /**
      * Returns the species that match the species filter.
      */
-    const getFilteredSpecies = () => {
-        return props.speciesInfo.filter(isPresent)
-    }
+    const getFilteredSpecies = () => props.speciesInfo.filter(isPresent)
 
     /**
      * Returns whether the species passes the filter.
@@ -342,7 +292,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
 
     /**
      * Set this selector to a random species.
-     * TODO: move this to SpeciesSelector
      */
     const setRandomSpecies = () => {
         // ignore validity since we can't guarantee a valid Pokemon
@@ -356,7 +305,13 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         let randomIndex = randomInt(0, max)
         let species = speciesList[randomIndex]
 
-        // setSpecies(species)
+        setLoadingRandomSpecies(true)
+
+        fetch(`${process.env.REACT_APP_API_URL}/species/${species.pokemonSpeciesId}`)
+            .then(response => response.json())
+            .then((species: PokemonSpeciesEntry) => props.setSpecies(species))
+            .catch(error => console.error(error))
+            .finally(() => setLoadingRandomSpecies(false))
 
         // set cookie
         CookieHelper.set(`speciesId${props.index}`, species.pokemonSpeciesId)
