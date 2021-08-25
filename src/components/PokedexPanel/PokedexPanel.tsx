@@ -22,6 +22,7 @@ import {
 import "./PokedexPanel.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
+import { useEffect } from "react"
 
 interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
@@ -72,6 +73,22 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
     const [forms, setForms] = useState<PokemonFormEntry[]>([])
 
     const [showShinySprite, setShowShinySprite] = useState(false)
+
+    useEffect(() => {
+        if (varieties.length > 0) {
+            setVariety(varieties[0])
+        }
+
+        return () => setVariety(undefined)
+    }, [varieties, setVariety])
+
+    useEffect(() => {
+        if (forms.length > 0) {
+            setForm(forms[0])
+        }
+
+        return () => setForm(undefined)
+    }, [forms, setForm])
 
     const hasSpecies = species !== undefined
     const selectedPokemonIsValid = !hasSpecies || pokemonIsValid(

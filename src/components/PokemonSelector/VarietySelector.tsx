@@ -183,8 +183,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
     /**
      * Returns whether the select box should be disabled.
      */
-    // const isDisabled = () => loadingVarieties || props.varieties.length <= 1
-    const isDisabled = () => loadingVarieties
+    const isDisabled = () => loadingVarieties || props.varieties.length <= 1
 
     /**
      * Handler for when the selected variety changes.

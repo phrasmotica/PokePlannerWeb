@@ -191,8 +191,7 @@ export const FormSelector = (props: FormSelectorProps) => {
     /**
      * Returns whether the select box should be disabled.
      */
-    // const isDisabled = () => loadingForms || props.forms.length <= 1
-    const isDisabled = () => loadingForms
+    const isDisabled = () => loadingForms || props.forms.length <= 1
 
     /**
      * Handler for when the selected form changes.
