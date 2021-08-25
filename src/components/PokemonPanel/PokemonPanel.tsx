@@ -38,6 +38,8 @@ interface PokemonPanelProps extends IHasCommon {
 
     speciesInfo: PokemonSpeciesInfo[]
 
+    loadingSpeciesInfo: boolean
+
     /**
      * List of generations.
      */
@@ -54,6 +56,14 @@ interface PokemonPanelProps extends IHasCommon {
     baseStats: StatEntry[]
 
     species: PokemonSpeciesEntry | undefined
+
+    varieties: PokemonEntry[]
+
+    setVarieties: (varieties: PokemonEntry[]) => void
+
+    forms: PokemonFormEntry[]
+
+    setForms: (forms: PokemonFormEntry[]) => void
 
     /**
      * Handler for setting the Pokemon species in the parent component.
@@ -89,10 +99,6 @@ interface PokemonPanelProps extends IHasCommon {
  * Renders a Pokemon and basic information about it.
  */
 export const PokemonPanel = (props: PokemonPanelProps) => {
-    const [pokemonSpeciesId, setPokemonSpeciesId] = useState<number>()
-    const [variety, setVariety] = useState<PokemonEntry>()
-    const [form, setForm] = useState<PokemonFormEntry>()
-
     /**
      * Creates a generation filter from the browser cookies.
      */
@@ -180,8 +186,9 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
     const getEffectiveDisplayName = () => {
         // default to species display name
-        let displayName = getDisplayName(getSpecies(), "en")
+        let displayName = getDisplayName(props.species!, "en")
 
+        let form = props.form
         if (form !== undefined && hasDisplayNames(form)) {
             displayName = getDisplayName(form, "en") ?? displayName
         }
@@ -192,7 +199,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const renderPokemonGenus = () => {
         let genusElement = "-"
         if (shouldShowPokemon()) {
-            genusElement = getGenus(getSpecies(), "en") ?? "-"
+            genusElement = getGenus(props.species!, "en") ?? "-"
         }
 
         return (
@@ -206,8 +213,8 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         let typesElement: any = "-"
         if (shouldShowPokemon()) {
             let types = getEffectiveTypes(
-                variety,
-                form,
+                props.variety,
+                props.form,
                 props.versionGroupId
             )
 
@@ -236,7 +243,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const renderPokemonSprite = () => {
         let spriteUrl = ""
         if (shouldShowPokemon()) {
-            let dataObject = form ?? variety
+            let dataObject = props.form ?? props.variety
             if (dataObject !== undefined) {
                 spriteUrl = showShinySprite
                     ? dataObject.shinySpriteUrl
@@ -280,40 +287,25 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         props.toggleShowShinySprite()
     }
 
-    /**
-     * Returns the data object for the selected species.
-     */
-    const getSpecies = () => {
-        let species = props.speciesList.find(s => s.pokemonSpeciesId === pokemonSpeciesId)
-        if (species === undefined) {
-            throw new Error(
-                `Panel ${props.index}: no species found with ID ${pokemonSpeciesId}!`
-            )
-        }
-
-        return species
-    }
-
-    const hasSpecies = pokemonSpeciesId !== undefined
+    const hasSpecies = props.species !== undefined
 
     const selectedPokemonIsValid = () => pokemonIsValid(
-        getSpecies(), form, props.versionGroupId
+        props.species!, props.form, props.versionGroupId
     )
 
     /**
      * Returns whether the Pokemon should be displayed.
      */
     const shouldShowPokemon = () => hasSpecies
-            && form !== undefined
+            && props.form !== undefined
             && (props.ignoreValidity || selectedPokemonIsValid())
 
     const setGenerationFilterAndUpdate = (filter: GenerationFilterModel) => {
         setGenerationFilter(filter)
 
         // no longer have a valid species
-        if (pokemonSpeciesId !== undefined) {
-            let species = getSpecies()
-            let generationId = species.generation.generationId
+        if (props.species !== undefined) {
+            let generationId = props.species.generation.generationId
 
             let failsGenerationFilter = !filter.passesFilter([generationId])
             if (failsGenerationFilter) {
@@ -333,9 +325,8 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         setTypeFilter(filter)
 
         // no longer have a valid species
-        if (pokemonSpeciesId !== undefined) {
-            let species = getSpecies()
-            let speciesTypes = getTypes(species, versionGroupId).map(t => t.typeId)
+        if (props.species !== undefined) {
+            let speciesTypes = getTypes(props.species, versionGroupId).map(t => t.typeId)
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
@@ -355,9 +346,8 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         setBaseStatFilter(filter)
 
         // no longer have a valid species
-        if (pokemonSpeciesId !== undefined) {
-            let species = getSpecies()
-            let speciesBaseStats = getBaseStats(species, versionGroupId)
+        if (props.species !== undefined) {
+            let speciesBaseStats = getBaseStats(props.species, versionGroupId)
 
             let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {
@@ -404,6 +394,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     index={props.index}
                     versionGroupId={props.versionGroupId}
                     speciesInfo={props.speciesInfo}
+                    loadingSpeciesInfo={props.loadingSpeciesInfo}
                     defaultSpeciesId={props.defaultSpeciesId}
                     ignoreValidity={props.ignoreValidity}
                     generations={props.generations}
@@ -412,7 +403,12 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     setSpecies={props.setSpecies}
                     variety={props.variety}
                     setVariety={props.setVariety}
+                    varieties={props.varieties}
+                    setVarieties={props.setVarieties}
+                    form={props.form}
                     setForm={props.setForm}
+                    forms={props.forms}
+                    setForms={props.setForms}
                     generationFilter={generationFilter}
                     typeFilter={typeFilter}
                     baseStatFilter={baseStatFilter}

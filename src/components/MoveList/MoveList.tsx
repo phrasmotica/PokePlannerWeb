@@ -401,7 +401,7 @@ export const MoveList = (props: MoveListProps) => {
                 let powerElement = <div>Power: {move.power ?? "-"}</div>
 
                 // some moves damage but don't have a constant base power, e.g. Low Kick
-                if (isStab && move.power !== undefined) {
+                if (isStab(move) && move.power !== undefined) {
                     let sameTypeElement = (
                         <abbr title="same-type attack bonus">
                             <b>{move.power * 1.5}</b>
@@ -511,15 +511,15 @@ export const MoveList = (props: MoveListProps) => {
         // level-up moves in ascending order first, then the rest
         if (m1.level === 0 && m2.level === 0) {
             // then machines in ascending order
-            if (m1.learnMachines.length <= 0 && m2.learnMachines.length <= 0) {
+            if (m1.learnMachines?.length <= 0 && m2.learnMachines?.length <= 0) {
                 return sortLearnMethods(m1.methods, m2.methods)
             }
 
-            if (m1.learnMachines.length <= 0) {
+            if (m1.learnMachines?.length <= 0) {
                 return 1
             }
 
-            if (m2.learnMachines.length <= 0) {
+            if (m2.learnMachines?.length <= 0) {
                 return -1
             }
 
@@ -565,6 +565,10 @@ export const MoveList = (props: MoveListProps) => {
      * Sorts ordered lists of machines into ascending order.
      */
     const sortMachines = (machines1: ItemEntry[], machines2: ItemEntry[]) => {
+        if (machines1 === undefined || machines2 === undefined) {
+            return 0
+        }
+
         let commonLength = Math.min(machines1.length, machines2.length)
         for (let i = 0; i < commonLength; i++) {
             let m1 = machines1[i], m2 = machines2[i]

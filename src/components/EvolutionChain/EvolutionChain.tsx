@@ -13,9 +13,9 @@ import "./EvolutionChain.scss"
 
 interface EvolutionChainProps extends IHasIndex {
     /**
-     * The ID of the species this chain is being shown for.
+     * The species this chain is being shown for.
      */
-    pokemonSpeciesId: number | undefined
+    species: PokemonSpeciesEntry | undefined
 
     /**
      * The IDs of the species available in the parent selector.
@@ -47,8 +47,10 @@ export const EvolutionChain = (props: EvolutionChainProps) => {
 
     useEffect(() => {
         const fetchEvolutionChain = () => {
-            let speciesId = props.pokemonSpeciesId
-            if (speciesId !== undefined) {
+            let species = props.species
+            if (species !== undefined) {
+                let speciesId = species.pokemonSpeciesId
+
                 console.log(`Evolution chain ${props.index}: getting evolution chain for species ${speciesId}...`)
                 setLoadingChain(true)
 
@@ -78,7 +80,7 @@ export const EvolutionChain = (props: EvolutionChainProps) => {
         fetchEvolutionChain()
 
         return () => setEvolutionChain(undefined)
-    }, [props.index, props.pokemonSpeciesId])
+    }, [props.index, props.species])
 
     /**
      * Renders the evolution chain.
@@ -113,7 +115,7 @@ export const EvolutionChain = (props: EvolutionChainProps) => {
             <EvolutionTree
                 chain={chain}
                 index={props.index}
-                pokemonSpeciesId={props.pokemonSpeciesId}
+                species={props.species}
                 availableSpeciesIds={props.availableSpeciesIds}
                 showShinySprites={props.showShinySprites}
                 setSpecies={props.setSpecies} />

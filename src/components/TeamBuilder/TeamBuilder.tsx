@@ -7,7 +7,6 @@ import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 import { getDisplayNameOfVersionGroup } from '../../models/Helpers'
 import {
     GenerationInfo,
-    PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     StatEntry,
     TypeInfo,
@@ -240,6 +239,7 @@ export const TeamBuilder = () => {
                     toggleIgnoreValidity={toggleIgnoreValidity}
                     hideTooltips={hideTooltips}
                     speciesInfo={speciesInfo}
+                    loadingSpeciesInfo={loadingSpeciesInfo}
                     generations={generations}
                     types={types}
                     baseStats={baseStats} />
@@ -272,7 +272,8 @@ export const TeamBuilder = () => {
         setHideTooltips(!hideTooltips)
     }
 
-    const pageIsLoading = loadingVersionGroups
+    const pageIsLoading = loadingBaseStats
+                    || loadingVersionGroups
                     || loadingGenerations
                     || loadingTypes
 

@@ -13,6 +13,7 @@ import {
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -27,14 +28,14 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     versionGroup: VersionGroupInfo | undefined
 
     /**
-     * List of Pokemon species.
+     * List of Pokemon species info.
      */
-    species: PokemonSpeciesEntry[]
+    speciesInfo: PokemonSpeciesInfo[]
 
     /**
-     * The ID of the Pokemon species.
+     * The Pokemon species.
      */
-    pokemonSpeciesId: number | undefined
+    species: PokemonSpeciesEntry | undefined
 
     /**
      * The species variety.
@@ -100,18 +101,10 @@ export const ActionPanel = (props: ActionPanelProps) => {
                 index={props.index}
                 pokemonId={props.variety?.pokemonId}
                 versionGroup={props.versionGroup}
-                species={getSpecies()}
+                species={props.species}
                 showLocations={props.shouldShowPokemon}
                 hideTooltips={props.hideTooltips} />
         )
-    }
-
-    /**
-     * Returns the data object for the selected species.
-     */
-    const getSpecies = () => {
-        let speciesId = props.pokemonSpeciesId
-        return props.species.find(s => s.pokemonSpeciesId === speciesId)
     }
 
     /**
@@ -121,8 +114,8 @@ export const ActionPanel = (props: ActionPanelProps) => {
         <div className="inherit-size">
             <EvolutionChain
                 index={props.index}
-                pokemonSpeciesId={props.pokemonSpeciesId}
-                availableSpeciesIds={props.species.map(s => s.pokemonSpeciesId)}
+                species={props.species}
+                availableSpeciesIds={props.speciesInfo.map(s => s.pokemonSpeciesId)}
                 showShinySprites={props.showShinySprite}
                 shouldShowChain={props.shouldShowPokemon}
                 setSpecies={props.setSpecies} />

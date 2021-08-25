@@ -24,9 +24,9 @@ interface EvolutionTreeProps extends IHasIndex {
     chain: ChainLinkEntry
 
     /**
-     * The ID of the species this chain is being shown for.
+     * The species this chain is being shown for.
      */
-    pokemonSpeciesId: number | undefined
+    species: PokemonSpeciesEntry | undefined
 
     /**
      * The IDs of the species available in the parent selector.
@@ -123,7 +123,7 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
         let speciesName = getDisplayName(species, "en") ?? species.name
         let nameElement = <span>{speciesName}</span>
 
-        let isCurrentSpecies = speciesId === props.pokemonSpeciesId
+        let isCurrentSpecies = speciesId === props.species?.pokemonSpeciesId
         if (isCurrentSpecies) {
             nameElement = <span><b>{speciesName}</b></span>
         }
@@ -140,7 +140,7 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
      */
     const renderOpenButton = (species: PokemonSpeciesEntry) => {
         let speciesId = species.pokemonSpeciesId
-        let isCurrentSpecies = speciesId === props.pokemonSpeciesId
+        let isCurrentSpecies = speciesId === props.species?.pokemonSpeciesId
         if (isCurrentSpecies) {
             return null
         }

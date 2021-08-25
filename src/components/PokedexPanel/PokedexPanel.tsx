@@ -36,6 +36,8 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
 
     speciesInfo: PokemonSpeciesInfo[]
 
+    loadingSpeciesInfo: boolean
+
     /**
      * List of generations.
      */
@@ -62,14 +64,14 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
  */
 export const PokedexPanel = (props: PokedexPanelProps) => {
     const [species, setSpecies] = useState<PokemonSpeciesEntry>()
-    const [variety, setVariety] = useState<PokemonEntry>()
-    const [form, setForm] = useState<PokemonFormEntry>()
-    const [showShinySprite, setShowShinySprite] = useState(false)
 
-    console.log("PokedexPanel RENDER")
-    console.log(species)
-    console.log(variety)
-    console.log(form)
+    const [variety, setVariety] = useState<PokemonEntry>()
+    const [varieties, setVarieties] = useState<PokemonEntry[]>([])
+
+    const [form, setForm] = useState<PokemonFormEntry>()
+    const [forms, setForms] = useState<PokemonFormEntry[]>([])
+
+    const [showShinySprite, setShowShinySprite] = useState(false)
 
     const hasSpecies = species !== undefined
     const selectedPokemonIsValid = !hasSpecies || pokemonIsValid(
@@ -91,6 +93,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     index={props.index}
                     versionGroupId={props.versionGroup?.versionGroupId}
                     speciesInfo={props.speciesInfo}
+                    loadingSpeciesInfo={props.loadingSpeciesInfo}
                     defaultSpeciesId={species?.pokemonSpeciesId}
                     generations={props.generations}
                     types={props.types}
@@ -101,8 +104,12 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     setSpecies={setSpecies}
                     variety={variety}
                     setVariety={setVariety}
+                    varieties={varieties}
+                    setVarieties={setVarieties}
                     form={form}
                     setForm={setForm}
+                    forms={forms}
+                    setForms={setForms}
                     toggleShowShinySprite={() => setShowShinySprite(!showShinySprite)}
                     toggleIgnoreValidity={props.toggleIgnoreValidity} />
 
@@ -126,7 +133,8 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     index={props.index}
                     versionGroup={props.versionGroup}
                     hideTooltips={props.hideTooltips}
-                    pokemonSpeciesId={species?.pokemonSpeciesId}
+                    speciesInfo={props.speciesInfo}
+                    species={species}
                     variety={variety}
                     form={form}
                     shouldShowPokemon={shouldShowPokemon}

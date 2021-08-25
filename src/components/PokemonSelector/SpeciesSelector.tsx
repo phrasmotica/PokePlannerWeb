@@ -32,14 +32,14 @@ interface SpeciesSelectorProps {
     speciesInfo: PokemonSpeciesInfo[]
 
     /**
-     * The ID of the selected species.
-     */
-    speciesId: number | undefined
-
-    /**
      * Whether the parent component is loading data to be passed to this component.
      */
-    loading: boolean
+    loadingSpeciesInfo: boolean
+
+    /**
+     * The selected species.
+     */
+    species: PokemonSpeciesEntry | undefined
 
     /**
      * Whether the species should be marked as invalid.
@@ -91,11 +91,11 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         let options = createOptions()
 
         let selectedOption = null
-        let speciesId = props.speciesId
-        if (speciesId !== undefined) {
+        let species = props.species
+        if (species !== undefined) {
             // undefined doesn't clear stored state so coalesce to null
             // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.find(o => o.value === speciesId) ?? null
+            selectedOption = options.find(o => o.value === species!.pokemonSpeciesId) ?? null
         }
 
         // attach red border if necessary
@@ -107,7 +107,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
                 isSearchable
                 blurInputOnSelect
                 width="230px"
-                isLoading={props.loading}
+                isLoading={props.loadingSpeciesInfo}
                 isDisabled={isDisabled()}
                 className="margin-right-small"
                 id={selectId}
@@ -184,7 +184,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     /**
      * Returns whether the select box should be disabled.
      */
-    const isDisabled = () => getFilteredSpecies().length <= 0
+    const isDisabled = () => props.loadingSpeciesInfo || getFilteredSpecies().length <= 0
 
     /**
      * Handler for when the selected species changes.
@@ -236,7 +236,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Returns whether the species is valid in the selected version group.
      */
     const speciesIsValid = () => {
-        if (props.speciesId === undefined) {
+        if (props.species === undefined) {
             return true
         }
 
@@ -247,7 +247,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
             )
         }
 
-        let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.speciesId)[0]
+        let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.species?.pokemonSpeciesId)[0]
         return isValid(speciesInfo.species!, versionGroupId)
     }
 
