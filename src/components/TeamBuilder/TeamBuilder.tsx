@@ -13,8 +13,6 @@ import {
     VersionGroupInfo
 } from '../../models/swagger'
 
-import { CookieHelper } from '../../util/CookieHelper'
-
 /**
  * The number of Pokemon panels to show.
  * */
@@ -37,13 +35,8 @@ export const TeamBuilder = () => {
     const [baseStats, setBaseStats] = useState<StatEntry[]>([])
     const [loadingBaseStats, setLoadingBaseStats] = useState(false)
 
-    const [ignoreValidity, setIgnoreValidity] = useState(
-        CookieHelper.getFlag("ignoreValidity")
-    )
-
-    const [hideTooltips, setHideTooltips] = useState(
-        CookieHelper.getFlag("hideTooltips")
-    )
+    const [ignoreValidity, setIgnoreValidity] = useState(false)
+    const [hideTooltips, setHideTooltips] = useState(false)
 
     // fetch generations, types and version groups on mount
     useEffect(() => {
@@ -78,14 +71,9 @@ export const TeamBuilder = () => {
                 .then((versionGroups: VersionGroupInfo[]) => {
                     setVersionGroups(versionGroups)
 
-                    // try get version group ID from cookies
-                    let versionGroupId = CookieHelper.getNumber("versionGroupId")
-                    if (versionGroupId === undefined) {
-                        // fall back to latest one
-                        versionGroupId = versionGroups[versionGroups.length - 1].versionGroupId
-                    }
+                    let versionGroupId = versionGroups[versionGroups.length - 1].versionGroupId
 
-                    setVersionGroup(versionGroupId)
+                    setVersionGroupId(versionGroupId)
                 })
                 .catch(error => console.error(error))
                 .finally(() => setLoadingVersionGroups(false))
@@ -193,7 +181,7 @@ export const TeamBuilder = () => {
                     id="versionGroupSelect"
                     className="version-group-select"
                     defaultValue={defaultOption}
-                    onChange={(option: any) => setVersionGroup(option.value)}
+                    onChange={(option: any) => setVersionGroupId(option.value)}
                     options={options} />
             </FormGroup>
         )
@@ -255,22 +243,8 @@ export const TeamBuilder = () => {
 
     const versionGroup = versionGroups.find(g => g.versionGroupId === versionGroupId)
 
-    const setVersionGroup = (versionGroupId: number) => {
-        setVersionGroupId(versionGroupId)
-
-        // set cookie
-        CookieHelper.set("versionGroupId", versionGroupId)
-    }
-
-    const toggleIgnoreValidity = () => {
-        CookieHelper.set("ignoreValidity", !ignoreValidity)
-        setIgnoreValidity(!ignoreValidity)
-    }
-
-    const toggleHideTooltips = () => {
-        CookieHelper.set("hideTooltips", !hideTooltips)
-        setHideTooltips(!hideTooltips)
-    }
+    const toggleIgnoreValidity = () => setIgnoreValidity(!ignoreValidity)
+    const toggleHideTooltips = () => setHideTooltips(!hideTooltips)
 
     const pageIsLoading = loadingBaseStats
                     || loadingVersionGroups

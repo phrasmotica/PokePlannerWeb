@@ -22,7 +22,6 @@ import {
     PokemonSpeciesInfo,
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
 import { CssHelper } from "../../util/CssHelper"
 
 import "../../styles/types.scss"
@@ -312,9 +311,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             .then((species: PokemonSpeciesEntry) => props.setSpecies(species))
             .catch(error => console.error(error))
             .finally(() => setLoadingRandomSpecies(false))
-
-        // set cookie
-        CookieHelper.set(`speciesId${props.index}`, species.pokemonSpeciesId)
     }
 
     /**
@@ -327,14 +323,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     /**
      * Empty this selector.
      */
-    const clearPokemon = () => {
-        // clear cookies
-        let index = props.index
-        CookieHelper.remove(`speciesId${index}`)
-        CookieHelper.remove(`varietyId${index}`)
-
-        props.setSpecies(undefined)
-    }
+    const clearPokemon = () => props.setSpecies(undefined)
 
     /**
      * Returns the rating of the selected species.

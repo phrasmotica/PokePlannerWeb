@@ -18,8 +18,6 @@ import {
     TypeInfo
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 import "./SpeciesFilter.scss"
 
 interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
@@ -78,17 +76,9 @@ interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
  * Component for filtering a list of species stored in the parent component.
  */
 export const SpeciesFilter = (props: SpeciesFilterProps) => {
-    const [generationFilterOpen, setGenerationFilterOpen] = useState(
-        CookieHelper.getFlag(`generationFilter${props.index}open`)
-    )
-
-    const [typeFilterOpen, setTypeFilterOpen] = useState(
-        CookieHelper.getFlag(`typeFilter${props.index}open`)
-    )
-
-    const [baseStatFilterOpen, setBaseStatFilterOpen] = useState(
-        CookieHelper.getFlag(`baseStatFilter${props.index}open`)
-    )
+    const [generationFilterOpen, setGenerationFilterOpen] = useState(false)
+    const [typeFilterOpen, setTypeFilterOpen] = useState(false)
+    const [baseStatFilterOpen, setBaseStatFilterOpen] = useState(false)
 
     /**
      * Renders the filter.
@@ -280,29 +270,9 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
         )
     }
 
-    /**
-     * Toggles the generation filter.
-     */
-    const toggleGenerationFilter = () => {
-        CookieHelper.set(`generationFilter${props.index}open`, !generationFilterOpen)
-        setGenerationFilterOpen(!generationFilterOpen)
-    }
-
-    /**
-     * Toggles the type filter.
-     */
-    const toggleTypeFilter = () => {
-        CookieHelper.set(`typeFilter${props.index}open`, !typeFilterOpen)
-        setTypeFilterOpen(!typeFilterOpen)
-    }
-
-    /**
-     * Toggles the base stat filter.
-     */
-    const toggleBaseStatFilter = () => {
-        CookieHelper.set(`baseStatFilter${props.index}open`, !baseStatFilterOpen)
-        setBaseStatFilterOpen(!baseStatFilterOpen)
-    }
+    const toggleGenerationFilter = () => setGenerationFilterOpen(!generationFilterOpen)
+    const toggleTypeFilter = () => setTypeFilterOpen(!typeFilterOpen)
+    const toggleBaseStatFilter = () => setBaseStatFilterOpen(!baseStatFilterOpen)
 
     return renderFilters()
 }

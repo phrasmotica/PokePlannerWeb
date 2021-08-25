@@ -17,8 +17,6 @@ import {
     VersionGroupInfo
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 import "./ActionPanel.scss"
 
 interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
@@ -67,9 +65,7 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
  * Renders moves, evolution trees, encounters, etc.
  */
 export const ActionPanel = (props: ActionPanelProps) => {
-    const [activeMoveTabKey, setActiveMoveTabKey] = useState<string | undefined>(
-        CookieHelper.get(`panel${props.index}activeMoveTabKey`)
-    )
+    const [activeMoveTabKey, setActiveMoveTabKey] = useState<string>()
 
     /**
      * Renders the move list.
@@ -122,14 +118,6 @@ export const ActionPanel = (props: ActionPanelProps) => {
         </div>
     )
 
-    /**
-     * Sets the key of the active move tab.
-     */
-    const setMoveTab = (key: string) => {
-        CookieHelper.set(`panel${props.index}activeMoveTabKey`, key)
-        setActiveMoveTabKey(key)
-    }
-
     return (
         <Tabs
             className="tabpane-small"
@@ -137,7 +125,7 @@ export const ActionPanel = (props: ActionPanelProps) => {
             transition={false}
             activeKey={activeMoveTabKey}
             defaultActiveKey="moves"
-            onSelect={(k: string) => setMoveTab(k)}>
+            onSelect={(k: string) => setActiveMoveTabKey(k)}>
             <Tab eventKey="locations" title="Capture Locations">
                 {renderCaptureLocations()}
             </Tab>

@@ -21,8 +21,6 @@ import {
     TypeInfo
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 import "./PokemonPanel.scss"
 
 interface PokemonPanelProps extends IHasCommon {
@@ -99,69 +97,9 @@ interface PokemonPanelProps extends IHasCommon {
  * Renders a Pokemon and basic information about it.
  */
 export const PokemonPanel = (props: PokemonPanelProps) => {
-    /**
-     * Creates a generation filter from the browser cookies.
-     */
-    const createGenerationFilterFromCookies = () => {
-        let isEnabled = CookieHelper.getFlag(`generationFilter${props.index}enabled`)
-
-        let cookieGenerationIds = []
-        for (let id of props.generations.map(g => g.generationId)) {
-            let cookieName = `generationFilter${props.index}active${id}`
-            let active = CookieHelper.getFlag(cookieName)
-            if (active) {
-                cookieGenerationIds.push(id)
-            }
-        }
-
-        return new GenerationFilterModel(isEnabled, cookieGenerationIds)
-    }
-
-    /**
-     * Creates a type filter from the browser cookies.
-     */
-    const createTypeFilterFromCookies = () => {
-        let isEnabled = CookieHelper.getFlag(`typeFilter${props.index}enabled`)
-
-        let cookieTypeIds = []
-        for (let id of props.types.map(t => t.typeId)) {
-            let cookieName = `typeFilter${props.index}active${id}`
-            let active = CookieHelper.getFlag(cookieName)
-            if (active) {
-                cookieTypeIds.push(id)
-            }
-        }
-
-        return new TypeFilterModel(isEnabled, cookieTypeIds)
-    }
-
-    /**
-     * Creates a base stat filter from the browser cookies.
-     */
-    const createBaseStatFilterFromCookies = () => {
-        let isEnabled = CookieHelper.getFlag(`baseStatFilter${props.index}enabled`)
-
-        let cookieFilterValues = []
-        for (let i = 0; i < props.baseStats.length; i++) {
-            let active = CookieHelper.getFlag(`baseStatFilter${props.index}active${i}`)
-            let value = CookieHelper.getNumber(`baseStatFilter${props.index}value${i}`)
-            cookieFilterValues.push(new BaseStatFilterValue(active, value ?? 0))
-        }
-
-        return new BaseStatFilterModel(isEnabled, cookieFilterValues)
-    }
-
-    const [generationFilter, setGenerationFilter] = useState<GenerationFilterModel>(
-        createGenerationFilterFromCookies()
-    )
-
-    const [typeFilter, setTypeFilter] = useState<TypeFilterModel>(
-        createTypeFilterFromCookies()
-    )
-
-    const [baseStatFilter, setBaseStatFilter] = useState<BaseStatFilterModel>(
-        createBaseStatFilterFromCookies()
-    )
+    const [generationFilter, setGenerationFilter] = useState(new GenerationFilterModel())
+    const [typeFilter, setTypeFilter] = useState(new TypeFilterModel())
+    const [baseStatFilter, setBaseStatFilter] = useState(BaseStatFilterModel.createEmpty(0))
 
     const [showShinySprite, setShowShinySprite] = useState(false)
     const [showSpeciesFilter, setShowSpeciesFilter] = useState(false)

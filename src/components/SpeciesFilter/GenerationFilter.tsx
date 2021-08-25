@@ -5,7 +5,6 @@ import { GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { CookieHelper } from "../../util/CookieHelper"
 import { CssHelper } from "../../util/CssHelper"
 
 interface GenerationFilterProps extends IHasIndex {
@@ -97,11 +96,7 @@ export const GenerationFilter = (props: GenerationFilterProps) => {
      */
     const toggleFilter = () => {
         let generationFilter = props.generationFilter
-        let isEnabled = generationFilter.toggle()
-
-        let cookieName = `generationFilter${props.index}enabled`
-        CookieHelper.set(cookieName, isEnabled)
-
+        let _ = generationFilter.toggle()
         props.setGenerationFilter(generationFilter)
     }
 
@@ -110,11 +105,7 @@ export const GenerationFilter = (props: GenerationFilterProps) => {
      */
     const toggleFilterId = (id: number) => {
         let generationFilter = props.generationFilter
-        let isActive = generationFilter.toggleId(id)
-
-        let cookieName = `generationFilter${props.index}active${id}`
-        CookieHelper.set(cookieName, isActive)
-
+        let _ = generationFilter.toggleId(id)
         props.setGenerationFilter(generationFilter)
     }
 

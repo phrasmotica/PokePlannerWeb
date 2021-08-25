@@ -6,8 +6,6 @@ import { BaseStatFilterModel } from "./BaseStatFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 import "./BaseStatFilter.scss"
 
 interface BaseStatFilterProps extends IHasIndex {
@@ -131,11 +129,7 @@ export const BaseStatFilter = (props: BaseStatFilterProps) => {
      */
     const toggleFilter = () => {
         let filter = props.baseStatFilter
-        let isEnabled = filter.toggle()
-
-        let cookieName = `baseStatFilter${props.index}enabled`
-        CookieHelper.set(cookieName, isEnabled)
-
+        let _ = filter.toggle()
         props.setBaseStatFilter(filter)
     }
 
@@ -144,11 +138,6 @@ export const BaseStatFilter = (props: BaseStatFilterProps) => {
      */
     const toggleFilterActive = (index: number) => {
         let filter = props.baseStatFilter
-
-        let cookieName = `baseStatFilter${props.index}active${index}`
-        let isActive = filter.values[index].active
-        CookieHelper.set(cookieName, !isActive)
-
         filter.toggleActive(index)
         props.setBaseStatFilter(filter)
     }
@@ -157,9 +146,6 @@ export const BaseStatFilter = (props: BaseStatFilterProps) => {
      * Sets the given minimum base stat value at the given index.
      */
     const setFilterValue = (value: number, index: number) => {
-        let cookieName = `baseStatFilter${props.index}value${index}`
-        CookieHelper.set(cookieName, value)
-
         let filter = props.baseStatFilter
         filter.setValue(value, index)
         props.setBaseStatFilter(filter)

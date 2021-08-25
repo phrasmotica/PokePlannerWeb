@@ -21,8 +21,6 @@ import {
     VersionInfo
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
@@ -69,9 +67,7 @@ interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
  * Renders base stats, type efficacy, abilities, flavour text, etc.
  */
 export const InfoPanel = (props: InfoPanelProps) => {
-    const [activeInfoTabKey, setActiveInfoTabKey] = useState<string | undefined>(
-        CookieHelper.get(`panel${props.index}activeInfoTabKey`)
-    )
+    const [activeInfoTabKey, setActiveInfoTabKey] = useState<string>()
 
     const flavourTextList = (
         <FlavourTextList
@@ -129,14 +125,6 @@ export const InfoPanel = (props: InfoPanelProps) => {
             showHeldItems={props.shouldShowPokemon} />
     )
 
-    /**
-     * Sets the key of the active info tab.
-     */
-    const setInfoTab = (key: string) => {
-        CookieHelper.set(`panel${props.index}activeInfoTabKey`, key)
-        setActiveInfoTabKey(key)
-    }
-
     return (
         <div>
             <Tabs
@@ -144,7 +132,7 @@ export const InfoPanel = (props: InfoPanelProps) => {
                 transition={false}
                 activeKey={activeInfoTabKey}
                 defaultActiveKey="flavourText"
-                onSelect={(k: string) => setInfoTab(k)}
+                onSelect={(k: string) => setActiveInfoTabKey(k)}
                 id="infoTabs">
                 <Tab eventKey="flavourText" title="Flavour Text">
                     {flavourTextList}

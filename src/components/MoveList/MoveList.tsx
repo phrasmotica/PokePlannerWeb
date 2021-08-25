@@ -15,7 +15,6 @@ import {
     PokemonMoveContext
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
 import { CssHelper } from "../../util/CssHelper"
 
 import "./MoveList.scss"
@@ -63,27 +62,13 @@ interface MoveListProps extends IHasCommon {
  * Component for displaying a Pokemon's moves.
  */
 export const MoveList = (props: MoveListProps) => {
-    let index = props.index
+    const [moveClass, setMoveClass] = useState(MoveClass.All)
 
-    const [moveClass, setMoveClass] = useState(
-        (CookieHelper.get(`moveClass${index}`) as MoveClass) ?? MoveClass.All,
-    )
+    const [useMinPower, setUseMinPower] = useState(false)
+    const [minPower, setMinPower] = useState(0)
 
-    const [useMinPower, setUseMinPower] = useState(
-        CookieHelper.getFlag(`useMinPower${index}`)
-    )
-
-    const [minPower, setMinPower] = useState(
-        CookieHelper.getNumber(`minPower${index}`) ?? 0
-    )
-
-    const [sameTypeOnly, setSameTypeOnly] = useState(
-        CookieHelper.getFlag(`sameTypeOnly${index}`)
-    )
-
-    const [levelUpOnly, setLevelUpOnly] = useState(
-        CookieHelper.getFlag(`levelUpOnly${index}`)
-    )
+    const [sameTypeOnly, setSameTypeOnly] = useState(false)
+    const [levelUpOnly, setLevelUpOnly] = useState(false)
 
     const [moves, setMoves] = useState<PokemonMoveContext[]>([])
     const [loadingMoves, setLoadingMoves] = useState(false)
@@ -160,7 +145,7 @@ export const MoveList = (props: MoveListProps) => {
                             id={minPowerId}
                             checked={useMinPower}
                             disabled={!props.showMoves || moveClass !== MoveClass.Damaging}
-                            onChange={() => toggleUseMinPowerWithCookie()} />
+                            onChange={toggleUseMinPower} />
 
                         <Label
                             check
@@ -175,7 +160,7 @@ export const MoveList = (props: MoveListProps) => {
                             type="number"
                             className="minPowerFilterInput"
                             disabled={!props.showMoves || moveClass !== MoveClass.Damaging || !useMinPower}
-                            onChange={e => setMinPowerWithCookie(+e.target.value)}
+                            onChange={e => setMinPower(+e.target.value)}
                             min={lowestPower}
                             value={actualMinPower}
                             max={highestPower} />
@@ -190,7 +175,7 @@ export const MoveList = (props: MoveListProps) => {
                             id={sameTypeId}
                             checked={sameTypeOnly}
                             disabled={!props.showMoves}
-                            onChange={() => toggleSameTypeOnlyWithCookie()} />
+                            onChange={toggleSameTypeOnly} />
 
                         <Label for={sameTypeId} check>
                             <span title="Only show moves of the Pokemon's type">
@@ -206,7 +191,7 @@ export const MoveList = (props: MoveListProps) => {
                             id={levelUpId}
                             checked={levelUpOnly}
                             disabled={!props.showMoves}
-                            onChange={() => toggleLevelUpOnlyWithCookie()} />
+                            onChange={toggleLevelUpOnly} />
 
                         <Label for={levelUpId} check>
                             <span title="Only show moves learnt by level-up">
@@ -232,7 +217,7 @@ export const MoveList = (props: MoveListProps) => {
                     color={moveClass === c ? "success" : "secondary"}
                     disabled={!props.showMoves}
                     style={CssHelper.defaultCursorIf(!props.showMoves)}
-                    onClick={() => setMoveClassWithCookie(c)}>
+                    onClick={() => setMoveClass(c)}>
                     {c}
                 </Button>
             )
@@ -245,45 +230,9 @@ export const MoveList = (props: MoveListProps) => {
         )
     }
 
-    /**
-     * Sets the move class.
-     */
-    const setMoveClassWithCookie = (moveClass: MoveClass) => {
-        CookieHelper.set(`moveClass${props.index}`, moveClass)
-        setMoveClass(moveClass)
-    }
-
-    /**
-     * Toggles the minimum power filter.
-     */
-    const toggleUseMinPowerWithCookie = () => {
-        CookieHelper.set(`useMinPower${props.index}`, !useMinPower)
-        setUseMinPower(!useMinPower)
-    }
-
-    /**
-     * Sets the minimum power.
-     */
-    const setMinPowerWithCookie = (minPower: number) => {
-        CookieHelper.set(`minPower${props.index}`, minPower)
-        setMinPower(minPower)
-    }
-
-    /**
-     * Toggles the same type only filter.
-     */
-    const toggleSameTypeOnlyWithCookie = () => {
-        CookieHelper.set(`sameTypeOnly${props.index}`, !sameTypeOnly)
-        setSameTypeOnly(!sameTypeOnly)
-    }
-
-    /**
-     * Toggles the level-up only filter.
-     */
-    const toggleLevelUpOnlyWithCookie = () => {
-        CookieHelper.set(`levelUpOnly${props.index}`, !levelUpOnly)
-        setLevelUpOnly(!levelUpOnly)
-    }
+    const toggleUseMinPower = () => setUseMinPower(!useMinPower)
+    const toggleSameTypeOnly = () => setSameTypeOnly(!sameTypeOnly)
+    const toggleLevelUpOnly = () => setLevelUpOnly(!levelUpOnly)
 
     const searchBar = (
         <div className="movesSearchBarContainer flex-center">

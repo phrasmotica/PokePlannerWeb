@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Tooltip } from "reactstrap"
 import Select from "react-select"
 
@@ -8,9 +8,6 @@ import {
     PokemonEntry,
     PokemonSpeciesEntry
 } from "../../models/swagger"
-
-import { CookieHelper } from "../../util/CookieHelper"
-import { useEffect } from "react"
 
 interface VarietySelectorProps {
     /**
@@ -194,11 +191,6 @@ export const VarietySelector = (props: VarietySelectorProps) => {
      */
     const onChange = (option: any) => {
         let varietyId = option.value
-
-        // set variety cookie and remove old form cookie
-        CookieHelper.set(`varietyId${props.index}`, varietyId)
-        CookieHelper.remove(`formId${props.index}`)
-
         let variety = getVariety(varietyId)
         props.setVariety(variety)
     }

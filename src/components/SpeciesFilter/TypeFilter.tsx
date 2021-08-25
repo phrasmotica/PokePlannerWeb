@@ -5,8 +5,6 @@ import { TypeFilterModel } from "./IdFilterModel"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 import "./TypeFilter.scss"
 
 interface TypeFilterProps extends IHasIndex {
@@ -115,11 +113,7 @@ export const TypeFilter = (props: TypeFilterProps) => {
      */
     const toggleFilter = () => {
         let typeFilter = props.typeFilter
-        let isEnabled = typeFilter.toggle()
-
-        let cookieName = `typeFilter${props.index}enabled`
-        CookieHelper.set(cookieName, isEnabled)
-
+        let _ = typeFilter.toggle()
         props.setTypeFilter(typeFilter)
     }
 
@@ -128,11 +122,7 @@ export const TypeFilter = (props: TypeFilterProps) => {
      */
     const toggleFilterId = (id: number) => {
         let typeFilter = props.typeFilter
-        let isActive = typeFilter.toggleId(id)
-
-        let cookieName = `typeFilter${props.index}active${id}`
-        CookieHelper.set(cookieName, isActive)
-
+        let _ = typeFilter.toggleId(id)
         props.setTypeFilter(typeFilter)
     }
 

@@ -10,8 +10,6 @@ import {
     PokemonSpeciesEntry
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 interface FormSelectorProps {
     /**
      * The index of this component.
@@ -201,9 +199,6 @@ export const FormSelector = (props: FormSelectorProps) => {
      */
     const onChange = (option: any) => {
         let formId = option.value
-
-        // set cookie
-        CookieHelper.set(`formId${props.index}`, formId)
 
         fetch(`${process.env.REACT_APP_API_URL}/form/${formId}`)
             .then(response => response.json())

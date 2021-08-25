@@ -13,8 +13,6 @@ import {
     PokemonSpeciesInfo,
 } from "../../models/swagger"
 
-import { CookieHelper } from "../../util/CookieHelper"
-
 interface SpeciesSelectorProps {
     /**
      * The index of this component.
@@ -191,9 +189,6 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      */
     const onChange = (option: any) => {
         let speciesId = option.value
-
-        // set cookie
-        CookieHelper.set(`speciesId${props.index}`, speciesId)
 
         fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}`)
             .then(response => response.json())
