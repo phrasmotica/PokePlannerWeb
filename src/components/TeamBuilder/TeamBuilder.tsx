@@ -153,7 +153,7 @@ export const TeamBuilder = () => {
             setBaseStats([])
             setSpeciesInfo([])
         }
-    }, [versionGroupId])
+    }, [versionGroupId, versionGroups])
 
     const renderMenu = () => {
         if (pageIsLoading) {

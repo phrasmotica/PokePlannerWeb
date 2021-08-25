@@ -60,30 +60,32 @@ export const VarietySelector = (props: VarietySelectorProps) => {
     const [loadingVarieties, setLoadingVarieties] = useState(false)
     const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
 
+    let index = props.index
+    let versionGroupId = props.versionGroupId
+    let species = props.species
+    let setVarieties = props.setVarieties
+
     // fetch varieties when species changes
     useEffect(() => {
-        if (props.species !== undefined) {
-            let speciesId = props.species.pokemonSpeciesId
+        if (species !== undefined) {
+            let speciesId = species.pokemonSpeciesId
 
-            console.log(`Variety selector ${props.index}: fetching varieties of species ${speciesId}...`)
+            console.log(`Variety selector ${index}: fetching varieties of species ${speciesId}...`)
 
             setLoadingVarieties(true)
 
-            fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}/varieties/${props.versionGroupId}`)
+            fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}/varieties/${versionGroupId}`)
                 .then(response => response.json())
-                .then((varieties: PokemonEntry[]) => {
-                    console.log(`Got ${varieties.length} varieties`)
-                    props.setVarieties(varieties)
-                })
+                .then((varieties: PokemonEntry[]) => setVarieties(varieties))
                 .catch(error => console.error(error))
                 .finally(() => setLoadingVarieties(false))
         }
         else {
-            props.setVarieties([])
+            setVarieties([])
         }
 
         return () => {}
-    }, [props.species])
+    }, [index, versionGroupId, species, setVarieties])
 
     /**
      * Renders the variety select.

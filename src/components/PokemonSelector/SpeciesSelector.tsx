@@ -247,7 +247,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
             )
         }
 
-        let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.species?.pokemonSpeciesId)[0]
+        let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.species!.pokemonSpeciesId)[0]
         return isValid(speciesInfo.species!, versionGroupId)
     }
 

@@ -9,7 +9,7 @@ import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { getBaseStats, getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypes, getTypesOfSpecies } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypesOfSpecies } from "../../models/Helpers"
 
 import {
     GenerationInfo,

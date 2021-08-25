@@ -65,30 +65,32 @@ export const FormSelector = (props: FormSelectorProps) => {
     const [loadingForms, setLoadingForms] = useState(false)
     const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
 
+    let index = props.index
+    let versionGroupId = props.versionGroupId
+    let variety = props.variety
+    let setForms = props.setForms
+
     // fetch forms when variety changes
     useEffect(() => {
-        if (props.variety !== undefined) {
-            let pokemonId = props.variety.pokemonId
+        if (variety !== undefined) {
+            let pokemonId = variety.pokemonId
 
-            console.log(`Variety selector ${props.index}: fetching forms of variety ${pokemonId}...`)
+            console.log(`Variety selector ${index}: fetching forms of variety ${pokemonId}...`)
 
             setLoadingForms(true)
 
-            fetch(`${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/forms/${props.versionGroupId}`)
+            fetch(`${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/forms/${versionGroupId}`)
                 .then(response => response.json())
-                .then((forms: PokemonFormEntry[]) => {
-                    console.log(`Got ${forms.length} forms`)
-                    props.setForms(forms)
-                })
+                .then((forms: PokemonFormEntry[]) => setForms(forms))
                 .catch(error => console.error(error))
                 .finally(() => setLoadingForms(false))
         }
         else {
-            props.setForms([])
+            setForms([])
         }
 
         return () => {}
-    }, [props.variety])
+    }, [index, versionGroupId, variety, setForms])
 
     /**
      * Renders the form select.
