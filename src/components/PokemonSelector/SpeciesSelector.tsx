@@ -6,7 +6,7 @@ import { FaFilter } from "react-icons/fa"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { getBaseStatsOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
 
 import {
     PokemonSpeciesEntry,
@@ -149,7 +149,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      */
     const createOptions = () => {
         return props.speciesInfo.map(species => ({
-            label: species.name,
+            label: getDisplayNameOfSpecies(species),
             value: species.pokemonSpeciesId
         }))
     }
@@ -213,7 +213,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         }
 
         // generation filter test
-        let generationId = species.species?.generationId ?? 0
+        let generationId = species.generationId
         let passesGenerationFilter = props.generationFilter.passesFilter([generationId])
 
         // type filter test
@@ -243,7 +243,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         }
 
         let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.species!.pokemonSpeciesId)[0]
-        return isValid(speciesInfo.species!, versionGroupId)
+        return isValid(speciesInfo, versionGroupId)
     }
 
     /**

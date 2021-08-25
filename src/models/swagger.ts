@@ -577,7 +577,16 @@ export interface PokemonSpeciesInfo {
   /** @format int32 */
   pokemonSpeciesId: number;
   name?: string;
-  species?: SpeciesInfo;
+
+  /** @format int32 */
+  order: number;
+
+  /** @format int32 */
+  generationId: number;
+  names: PokemonSpeciesNamesInfo[];
+  pokedexes: PokedexInfo[];
+  varieties: VarietyInfo[];
+  validity: number[];
 }
 
 export interface PokemonSpeciesNamedApiResource {
@@ -585,15 +594,8 @@ export interface PokemonSpeciesNamedApiResource {
   name?: string;
 }
 
-export interface SpeciesInfo {
-  /** @format int32 */
-  order: number;
-
-  /** @format int32 */
-  generationId: number;
-  pokedexes: PokedexInfo[];
-  varieties: VarietyInfo[];
-  validity: number[];
+export interface PokemonSpeciesNamesInfo {
+  name?: string;
 }
 
 export interface StatEntry {

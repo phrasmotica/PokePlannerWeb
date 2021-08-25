@@ -28,6 +28,15 @@ export const getDisplayName = (
 /**
  * Returns the given type's display name.
  */
+export const getDisplayNameOfSpecies = (
+    species: PokemonSpeciesInfo,
+) => {
+    return species.names[0]?.name ?? species.name!
+}
+
+/**
+ * Returns the given type's display name.
+ */
 export const getDisplayNameOfType = (
     type: TypeInfo,
 ) => {
@@ -190,7 +199,7 @@ export const getTypes = (
 export const getTypesOfSpecies = (
     speciesInfo: PokemonSpeciesInfo,
 ) => {
-    let varieties = speciesInfo.species?.varieties ?? []
+    let varieties = speciesInfo.varieties
     if (varieties.length <= 0) {
         return []
     }
@@ -216,7 +225,7 @@ export const getBaseStats = (
 export const getBaseStatsOfSpecies = (
     speciesInfo: PokemonSpeciesInfo,
 ) => {
-    let varieties = speciesInfo.species?.varieties ?? []
+    let varieties = speciesInfo.varieties
     if (varieties.length <= 0) {
         return []
     }

@@ -167,7 +167,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
      */
     const renderGenerationFilter = () => {
         let species = props.species
-        let generationIds = species.map(s => s.species!.generationId).distinct()
+        let generationIds = species.map(s => s.generationId).distinct()
 
         let generations = props.generations
         let generationLabels = generations.filter(g => generationIds.includes(g.generationId))

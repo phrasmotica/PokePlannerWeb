@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:17895"
+      "url": "https://localhost:44347"
     }
   ],
   "paths": {
@@ -2727,7 +2727,13 @@
       },
       "PokemonSpeciesInfo": {
         "required": [
-          "pokemonSpeciesId"
+          "generationId",
+          "names",
+          "order",
+          "pokedexes",
+          "pokemonSpeciesId",
+          "validity",
+          "varieties"
         ],
         "type": "object",
         "properties": {
@@ -2738,34 +2744,6 @@
           "name": {
             "type": "string"
           },
-          "species": {
-            "$ref": "#/components/schemas/SpeciesInfo"
-          }
-        },
-        "additionalProperties": false
-      },
-      "PokemonSpeciesNamedApiResource": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "SpeciesInfo": {
-        "required": [
-          "generationId",
-          "order",
-          "pokedexes",
-          "validity",
-          "varieties"
-        ],
-        "type": "object",
-        "properties": {
           "order": {
             "type": "integer",
             "format": "int32"
@@ -2773,6 +2751,12 @@
           "generationId": {
             "type": "integer",
             "format": "int32"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokemonSpeciesNamesInfo"
+            }
           },
           "pokedexes": {
             "type": "array",
@@ -2792,6 +2776,27 @@
               "type": "integer",
               "format": "int32"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonSpeciesNamedApiResource": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonSpeciesNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false

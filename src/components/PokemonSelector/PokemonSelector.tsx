@@ -275,7 +275,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         }
 
         // generation filter test
-        let generationId = species.species!.generationId
+        let generationId = species.generationId
         let passesGenerationFilter = props.generationFilter.passesFilter([generationId])
 
         // type filter test
