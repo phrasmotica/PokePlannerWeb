@@ -124,14 +124,26 @@ export const TeamBuilder = () => {
             setLoadingSpeciesInfo(true)
 
             let versionGroup = versionGroups.find(vg => vg.versionGroupId === versionGroupId)!
-            let generationId = versionGroup.generationId
+            let pokedexIds = versionGroup.pokedexes.map(p => p.pokedexId)
+
             let languageId = 9
 
-            fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/${generationId}/${languageId}`)
-                .then(response => response.json())
-                .then((speciesInfo: PokemonSpeciesInfo[]) => setSpeciesInfo(speciesInfo))
-                .catch(error => console.error(error))
-                .finally(() => setLoadingSpeciesInfo(false))
+            // fetch species info from multiple pokedexes simultaneously
+            Promise.all(
+                pokedexIds.map(
+                    async id => {
+                        console.log(`Team builder: getting species info for pokedex ${id}...`)
+                        let response = await fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/pokedex/${id}/language/${languageId}`)
+                        return await response.json()
+                    }
+                )
+            )
+            .then((speciesInfo: PokemonSpeciesInfo[][]) => {
+                let allSpeciesInfo = speciesInfo.flatMap(arr => arr)
+                setSpeciesInfo(allSpeciesInfo)
+            })
+            .catch(error => console.error(error))
+            .finally(() => setLoadingSpeciesInfo(false))
         }
 
         fetchBaseStats(versionGroupId)

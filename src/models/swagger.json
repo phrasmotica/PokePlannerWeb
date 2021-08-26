@@ -802,7 +802,7 @@
         }
       }
     },
-    "/SpeciesInfo/{generationId}/{languageId}": {
+    "/SpeciesInfo/generation/{generationId}/language/{languageId}": {
       "get": {
         "tags": [
           "SpeciesInfo"
@@ -810,6 +810,64 @@
         "parameters": [
           {
             "name": "generationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/SpeciesInfo/versionGroup/{versionGroup}/language/{languageId}": {
+      "get": {
+        "tags": [
+          "SpeciesInfo"
+        ],
+        "parameters": [
+          {
+            "name": "versionGroup",
             "in": "path",
             "required": true,
             "schema": {
