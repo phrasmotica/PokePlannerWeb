@@ -584,7 +584,7 @@ export interface PokemonSpeciesInfo {
   /** @format int32 */
   generationId: number;
   names: PokemonSpeciesNamesInfo[];
-  pokedexes: PokedexInfo[];
+  pokedexes: PokemonSpeciesPokedexInfo[];
   varieties: VarietyInfo[];
   validity: number[];
 }
@@ -596,6 +596,14 @@ export interface PokemonSpeciesNamedApiResource {
 
 export interface PokemonSpeciesNamesInfo {
   name?: string;
+}
+
+export interface PokemonSpeciesPokedexInfo {
+  /** @format int32 */
+  pokedexId: number;
+
+  /** @format int32 */
+  pokedexNumber: number;
 }
 
 export interface StatEntry {

@@ -26,12 +26,19 @@ export const getDisplayName = (
 }
 
 /**
- * Returns the given type's display name.
+ * Returns the given species' display name.
  */
 export const getDisplayNameOfSpecies = (
     species: PokemonSpeciesInfo,
 ) => {
     return species.names[0]?.name ?? species.name!
+}
+
+export const getPokedexNumberOfSpecies = (
+    species: PokemonSpeciesInfo,
+    pokedexId: number,
+) => {
+    return species.pokedexes.find(p => p.pokedexId === pokedexId)?.pokedexNumber
 }
 
 /**

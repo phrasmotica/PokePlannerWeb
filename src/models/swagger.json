@@ -860,14 +860,14 @@
         }
       }
     },
-    "/SpeciesInfo/versionGroup/{versionGroup}/language/{languageId}": {
+    "/SpeciesInfo/pokedex/{pokedexId}/language/{languageId}": {
       "get": {
         "tags": [
           "SpeciesInfo"
         ],
         "parameters": [
           {
-            "name": "versionGroup",
+            "name": "pokedexId",
             "in": "path",
             "required": true,
             "schema": {
@@ -2819,7 +2819,7 @@
           "pokedexes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PokedexInfo"
+              "$ref": "#/components/schemas/PokemonSpeciesPokedexInfo"
             }
           },
           "varieties": {
@@ -2855,6 +2855,24 @@
         "properties": {
           "name": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonSpeciesPokedexInfo": {
+        "required": [
+          "pokedexId",
+          "pokedexNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "pokedexId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pokedexNumber": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

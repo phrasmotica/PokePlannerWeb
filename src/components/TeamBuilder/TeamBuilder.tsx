@@ -4,7 +4,7 @@ import Select from 'react-select'
 
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
-import { getDisplayNameOfVersionGroup } from '../../models/Helpers'
+import { getDisplayNameOfVersionGroup, getPokedexNumberOfSpecies } from '../../models/Helpers'
 import { SpeciesInfo } from '../../models/SpeciesInfo'
 
 import {
@@ -143,11 +143,13 @@ export const TeamBuilder = () => {
                             .then((newSpeciesInfo: PokemonSpeciesInfo[]) => {
                                 console.log(`Team builder: got ${newSpeciesInfo.length} species info for pokedex ${id}`)
 
+                                let sortedSpeciesInfo = newSpeciesInfo.sort((a, b) => getPokedexNumberOfSpecies(a, id)! - getPokedexNumberOfSpecies(b, id)!)
+
                                 let speciesInfoDict = speciesInfo.speciesInfo
 
                                 speciesInfoDict.push({
                                     pokedexId: id,
-                                    speciesInfo: newSpeciesInfo,
+                                    speciesInfo: sortedSpeciesInfo,
                                 })
 
                                 setSpeciesInfo(new SpeciesInfo(speciesInfoDict))

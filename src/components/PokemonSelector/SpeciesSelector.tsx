@@ -6,7 +6,7 @@ import { FaFilter } from "react-icons/fa"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getPokedexNumberOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
@@ -152,7 +152,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         return props.speciesInfo.speciesInfo.map(a => ({
             label: `Pokedex ${a.pokedexId}`,
             options: a.speciesInfo.map(species => ({
-                label: getDisplayNameOfSpecies(species),
+                label: `#${getPokedexNumberOfSpecies(species, a.pokedexId)} ${getDisplayNameOfSpecies(species)}`,
                 value: species.pokemonSpeciesId,
             }))
         }))
