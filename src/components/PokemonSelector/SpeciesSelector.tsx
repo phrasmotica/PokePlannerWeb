@@ -94,7 +94,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         if (species !== undefined) {
             // undefined doesn't clear stored state so coalesce to null
             // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.find(o => o.value === species!.pokemonSpeciesId) ?? null
+            selectedOption = options.flatMap(o => o.options).find(o => o.value === species!.pokemonSpeciesId) ?? null
         }
 
         // attach red border if necessary
@@ -149,9 +149,12 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Returns options for the species select.
      */
     const createOptions = () => {
-        return props.speciesInfo.getAllSpecies().map(species => ({
-            label: getDisplayNameOfSpecies(species),
-            value: species.pokemonSpeciesId
+        return props.speciesInfo.speciesInfo.map(a => ({
+            label: `Pokedex ${a.pokedexId}`,
+            options: a.speciesInfo.map(species => ({
+                label: getDisplayNameOfSpecies(species),
+                value: species.pokemonSpeciesId,
+            }))
         }))
     }
 
