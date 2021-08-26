@@ -452,6 +452,11 @@ export interface PokedexEntry {
 export interface PokedexInfo {
   /** @format int32 */
   pokedexId: number;
+  names: PokedexNamesInfo[];
+}
+
+export interface PokedexNamesInfo {
+  name?: string;
 }
 
 export interface PokemonAbilityContext {
@@ -706,7 +711,11 @@ export interface VersionGroupInfo {
   /** @format int32 */
   generationId: number;
   versionInfo: VersionInfo[];
-  pokedexes: PokedexInfo[];
+  versionGroupPokedexes: VersionGroupPokedexInfo[];
+}
+
+export interface VersionGroupPokedexInfo {
+  pokedex?: PokedexInfo;
 }
 
 export interface VersionHeldItemContext {

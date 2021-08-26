@@ -88,14 +88,12 @@ export const InfoPanel = (props: InfoPanelProps) => {
     const renderStatsGraph = () => {
         let baseStats: number[] = []
 
-        let pokemon = props.pokemon
-        if (pokemon !== undefined) {
-            let versionGroupId = props.versionGroup?.versionGroupId
-            if (versionGroupId === undefined) {
-                throw new Error(`Panel ${props.index}: version group ID is undefined!`)
+        if (props.pokemon !== undefined) {
+            if (props.versionGroup === undefined) {
+                throw new Error(`Panel ${props.index}: version group is undefined!`)
             }
 
-            baseStats = getBaseStats(pokemon, versionGroupId)
+            baseStats = getBaseStats(props.pokemon, props.versionGroup)
         }
 
         return (

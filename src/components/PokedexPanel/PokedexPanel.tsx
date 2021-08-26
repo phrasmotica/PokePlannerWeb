@@ -91,11 +91,11 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
 
     const hasSpecies = species !== undefined
     const selectedPokemonIsValid = !hasSpecies || pokemonIsValid(
-        species!, form, props.versionGroup?.versionGroupId
+        species!, form, props.versionGroup
     )
 
     let effectiveTypes = getEffectiveTypes(
-        variety, form, props.versionGroup?.versionGroupId
+        variety, form, props.versionGroup
     )
 
     const shouldShowPokemon = hasSpecies
@@ -107,7 +107,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
             <div className="debug-border whalf">
                 <PokemonPanel
                     index={props.index}
-                    versionGroupId={props.versionGroup?.versionGroupId}
+                    versionGroup={props.versionGroup}
                     speciesInfo={props.speciesInfo}
                     loadingSpeciesInfo={props.loadingSpeciesInfo}
                     defaultSpeciesId={species?.pokemonSpeciesId}

@@ -7,7 +7,8 @@ import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../mod
 import {
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry
+    PokemonSpeciesEntry,
+    VersionGroupInfo
 } from "../../models/swagger"
 
 interface FormSelectorProps {
@@ -17,9 +18,9 @@ interface FormSelectorProps {
     index: number
 
     /**
-     * The index of the version group.
+     * The version group.
      */
-    versionGroupId: number | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * The species of the selected variety.
@@ -64,7 +65,7 @@ export const FormSelector = (props: FormSelectorProps) => {
     const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
 
     let index = props.index
-    let versionGroupId = props.versionGroupId
+    let versionGroupId = props.versionGroup?.versionGroupId
     let variety = props.variety
     let setForms = props.setForms
 
@@ -218,19 +219,19 @@ export const FormSelector = (props: FormSelectorProps) => {
             return true
         }
 
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
+        let versionGroup = props.versionGroup
+        if (versionGroup === undefined) {
             throw new Error(
                 `Form selector ${props.index}: version group ID is undefined!`
             )
         }
 
-        let pokemonIsValid = isValid(species, versionGroupId)
+        let pokemonIsValid = isValid(species, versionGroup)
 
         let form = props.form
         if (form !== undefined && hasValidity(form)) {
             // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && isValid(form, versionGroupId)
+            pokemonIsValid = pokemonIsValid && isValid(form, versionGroup)
         }
 
         return pokemonIsValid

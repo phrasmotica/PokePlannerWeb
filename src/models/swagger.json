@@ -2361,6 +2361,7 @@
       },
       "PokedexInfo": {
         "required": [
+          "names",
           "pokedexId"
         ],
         "type": "object",
@@ -2368,6 +2369,21 @@
           "pokedexId": {
             "type": "integer",
             "format": "int32"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PokedexNamesInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokedexNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3155,8 +3171,8 @@
       "VersionGroupInfo": {
         "required": [
           "generationId",
-          "pokedexes",
           "versionGroupId",
+          "versionGroupPokedexes",
           "versionInfo"
         ],
         "type": "object",
@@ -3175,11 +3191,20 @@
               "$ref": "#/components/schemas/VersionInfo"
             }
           },
-          "pokedexes": {
+          "versionGroupPokedexes": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PokedexInfo"
+              "$ref": "#/components/schemas/VersionGroupPokedexInfo"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionGroupPokedexInfo": {
+        "type": "object",
+        "properties": {
+          "pokedex": {
+            "$ref": "#/components/schemas/PokedexInfo"
           }
         },
         "additionalProperties": false

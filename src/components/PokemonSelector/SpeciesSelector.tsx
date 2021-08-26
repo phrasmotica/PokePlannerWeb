@@ -12,6 +12,7 @@ import { SpeciesInfo } from "../../models/SpeciesInfo"
 import {
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
+    VersionGroupInfo,
 } from "../../models/swagger"
 
 interface SpeciesSelectorProps {
@@ -21,9 +22,9 @@ interface SpeciesSelectorProps {
     index: number
 
     /**
-     * The index of the version group.
+     * The version group.
      */
-    versionGroupId: number | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * List of species to select from.
@@ -149,13 +150,23 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Returns options for the species select.
      */
     const createOptions = () => {
-        return props.speciesInfo.speciesInfo.map(a => ({
-            label: `Pokedex ${a.pokedexId}`,
-            options: a.speciesInfo.map(species => ({
-                label: `#${getPokedexNumberOfSpecies(species, a.pokedexId)} ${getDisplayNameOfSpecies(species)}`,
-                value: species.pokemonSpeciesId,
-            }))
-        }))
+        if (props.versionGroup === undefined) {
+            return []
+        }
+
+        return props.speciesInfo.speciesInfo.map(a => {
+            let pokedexName = props.versionGroup!.versionGroupPokedexes.map(p => p.pokedex!)
+                                                                       .find(p => p.pokedexId === a.pokedexId)
+                                                                       ?.names[0]?.name
+
+            return {
+                label: pokedexName,
+                options: a.speciesInfo.map(species => ({
+                    label: `#${getPokedexNumberOfSpecies(species, a.pokedexId)} ${getDisplayNameOfSpecies(species)}`,
+                    value: species.pokemonSpeciesId,
+                }))
+            }
+        })
     }
 
     /**
@@ -209,7 +220,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Returns whether the species passes the filter.
      */
     const isPresent = (species: PokemonSpeciesInfo) => {
-        let versionGroupId = props.versionGroupId
+        let versionGroupId = props.versionGroup?.versionGroupId
         if (versionGroupId === undefined) {
             throw new Error(
                 `Species selector ${props.index}: version group ID is undefined!`
@@ -239,15 +250,14 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
             return true
         }
 
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
+        if (props.versionGroup === undefined) {
             throw new Error(
-                `Species selector ${props.index}: version group ID is undefined!`
+                `Species selector ${props.index}: version group is undefined!`
             )
         }
 
         let speciesInfo = props.speciesInfo.getAllSpecies().filter(s => s.pokemonSpeciesId === props.species!.pokemonSpeciesId)[0]
-        return isValid(speciesInfo, versionGroupId)
+        return isValid(speciesInfo, props.versionGroup)
     }
 
     /**

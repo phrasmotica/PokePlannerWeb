@@ -74,7 +74,7 @@ export const ActionPanel = (props: ActionPanelProps) => {
         let typeIds = getEffectiveTypes(
             props.variety,
             props.form,
-            props.versionGroup?.versionGroupId
+            props.versionGroup
         ).map(t => t.typeId)
 
         return (

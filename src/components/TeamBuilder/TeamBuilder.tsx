@@ -129,7 +129,7 @@ export const TeamBuilder = () => {
             setLoadingSpeciesInfo(true)
 
             let versionGroup = versionGroups.find(vg => vg.versionGroupId === versionGroupId)!
-            let pokedexIds = versionGroup.pokedexes.map(p => p.pokedexId)
+            let pokedexIds = versionGroup.versionGroupPokedexes.map(p => p.pokedex!.pokedexId)
 
             let languageId = 9
 

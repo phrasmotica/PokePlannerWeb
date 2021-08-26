@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 import key from "weak-key"
 
-import { IHasCommon } from "../CommonMembers"
+import { IHasHideTooltips, IHasIndex } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
@@ -18,12 +18,13 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     StatEntry,
-    TypeInfo
+    TypeInfo,
+    VersionGroupInfo
 } from "../../models/swagger"
 
 import "./PokemonPanel.scss"
 
-interface PokemonPanelProps extends IHasCommon {
+interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * Whether Pokemon validity in the selected version group should be ignored.
      */
@@ -33,6 +34,8 @@ interface PokemonPanelProps extends IHasCommon {
      * The ID of the species to be selected by default.
      */
     defaultSpeciesId: number | undefined
+
+    versionGroup: VersionGroupInfo | undefined
 
     speciesInfo: SpeciesInfo
 
@@ -153,7 +156,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
             let types = getEffectiveTypes(
                 props.variety,
                 props.form,
-                props.versionGroupId
+                props.versionGroup
             )
 
             typesElement = types.map(type => {
@@ -228,7 +231,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const hasSpecies = props.species !== undefined
 
     const selectedPokemonIsValid = () => pokemonIsValid(
-        props.species!, props.form, props.versionGroupId
+        props.species!, props.form, props.versionGroup
     )
 
     /**
@@ -253,10 +256,10 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     }
 
     const setTypeFilterAndUpdate = (filter: TypeFilterModel) => {
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
+        let versionGroup = props.versionGroup
+        if (versionGroup === undefined) {
             throw new Error(
-                `Pokemon panel ${props.index}: version group ID is undefined!`
+                `Pokemon panel ${props.index}: version group is undefined!`
             )
         }
 
@@ -264,7 +267,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
         // no longer have a valid species
         if (props.species !== undefined) {
-            let speciesTypes = getTypes(props.species, versionGroupId).map(t => t.typeId)
+            let speciesTypes = getTypes(props.species, versionGroup).map(t => t.typeId)
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
@@ -274,10 +277,10 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     }
 
     const setBaseStatFilterAndUpdate = (filter: BaseStatFilterModel) => {
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
+        let versionGroup = props.versionGroup
+        if (versionGroup === undefined) {
             throw new Error(
-                `Pokemon panel ${props.index}: version group ID is undefined!`
+                `Pokemon panel ${props.index}: version group is undefined!`
             )
         }
 
@@ -285,7 +288,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
         // no longer have a valid species
         if (props.species !== undefined) {
-            let speciesBaseStats = getBaseStats(props.species, versionGroupId)
+            let speciesBaseStats = getBaseStats(props.species, versionGroup)
 
             let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {
@@ -297,7 +300,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const speciesFilter = (
         <SpeciesFilter
             index={props.index}
-            versionGroupId={props.versionGroupId}
+            versionGroupId={props.versionGroup?.versionGroupId}
             species={props.speciesInfo}
             generations={props.generations}
             generationFilter={generationFilter}
@@ -330,7 +333,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
             <div className="flex-center w60 debug-border">
                 <PokemonSelector
                     index={props.index}
-                    versionGroupId={props.versionGroupId}
+                    versionGroup={props.versionGroup}
                     speciesInfo={props.speciesInfo}
                     loadingSpeciesInfo={props.loadingSpeciesInfo}
                     defaultSpeciesId={props.defaultSpeciesId}

@@ -21,6 +21,7 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
+    VersionGroupInfo,
 } from "../../models/swagger"
 
 import { CssHelper } from "../../util/CssHelper"
@@ -29,7 +30,9 @@ import "../../styles/types.scss"
 import "./PokemonSelector.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 
-interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
+interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
+    versionGroup: VersionGroupInfo | undefined
+
     speciesInfo: SpeciesInfo
 
     loadingSpeciesInfo: boolean
@@ -127,7 +130,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         return (
             <SpeciesSelector
                 index={props.index}
-                versionGroupId={props.versionGroupId}
+                versionGroup={props.versionGroup}
                 hideTooltips={props.hideTooltips}
                 speciesInfo={props.speciesInfo}
                 species={props.species}
@@ -147,7 +150,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     const renderVarietySelect = () => (
         <VarietySelector
             index={props.index}
-            versionGroupId={props.versionGroupId}
+            versionGroup={props.versionGroup}
             hideTooltips={props.hideTooltips}
             varieties={props.varieties}
             setVarieties={props.setVarieties}
@@ -163,7 +166,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     const renderFormSelect = () => (
         <FormSelector
             index={props.index}
-            versionGroupId={props.versionGroupId}
+            versionGroup={props.versionGroup}
             hideTooltips={props.hideTooltips}
             forms={props.forms}
             setForms={props.setForms}
@@ -268,13 +271,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Returns whether the species passes the filter.
      */
     const isPresent = (species: PokemonSpeciesInfo) => {
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(
-                `Species selector ${props.index}: version group ID is undefined!`
-            )
-        }
-
         // generation filter test
         let generationId = species.generationId
         let passesGenerationFilter = props.generationFilter.passesFilter([generationId])

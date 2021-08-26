@@ -6,7 +6,8 @@ import { getDisplayName, hasDisplayNames, isValid } from "../../models/Helpers"
 
 import {
     PokemonEntry,
-    PokemonSpeciesEntry
+    PokemonSpeciesEntry,
+    VersionGroupInfo
 } from "../../models/swagger"
 
 interface VarietySelectorProps {
@@ -16,9 +17,9 @@ interface VarietySelectorProps {
     index: number
 
     /**
-     * The index of the version group.
+     * The version group.
      */
-    versionGroupId: number | undefined
+    versionGroup: VersionGroupInfo | undefined
 
     /**
      * The species of the selected variety.
@@ -58,7 +59,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
     const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
 
     let index = props.index
-    let versionGroupId = props.versionGroupId
+    let versionGroupId = props.versionGroup?.versionGroupId
     let species = props.species
     let setVarieties = props.setVarieties
 
@@ -202,14 +203,14 @@ export const VarietySelector = (props: VarietySelectorProps) => {
             return true
         }
 
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
+        let versionGroup = props.versionGroup
+        if (versionGroup === undefined) {
             throw new Error(
-                `Variety selector ${props.index}: version group ID is undefined!`
+                `Variety selector ${props.index}: version group is undefined!`
             )
         }
 
-        return isValid(props.species, versionGroupId)
+        return isValid(props.species, versionGroup)
     }
 
     /**

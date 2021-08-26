@@ -172,7 +172,7 @@ export const getGenus = (
  */
 export const getTypes = (
     resource: PokemonSpeciesEntry | PokemonEntry | PokemonFormEntry,
-    versionGroupId: number
+    versionGroup: VersionGroupInfo
 ) => {
     let types = resource.types
     if (types.length <= 0) {
@@ -184,7 +184,7 @@ export const getTypes = (
     // find first types entry with a version group ID after the one we're looking so
     let matchFunc = (searchId: number) => types.find(e => e.id === searchId)
 
-    let searchId = versionGroupId
+    let searchId = versionGroup.versionGroupId
     let matchingEntry: TypeEntryListWithId | undefined = undefined
     while (matchingEntry === undefined && searchId <= newestVersionGroupId) {
         matchingEntry = matchFunc(searchId)
@@ -220,9 +220,9 @@ export const getTypesOfSpecies = (
  */
 export const getBaseStats = (
     pokemon: PokemonSpeciesEntry | PokemonEntry,
-    versionGroupId: number
+    versionGroup: VersionGroupInfo
 ) => {
-    let baseStats = pokemon.baseStats.find(t => t.id === versionGroupId)
+    let baseStats = pokemon.baseStats.find(t => t.id === versionGroup.versionGroupId)
     return baseStats?.data ?? []
 }
 
@@ -247,20 +247,20 @@ export const getBaseStatsOfSpecies = (
 export const getEffectiveTypes = (
     variety: PokemonEntry | undefined,
     form: PokemonFormEntry | undefined,
-    versionGroupId: number | undefined
+    versionGroup: VersionGroupInfo | undefined
 ) => {
     if (variety === undefined) {
         return []
     }
 
-    if (versionGroupId === undefined) {
-        throw new Error("Version group ID is undefined!")
+    if (versionGroup === undefined) {
+        throw new Error("Version group is undefined!")
     }
 
-    let types = getTypes(variety, versionGroupId)
+    let types = getTypes(variety, versionGroup)
 
     if (form !== undefined) {
-        let formTypes = getTypes(form, versionGroupId)
+        let formTypes = getTypes(form, versionGroup)
         if (formTypes.length > 0) {
             // use form-specific types if present
             types = formTypes
@@ -275,9 +275,9 @@ export const getEffectiveTypes = (
  */
 export const isValid = (
     resource: { validity: number[] },
-    versionGroupId: number
+    versionGroup: VersionGroupInfo
 ) => {
-    return resource.validity.includes(versionGroupId)
+    return resource.validity.includes(versionGroup.versionGroupId)
 }
 
 /**
@@ -295,16 +295,16 @@ export const hasValidity = (
 export const pokemonIsValid = (
     species: PokemonSpeciesEntry,
     form: PokemonFormEntry | undefined,
-    versionGroupId: number | undefined
+    versionGroup: VersionGroupInfo | undefined
 ) => {
-    if (versionGroupId === undefined) {
-        throw new Error("Version group ID is undefined!")
+    if (versionGroup === undefined) {
+        throw new Error("Version group is undefined!")
     }
 
-    let pokemonIsValid = isValid(species, versionGroupId)
+    let pokemonIsValid = isValid(species, versionGroup)
     if (form !== undefined && hasValidity(form)) {
         // can only obtain form if base species is obtainable
-        pokemonIsValid = pokemonIsValid && isValid(form, versionGroupId)
+        pokemonIsValid = pokemonIsValid && isValid(form, versionGroup)
     }
 
     return pokemonIsValid
