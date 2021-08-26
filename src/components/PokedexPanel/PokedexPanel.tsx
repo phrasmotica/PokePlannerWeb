@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react"
+﻿import React, { useEffect, useState } from "react"
 
 import { ActionPanel } from "../ActionPanel/ActionPanel"
 import { InfoPanel } from "../InfoPanel/InfoPanel"
@@ -7,13 +7,13 @@ import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { getEffectiveTypes, pokemonIsValid } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
-    PokemonSpeciesInfo,
     StatEntry,
     TypeInfo,
     VersionGroupInfo
@@ -22,7 +22,6 @@ import {
 import "./PokedexPanel.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
-import { useEffect } from "react"
 
 interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
@@ -35,7 +34,7 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
      */
     versionGroup: VersionGroupInfo | undefined
 
-    speciesInfo: PokemonSpeciesInfo[]
+    speciesInfo: SpeciesInfo
 
     loadingSpeciesInfo: boolean
 

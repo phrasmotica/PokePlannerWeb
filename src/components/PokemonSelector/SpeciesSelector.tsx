@@ -7,6 +7,7 @@ import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     PokemonSpeciesEntry,
@@ -27,7 +28,7 @@ interface SpeciesSelectorProps {
     /**
      * List of species to select from.
      */
-    speciesInfo: PokemonSpeciesInfo[]
+    speciesInfo: SpeciesInfo
 
     /**
      * Whether the parent component is loading data to be passed to this component.
@@ -148,7 +149,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Returns options for the species select.
      */
     const createOptions = () => {
-        return props.speciesInfo.map(species => ({
+        return props.speciesInfo.getAllSpecies().map(species => ({
             label: getDisplayNameOfSpecies(species),
             value: species.pokemonSpeciesId
         }))
@@ -199,7 +200,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     /**
      * Returns the species that match the species filter.
      */
-    const getFilteredSpecies = () => props.speciesInfo.filter(isPresent)
+    const getFilteredSpecies = () => props.speciesInfo.getAllSpecies().filter(isPresent)
 
     /**
      * Returns whether the species passes the filter.
@@ -242,7 +243,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
             )
         }
 
-        let speciesInfo = props.speciesInfo.filter(s => s.pokemonSpeciesId === props.species!.pokemonSpeciesId)[0]
+        let speciesInfo = props.speciesInfo.getAllSpecies().filter(s => s.pokemonSpeciesId === props.species!.pokemonSpeciesId)[0]
         return isValid(speciesInfo, versionGroupId)
     }
 

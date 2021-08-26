@@ -8,12 +8,12 @@ import { EvolutionChain } from "../EvolutionChain/EvolutionChain"
 import { MoveList } from "../MoveList/MoveList"
 
 import { getEffectiveTypes } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
-    PokemonSpeciesInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -28,7 +28,7 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * List of Pokemon species info.
      */
-    speciesInfo: PokemonSpeciesInfo[]
+    speciesInfo: SpeciesInfo
 
     /**
      * The Pokemon species.
@@ -111,7 +111,7 @@ export const ActionPanel = (props: ActionPanelProps) => {
             <EvolutionChain
                 index={props.index}
                 species={props.species}
-                availableSpeciesIds={props.speciesInfo.map(s => s.pokemonSpeciesId)}
+                availableSpeciesIds={props.speciesInfo.getAllSpeciesIds()}
                 showShinySprites={props.showShinySprite}
                 shouldShowChain={props.shouldShowPokemon}
                 setSpecies={props.setSpecies} />

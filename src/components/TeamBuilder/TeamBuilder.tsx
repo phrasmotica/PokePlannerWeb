@@ -5,6 +5,8 @@ import Select from 'react-select'
 import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
 
 import { getDisplayNameOfVersionGroup } from '../../models/Helpers'
+import { SpeciesInfo } from '../../models/SpeciesInfo'
+
 import {
     GenerationInfo,
     PokemonSpeciesInfo,
@@ -24,7 +26,7 @@ const TEAM_SIZE: number = 1
 export const TeamBuilder = () => {
     const [versionGroupId, setVersionGroupId] = useState<number>()
 
-    const [speciesInfo, setSpeciesInfo] = useState<PokemonSpeciesInfo[]>([])
+    const [speciesInfo, setSpeciesInfo] = useState<SpeciesInfo>(new SpeciesInfo([]))
     const [loadingSpeciesInfo, setLoadingSpeciesInfo] = useState(false)
     const [generations, setGenerations] = useState<GenerationInfo[]>([])
     const [loadingGenerations, setLoadingGenerations] = useState(false)
@@ -120,6 +122,9 @@ export const TeamBuilder = () => {
                 return
             }
 
+            // clear species info data when version group changes
+            speciesInfo.clear()
+
             console.log(`Team builder: getting species info for version group ${versionGroupId}...`)
             setLoadingSpeciesInfo(true)
 
@@ -131,18 +136,26 @@ export const TeamBuilder = () => {
             // fetch species info from multiple pokedexes simultaneously
             Promise.all(
                 pokedexIds.map(
-                    async id => {
+                    id => {
                         console.log(`Team builder: getting species info for pokedex ${id}...`)
-                        let response = await fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/pokedex/${id}/language/${languageId}`)
-                        return await response.json()
+                        fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/pokedex/${id}/language/${languageId}`)
+                            .then(response => response.json())
+                            .then((newSpeciesInfo: PokemonSpeciesInfo[]) => {
+                                console.log(`Team builder: got ${newSpeciesInfo.length} species info for pokedex ${id}`)
+
+                                let speciesInfoDict = speciesInfo.speciesInfo
+
+                                speciesInfoDict.push({
+                                    pokedexId: id,
+                                    speciesInfo: newSpeciesInfo,
+                                })
+
+                                setSpeciesInfo(new SpeciesInfo(speciesInfoDict))
+                            })
+                            .catch(error => console.error(error))
                     }
                 )
             )
-            .then((speciesInfo: PokemonSpeciesInfo[][]) => {
-                let allSpeciesInfo = speciesInfo.flatMap(arr => arr)
-                setSpeciesInfo(allSpeciesInfo)
-            })
-            .catch(error => console.error(error))
             .finally(() => setLoadingSpeciesInfo(false))
         }
 
@@ -151,7 +164,7 @@ export const TeamBuilder = () => {
 
         return () => {
             setBaseStats([])
-            setSpeciesInfo([])
+            setSpeciesInfo(new SpeciesInfo([]))
         }
     }, [versionGroupId, versionGroups])
 

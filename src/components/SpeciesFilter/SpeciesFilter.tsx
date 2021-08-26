@@ -10,10 +10,10 @@ import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
 import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypesOfSpecies } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
-    PokemonSpeciesInfo,
     StatEntry,
     TypeInfo
 } from "../../models/swagger"
@@ -24,7 +24,7 @@ interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The species to filter.
      */
-    species: PokemonSpeciesInfo[]
+    species: SpeciesInfo
 
     /**
      * The generations.
@@ -166,7 +166,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
      * Renders the generation filter.
      */
     const renderGenerationFilter = () => {
-        let species = props.species
+        let species = props.species.getAllSpecies()
         let generationIds = species.map(s => s.generationId).distinct()
 
         let generations = props.generations
@@ -201,7 +201,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
             )
         }
 
-        let species = props.species
+        let species = props.species.getAllSpecies()
         let typeIds = species.flatMap(getTypesOfSpecies)
                              .distinct()
                              .sort((i, j) => i - j) // ascending order
@@ -241,7 +241,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
         let filter = props.baseStatFilter
         let baseStats = props.baseStats
 
-        let allSpeciesBaseStats = props.species.map(getBaseStatsOfSpecies)
+        let allSpeciesBaseStats = props.species.getAllSpecies().map(getBaseStatsOfSpecies)
 
         let minValues = []
         for (let i = 0; i < baseStats.length; i++) {

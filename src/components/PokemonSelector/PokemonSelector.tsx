@@ -13,6 +13,7 @@ import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { getBaseStatsOfSpecies, getTypesOfSpecies } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
@@ -29,7 +30,7 @@ import "./PokemonSelector.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 
 interface PokemonSelectorProps extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
-    speciesInfo: PokemonSpeciesInfo[]
+    speciesInfo: SpeciesInfo
 
     loadingSpeciesInfo: boolean
 
@@ -261,7 +262,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     /**
      * Returns the species that match the species filter.
      */
-    const getFilteredSpecies = () => props.speciesInfo.filter(isPresent)
+    const getFilteredSpecies = () => props.speciesInfo.getAllSpecies().filter(isPresent)
 
     /**
      * Returns whether the species passes the filter.

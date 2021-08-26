@@ -5,18 +5,18 @@ import key from "weak-key"
 import { IHasCommon } from "../CommonMembers"
 
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
-import { BaseStatFilterModel, BaseStatFilterValue } from "../SpeciesFilter/BaseStatFilterModel"
+import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
 import { getBaseStats, getDisplayName, getEffectiveTypes, getGenus, getTypes, hasDisplayNames, pokemonIsValid } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
-    PokemonSpeciesInfo,
     StatEntry,
     TypeInfo
 } from "../../models/swagger"
@@ -34,7 +34,7 @@ interface PokemonPanelProps extends IHasCommon {
      */
     defaultSpeciesId: number | undefined
 
-    speciesInfo: PokemonSpeciesInfo[]
+    speciesInfo: SpeciesInfo
 
     loadingSpeciesInfo: boolean
 
