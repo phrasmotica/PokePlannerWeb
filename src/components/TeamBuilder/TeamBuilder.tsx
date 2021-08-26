@@ -10,7 +10,7 @@ import { SpeciesInfo } from '../../models/SpeciesInfo'
 import {
     GenerationInfo,
     PokemonSpeciesInfo,
-    StatEntry,
+    StatInfo,
     TypeInfo,
     VersionGroupInfo
 } from '../../models/swagger'
@@ -34,7 +34,7 @@ export const TeamBuilder = () => {
     const [loadingVersionGroups, setLoadingVersionGroups] = useState(false)
     const [types, setTypes] = useState<TypeInfo[]>([])
     const [loadingTypes, setLoadingTypes] = useState(false)
-    const [baseStats, setBaseStats] = useState<StatEntry[]>([])
+    const [baseStats, setBaseStats] = useState<StatInfo[]>([])
     const [loadingBaseStats, setLoadingBaseStats] = useState(false)
 
     const [ignoreValidity, setIgnoreValidity] = useState(false)
@@ -102,17 +102,18 @@ export const TeamBuilder = () => {
             console.log(`Team builder: getting base stats for version group ${versionGroupId}...`)
             setLoadingBaseStats(true)
 
-            fetch(`${process.env.REACT_APP_API_URL}/stat/${versionGroupId}`)
+            let languageId = 9
+
+            fetch(`${process.env.REACT_APP_API_URL}/statInfo/${languageId}`)
                 .then(response => {
                     if (response.status === 200) {
                         return response
                     }
 
-                    // concrete types endpoint couldn't be found
-                    throw new Error(`Team builder: couldn't get base stat names for version group ${versionGroupId}!`)
+                    throw new Error(`Team builder: couldn't get base stats for version group ${versionGroupId}!`)
                 })
                 .then(response => response.json())
-                .then((baseStats: StatEntry[]) => setBaseStats(baseStats))
+                .then((baseStats: StatInfo[]) => setBaseStats(baseStats))
                 .catch(error => console.error(error))
                 .then(() => setLoadingBaseStats(false))
         }
@@ -257,7 +258,7 @@ export const TeamBuilder = () => {
                     loadingSpeciesInfo={loadingSpeciesInfo}
                     generations={generations}
                     types={types}
-                    baseStats={baseStats} />
+                    baseStats={baseStats.filter(s => !s.isBattleOnly)} />
             )
 
             if (i < TEAM_SIZE - 1) {

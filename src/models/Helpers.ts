@@ -8,6 +8,7 @@ import {
     PokemonFormEntry,
     PokemonSpeciesEntry,
     PokemonSpeciesInfo,
+    StatInfo,
     TypeEntryListWithId,
     TypeInfo,
     VersionGroupInfo,
@@ -39,6 +40,15 @@ export const getPokedexNumberOfSpecies = (
     pokedexId: number,
 ) => {
     return species.pokedexes.find(p => p.pokedexId === pokedexId)?.pokedexNumber
+}
+
+/**
+ * Returns the given stat's display name.
+ */
+export const getDisplayNameOfStat = (
+    stat: StatInfo,
+) => {
+    return stat.statNamesInfo[0]?.name ?? stat.name!
 }
 
 /**

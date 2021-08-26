@@ -17,7 +17,7 @@ import {
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
-    StatEntry,
+    StatInfo,
     TypeInfo,
     VersionGroupInfo
 } from "../../models/swagger"
@@ -54,7 +54,7 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The base stats.
      */
-    baseStats: StatEntry[]
+    baseStats: StatInfo[]
 
     species: PokemonSpeciesEntry | undefined
 

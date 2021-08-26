@@ -967,6 +967,55 @@
         }
       }
     },
+    "/StatInfo/{languageId}": {
+      "get": {
+        "tags": [
+          "StatInfo"
+        ],
+        "parameters": [
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StatInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Type": {
       "get": {
         "tags": [
@@ -2926,6 +2975,42 @@
           },
           "isBattleOnly": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatInfo": {
+        "required": [
+          "isBattleOnly",
+          "statId",
+          "statNamesInfo"
+        ],
+        "type": "object",
+        "properties": {
+          "statId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "isBattleOnly": {
+            "type": "boolean"
+          },
+          "statNamesInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatNamesInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "StatNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false

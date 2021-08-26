@@ -9,12 +9,12 @@ import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
 import { HeldItemList } from "../HeldItemList/HeldItemList"
 import { StatGraph } from "../StatGraph/StatGraph"
 
-import { getBaseStats, getDisplayName } from "../../models/Helpers"
+import { getBaseStats, getDisplayName, getDisplayNameOfStat } from "../../models/Helpers"
 
 import {
     PokemonEntry,
     PokemonSpeciesEntry,
-    StatEntry,
+    StatInfo,
     TypeEntry,
     TypeInfo,
     VersionGroupInfo,
@@ -55,7 +55,7 @@ interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The base stats.
      */
-    baseStats: StatEntry[]
+    baseStats: StatInfo[]
 
     /**
      * Whether to show info about the Pokemon.
@@ -99,7 +99,7 @@ export const InfoPanel = (props: InfoPanelProps) => {
         return (
             <StatGraph
                 index={props.index}
-                statNames={props.baseStats.map(s => getDisplayName(s, "en") ?? s.name)}
+                statNames={props.baseStats.map(getDisplayNameOfStat)}
                 statValues={baseStats}
                 shouldShowStats={props.shouldShowPokemon} />
         )

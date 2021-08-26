@@ -9,12 +9,12 @@ import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
 import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
 
-import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfType, getShortDisplayName, getTypesOfSpecies } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfStat, getDisplayNameOfType, getShortDisplayName, getTypesOfSpecies } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
-    StatEntry,
+    StatInfo,
     TypeInfo
 } from "../../models/swagger"
 
@@ -54,7 +54,7 @@ interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
     /**
      * The base stats.
      */
-    baseStats: StatEntry[]
+    baseStats: StatInfo[]
 
     /**
      * Handler for setting the generation filter in the parent component.
@@ -263,7 +263,7 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
             <BaseStatFilter
                 index={props.index}
                 baseStatFilter={filter}
-                baseStatLabels={baseStats.map(s => getDisplayName(s, "en") ?? s.name)}
+                baseStatLabels={baseStats.map(getDisplayNameOfStat)}
                 minValues={minValues}
                 maxValues={maxValues}
                 setBaseStatFilter={setFilter} />

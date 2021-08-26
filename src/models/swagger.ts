@@ -624,6 +624,18 @@ export interface StatEntry {
   isBattleOnly: boolean;
 }
 
+export interface StatInfo {
+  /** @format int32 */
+  statId: number;
+  name?: string;
+  isBattleOnly: boolean;
+  statNamesInfo: StatNamesInfo[];
+}
+
+export interface StatNamesInfo {
+  name?: string;
+}
+
 export interface TypeEntry {
   id: string;
   name: string;
