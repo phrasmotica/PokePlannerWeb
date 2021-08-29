@@ -96,6 +96,9 @@ export const FormSelector = (props: FormSelectorProps) => {
      */
     const renderFormSelect = () => {
         let options = createOptions()
+        if (options.length <= 1) {
+            options = []
+        }
 
         let selectedOption = null
         if (props.form !== undefined) {
@@ -107,6 +110,8 @@ export const FormSelector = (props: FormSelectorProps) => {
         // attach red border if necessary
         let customStyles = createSelectStyles()
 
+        let selectDisabled = isDisabled() || options.length <= 0
+
         let selectId = "formSelect" + props.index
         let searchBox = (
             <Select
@@ -114,11 +119,11 @@ export const FormSelector = (props: FormSelectorProps) => {
                 blurInputOnSelect
                 width="230px"
                 isLoading={loadingForms}
-                isDisabled={isDisabled()}
+                isDisabled={selectDisabled}
                 className="margin-right-small"
                 id={selectId}
                 styles={customStyles}
-                placeholder={isDisabled() ? "-" : "Select a form!"}
+                placeholder={selectDisabled ? "-" : "Select a form!"}
                 onChange={onChange}
                 value={selectedOption}
                 options={options} />
@@ -144,12 +149,20 @@ export const FormSelector = (props: FormSelectorProps) => {
             return []
         }
 
+        let versionGroup = props.versionGroup
+        if (versionGroup === undefined) {
+            return []
+        }
+
         if (isDisabled()) {
             return []
         }
 
-        let forms = props.forms
-        return forms.map(form => {
+        // form is only available if it was introduced
+        // in this version group at the latest
+        let availableForms = props.forms.filter(f => f.versionGroup.versionGroupId <= versionGroup!.versionGroupId)
+
+        return availableForms.map(form => {
             // default varieties derive name from their species
             let label = getDisplayName(species!, "en") ?? species!.name
 

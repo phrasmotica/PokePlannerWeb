@@ -90,6 +90,9 @@ export const VarietySelector = (props: VarietySelectorProps) => {
      */
     const renderVarietySelect = () => {
         let options = createOptions()
+        if (options.length <= 1) {
+            options = []
+        }
 
         let selectedOption = null
         if (props.variety !== undefined) {
@@ -101,6 +104,8 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         // attach red border if necessary
         let customStyles = createSelectStyles()
 
+        let selectDisabled = isDisabled() || options.length <= 0
+
         let selectId = "varietySelect" + props.index
         let searchBox = (
             <Select
@@ -108,11 +113,11 @@ export const VarietySelector = (props: VarietySelectorProps) => {
                 blurInputOnSelect
                 width="230px"
                 isLoading={loadingVarieties}
-                isDisabled={isDisabled()}
+                isDisabled={selectDisabled}
                 className="margin-right-small"
                 id={selectId}
                 styles={customStyles}
-                placeholder={isDisabled() ? "-" : "Select a variety!"}
+                placeholder={selectDisabled ? "-" : "Select a variety!"}
                 onChange={(option: any) => onChange(option)}
                 value={selectedOption}
                 options={options} />
@@ -138,11 +143,22 @@ export const VarietySelector = (props: VarietySelectorProps) => {
             return []
         }
 
+        let versionGroup = props.versionGroup
+        if (versionGroup === undefined) {
+            return []
+        }
+
         if (isDisabled()) {
             return []
         }
 
-        return props.varieties.map(variety => {
+        // variety is only available if it has at least one form
+        // that was introduced in this version group at the latest
+        let availableVarieties = props.varieties.filter(v => {
+            return v.forms.some(f => f.versionGroup.versionGroupId <= versionGroup!.versionGroupId)
+        })
+
+        return availableVarieties.map(variety => {
             let label = getDisplayName(species!, "en") ?? species!.name
 
             if (hasDisplayNames(variety)) {
