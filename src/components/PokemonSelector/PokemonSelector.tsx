@@ -57,11 +57,6 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
     defaultSpeciesId: number | undefined
 
     /**
-     * Whether Pokemon validity in the selected version group should be ignored.
-     */
-    ignoreValidity: boolean
-
-    /**
      * List of generations.
      */
     generations: GenerationInfo[]
@@ -100,11 +95,6 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
      * Handler for toggling the species filter in the parent component.
      */
     toggleSpeciesFilter: () => void
-
-    /**
-     * Optional handler for toggling the ignore validity setting.
-     */
-    toggleIgnoreValidity: () => void | null
 }
 
 type SpeciesRatingsDict = {
@@ -116,7 +106,6 @@ type SpeciesRatingsDict = {
  * Component for selecting a Pokemon.
  */
 export const PokemonSelector = (props: PokemonSelectorProps) => {
-    const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
     const [speciesRatings, setSpeciesRatings] = useState<SpeciesRatingsDict>([])
     const [favouriteSpecies, setFavouriteSpecies] = useState<number[]>([])
     const [loadingRandomSpecies, setLoadingRandomSpecies] = useState(false)
@@ -125,8 +114,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Renders the species select box.
      */
     const renderSpeciesSelect = () => {
-        let hasNoVariants = !hasSecondaryForms() && !hasSecondaryVarieties()
-
         return (
             <SpeciesSelector
                 index={props.index}
@@ -139,8 +126,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 typeFilter={props.typeFilter}
                 baseStatFilter={props.baseStatFilter}
                 setSpecies={props.setSpecies}
-                toggleFilter={props.toggleSpeciesFilter}
-                shouldMarkInvalid={!props.ignoreValidity && hasNoVariants} />
+                toggleFilter={props.toggleSpeciesFilter} />
         )
     }
 
@@ -156,8 +142,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             setVarieties={props.setVarieties}
             species={props.species}
             variety={props.variety}
-            setVariety={props.setVariety}
-            shouldMarkInvalid={!props.ignoreValidity && props.varieties.length >= 2} />
+            setVariety={props.setVariety} />
     )
 
     /**
@@ -173,8 +158,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             species={props.species}
             variety={props.variety}
             form={props.form}
-            setForm={props.setForm}
-            shouldMarkInvalid={!props.ignoreValidity && props.forms.length >= 2} />
+            setForm={props.setForm} />
     )
 
     /**
@@ -290,11 +274,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Set this selector to a random species.
      */
     const setRandomSpecies = () => {
-        // ignore validity since we can't guarantee a valid Pokemon
-        if (!props.ignoreValidity) {
-            props.toggleIgnoreValidity()
-        }
-
         let speciesList = getFilteredSpecies()
 
         let max = speciesList.length

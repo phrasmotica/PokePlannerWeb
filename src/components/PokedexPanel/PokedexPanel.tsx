@@ -25,11 +25,6 @@ import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
-     * Whether Pokemon validity in the selected version group should be ignored.
-     */
-    ignoreValidity: boolean
-
-    /**
      * The version group.
      */
     versionGroup: VersionGroupInfo | undefined
@@ -52,11 +47,6 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
      * The base stats.
      */
     baseStats: StatInfo[]
-
-    /**
-     * Optional handler for toggling the ignore validity setting.
-     */
-    toggleIgnoreValidity: () => void | null
 }
 
 /**
@@ -102,7 +92,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
 
     const shouldShowPokemon = hasSpecies
             && form !== undefined
-            && (props.ignoreValidity || selectedPokemonIsValid)
+            && selectedPokemonIsValid
 
     return (
         <div className="flex pokedex-panel debug-border">
@@ -117,7 +107,6 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     types={props.types}
                     baseStats={props.baseStats}
                     hideTooltips={props.hideTooltips}
-                    ignoreValidity={props.ignoreValidity}
                     species={species}
                     setSpecies={setSpecies}
                     variety={variety}
@@ -128,8 +117,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     setForm={setForm}
                     forms={forms}
                     setForms={setForms}
-                    toggleShowShinySprite={() => setShowShinySprite(!showShinySprite)}
-                    toggleIgnoreValidity={props.toggleIgnoreValidity} />
+                    toggleShowShinySprite={() => setShowShinySprite(!showShinySprite)} />
 
                 <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>
                     <InfoPanel

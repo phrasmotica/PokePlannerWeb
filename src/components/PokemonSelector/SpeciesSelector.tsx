@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import Select from "react-select"
-import { Button, Tooltip } from "reactstrap"
+import { Button } from "reactstrap"
 import { FaFilter } from "react-icons/fa"
 
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
@@ -42,11 +42,6 @@ interface SpeciesSelectorProps {
     species: PokemonSpeciesEntry | undefined
 
     /**
-     * Whether the species should be marked as invalid.
-     */
-    shouldMarkInvalid: boolean
-
-    /**
      * The generation filter.
      */
     generationFilter: GenerationFilterModel
@@ -81,7 +76,6 @@ interface SpeciesSelectorProps {
  * Component for selecting a Pokemon species.
  */
 export const SpeciesSelector = (props: SpeciesSelectorProps) => {
-    const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
     const [filterOpen, setFilterOpen] = useState(false)
 
     /**
@@ -118,15 +112,11 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
                 options={options} />
         )
 
-        // attach validity tooltip if necessary
-        let validityTooltip = renderValidityTooltip(selectId)
-
         let filterButton = renderFilterButton()
 
         return (
             <div className="flex margin-bottom-small">
                 {searchBox}
-                {validityTooltip}
                 {filterButton}
             </div>
         )
@@ -172,27 +162,22 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     /**
      * Returns a custom style for the select box.
      */
-    const createSelectStyles = () => {
-        let shouldMarkInvalid = props.shouldMarkInvalid
+    const createSelectStyles = () => ({
+        container: (provided: any, state: any) => ({
+            ...provided,
+            minWidth: state.selectProps.width
+        }),
 
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            }),
+        control: (provided: any, state: any) => ({
+            ...provided,
+            minWidth: state.selectProps.width,
+        }),
 
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                border: shouldMarkInvalid ? "1px solid #dc3545" : ""
-            }),
-
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
-        }
-    }
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            minWidth: state.selectProps.width
+        })
+    })
 
     /**
      * Returns whether the select box should be disabled.
@@ -240,27 +225,6 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         let passesBaseStatFilter = props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
-    }
-
-    /**
-     * Renders a tooltip indicating the validity of the species.
-     */
-    const renderValidityTooltip = (targetId: string) => {
-        let shouldRender = !props.hideTooltips && props.shouldMarkInvalid
-
-        if (shouldRender) {
-            return (
-                <Tooltip
-                    isOpen={validityTooltipOpen}
-                    toggle={() => setValidityTooltipOpen(!validityTooltipOpen)}
-                    placement="bottom"
-                    target={targetId}>
-                    Cannot be obtained in this game version!
-                </Tooltip>
-            )
-        }
-
-        return null
     }
 
     /**

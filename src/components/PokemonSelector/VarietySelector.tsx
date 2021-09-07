@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Tooltip } from "reactstrap"
 import Select from "react-select"
 
 import { getDisplayName, hasDisplayNames, isValid } from "../../models/Helpers"
@@ -41,11 +40,6 @@ interface VarietySelectorProps {
     setVariety: (variety: PokemonEntry) => void
 
     /**
-     * Whether the variety should be marked as invalid.
-     */
-    shouldMarkInvalid: boolean
-
-    /**
      * Whether tooltips should be hidden.
      */
     hideTooltips: boolean
@@ -56,7 +50,6 @@ interface VarietySelectorProps {
  */
 export const VarietySelector = (props: VarietySelectorProps) => {
     const [loadingVarieties, setLoadingVarieties] = useState(false)
-    const [validityTooltipOpen, setValidityTooltipOpen] = useState(false)
 
     let index = props.index
     let versionGroupId = props.versionGroup?.versionGroupId
@@ -123,13 +116,9 @@ export const VarietySelector = (props: VarietySelectorProps) => {
                 options={options} />
         )
 
-        // attach validity tooltip if necessary
-        let validityTooltip = renderValidityTooltip(selectId)
-
         return (
             <div className="flex margin-bottom-small">
                 {searchBox}
-                {validityTooltip}
             </div>
         )
     }
@@ -175,27 +164,22 @@ export const VarietySelector = (props: VarietySelectorProps) => {
     /**
      * Returns a custom style for the select box.
      */
-    const createSelectStyles = () => {
-        let shouldMarkInvalid = props.shouldMarkInvalid
+    const createSelectStyles = () => ({
+        container: (provided: any, state: any) => ({
+            ...provided,
+            minWidth: state.selectProps.width
+        }),
 
-        return {
-            container: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            }),
+        control: (provided: any, state: any) => ({
+            ...provided,
+            minWidth: state.selectProps.width,
+        }),
 
-            control: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width,
-                border: shouldMarkInvalid && !varietyIsValid() ? "1px solid #dc3545" : ""
-            }),
-
-            menu: (provided: any, state: any) => ({
-                ...provided,
-                minWidth: state.selectProps.width
-            })
-        }
-    }
+        menu: (provided: any, state: any) => ({
+            ...provided,
+            minWidth: state.selectProps.width
+        })
+    })
 
     /**
      * Returns whether the select box should be disabled.
@@ -227,29 +211,6 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         }
 
         return isValid(props.species, versionGroup)
-    }
-
-    /**
-     * Renders a tooltip indicating the validity of the variety.
-     */
-    const renderValidityTooltip = (targetId: string) => {
-        let shouldRender = !props.hideTooltips
-                        && props.shouldMarkInvalid
-                        && !varietyIsValid()
-
-        if (shouldRender) {
-            return (
-                <Tooltip
-                    isOpen={validityTooltipOpen}
-                    toggle={() => setValidityTooltipOpen(!validityTooltipOpen)}
-                    placement="bottom"
-                    target={targetId}>
-                    Cannot be obtained in this game version!
-                </Tooltip>
-            )
-        }
-
-        return null
     }
 
     /**

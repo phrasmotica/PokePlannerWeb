@@ -26,11 +26,6 @@ import "./PokemonPanel.scss"
 
 interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
     /**
-     * Whether Pokemon validity in the selected version group should be ignored.
-     */
-    ignoreValidity: boolean
-
-    /**
      * The ID of the species to be selected by default.
      */
     defaultSpeciesId: number | undefined
@@ -89,11 +84,6 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
      * Handler for toggling the shiny sprite.
      */
     toggleShowShinySprite: () => void
-
-    /**
-     * Optional handler for toggling the ignore validity setting.
-     */
-    toggleIgnoreValidity: () => void | null
 }
 
 /**
@@ -239,7 +229,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
      */
     const shouldShowPokemon = () => hasSpecies
             && props.form !== undefined
-            && (props.ignoreValidity || selectedPokemonIsValid())
+            && selectedPokemonIsValid()
 
     const setGenerationFilterAndUpdate = (filter: GenerationFilterModel) => {
         setGenerationFilter(filter)
@@ -336,7 +326,6 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     speciesInfo={props.speciesInfo}
                     loadingSpeciesInfo={props.loadingSpeciesInfo}
                     defaultSpeciesId={props.defaultSpeciesId}
-                    ignoreValidity={props.ignoreValidity}
                     generations={props.generations}
                     hideTooltips={props.hideTooltips}
                     species={props.species}
@@ -352,7 +341,6 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     generationFilter={generationFilter}
                     typeFilter={typeFilter}
                     baseStatFilter={baseStatFilter}
-                    toggleIgnoreValidity={props.toggleIgnoreValidity}
                     toggleSpeciesFilter={() => setShowSpeciesFilter(!showSpeciesFilter)} />
             </div>
 

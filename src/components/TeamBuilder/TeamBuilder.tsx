@@ -37,7 +37,6 @@ export const TeamBuilder = () => {
     const [baseStats, setBaseStats] = useState<StatInfo[]>([])
     const [loadingBaseStats, setLoadingBaseStats] = useState(false)
 
-    const [ignoreValidity, setIgnoreValidity] = useState(false)
     const [hideTooltips, setHideTooltips] = useState(false)
 
     // fetch generations, types and version groups on mount
@@ -221,17 +220,6 @@ export const TeamBuilder = () => {
             <FormGroup check>
                 <Input
                     type="checkbox"
-                    id="ignoreValidityCheckbox"
-                    checked={ignoreValidity}
-                    onChange={() => toggleIgnoreValidity()} />
-                <Label for="ignoreValidityCheckbox" check>
-                    Ignore Pokemon validity in game version
-                </Label>
-            </FormGroup>
-
-            <FormGroup check>
-                <Input
-                    type="checkbox"
                     id="hideTooltipsCheckbox"
                     checked={hideTooltips}
                     onChange={() => toggleHideTooltips()} />
@@ -251,8 +239,6 @@ export const TeamBuilder = () => {
                     key={i}
                     index={i}
                     versionGroup={versionGroup}
-                    ignoreValidity={ignoreValidity}
-                    toggleIgnoreValidity={toggleIgnoreValidity}
                     hideTooltips={hideTooltips}
                     speciesInfo={speciesInfo}
                     loadingSpeciesInfo={loadingSpeciesInfo}
@@ -271,7 +257,6 @@ export const TeamBuilder = () => {
 
     const versionGroup = versionGroups.find(g => g.versionGroupId === versionGroupId)
 
-    const toggleIgnoreValidity = () => setIgnoreValidity(!ignoreValidity)
     const toggleHideTooltips = () => setHideTooltips(!hideTooltips)
 
     const pageIsLoading = loadingBaseStats
