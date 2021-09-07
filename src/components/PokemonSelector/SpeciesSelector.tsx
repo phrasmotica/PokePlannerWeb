@@ -6,7 +6,7 @@ import { FaFilter } from "react-icons/fa"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getPokedexNumberOfSpecies, getTypesOfSpecies, isValid } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getPokedexNumberOfSpecies, getTypesOfSpecies } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
@@ -184,7 +184,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
             control: (provided: any, state: any) => ({
                 ...provided,
                 minWidth: state.selectProps.width,
-                border: shouldMarkInvalid && !speciesIsValid() ? "1px solid #dc3545" : ""
+                border: shouldMarkInvalid ? "1px solid #dc3545" : ""
             }),
 
             menu: (provided: any, state: any) => ({
@@ -243,30 +243,10 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     }
 
     /**
-     * Returns whether the species is valid in the selected version group.
-     */
-    const speciesIsValid = () => {
-        if (props.species === undefined) {
-            return true
-        }
-
-        if (props.versionGroup === undefined) {
-            throw new Error(
-                `Species selector ${props.index}: version group is undefined!`
-            )
-        }
-
-        let speciesInfo = props.speciesInfo.getAllSpecies().filter(s => s.pokemonSpeciesId === props.species!.pokemonSpeciesId)[0]
-        return isValid(speciesInfo, props.versionGroup)
-    }
-
-    /**
      * Renders a tooltip indicating the validity of the species.
      */
     const renderValidityTooltip = (targetId: string) => {
-        let shouldRender = !props.hideTooltips
-                        && props.shouldMarkInvalid
-                        && !speciesIsValid()
+        let shouldRender = !props.hideTooltips && props.shouldMarkInvalid
 
         if (shouldRender) {
             return (

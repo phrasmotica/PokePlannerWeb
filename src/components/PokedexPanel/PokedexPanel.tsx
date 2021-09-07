@@ -7,7 +7,6 @@ import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { getEffectiveTypes, pokemonIsValid } from "../../models/Helpers"
-import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
@@ -22,6 +21,7 @@ import {
 import "./PokedexPanel.scss"
 import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
     /**
@@ -63,6 +63,8 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
  * Renders a Pokemon and information about it.
  */
 export const PokedexPanel = (props: PokedexPanelProps) => {
+    // TODO: replace with the ID of the selected species, so we can
+    // find it in props.speciesInfo and use its data exclusively
     const [species, setSpecies] = useState<PokemonSpeciesEntry>()
 
     const [variety, setVariety] = useState<PokemonEntry>()
@@ -136,6 +138,7 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                         hideTooltips={props.hideTooltips}
                         versions={props.versionGroup?.versionInfo ?? []}
                         species={species}
+                        speciesInfo={props.speciesInfo}
                         pokemon={variety}
                         effectiveTypes={effectiveTypes}
                         types={props.types}

@@ -139,7 +139,7 @@ export const TeamBuilder = () => {
                 pokedexIds.map(
                     id => {
                         console.log(`Team builder: getting species info for pokedex ${id}...`)
-                        fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/pokedex/${id}/language/${languageId}`)
+                        fetch(`${process.env.REACT_APP_API_URL}/speciesInfo/pokedex/${id}/versionGroup/${versionGroupId}/language/${languageId}`)
                             .then(response => response.json())
                             .then((newSpeciesInfo: PokemonSpeciesInfo[]) => {
                                 console.log(`Team builder: got ${newSpeciesInfo.length} species info for pokedex ${id}`)

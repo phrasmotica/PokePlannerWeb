@@ -80,7 +80,7 @@ export const ActionPanel = (props: ActionPanelProps) => {
         return (
             <MoveList
                 index={props.index}
-                versionGroupId={props.versionGroup?.versionGroupId}
+                versionGroup={props.versionGroup}
                 pokemonId={props.variety?.pokemonId}
                 typeIds={typeIds}
                 showMoves={props.shouldShowPokemon}

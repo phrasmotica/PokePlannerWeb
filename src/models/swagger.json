@@ -802,14 +802,14 @@
         }
       }
     },
-    "/SpeciesInfo/generation/{generationId}/language/{languageId}": {
+    "/SpeciesInfo/pokedex/{pokedexId}/versionGroup/{versionGroupId}/language/{languageId}": {
       "get": {
         "tags": [
           "SpeciesInfo"
         ],
         "parameters": [
           {
-            "name": "generationId",
+            "name": "pokedexId",
             "in": "path",
             "required": true,
             "schema": {
@@ -818,56 +818,7 @@
             }
           },
           {
-            "name": "languageId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
-                  }
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PokemonSpeciesInfo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SpeciesInfo/pokedex/{pokedexId}/language/{languageId}": {
-      "get": {
-        "tags": [
-          "SpeciesInfo"
-        ],
-        "parameters": [
-          {
-            "name": "pokedexId",
+            "name": "versionGroupId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1229,6 +1180,72 @@
             "items": {
               "$ref": "#/components/schemas/LocalStringListWithId"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AbilityInfo": {
+        "required": [
+          "flavorTexts",
+          "generationId",
+          "id",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "generationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AbilityNamesInfo"
+            }
+          },
+          "flavorTexts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlavorTextInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AbilityNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregateContainer": {
+        "type": "object",
+        "properties": {
+          "aggregate": {
+            "$ref": "#/components/schemas/AggregateValues"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AggregateValues": {
+        "required": [
+          "count"
+        ],
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1858,6 +1875,71 @@
           },
           "name": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FlavorTextInfo": {
+        "type": "object",
+        "properties": {
+          "flavorText": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormInfo": {
+        "required": [
+          "id",
+          "isMega",
+          "names",
+          "types"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "formName": {
+            "type": "string"
+          },
+          "isMega": {
+            "type": "boolean"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormNamesInfo"
+            }
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormTypeInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FormTypeInfo": {
+        "required": [
+          "typeId"
+        ],
+        "type": "object",
+        "properties": {
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2855,7 +2937,6 @@
           "order",
           "pokedexes",
           "pokemonSpeciesId",
-          "validity",
           "varieties"
         ],
         "type": "object",
@@ -2891,13 +2972,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VarietyInfo"
-            }
-          },
-          "validity": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int32"
             }
           }
         },
@@ -3100,6 +3174,9 @@
             "items": {
               "$ref": "#/components/schemas/TypeNamesInfo"
             }
+          },
+          "pokemonTypesAggregate": {
+            "$ref": "#/components/schemas/AggregateContainer"
           }
         },
         "additionalProperties": false
@@ -3125,28 +3202,95 @@
         },
         "additionalProperties": false
       },
+      "VarietyAbilityInfo": {
+        "required": [
+          "isHidden",
+          "slot"
+        ],
+        "type": "object",
+        "properties": {
+          "slot": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isHidden": {
+            "type": "boolean"
+          },
+          "ability": {
+            "$ref": "#/components/schemas/AbilityInfo"
+          }
+        },
+        "additionalProperties": false
+      },
       "VarietyInfo": {
         "required": [
-          "baseStats",
+          "abilities",
+          "forms",
+          "id",
           "isDefault",
+          "pastTypes",
+          "stats",
           "types"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
           "isDefault": {
             "type": "boolean"
+          },
+          "abilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VarietyAbilityInfo"
+            }
+          },
+          "forms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormInfo"
+            }
+          },
+          "pastTypes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VarietyPastTypeInfo"
+            }
+          },
+          "stats": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BaseStatInfo"
+            }
           },
           "types": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/VarietyTypeInfo"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "VarietyPastTypeInfo": {
+        "required": [
+          "generationId",
+          "typeId"
+        ],
+        "type": "object",
+        "properties": {
+          "generationId": {
+            "type": "integer",
+            "format": "int32"
           },
-          "baseStats": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BaseStatInfo"
-            }
+          "typeId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

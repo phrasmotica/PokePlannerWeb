@@ -1,4 +1,5 @@
 import {
+    AbilityInfo,
     ChainLinkEntry,
     EvolutionChainEntry,
     GenerationInfo,
@@ -24,6 +25,13 @@ export const getDisplayName = (
 ) => {
     let localName = resource.displayNames.find(n => n.language === locale)
     return localName?.value
+}
+
+/**
+ * Returns the given ability's display name.
+ */
+export const getDisplayNameOfAbility = (ability: AbilityInfo) => {
+    return ability.names[0]?.name ?? ability.name!
 }
 
 /**
@@ -115,6 +123,13 @@ export const getFlavourText = (
 
     let localFlavourText = matchingEntry.data.find(n => n.language === locale)
     return localFlavourText?.value
+}
+
+/**
+ * Returns the given ability's flavour text.
+ */
+export const getFlavourTextOfAbility = (ability: AbilityInfo) => {
+    return ability.flavorTexts[0]?.flavorText
 }
 
 /**
@@ -247,8 +262,8 @@ export const getBaseStatsOfSpecies = (
         return []
     }
 
-    let baseStats = varieties[0].baseStats
-    return baseStats.map(bs => bs.baseValue)
+    let stats = varieties[0].stats
+    return stats.map(s => s.baseValue)
 }
 
 /**
@@ -319,6 +334,8 @@ export const pokemonIsValid = (
 
     return pokemonIsValid
 }
+
+export const typeIsConcrete = (type: TypeInfo) => type.pokemonTypesAggregate!.aggregate!.count > 0
 
 /**
  * Returns the number of links in this chain.

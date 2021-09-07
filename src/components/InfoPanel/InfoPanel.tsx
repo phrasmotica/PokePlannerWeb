@@ -9,7 +9,7 @@ import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
 import { HeldItemList } from "../HeldItemList/HeldItemList"
 import { StatGraph } from "../StatGraph/StatGraph"
 
-import { getBaseStats, getDisplayName, getDisplayNameOfStat } from "../../models/Helpers"
+import { getBaseStats, getDisplayNameOfStat, typeIsConcrete } from "../../models/Helpers"
 
 import {
     PokemonEntry,
@@ -17,9 +17,11 @@ import {
     StatInfo,
     TypeEntry,
     TypeInfo,
+    VarietyAbilityInfo,
     VersionGroupInfo,
     VersionInfo
 } from "../../models/swagger"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
@@ -36,6 +38,8 @@ interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
      * The species.
      */
     species: PokemonSpeciesEntry | undefined
+
+    speciesInfo: SpeciesInfo
 
     /**
      * The Pokemon.
@@ -77,11 +81,18 @@ export const InfoPanel = (props: InfoPanelProps) => {
             showFlavourText={props.shouldShowPokemon} />
     )
 
+    let abilities: VarietyAbilityInfo[] = []
+    if (props.species !== undefined) {
+        let selectedSpeciesInfo = props.speciesInfo.getById(props.species.pokemonSpeciesId)
+        let varietyInfo = selectedSpeciesInfo!.varieties.find(v => v.id === props.pokemon?.pokemonId)
+        abilities = varietyInfo?.abilities ?? []
+    }
+
     const abilityList = (
         <AbilityList
             index={props.index}
-            versionGroupId={props.versionGroup?.versionGroupId}
-            pokemonId={props.pokemon?.pokemonId}
+            abilities={abilities}
+            loading={false}
             showAbilities={props.shouldShowPokemon} />
     )
 
@@ -109,7 +120,7 @@ export const InfoPanel = (props: InfoPanelProps) => {
         <EfficacyList
             index={props.index}
             typeIds={props.effectiveTypes.map(type => type.typeId)}
-            types={props.types}
+            types={props.types.filter(typeIsConcrete)}
             versionGroup={props.versionGroup}
             showMultipliers={props.shouldShowPokemon}
             hideTooltips={props.hideTooltips} />

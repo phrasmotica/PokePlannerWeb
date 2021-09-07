@@ -9,16 +9,6 @@ export interface IHasIndex {
 }
 
 /**
- * Interface for a version group index member.
- */
-export interface IHasVersionGroup {
-    /**
-     * The index of the version group.
-     */
-    versionGroupId: number | undefined
-}
-
-/**
  * Interface for a hide tooltips flag member.
  */
 export interface IHasHideTooltips {
@@ -41,7 +31,7 @@ export interface IHasSearch {
 /**
  * Interface for members shared by numerous components.
  */
-export interface IHasCommon extends IHasIndex, IHasVersionGroup, IHasHideTooltips {
+export interface IHasCommon extends IHasIndex, IHasHideTooltips {
 }
 
 export type IsOpenDict = {

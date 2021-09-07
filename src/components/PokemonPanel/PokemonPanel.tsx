@@ -300,7 +300,6 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const speciesFilter = (
         <SpeciesFilter
             index={props.index}
-            versionGroupId={props.versionGroup?.versionGroupId}
             species={props.speciesInfo}
             generations={props.generations}
             generationFilter={generationFilter}

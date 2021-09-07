@@ -7,9 +7,9 @@ import { GenerationFilter } from "./GenerationFilter"
 import { TypeFilter } from "./TypeFilter"
 import { TypeFilterModel, GenerationFilterModel } from "./IdFilterModel"
 
-import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
+import { IHasIndex } from "../CommonMembers"
 
-import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfStat, getDisplayNameOfType, getShortDisplayName, getTypesOfSpecies } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayNameOfStat, getDisplayNameOfType, getShortDisplayName, getTypesOfSpecies } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
@@ -20,7 +20,7 @@ import {
 
 import "./SpeciesFilter.scss"
 
-interface SpeciesFilterProps extends IHasIndex, IHasVersionGroup {
+interface SpeciesFilterProps extends IHasIndex {
     /**
      * The species to filter.
      */
@@ -194,13 +194,6 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
      * Renders the type filter.
      */
     const renderTypeFilter = () => {
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(
-                `Species filter ${props.index}: version group ID is undefined!`
-            )
-        }
-
         let species = props.species.getAllSpecies()
         let typeIds = species.flatMap(getTypesOfSpecies)
                              .distinct()
@@ -231,13 +224,6 @@ export const SpeciesFilter = (props: SpeciesFilterProps) => {
      * Renders the base stat filter.
      */
     const renderBaseStatFilter = () => {
-        let versionGroupId = props.versionGroupId
-        if (versionGroupId === undefined) {
-            throw new Error(
-                `Species filter ${props.index}: version group ID is undefined!`
-            )
-        }
-
         let filter = props.baseStatFilter
         let baseStats = props.baseStats
 

@@ -22,6 +22,30 @@ export interface AbilityEntry {
   flavourTextEntries: LocalStringListWithId[];
 }
 
+export interface AbilityInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+
+  /** @format int32 */
+  generationId: number;
+  names: AbilityNamesInfo[];
+  flavorTexts: FlavorTextInfo[];
+}
+
+export interface AbilityNamesInfo {
+  name?: string;
+}
+
+export interface AggregateContainer {
+  aggregate?: AggregateValues;
+}
+
+export interface AggregateValues {
+  /** @format int32 */
+  count: number;
+}
+
 export interface BaseStatInfo {
   /** @format int32 */
   statId: number;
@@ -253,6 +277,28 @@ export interface EvolutionTriggerEntry {
 export interface EvolutionTriggerNamedApiResource {
   url?: string;
   name?: string;
+}
+
+export interface FlavorTextInfo {
+  flavorText?: string;
+}
+
+export interface FormInfo {
+  /** @format int32 */
+  id: number;
+  formName?: string;
+  isMega: boolean;
+  names: FormNamesInfo[];
+  types: FormTypeInfo[];
+}
+
+export interface FormNamesInfo {
+  name?: string;
+}
+
+export interface FormTypeInfo {
+  /** @format int32 */
+  typeId: number;
 }
 
 export interface GenerationEntry {
@@ -591,7 +637,6 @@ export interface PokemonSpeciesInfo {
   names: PokemonSpeciesNamesInfo[];
   pokedexes: PokemonSpeciesPokedexInfo[];
   varieties: VarietyInfo[];
-  validity: number[];
 }
 
 export interface PokemonSpeciesNamedApiResource {
@@ -664,6 +709,7 @@ export interface TypeInfo {
   /** @format int32 */
   generationId: number;
   typeNamesInfo: TypeNamesInfo[];
+  pokemonTypesAggregate?: AggregateContainer;
 }
 
 export interface TypeNamedApiResource {
@@ -675,10 +721,31 @@ export interface TypeNamesInfo {
   name?: string;
 }
 
+export interface VarietyAbilityInfo {
+  /** @format int32 */
+  slot: number;
+  isHidden: boolean;
+  ability?: AbilityInfo;
+}
+
 export interface VarietyInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
   isDefault: boolean;
+  abilities: VarietyAbilityInfo[];
+  forms: FormInfo[];
+  pastTypes: VarietyPastTypeInfo[];
+  stats: BaseStatInfo[];
   types: VarietyTypeInfo[];
-  baseStats: BaseStatInfo[];
+}
+
+export interface VarietyPastTypeInfo {
+  /** @format int32 */
+  generationId: number;
+
+  /** @format int32 */
+  typeId: number;
 }
 
 export interface VarietyTypeInfo {

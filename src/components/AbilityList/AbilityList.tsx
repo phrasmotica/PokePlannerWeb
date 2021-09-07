@@ -1,18 +1,20 @@
-﻿import React, { useEffect, useState } from "react"
+﻿import React from "react"
 import key from "weak-key"
 
-import { IHasIndex, IHasVersionGroup } from "../CommonMembers"
+import { IHasIndex } from "../CommonMembers"
 
-import { getDisplayName, getFlavourText } from "../../models/Helpers"
-import { PokemonAbilityContext } from "../../models/swagger"
+import { getDisplayNameOfAbility, getFlavourTextOfAbility } from "../../models/Helpers"
+import { VarietyAbilityInfo } from "../../models/swagger"
 
 import "./AbilityList.scss"
 
-interface AbilityListProps extends IHasIndex, IHasVersionGroup {
+interface AbilityListProps extends IHasIndex {
     /**
      * The ID of the Pokemon to show abilities for.
      */
-    pokemonId: number | undefined
+    abilities: VarietyAbilityInfo[]
+
+    loading: boolean
 
     /**
      * Whether to show the abilities.
@@ -24,39 +26,10 @@ interface AbilityListProps extends IHasIndex, IHasVersionGroup {
  * Renders a Pokemon's abilities.
  */
 export const AbilityList = (props: AbilityListProps) => {
-    const [abilities, setAbilities] = useState<PokemonAbilityContext[]>([])
-    const [loadingAbilities, setLoadingAbilities] = useState(false)
-
-    // refresh abilities if the Pokemon ID changed
-    useEffect(() => {
-        const fetchAbilities = () => {
-            let pokemonId = props.pokemonId
-            if (pokemonId !== undefined) {
-                console.log(`Ability list ${props.index}: getting abilities for Pokemon ${pokemonId}...`)
-                setLoadingAbilities(true)
-
-                fetch(`${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/abilities`)
-                    .then(response => {
-                        if (response.status === 200) {
-                            return response
-                        }
-
-                        throw new Error(`Ability list ${props.index}: tried to get abilities for Pokemon ${pokemonId} but failed with status ${response.status}!`)
-                    })
-                    .then(response => response.json())
-                    .then((abilities: PokemonAbilityContext[]) => setAbilities(abilities))
-                    .catch(error => console.error(error))
-                    .then(() => setLoadingAbilities(false))
-            }
-        }
-
-        fetchAbilities()
-
-        return () => setAbilities([])
-    }, [props.index, props.pokemonId])
-
     const renderAbilities = () => {
-        if (props.pokemonId === undefined) {
+        let abilities = props.abilities
+
+        if (props.abilities.length <= 0) {
             return (
                 <div className="flex-center margin-bottom-small">
                     -
@@ -64,7 +37,7 @@ export const AbilityList = (props: AbilityListProps) => {
             )
         }
 
-        if (loadingAbilities) {
+        if (props.loading) {
             return (
                 <div className="flex-center margin-bottom-small">
                     Loading...
@@ -75,7 +48,9 @@ export const AbilityList = (props: AbilityListProps) => {
         let items = []
         if (props.showAbilities && abilities.length > 0) {
             for (let ability of abilities) {
-                let abilityName = getDisplayName(ability, "en") ?? ability.name
+                let abilityInfo = ability.ability!
+
+                let abilityName = getDisplayNameOfAbility(abilityInfo)
                 let hiddenText = ability.isHidden ? " (hidden)" : ""
 
                 let nameElement = (
@@ -89,7 +64,7 @@ export const AbilityList = (props: AbilityListProps) => {
 
                 let flavourTextElement = (
                     <div className="abilityFlavourText">
-                        {getFlavourText(ability, props.versionGroupId!, "en")}
+                        {getFlavourTextOfAbility(abilityInfo) ?? "-"}
                     </div>
                 )
 

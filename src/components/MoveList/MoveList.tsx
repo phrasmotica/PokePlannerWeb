@@ -12,7 +12,8 @@ import {
     ItemEntry,
     MoveEntry,
     MoveLearnMethodEntry,
-    PokemonMoveContext
+    PokemonMoveContext,
+    VersionGroupInfo
 } from "../../models/swagger"
 
 import { CssHelper } from "../../util/CssHelper"
@@ -42,6 +43,8 @@ enum MoveClass {
 }
 
 interface MoveListProps extends IHasCommon {
+    versionGroup: VersionGroupInfo | undefined
+
     /**
      * The ID of the Pokemon to show moves for.
      */
@@ -77,7 +80,7 @@ export const MoveList = (props: MoveListProps) => {
 
     useEffect(() => {
         const fetchMoves = () => {
-            let versionGroupId = props.versionGroupId
+            let versionGroupId = props.versionGroup?.versionGroupId
             if (versionGroupId === undefined) {
                 return
             }
@@ -109,7 +112,7 @@ export const MoveList = (props: MoveListProps) => {
         fetchMoves()
 
         return () => setMoves([])
-    }, [props.index, props.pokemonId, props.versionGroupId])
+    }, [props.index, props.pokemonId, props.versionGroup])
 
     /**
      * Renders the filters.
@@ -264,6 +267,17 @@ export const MoveList = (props: MoveListProps) => {
      * Renders the moves.
      */
     const renderMoves = () => {
+        let versionGroupId = props.versionGroup?.versionGroupId
+        if (versionGroupId === undefined) {
+            return (
+                <ListGroup className="movesListGroup">
+                    <ListGroupItem>
+                        -
+                    </ListGroupItem>
+                </ListGroup>
+            )
+        }
+
         if (props.pokemonId === undefined) {
             return (
                 <ListGroup className="movesListGroup">
@@ -383,7 +397,7 @@ export const MoveList = (props: MoveListProps) => {
                             </div>
 
                             <div className="text-align-center flex-center">
-                                {getFlavourText(move, props.versionGroupId!, "en")}
+                                {getFlavourText(move, versionGroupId, "en")}
                             </div>
                         </div>
                     </Collapse>

@@ -21,6 +21,10 @@ export class SpeciesInfo {
         return this.getAllSpecies().map(si => si.pokemonSpeciesId)
     }
 
+    getById(id: number) {
+        return this.getAllSpecies().find(si => si.pokemonSpeciesId === id)
+    }
+
     clear() {
         this.speciesInfo = []
     }

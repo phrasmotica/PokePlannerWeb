@@ -3,7 +3,7 @@ import { Rating } from "@material-ui/lab"
 import { Button } from "reactstrap"
 import { TiArrowShuffle, TiDelete, TiHeartOutline, TiHeartFullOutline } from "react-icons/ti"
 
-import { IHasIndex, IHasVersionGroup, IHasHideTooltips } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { FormSelector } from "./FormSelector"
 import { SpeciesSelector } from "./SpeciesSelector"
