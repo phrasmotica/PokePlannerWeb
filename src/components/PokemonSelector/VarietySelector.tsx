@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react"
 import Select from "react-select"
 
-import { getDisplayName, hasDisplayNames, isValid } from "../../models/Helpers"
+import { getDisplayName, getDisplayNameOfSpecies, hasDisplayNames } from "../../models/Helpers"
 
 import {
     PokemonEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -23,7 +23,7 @@ interface VarietySelectorProps {
     /**
      * The species of the selected variety.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * List of varieties to select from.
@@ -148,7 +148,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         })
 
         return availableVarieties.map(variety => {
-            let label = getDisplayName(species!, "en") ?? species!.name
+            let label = getDisplayNameOfSpecies(species!)
 
             if (hasDisplayNames(variety)) {
                 label = getDisplayName(variety, "en") ?? variety.name
@@ -193,24 +193,6 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         let varietyId = option.value
         let variety = getVariety(varietyId)
         props.setVariety(variety)
-    }
-
-    /**
-     * Returns whether the variety is valid in the selected version group.
-     */
-    const varietyIsValid = () => {
-        if (props.species === undefined) {
-            return true
-        }
-
-        let versionGroup = props.versionGroup
-        if (versionGroup === undefined) {
-            throw new Error(
-                `Variety selector ${props.index}: version group is undefined!`
-            )
-        }
-
-        return isValid(props.species, versionGroup)
     }
 
     /**

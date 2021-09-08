@@ -9,14 +9,14 @@ import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { getBaseStats, getDisplayName, getEffectiveTypes, getGenus, getTypes, hasDisplayNames, pokemonIsValid } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfSpecies, getEffectiveTypes, getGenus, getTypesOfSpecies, hasDisplayNames } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     StatInfo,
     TypeInfo,
     VersionGroupInfo
@@ -51,7 +51,7 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
      */
     baseStats: StatInfo[]
 
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     varieties: PokemonEntry[]
 
@@ -64,7 +64,7 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+    setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 
     variety: PokemonEntry | undefined
 
@@ -116,12 +116,16 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     }
 
     const getEffectiveDisplayName = () => {
-        // default to species display name
-        let displayName = getDisplayName(props.species!, "en")
+        let displayName = "???"
 
-        let form = props.form
-        if (form !== undefined && hasDisplayNames(form)) {
-            displayName = getDisplayName(form, "en") ?? displayName
+        if (props.species !== undefined) {
+            // default to species display name
+            displayName = getDisplayNameOfSpecies(props.species)
+
+            let form = props.form
+            if (form !== undefined && hasDisplayNames(form)) {
+                displayName = getDisplayName(form, "en") ?? displayName
+            }
         }
 
         return displayName
@@ -130,7 +134,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const renderPokemonGenus = () => {
         let genusElement = "-"
         if (shouldShowPokemon()) {
-            genusElement = getGenus(props.species!, "en") ?? "-"
+            genusElement = getGenus(props.species!)
         }
 
         return (
@@ -218,25 +222,17 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         props.toggleShowShinySprite()
     }
 
-    const hasSpecies = props.species !== undefined
-
-    const selectedPokemonIsValid = () => pokemonIsValid(
-        props.species!, props.form, props.versionGroup
-    )
-
     /**
      * Returns whether the Pokemon should be displayed.
      */
-    const shouldShowPokemon = () => hasSpecies
-            && props.form !== undefined
-            && selectedPokemonIsValid()
+    const shouldShowPokemon = () => props.species !== undefined && props.form !== undefined
 
     const setGenerationFilterAndUpdate = (filter: GenerationFilterModel) => {
         setGenerationFilter(filter)
 
         // no longer have a valid species
         if (props.species !== undefined) {
-            let generationId = props.species.generation.generationId
+            let generationId = props.species.generationId
 
             let failsGenerationFilter = !filter.passesFilter([generationId])
             if (failsGenerationFilter) {
@@ -257,7 +253,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
         // no longer have a valid species
         if (props.species !== undefined) {
-            let speciesTypes = getTypes(props.species, versionGroup).map(t => t.typeId)
+            let speciesTypes = getTypesOfSpecies(props.species)
 
             let failsTypeFilter = !filter.passesFilter(speciesTypes)
             if (failsTypeFilter) {
@@ -278,7 +274,7 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
         // no longer have a valid species
         if (props.species !== undefined) {
-            let speciesBaseStats = getBaseStats(props.species, versionGroup)
+            let speciesBaseStats = getBaseStatsOfSpecies(props.species)
 
             let failsBaseStatFilter = !filter.passesFilter(speciesBaseStats)
             if (failsBaseStatFilter) {

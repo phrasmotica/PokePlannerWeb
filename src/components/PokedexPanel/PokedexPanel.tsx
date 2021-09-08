@@ -6,13 +6,13 @@ import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
-import { getEffectiveTypes, pokemonIsValid } from "../../models/Helpers"
+import { getEffectiveTypes } from "../../models/Helpers"
 
 import {
     GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     StatInfo,
     TypeInfo,
     VersionGroupInfo
@@ -53,9 +53,7 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
  * Renders a Pokemon and information about it.
  */
 export const PokedexPanel = (props: PokedexPanelProps) => {
-    // TODO: replace with the ID of the selected species, so we can
-    // find it in props.speciesInfo and use its data exclusively
-    const [species, setSpecies] = useState<PokemonSpeciesEntry>()
+    const [species, setSpecies] = useState<PokemonSpeciesInfo>()
 
     const [variety, setVariety] = useState<PokemonEntry>()
     const [varieties, setVarieties] = useState<PokemonEntry[]>([])
@@ -81,18 +79,11 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
         return () => setForm(undefined)
     }, [forms, setForm])
 
-    const hasSpecies = species !== undefined
-    const selectedPokemonIsValid = !hasSpecies || pokemonIsValid(
-        species!, form, props.versionGroup
-    )
+    let shouldShowPokemon = species !== undefined && form !== undefined
 
     let effectiveTypes = getEffectiveTypes(
         variety, form, props.versionGroup
     )
-
-    const shouldShowPokemon = hasSpecies
-            && form !== undefined
-            && selectedPokemonIsValid
 
     return (
         <div className="flex pokedex-panel debug-border">

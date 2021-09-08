@@ -133,6 +133,13 @@ export const getFlavourTextOfAbility = (ability: AbilityInfo) => {
 }
 
 /**
+ * Returns the given species's flavour text.
+ */
+export const getFlavourTextOfSpecies = (species: PokemonSpeciesInfo) => {
+    return species.flavorTexts[0]?.flavorText ?? "-"
+}
+
+/**
  * Returns the IDs of the species in the chain.
  */
 export const getSpeciesIds = (chain: EvolutionChainEntry) => {
@@ -175,21 +182,10 @@ export const getShortDisplayName = (
 }
 
 /**
- * Returns the species' genus in the given locale.
+ * Returns the species' genus.
  */
-export const getGenus = (
-    species: PokemonSpeciesEntry,
-    locale: string
-) => {
-    let localName = species.genera.find(n => n.language === locale)
-    if (localName === undefined) {
-        // species should have genus in every locale so throw an error
-        throw new Error(
-            `Species ${species.pokemonSpeciesId} is missing genus in locale '${locale}'`
-        )
-    }
-
-    return localName?.value
+export const getGenus = (species: PokemonSpeciesInfo) => {
+    return species.names[0]?.genus ?? "-"
 }
 
 /**

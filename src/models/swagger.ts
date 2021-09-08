@@ -634,8 +634,12 @@ export interface PokemonSpeciesInfo {
 
   /** @format int32 */
   generationId: number;
+
+  /** @format int32 */
+  captureRate: number;
   names: PokemonSpeciesNamesInfo[];
   pokedexes: PokemonSpeciesPokedexInfo[];
+  flavorTexts: FlavorTextInfo[];
   varieties: VarietyInfo[];
 }
 
@@ -646,6 +650,7 @@ export interface PokemonSpeciesNamedApiResource {
 
 export interface PokemonSpeciesNamesInfo {
   name?: string;
+  genus?: string;
 }
 
 export interface PokemonSpeciesPokedexInfo {

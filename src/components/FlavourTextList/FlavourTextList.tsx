@@ -3,10 +3,10 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { getDisplayNameOfVersion, getFlavourText } from "../../models/Helpers"
+import { getDisplayNameOfVersion, getFlavourTextOfSpecies } from "../../models/Helpers"
 
 import {
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     VersionInfo
 } from "../../models/swagger"
 
@@ -16,7 +16,7 @@ interface FlavourTextListProps extends IHasIndex {
     /**
      * The species to show flavour text for.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The versions to show flavour text for.
@@ -50,7 +50,7 @@ export const FlavourTextList = (props: FlavourTextListProps) => {
 
                 let flavourText = "-"
                 if (props.showFlavourText && species !== undefined) {
-                    flavourText = getFlavourText(species, v.versionId, "en") ?? "?"
+                    flavourText = getFlavourTextOfSpecies(species)
                 }
 
                 let flavourTextElement = (

@@ -19,7 +19,6 @@ import {
     GenerationInfo,
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     VersionGroupInfo,
 } from "../../models/swagger"
@@ -37,7 +36,7 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
 
     loadingSpeciesInfo: boolean
 
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     variety: PokemonEntry | undefined
 
@@ -79,7 +78,7 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+    setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
@@ -237,16 +236,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
     }
 
     /**
-     * Returns whether the species has secondary varieties.
-     */
-    const hasSecondaryVarieties = () => props.varieties.length >= 2
-
-    /**
-     * Returns whether the variety has secondary forms.
-     */
-    const hasSecondaryForms = () => props.forms.length >= 2
-
-    /**
      * Returns the species that match the species filter.
      */
     const getFilteredSpecies = () => props.speciesInfo.getAllSpecies().filter(isPresent)
@@ -280,13 +269,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         let randomIndex = randomInt(0, max)
         let species = speciesList[randomIndex]
 
-        setLoadingRandomSpecies(true)
-
-        fetch(`${process.env.REACT_APP_API_URL}/species/${species.pokemonSpeciesId}`)
-            .then(response => response.json())
-            .then((species: PokemonSpeciesEntry) => props.setSpecies(species))
-            .catch(error => console.error(error))
-            .finally(() => setLoadingRandomSpecies(false))
+        props.setSpecies(species)
     }
 
     /**

@@ -6,12 +6,12 @@ import key from "weak-key"
 
 import { IHasIndex } from "../CommonMembers"
 
-import { getDisplayName, size } from "../../models/Helpers"
+import { getDisplayName, getDisplayNameOfSpecies, size } from "../../models/Helpers"
 
 import {
     ChainLinkEntry,
     EvolutionDetailEntry,
-    PokemonSpeciesEntry
+    PokemonSpeciesInfo
 } from "../../models/swagger"
 
 import "./EvolutionChain.scss"
@@ -26,7 +26,7 @@ interface EvolutionTreeProps extends IHasIndex {
     /**
      * The species this chain is being shown for.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The IDs of the species available in the parent selector.
@@ -41,7 +41,7 @@ interface EvolutionTreeProps extends IHasIndex {
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+    setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 }
 
 /**
@@ -64,8 +64,8 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
         let speciesElement = (
             <div className="evolutionTreeSpeciesContainer">
                 {expandButton}
-                {renderSpeciesName(link.species)}
-                {renderOpenButton(link.species)}
+                {/* {renderSpeciesName(link.species)}
+                {renderOpenButton(link.species)} */}
             </div>
         )
 
@@ -76,7 +76,7 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
             middleElement = (
                 <div className="flex">
                     <div className="separate-right">
-                        {renderSpeciesSprite(link.species)}
+                        {/* {renderSpeciesSprite(link.species)} */}
                     </div>
 
                     {renderTransition(link)}
@@ -118,9 +118,9 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
     /**
      * Renders the name of the species.
      */
-    const renderSpeciesName = (species: PokemonSpeciesEntry) => {
+    const renderSpeciesName = (species: PokemonSpeciesInfo) => {
         let speciesId = species.pokemonSpeciesId
-        let speciesName = getDisplayName(species, "en") ?? species.name
+        let speciesName = getDisplayNameOfSpecies(species)
         let nameElement = <span>{speciesName}</span>
 
         let isCurrentSpecies = speciesId === props.species?.pokemonSpeciesId
@@ -138,7 +138,7 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
     /**
      * Renders a button for opening the given species in the selector.
      */
-    const renderOpenButton = (species: PokemonSpeciesEntry) => {
+    const renderOpenButton = (species: PokemonSpeciesInfo) => {
         let speciesId = species.pokemonSpeciesId
         let isCurrentSpecies = speciesId === props.species?.pokemonSpeciesId
         if (isCurrentSpecies) {
@@ -163,10 +163,13 @@ export const EvolutionTree = (props: EvolutionTreeProps) => {
     /**
      * Renders the species' sprite.
      */
-    const renderSpeciesSprite = (species: PokemonSpeciesEntry) => {
-        let spriteUrl = props.showShinySprites
-                      ? species.shinySpriteUrl
-                      : species.spriteUrl
+    const renderSpeciesSprite = (species: PokemonSpeciesInfo) => {
+        // let spriteUrl = props.showShinySprites
+        //               ? species.shinySpriteUrl
+        //               : species.spriteUrl
+
+        // TODO: get sprites from new API controller
+        let spriteUrl = props.showShinySprites ? "" : ""
 
         if (!spriteUrl) {
             return (

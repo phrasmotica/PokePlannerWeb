@@ -2932,6 +2932,8 @@
       },
       "PokemonSpeciesInfo": {
         "required": [
+          "captureRate",
+          "flavorTexts",
           "generationId",
           "names",
           "order",
@@ -2956,6 +2958,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "captureRate": {
+            "type": "integer",
+            "format": "int32"
+          },
           "names": {
             "type": "array",
             "items": {
@@ -2966,6 +2972,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PokemonSpeciesPokedexInfo"
+            }
+          },
+          "flavorTexts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlavorTextInfo"
             }
           },
           "varieties": {
@@ -2993,6 +3005,9 @@
         "type": "object",
         "properties": {
           "name": {
+            "type": "string"
+          },
+          "genus": {
             "type": "string"
           }
         },

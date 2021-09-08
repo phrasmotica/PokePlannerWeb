@@ -10,7 +10,6 @@ import { getBaseStatsOfSpecies, getDisplayNameOfSpecies, getPokedexNumberOfSpeci
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
-    PokemonSpeciesEntry,
     PokemonSpeciesInfo,
     VersionGroupInfo,
 } from "../../models/swagger"
@@ -39,7 +38,7 @@ interface SpeciesSelectorProps {
     /**
      * The selected species.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The generation filter.
@@ -59,7 +58,7 @@ interface SpeciesSelectorProps {
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+    setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 
     /**
      * Handler for toggling the species filter in the parent component.
@@ -188,12 +187,9 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Handler for when the selected species changes.
      */
     const onChange = (option: any) => {
-        let speciesId = option.value
-
-        fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}`)
-            .then(response => response.json())
-            .then((species: PokemonSpeciesEntry) => props.setSpecies(species))
-            .catch(error => console.error(error))
+        let speciesId = option.value as number
+        let newSpecies = props.speciesInfo.getById(speciesId)
+        props.setSpecies(newSpecies)
     }
 
     /**

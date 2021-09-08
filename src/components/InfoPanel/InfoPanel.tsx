@@ -13,7 +13,7 @@ import { getBaseStats, getDisplayNameOfStat, typeIsConcrete } from "../../models
 
 import {
     PokemonEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     StatInfo,
     TypeEntry,
     TypeInfo,
@@ -37,7 +37,7 @@ interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The species.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     speciesInfo: SpeciesInfo
 

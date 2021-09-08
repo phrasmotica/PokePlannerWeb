@@ -11,7 +11,7 @@ import {
     EncounterEntry,
     EncounterMethodDetails,
     EncountersEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -29,7 +29,7 @@ interface CaptureLocationsProps extends IHasIndex, IHasHideTooltips {
     /**
      * The version group.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The ID of the Pokemon to show capture locations for.
@@ -117,7 +117,7 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
 
         let species = props.species
         if (species !== undefined) {
-            catchRateElement = `${species.catchRate}`
+            catchRateElement = `${species.captureRate}`
         }
 
         return (
@@ -373,19 +373,6 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
 
         let resultIds = results.map(r => r.obj.id)
         return entries.filter(e => resultIds.includes(e.locationAreaId))
-    }
-
-    // toggle the location tooltip with the given index
-    const toggleLocationTooltip = (index: number) => {
-        let newLocationTooltipOpen = locationTooltipOpen.map((item, j) => {
-            if (j === index) {
-                return !item
-            }
-
-            return item
-        })
-
-        setLocationTooltipOpen(newLocationTooltipOpen)
     }
 
     /**

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react"
 import Select from "react-select"
 
-import { getDisplayName, hasDisplayNames, hasValidity, isValid } from "../../models/Helpers"
+import { getDisplayName, getDisplayNameOfSpecies, hasDisplayNames } from "../../models/Helpers"
 
 import {
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -24,7 +24,7 @@ interface FormSelectorProps {
     /**
      * The species of the selected variety.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The selected variety.
@@ -153,7 +153,7 @@ export const FormSelector = (props: FormSelectorProps) => {
 
         return availableForms.map(form => {
             // default varieties derive name from their species
-            let label = getDisplayName(species!, "en") ?? species!.name
+            let label = getDisplayNameOfSpecies(species!)
 
             if (hasDisplayNames(form)) {
                 label = getDisplayName(form, "en") ?? form.name
@@ -201,37 +201,6 @@ export const FormSelector = (props: FormSelectorProps) => {
             .then(response => response.json())
             .then((form: PokemonFormEntry) => props.setForm(form))
             .catch(error => console.error(error))
-    }
-
-    /**
-     * Returns whether the form is valid in the selected version group.
-     */
-    const formIsValid = () => {
-        let species = props.species
-        if (species === undefined) {
-            return true
-        }
-
-        if (props.form === undefined) {
-            return true
-        }
-
-        let versionGroup = props.versionGroup
-        if (versionGroup === undefined) {
-            throw new Error(
-                `Form selector ${props.index}: version group ID is undefined!`
-            )
-        }
-
-        let pokemonIsValid = isValid(species, versionGroup)
-
-        let form = props.form
-        if (form !== undefined && hasValidity(form)) {
-            // can only obtain form if base species is obtainable
-            pokemonIsValid = pokemonIsValid && isValid(form, versionGroup)
-        }
-
-        return pokemonIsValid
     }
 
     return renderFormSelect()

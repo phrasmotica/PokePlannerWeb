@@ -13,7 +13,7 @@ import { SpeciesInfo } from "../../models/SpeciesInfo"
 import {
     PokemonEntry,
     PokemonFormEntry,
-    PokemonSpeciesEntry,
+    PokemonSpeciesInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -33,7 +33,7 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The Pokemon species.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The species variety.
@@ -58,7 +58,7 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+    setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 }
 
 /**

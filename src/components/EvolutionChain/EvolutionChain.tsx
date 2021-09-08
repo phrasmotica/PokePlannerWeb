@@ -6,7 +6,7 @@ import { IHasIndex } from "../CommonMembers"
 
 import {
     EvolutionChainEntry,
-    PokemonSpeciesEntry
+    PokemonSpeciesInfo
 } from "../../models/swagger"
 
 import "./EvolutionChain.scss"
@@ -15,7 +15,7 @@ interface EvolutionChainProps extends IHasIndex {
     /**
      * The species this chain is being shown for.
      */
-    species: PokemonSpeciesEntry | undefined
+    species: PokemonSpeciesInfo | undefined
 
     /**
      * The IDs of the species available in the parent selector.
@@ -35,7 +35,7 @@ interface EvolutionChainProps extends IHasIndex {
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
-    setSpecies: (species: PokemonSpeciesEntry | undefined) => void
+    setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 }
 
 /**
