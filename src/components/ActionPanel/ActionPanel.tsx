@@ -11,9 +11,9 @@ import { getEffectiveTypes } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
-    PokemonEntry,
-    PokemonFormEntry,
+    FormInfo,
     PokemonSpeciesInfo,
+    VarietyInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -38,12 +38,12 @@ interface ActionPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The species variety.
      */
-    variety: PokemonEntry | undefined
+    variety: VarietyInfo | undefined
 
     /**
      * The Pokemon form.
      */
-    form: PokemonFormEntry | undefined
+    form: FormInfo | undefined
 
     /**
      * Whether to show info about the Pokemon.
@@ -71,17 +71,13 @@ export const ActionPanel = (props: ActionPanelProps) => {
      * Renders the move list.
      */
     const renderMoveList = () => {
-        let typeIds = getEffectiveTypes(
-            props.variety,
-            props.form,
-            props.versionGroup
-        ).map(t => t.typeId)
+        let typeIds = getEffectiveTypes(props.variety, props.form)
 
         return (
             <MoveList
                 index={props.index}
                 versionGroup={props.versionGroup}
-                pokemonId={props.variety?.pokemonId}
+                pokemonId={props.variety?.id}
                 typeIds={typeIds}
                 showMoves={props.shouldShowPokemon}
                 hideTooltips={props.hideTooltips} />
@@ -95,7 +91,7 @@ export const ActionPanel = (props: ActionPanelProps) => {
         return (
             <CaptureLocations
                 index={props.index}
-                pokemonId={props.variety?.pokemonId}
+                pokemonId={props.variety?.id}
                 versionGroup={props.versionGroup}
                 species={props.species}
                 showLocations={props.shouldShowPokemon}

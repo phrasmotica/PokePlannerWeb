@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
-import key from "weak-key"
 
 import { IHasHideTooltips, IHasIndex } from "../CommonMembers"
 
@@ -9,16 +8,16 @@ import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
 
-import { getBaseStatsOfSpecies, getDisplayName, getDisplayNameOfSpecies, getEffectiveTypes, getGenus, getTypesOfSpecies, hasDisplayNames } from "../../models/Helpers"
+import { getBaseStatsOfSpecies, getDisplayNameOfForm, getDisplayNameOfSpecies, getEffectiveTypes, getGenus, getTypesOfSpecies } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
+    FormInfo,
     GenerationInfo,
-    PokemonEntry,
-    PokemonFormEntry,
     PokemonSpeciesInfo,
     StatInfo,
     TypeInfo,
+    VarietyInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -53,32 +52,24 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
 
     species: PokemonSpeciesInfo | undefined
 
-    varieties: PokemonEntry[]
-
-    setVarieties: (varieties: PokemonEntry[]) => void
-
-    forms: PokemonFormEntry[]
-
-    setForms: (forms: PokemonFormEntry[]) => void
-
     /**
      * Handler for setting the Pokemon species in the parent component.
      */
     setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 
-    variety: PokemonEntry | undefined
+    variety: VarietyInfo | undefined
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
      */
-    setVariety: (variety: PokemonEntry | undefined) => void
+    setVariety: (variety: VarietyInfo | undefined) => void
 
-    form: PokemonFormEntry | undefined
+    form: FormInfo | undefined
 
     /**
      * Handler for setting the Pokemon form in the parent component.
      */
-    setForm: (form: PokemonFormEntry | undefined) => void
+    setForm: (form: FormInfo | undefined) => void
 
     /**
      * Handler for toggling the shiny sprite.
@@ -122,9 +113,8 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
             // default to species display name
             displayName = getDisplayNameOfSpecies(props.species)
 
-            let form = props.form
-            if (form !== undefined && hasDisplayNames(form)) {
-                displayName = getDisplayName(form, "en") ?? displayName
+            if (props.form !== undefined) {
+                displayName = getDisplayNameOfForm(props.form)
             }
         }
 
@@ -147,22 +137,18 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const renderPokemonTypes = () => {
         let typesElement: any = "-"
         if (shouldShowPokemon()) {
-            let types = getEffectiveTypes(
-                props.variety,
-                props.form,
-                props.versionGroup
-            )
+            let types = getEffectiveTypes(props.variety, props.form)
 
             typesElement = types.map(type => {
                 return (
                     <div
-                        key={key(type)}
+                        key={type}
                         className="flex-center fill-parent">
                         <img
-                            key={key(type)}
+                            key={type}
                             className={"type-icon padded" + (shouldShowPokemon() ? "" : " hidden")}
-                            alt={`type${type.typeId}`}
-                            src={require(`../../images/typeIcons/${type.typeId}-small.png`)} />
+                            alt={`type${type}`}
+                            src={require(`../../images/typeIcons/${type}-small.png`)} />
                     </div>
                 )
             })
@@ -180,9 +166,12 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
         if (shouldShowPokemon()) {
             let dataObject = props.form ?? props.variety
             if (dataObject !== undefined) {
-                spriteUrl = showShinySprite
-                    ? dataObject.shinySpriteUrl
-                    : dataObject.spriteUrl
+                // TODO: fetch sprite from new API controller
+                // spriteUrl = showShinySprite
+                //     ? dataObject.shinySpriteUrl
+                //     : dataObject.spriteUrl
+
+                spriteUrl = showShinySprite ? "" : ""
             }
 
             if (!spriteUrl) {
@@ -328,12 +317,8 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                     setSpecies={props.setSpecies}
                     variety={props.variety}
                     setVariety={props.setVariety}
-                    varieties={props.varieties}
-                    setVarieties={props.setVarieties}
                     form={props.form}
                     setForm={props.setForm}
-                    forms={props.forms}
-                    setForms={props.setForms}
                     generationFilter={generationFilter}
                     typeFilter={typeFilter}
                     baseStatFilter={baseStatFilter}

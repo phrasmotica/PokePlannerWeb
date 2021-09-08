@@ -16,10 +16,10 @@ import { getBaseStatsOfSpecies, getTypesOfSpecies } from "../../models/Helpers"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
+    FormInfo,
     GenerationInfo,
-    PokemonEntry,
-    PokemonFormEntry,
     PokemonSpeciesInfo,
+    VarietyInfo,
     VersionGroupInfo,
 } from "../../models/swagger"
 
@@ -38,17 +38,9 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
 
     species: PokemonSpeciesInfo | undefined
 
-    variety: PokemonEntry | undefined
+    variety: VarietyInfo | undefined
 
-    varieties: PokemonEntry[]
-
-    setVarieties: (varieties: PokemonEntry[]) => void
-
-    form: PokemonFormEntry | undefined
-
-    forms: PokemonFormEntry[]
-
-    setForms: (forms: PokemonFormEntry[]) => void
+    form: FormInfo | undefined
 
     /**
      * The ID of the species to be selected by default.
@@ -83,12 +75,12 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
     /**
      * Handler for setting the Pokemon variety in the parent component.
      */
-    setVariety: (variety: PokemonEntry | undefined) => void
+    setVariety: (variety: VarietyInfo | undefined) => void
 
     /**
      * Handler for setting the Pokemon form in the parent component.
      */
-    setForm: (form: PokemonFormEntry | undefined) => void
+    setForm: (form: FormInfo | undefined) => void
 
     /**
      * Handler for toggling the species filter in the parent component.
@@ -107,7 +99,6 @@ type SpeciesRatingsDict = {
 export const PokemonSelector = (props: PokemonSelectorProps) => {
     const [speciesRatings, setSpeciesRatings] = useState<SpeciesRatingsDict>([])
     const [favouriteSpecies, setFavouriteSpecies] = useState<number[]>([])
-    const [loadingRandomSpecies, setLoadingRandomSpecies] = useState(false)
 
     /**
      * Renders the species select box.
@@ -120,7 +111,7 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                 hideTooltips={props.hideTooltips}
                 speciesInfo={props.speciesInfo}
                 species={props.species}
-                loading={props.loadingSpeciesInfo || loadingRandomSpecies}
+                loading={props.loadingSpeciesInfo}
                 generationFilter={props.generationFilter}
                 typeFilter={props.typeFilter}
                 baseStatFilter={props.baseStatFilter}
@@ -137,8 +128,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             index={props.index}
             versionGroup={props.versionGroup}
             hideTooltips={props.hideTooltips}
-            varieties={props.varieties}
-            setVarieties={props.setVarieties}
             species={props.species}
             variety={props.variety}
             setVariety={props.setVariety} />
@@ -152,9 +141,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
             index={props.index}
             versionGroup={props.versionGroup}
             hideTooltips={props.hideTooltips}
-            forms={props.forms}
-            setForms={props.setForms}
-            species={props.species}
             variety={props.variety}
             form={props.form}
             setForm={props.setForm} />

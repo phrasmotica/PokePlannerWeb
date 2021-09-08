@@ -9,12 +9,12 @@ import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 import { getEffectiveTypes } from "../../models/Helpers"
 
 import {
+    FormInfo,
     GenerationInfo,
-    PokemonEntry,
-    PokemonFormEntry,
     PokemonSpeciesInfo,
     StatInfo,
     TypeInfo,
+    VarietyInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -54,36 +54,30 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
  */
 export const PokedexPanel = (props: PokedexPanelProps) => {
     const [species, setSpecies] = useState<PokemonSpeciesInfo>()
-
-    const [variety, setVariety] = useState<PokemonEntry>()
-    const [varieties, setVarieties] = useState<PokemonEntry[]>([])
-
-    const [form, setForm] = useState<PokemonFormEntry>()
-    const [forms, setForms] = useState<PokemonFormEntry[]>([])
+    const [variety, setVariety] = useState<VarietyInfo>()
+    const [form, setForm] = useState<FormInfo>()
 
     const [showShinySprite, setShowShinySprite] = useState(false)
 
     useEffect(() => {
-        if (varieties.length > 0) {
-            setVariety(varieties[0])
+        if (species !== undefined && species.varieties.length > 0) {
+            setVariety(species.varieties[0])
         }
 
         return () => setVariety(undefined)
-    }, [varieties, setVariety])
+    }, [species, setVariety])
 
     useEffect(() => {
-        if (forms.length > 0) {
-            setForm(forms[0])
+        if (variety !== undefined && variety.forms.length > 0) {
+            setForm(variety.forms[0])
         }
 
         return () => setForm(undefined)
-    }, [forms, setForm])
+    }, [variety, setForm])
 
     let shouldShowPokemon = species !== undefined && form !== undefined
 
-    let effectiveTypes = getEffectiveTypes(
-        variety, form, props.versionGroup
-    )
+    let effectiveTypes = getEffectiveTypes(variety, form)
 
     return (
         <div className="flex pokedex-panel debug-border">
@@ -102,12 +96,8 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     setSpecies={setSpecies}
                     variety={variety}
                     setVariety={setVariety}
-                    varieties={varieties}
-                    setVarieties={setVarieties}
                     form={form}
                     setForm={setForm}
-                    forms={forms}
-                    setForms={setForms}
                     toggleShowShinySprite={() => setShowShinySprite(!showShinySprite)} />
 
                 <div className="debug-border hhalf" style={{ fontSize: "10pt" }}>

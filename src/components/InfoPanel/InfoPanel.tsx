@@ -9,15 +9,14 @@ import { FlavourTextList } from "../FlavourTextList/FlavourTextList"
 import { HeldItemList } from "../HeldItemList/HeldItemList"
 import { StatGraph } from "../StatGraph/StatGraph"
 
-import { getBaseStats, getDisplayNameOfStat, typeIsConcrete } from "../../models/Helpers"
+import { getDisplayNameOfStat, typeIsConcrete } from "../../models/Helpers"
 
 import {
-    PokemonEntry,
     PokemonSpeciesInfo,
     StatInfo,
-    TypeEntry,
     TypeInfo,
     VarietyAbilityInfo,
+    VarietyInfo,
     VersionGroupInfo,
     VersionInfo
 } from "../../models/swagger"
@@ -44,12 +43,12 @@ interface InfoPanelProps extends IHasIndex, IHasHideTooltips {
     /**
      * The Pokemon.
      */
-    pokemon: PokemonEntry | undefined
+    pokemon: VarietyInfo | undefined
 
     /**
      * The effective types.
      */
-    effectiveTypes: TypeEntry[]
+    effectiveTypes: number[]
 
     /**
      * The types.
@@ -82,10 +81,8 @@ export const InfoPanel = (props: InfoPanelProps) => {
     )
 
     let abilities: VarietyAbilityInfo[] = []
-    if (props.species !== undefined) {
-        let selectedSpeciesInfo = props.speciesInfo.getById(props.species.pokemonSpeciesId)
-        let varietyInfo = selectedSpeciesInfo!.varieties.find(v => v.id === props.pokemon?.pokemonId)
-        abilities = varietyInfo?.abilities ?? []
+    if (props.pokemon !== undefined) {
+        abilities = props.pokemon.abilities
     }
 
     const abilityList = (
@@ -100,11 +97,7 @@ export const InfoPanel = (props: InfoPanelProps) => {
         let baseStats: number[] = []
 
         if (props.pokemon !== undefined) {
-            if (props.versionGroup === undefined) {
-                throw new Error(`Panel ${props.index}: version group is undefined!`)
-            }
-
-            baseStats = getBaseStats(props.pokemon, props.versionGroup)
+            baseStats = props.pokemon.stats.map(s => s.baseValue)
         }
 
         return (
@@ -119,7 +112,7 @@ export const InfoPanel = (props: InfoPanelProps) => {
     const efficacyList = (
         <EfficacyList
             index={props.index}
-            typeIds={props.effectiveTypes.map(type => type.typeId)}
+            typeIds={props.effectiveTypes}
             types={props.types.filter(typeIsConcrete)}
             versionGroup={props.versionGroup}
             showMultipliers={props.shouldShowPokemon}

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Select from "react-select"
 
-import { getDisplayName, getDisplayNameOfSpecies, hasDisplayNames } from "../../models/Helpers"
+import { getDisplayNameOfForm } from "../../models/Helpers"
 
 import {
-    PokemonEntry,
-    PokemonFormEntry,
-    PokemonSpeciesInfo,
+    FormInfo,
+    VarietyInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -22,28 +21,16 @@ interface FormSelectorProps {
     versionGroup: VersionGroupInfo | undefined
 
     /**
-     * The species of the selected variety.
-     */
-    species: PokemonSpeciesInfo | undefined
-
-    /**
      * The selected variety.
      */
-    variety: PokemonEntry | undefined
+    variety: VarietyInfo | undefined
 
-    form: PokemonFormEntry | undefined
-
-    /**
-     * List of forms to select from.
-     */
-    forms: PokemonFormEntry[]
-
-    setForms: (forms: PokemonFormEntry[]) => void
+    form: FormInfo | undefined
 
     /**
      * Handler for setting the form in the parent component.
      */
-    setForm: (form: PokemonFormEntry) => void
+    setForm: (form: FormInfo) => void
 
     /**
      * Whether tooltips should be hidden.
@@ -55,34 +42,7 @@ interface FormSelectorProps {
  * Component for selecting a Pokemon form.
  */
 export const FormSelector = (props: FormSelectorProps) => {
-    const [loadingForms, setLoadingForms] = useState(false)
-
-    let index = props.index
-    let versionGroupId = props.versionGroup?.versionGroupId
-    let variety = props.variety
-    let setForms = props.setForms
-
-    // fetch forms when variety changes
-    useEffect(() => {
-        if (variety !== undefined) {
-            let pokemonId = variety.pokemonId
-
-            console.log(`Variety selector ${index}: fetching forms of variety ${pokemonId}...`)
-
-            setLoadingForms(true)
-
-            fetch(`${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/forms/${versionGroupId}`)
-                .then(response => response.json())
-                .then((forms: PokemonFormEntry[]) => setForms(forms))
-                .catch(error => console.error(error))
-                .finally(() => setLoadingForms(false))
-        }
-        else {
-            setForms([])
-        }
-
-        return () => {}
-    }, [index, versionGroupId, variety, setForms])
+    const getForms = () => props.variety?.forms ?? []
 
     /**
      * Renders the form select.
@@ -97,7 +57,7 @@ export const FormSelector = (props: FormSelectorProps) => {
         if (props.form !== undefined) {
             // undefined doesn't clear stored state so coalesce to null
             // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.find(o => o.value === props.form!.pokemonFormId) ?? null
+            selectedOption = options.find(o => o.value === props.form!.id) ?? null
         }
 
         // attach red border if necessary
@@ -111,7 +71,6 @@ export const FormSelector = (props: FormSelectorProps) => {
                 isSearchable
                 blurInputOnSelect
                 width="230px"
-                isLoading={loadingForms}
                 isDisabled={selectDisabled}
                 className="margin-right-small"
                 id={selectId}
@@ -133,35 +92,16 @@ export const FormSelector = (props: FormSelectorProps) => {
      * Returns options for the select box.
      */
     const createOptions = () => {
-        let species = props.species
-        if (species === undefined) {
-            return []
-        }
-
-        let versionGroup = props.versionGroup
-        if (versionGroup === undefined) {
-            return []
-        }
-
         if (isDisabled()) {
             return []
         }
 
-        // form is only available if it was introduced
-        // in this version group at the latest
-        let availableForms = props.forms.filter(f => f.versionGroup.versionGroupId <= versionGroup!.versionGroupId)
-
-        return availableForms.map(form => {
-            // default varieties derive name from their species
-            let label = getDisplayNameOfSpecies(species!)
-
-            if (hasDisplayNames(form)) {
-                label = getDisplayName(form, "en") ?? form.name
-            }
+        return getForms().map(form => {
+            let label = getDisplayNameOfForm(form)
 
             return {
                 label: label,
-                value: form.pokemonFormId
+                value: form.id
             }
         })
     }
@@ -189,18 +129,27 @@ export const FormSelector = (props: FormSelectorProps) => {
     /**
      * Returns whether the select box should be disabled.
      */
-    const isDisabled = () => loadingForms || props.forms.length <= 1
+    const isDisabled = () => getForms().length <= 1
 
     /**
      * Handler for when the selected form changes.
      */
     const onChange = (option: any) => {
         let formId = option.value
+        let form = getForm(formId)
+        props.setForm(form)
+    }
 
-        fetch(`${process.env.REACT_APP_API_URL}/form/${formId}`)
-            .then(response => response.json())
-            .then((form: PokemonFormEntry) => props.setForm(form))
-            .catch(error => console.error(error))
+    /**
+     * Returns the form matching the given ID.
+     */
+    const getForm = (id: number) => {
+        let form = getForms().find(e => e.id === id)
+        if (form === undefined) {
+            throw new Error(`Form selector ${props.index}: no form found with ID ${id}!`)
+        }
+
+        return form
     }
 
     return renderFormSelect()

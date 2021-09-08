@@ -2,6 +2,7 @@ import {
     AbilityInfo,
     ChainLinkEntry,
     EvolutionChainEntry,
+    FormInfo,
     GenerationInfo,
     LocalString,
     LocalStringListWithId,
@@ -12,6 +13,7 @@ import {
     StatInfo,
     TypeEntryListWithId,
     TypeInfo,
+    VarietyInfo,
     VersionGroupInfo,
     VersionInfo
 } from "./swagger"
@@ -35,12 +37,28 @@ export const getDisplayNameOfAbility = (ability: AbilityInfo) => {
 }
 
 /**
+ * Returns the given form's display name.
+ */
+export const getDisplayNameOfForm = (form: FormInfo) => {
+    return form.names[0]?.name ?? form.formName!
+}
+
+/**
  * Returns the given species' display name.
  */
 export const getDisplayNameOfSpecies = (
     species: PokemonSpeciesInfo,
 ) => {
     return species.names[0]?.name ?? species.name!
+}
+
+/**
+ * Returns the given variety's display name.
+ */
+export const getDisplayNameOfVariety = (
+    variety: VarietyInfo,
+) => {
+    return getDisplayNameOfForm(variety.forms[0])
 }
 
 export const getPokedexNumberOfSpecies = (
@@ -266,25 +284,19 @@ export const getBaseStatsOfSpecies = (
  * Returns the effective types of the Pokemon given its form.
  */
 export const getEffectiveTypes = (
-    variety: PokemonEntry | undefined,
-    form: PokemonFormEntry | undefined,
-    versionGroup: VersionGroupInfo | undefined
+    variety: VarietyInfo | undefined,
+    form: FormInfo | undefined,
 ) => {
     if (variety === undefined) {
         return []
     }
 
-    if (versionGroup === undefined) {
-        throw new Error("Version group is undefined!")
-    }
-
-    let types = getTypes(variety, versionGroup)
+    let types = variety.types.map(t => t.typeId)
 
     if (form !== undefined) {
-        let formTypes = getTypes(form, versionGroup)
-        if (formTypes.length > 0) {
+        if (form.types.length > 0) {
             // use form-specific types if present
-            types = formTypes
+            types = form.types.map(t => t.typeId)
         }
     }
 

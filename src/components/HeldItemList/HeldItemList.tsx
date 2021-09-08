@@ -6,8 +6,9 @@ import { IHasIndex } from "../CommonMembers"
 import { getDisplayName, getDisplayNameOfVersion } from "../../models/Helpers"
 
 import {
-    PokemonEntry,
-    VersionGroupInfo
+    VarietyInfo,
+    VersionGroupInfo,
+    VersionHeldItemContextListWithId
 } from "../../models/swagger"
 
 import "./HeldItemList.scss"
@@ -21,7 +22,7 @@ interface HeldItemListProps extends IHasIndex {
     /**
      * The Pokemon to show held items for.
      */
-    pokemon: PokemonEntry | undefined
+    pokemon: VarietyInfo | undefined
 
     /**
      * Whether to show the held items.
@@ -44,8 +45,9 @@ export const HeldItemList = (props: HeldItemListProps) => {
         }
 
         let versions = versionGroup.versionInfo
-        let versionIds = versions.map(v => v.versionId)
-        let heldItems = props.pokemon?.heldItems.filter(e => versionIds.includes(e.id)) ?? []
+        // let versionIds = versions.map(v => v.versionId)
+        // let heldItems = props.pokemon?.heldItems.filter(e => versionIds.includes(e.id)) ?? []
+        let heldItems: VersionHeldItemContextListWithId[] = []
 
         let versionElements = []
         for (let version of versions) {

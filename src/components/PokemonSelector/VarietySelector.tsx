@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Select from "react-select"
 
-import { getDisplayName, getDisplayNameOfSpecies, hasDisplayNames } from "../../models/Helpers"
+import { getDisplayNameOfVariety } from "../../models/Helpers"
 
 import {
-    PokemonEntry,
     PokemonSpeciesInfo,
+    VarietyInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -25,19 +25,12 @@ interface VarietySelectorProps {
      */
     species: PokemonSpeciesInfo | undefined
 
-    /**
-     * List of varieties to select from.
-     */
-    varieties: PokemonEntry[]
-
-    setVarieties: (varieties: PokemonEntry[]) => void
-
-    variety: PokemonEntry | undefined
+    variety: VarietyInfo | undefined
 
     /**
      * Handler for setting the variety in the parent component.
      */
-    setVariety: (variety: PokemonEntry) => void
+    setVariety: (variety: VarietyInfo) => void
 
     /**
      * Whether tooltips should be hidden.
@@ -49,34 +42,7 @@ interface VarietySelectorProps {
  * Component for selecting a species variety.
  */
 export const VarietySelector = (props: VarietySelectorProps) => {
-    const [loadingVarieties, setLoadingVarieties] = useState(false)
-
-    let index = props.index
-    let versionGroupId = props.versionGroup?.versionGroupId
-    let species = props.species
-    let setVarieties = props.setVarieties
-
-    // fetch varieties when species changes
-    useEffect(() => {
-        if (species !== undefined) {
-            let speciesId = species.pokemonSpeciesId
-
-            console.log(`Variety selector ${index}: fetching varieties of species ${speciesId}...`)
-
-            setLoadingVarieties(true)
-
-            fetch(`${process.env.REACT_APP_API_URL}/species/${speciesId}/varieties/${versionGroupId}`)
-                .then(response => response.json())
-                .then((varieties: PokemonEntry[]) => setVarieties(varieties))
-                .catch(error => console.error(error))
-                .finally(() => setLoadingVarieties(false))
-        }
-        else {
-            setVarieties([])
-        }
-
-        return () => {}
-    }, [index, versionGroupId, species, setVarieties])
+    const getVarieties = () => props.species?.varieties ?? []
 
     /**
      * Renders the variety select.
@@ -91,7 +57,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         if (props.variety !== undefined) {
             // undefined doesn't clear stored state so coalesce to null
             // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.find(o => o.value === props.variety!.pokemonId) ?? null
+            selectedOption = options.find(o => o.value === props.variety!.id) ?? null
         }
 
         // attach red border if necessary
@@ -105,7 +71,6 @@ export const VarietySelector = (props: VarietySelectorProps) => {
                 isSearchable
                 blurInputOnSelect
                 width="230px"
-                isLoading={loadingVarieties}
                 isDisabled={selectDisabled}
                 className="margin-right-small"
                 id={selectId}
@@ -127,36 +92,16 @@ export const VarietySelector = (props: VarietySelectorProps) => {
      * Returns options for the variety select.
      */
     const createOptions = () => {
-        let species = props.species
-        if (species === undefined) {
-            return []
-        }
-
-        let versionGroup = props.versionGroup
-        if (versionGroup === undefined) {
-            return []
-        }
-
         if (isDisabled()) {
             return []
         }
 
-        // variety is only available if it has at least one form
-        // that was introduced in this version group at the latest
-        let availableVarieties = props.varieties.filter(v => {
-            return v.forms.some(f => f.versionGroup.versionGroupId <= versionGroup!.versionGroupId)
-        })
-
-        return availableVarieties.map(variety => {
-            let label = getDisplayNameOfSpecies(species!)
-
-            if (hasDisplayNames(variety)) {
-                label = getDisplayName(variety, "en") ?? variety.name
-            }
+        return getVarieties().map(variety => {
+            let label = getDisplayNameOfVariety(variety)
 
             return {
                 label: label,
-                value: variety.pokemonId
+                value: variety.id
             }
         })
     }
@@ -184,7 +129,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
     /**
      * Returns whether the select box should be disabled.
      */
-    const isDisabled = () => loadingVarieties || props.varieties.length <= 1
+    const isDisabled = () => getVarieties().length <= 1
 
     /**
      * Handler for when the selected variety changes.
@@ -199,7 +144,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
      * Returns the variety matching the given ID.
      */
     const getVariety = (id: number) => {
-        let variety = props.varieties.find(e => e.pokemonId === id)
+        let variety = getVarieties().find(e => e.id === id)
         if (variety === undefined) {
             throw new Error(`Variety selector ${props.index}: no variety found with ID ${id}!`)
         }
