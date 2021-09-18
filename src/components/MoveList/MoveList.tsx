@@ -6,13 +6,13 @@ import key from "weak-key"
 
 import { IHasCommon, IsOpenDict } from "../CommonMembers"
 
-import { getDisplayName, getFlavourText } from "../../models/Helpers"
+import { getDisplayNameOfLearnMethod, getDisplayNameOfMove, getFlavourTextOfMove } from "../../models/Helpers"
 
 import {
     ItemEntry,
-    MoveEntry,
+    MoveInfo,
     MoveLearnMethodEntry,
-    PokemonMoveContext,
+    PokemonMoveInfo,
     VersionGroupInfo
 } from "../../models/swagger"
 
@@ -73,7 +73,7 @@ export const MoveList = (props: MoveListProps) => {
     const [sameTypeOnly, setSameTypeOnly] = useState(false)
     const [levelUpOnly, setLevelUpOnly] = useState(false)
 
-    const [moves, setMoves] = useState<PokemonMoveContext[]>([])
+    const [moves, setMoves] = useState<PokemonMoveInfo[]>([])
     const [loadingMoves, setLoadingMoves] = useState(false)
     const [movesAreOpen, setMovesAreOpen] = useState<IsOpenDict>([])
     const [searchTerm, setSearchTerm] = useState("")
@@ -90,8 +90,8 @@ export const MoveList = (props: MoveListProps) => {
                 console.log(`Move list ${props.index}: getting moves for Pokemon ${pokemonId}...`)
                 setLoadingMoves(true)
 
-                // get moves
-                fetch(`${process.env.REACT_APP_API_URL}/pokemon/${pokemonId}/moves/${versionGroupId}`)
+                let languageId = 9
+                fetch(`${process.env.REACT_APP_API_URL}/movesInfo/pokemon/${pokemonId}/versionGroup/${versionGroupId}/language/${languageId}`)
                     .then(response => {
                         if (response.status === 200) {
                             return response
@@ -100,9 +100,9 @@ export const MoveList = (props: MoveListProps) => {
                         throw new Error(`Move list ${props.index}: tried to get moves for Pokemon ${pokemonId} but failed with status ${response.status}!`)
                     })
                     .then(response => response.json())
-                    .then((moves: PokemonMoveContext[]) => {
+                    .then((moves: PokemonMoveInfo[]) => {
                         setMoves(moves)
-                        setMovesAreOpen(moves.map(m => ({ id: m.moveId, data: false })))
+                        setMovesAreOpen(moves.map(m => ({ id: m.move!.id, data: false })))
                     })
                     .catch(error => console.error(error))
                     .then(() => setLoadingMoves(false))
@@ -120,8 +120,8 @@ export const MoveList = (props: MoveListProps) => {
     const renderFilters = () => {
         let minPowerId = "minPowerCheckbox" + props.index
 
-        let movePowers = moves.filter(m => m.power !== undefined)
-                              .map(m => m.power!)
+        let movePowers = moves.filter(m => m.move!.power !== undefined)
+                              .map(m => m.move!.power!)
         let lowestPower = 0
         let highestPower = 0
         if (movePowers.length > 0) {
@@ -250,17 +250,17 @@ export const MoveList = (props: MoveListProps) => {
     /**
      * Filters the given list of moves according to the current search term.
      */
-    const filterMoveEntries = (entries: PokemonMoveContext[]) => {
+    const filterMoveEntries = (entries: PokemonMoveInfo[]) => {
         if (searchTerm === "") {
             return entries
         }
 
-        let entryNames = entries.map(e => ({ id: e.moveId, name: getDisplayName(e, "en") }))
+        let entryNames = entries.map(e => ({ id: e.id, name: getDisplayNameOfMove(e.move!) }))
         const options = { key: 'name' }
         let results = fuzzysort.go(searchTerm, entryNames, options)
 
         let resultIds = results.map(r => r.obj.id)
-        return entries.filter(e => resultIds.includes(e.moveId))
+        return entries.filter(e => resultIds.includes(e.id))
     }
 
     /**
@@ -303,14 +303,16 @@ export const MoveList = (props: MoveListProps) => {
         if (props.showMoves && filteredMoves.length > 0) {
             let rows = []
             for (let row = 0; row < filteredMoves.length; row++) {
-                let move = filteredMoves[row]
-                let moveName = getDisplayName(move, "en") ?? move.name
+                let moveInfo = filteredMoves[row]
+                let moveName = getDisplayNameOfMove(moveInfo.move!)
 
                 let moveNameElement = (
                     <span>
                         {moveName}
                     </span>
                 )
+
+                let move = moveInfo.move!
 
                 if (isStab(move)) {
                     moveNameElement = (
@@ -323,19 +325,22 @@ export const MoveList = (props: MoveListProps) => {
                 }
 
                 let moveMethod = ""
-                if (move.level > 0) {
-                    moveMethod = `(level ${move.level})`
-                }
-                else if (move.learnMachines.length > 0) {
-                    let machinesSummary = move.learnMachines.map(m => getDisplayName(m, "en") ?? m.name).join(", ")
-                    moveMethod = `(${machinesSummary})`
+                if (moveInfo.level > 0) {
+                    moveMethod = `(level ${moveInfo.level})`
                 }
                 else {
-                    let methodsSummary = move.methods.map(m => getDisplayName(m, "en")).join(", ")
-                    moveMethod = `(${methodsSummary})`
+                    moveMethod = `(${getDisplayNameOfLearnMethod(moveInfo.learnMethod!)})`
                 }
+                // else if (moveInfo.learnMachines.length > 0) {
+                //     let machinesSummary = moveInfo.learnMachines.map(m => getDisplayName(m, "en") ?? m.name).join(", ")
+                //     moveMethod = `(${machinesSummary})`
+                // }
+                // else {
+                //     let methodsSummary = moveInfo.methods.map(m => getDisplayName(m, "en")).join(", ")
+                //     moveMethod = `(${methodsSummary})`
+                // }
 
-                const openInfoPane = () => toggleMoveOpen(move.moveId)
+                const openInfoPane = () => toggleMoveOpen(moveId)
                 let moveNameButton = (
                     <div className="flex">
                         <Button
@@ -350,30 +355,33 @@ export const MoveList = (props: MoveListProps) => {
                     </div>
                 )
 
-                let typeId = move.type.typeId
-                let headerId = `movelist${props.index}move${move.moveId}type${typeId}`
+                let moveId = move.id
+                let typeId = move.type!.id
+                let headerId = `movelist${props.index}move${moveId}type${typeId}`
                 let typeIcon = <img
                                 id={headerId}
                                 className="type-icon padded"
                                 alt={`type${typeId}`}
                                 src={require(`../../images/typeIcons/${typeId}-small.png`)} />
 
-                let damageClassIcon = getDamageClassIcon(move.damageClass.moveDamageClassId)
+                let damageClassIcon = getDamageClassIcon(move.damageClass!.id)
 
-                let isOpen = movesAreOpen.find(e => e.id === move.moveId)?.data ?? false
-                let powerElement = <div>Power: {move.power ?? "-"}</div>
+                let isOpen = movesAreOpen.find(e => e.id === moveId)?.data ?? false
+
+                let power = move.power
+                let powerElement = <div>Power: {power ?? "-"}</div>
 
                 // some moves damage but don't have a constant base power, e.g. Low Kick
-                if (isStab(move) && move.power !== undefined) {
+                if (isStab(move) && power !== undefined) {
                     let sameTypeElement = (
                         <abbr title="same-type attack bonus">
-                            <b>{move.power * 1.5}</b>
+                            <b>{power * 1.5}</b>
                         </abbr>
                     )
 
                     powerElement = (
                         <div>
-                            Power: {move.power} ({sameTypeElement})
+                            Power: {power} ({sameTypeElement})
                         </div>
                     )
                 }
@@ -397,14 +405,14 @@ export const MoveList = (props: MoveListProps) => {
                             </div>
 
                             <div className="text-align-center flex-center">
-                                {getFlavourText(move, versionGroupId, "en")}
+                                {getFlavourTextOfMove(move)}
                             </div>
                         </div>
                     </Collapse>
                 )
 
                 rows.push(
-                    <ListGroupItem key={key(move)}>
+                    <ListGroupItem key={key(moveInfo)}>
                         {moveNameButton}
                         {infoPane}
                     </ListGroupItem>
@@ -445,19 +453,19 @@ export const MoveList = (props: MoveListProps) => {
         let filteredMoves = moves
 
         if (moveClass === MoveClass.Damaging) {
-            filteredMoves = filteredMoves.filter(m => isDamaging(m))
+            filteredMoves = filteredMoves.filter(m => isDamaging(m.move!))
 
             if (useMinPower) {
-                filteredMoves = filteredMoves.filter(m => m.power !== undefined && m.power >= minPower)
+                filteredMoves = filteredMoves.filter(m => m.move!.power !== undefined && m.move!.power >= minPower)
             }
         }
 
         if (moveClass === MoveClass.NonDamaging) {
-            filteredMoves = filteredMoves.filter(m => !isDamaging(m))
+            filteredMoves = filteredMoves.filter(m => !isDamaging(m.move!))
         }
 
         if (sameTypeOnly) {
-            filteredMoves = filteredMoves.filter(m => isSameType(m))
+            filteredMoves = filteredMoves.filter(m => isSameType(m.move!))
         }
 
         if (levelUpOnly) {
@@ -470,25 +478,25 @@ export const MoveList = (props: MoveListProps) => {
     /**
      * Sorts moves into ascending order.
      */
-    const sortMoves = (m1: PokemonMoveContext, m2: PokemonMoveContext) => {
+    const sortMoves = (m1: PokemonMoveInfo, m2: PokemonMoveInfo) => {
         // level-up moves in ascending order first, then the rest
-        if (m1.level === 0 && m2.level === 0) {
-            // then machines in ascending order
-            if (m1.learnMachines?.length <= 0 && m2.learnMachines?.length <= 0) {
-                return sortLearnMethods(m1.methods, m2.methods)
-            }
+        // if (m1.level === 0 && m2.level === 0) {
+        //     // then machines in ascending order
+        //     if (m1.learnMachines?.length <= 0 && m2.learnMachines?.length <= 0) {
+        //         return sortLearnMethods(m1.methods, m2.methods)
+        //     }
 
-            if (m1.learnMachines?.length <= 0) {
-                return 1
-            }
+        //     if (m1.learnMachines?.length <= 0) {
+        //         return 1
+        //     }
 
-            if (m2.learnMachines?.length <= 0) {
-                return -1
-            }
+        //     if (m2.learnMachines?.length <= 0) {
+        //         return -1
+        //     }
 
-            // ordering by item ID doesn't work so do it by item name
-            return sortMachines(m1.learnMachines, m2.learnMachines)
-        }
+        //     // ordering by item ID doesn't work so do it by item name
+        //     return sortMachines(m1.learnMachines, m2.learnMachines)
+        // }
 
         if (m1.level === 0) {
             return 1
@@ -567,7 +575,7 @@ export const MoveList = (props: MoveListProps) => {
     /**
      * Returns whether the given move is damaging.
      */
-    const isDamaging = (move: MoveEntry) => {
+    const isDamaging = (move: MoveInfo) => {
         let damagingCategoryIds = [
             0, // damage
             4, // damage+ailment
@@ -577,20 +585,20 @@ export const MoveList = (props: MoveListProps) => {
             9, // one-hit KO
         ]
 
-        return damagingCategoryIds.includes(move.category.moveCategoryId)
+        return damagingCategoryIds.includes(move.meta[0]!.category!.id)
     }
 
     /**
      * Returns whether the given move has a type that the current Pokemon has.
      */
-    const isSameType = (move: MoveEntry) => {
-        return props.typeIds.includes(move.type.typeId)
+    const isSameType = (move: MoveInfo) => {
+        return props.typeIds.includes(move.type!.id)
     }
 
     /**
      * Returns whether the given move has STAB.
      */
-    const isStab = (move: MoveEntry) => {
+    const isStab = (move: MoveInfo) => {
         return isDamaging(move) && isSameType(move)
     }
 

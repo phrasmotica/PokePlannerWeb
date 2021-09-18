@@ -54,6 +54,12 @@ export interface BaseStatInfo {
   baseValue: number;
 }
 
+export interface Category {
+  /** @format int32 */
+  id: number;
+  name?: string;
+}
+
 export interface ChainLink {
   isBaby: boolean;
   species?: PokemonSpeciesNamedApiResource;
@@ -347,6 +353,15 @@ export interface ItemNamedApiResource {
   name?: string;
 }
 
+export interface LearnMethodInfo {
+  name?: string;
+  names: LearnMethodNames[];
+}
+
+export interface LearnMethodNames {
+  name?: string;
+}
+
 export interface LocalString {
   language: string;
   value: string;
@@ -417,6 +432,12 @@ export interface MoveDamageClassEntry {
   displayNames: LocalString[];
 }
 
+export interface MoveDamageClassInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+}
+
 export interface MoveEntry {
   id: string;
   name: string;
@@ -453,6 +474,30 @@ export interface MoveEntryListWithId {
   data: MoveEntry[];
 }
 
+export interface MoveInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+
+  /** @format int32 */
+  power?: number;
+
+  /** @format int32 */
+  accuracy?: number;
+
+  /** @format int32 */
+  pp?: number;
+
+  /** @format int32 */
+  priority: number;
+  damageClass?: MoveDamageClassInfo;
+  flavorTexts: FlavorTextInfo[];
+  meta: MoveMetaInfo[];
+  names: MoveNames[];
+  target?: MoveTargetInfo;
+  type?: MoveTypeInfo;
+}
+
 export interface MoveLearnMethodEntry {
   id: string;
   name: string;
@@ -466,8 +511,16 @@ export interface MoveLearnMethodEntry {
   descriptions: LocalString[];
 }
 
+export interface MoveMetaInfo {
+  category?: Category;
+}
+
 export interface MoveNamedApiResource {
   url?: string;
+  name?: string;
+}
+
+export interface MoveNames {
   name?: string;
 }
 
@@ -481,6 +534,17 @@ export interface MoveTargetEntry {
   /** @format int32 */
   moveTargetId: number;
   displayNames: LocalString[];
+}
+
+export interface MoveTargetInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+}
+
+export interface MoveTypeInfo {
+  /** @format int32 */
+  id: number;
 }
 
 export interface PokedexEntry {
@@ -604,6 +668,16 @@ export interface PokemonMoveContext {
   level: number;
   learnMachines: ItemEntry[];
   methods: MoveLearnMethodEntry[];
+}
+
+export interface PokemonMoveInfo {
+  /** @format int32 */
+  id: number;
+
+  /** @format int32 */
+  level: number;
+  learnMethod?: LearnMethodInfo;
+  move?: MoveInfo;
 }
 
 export interface PokemonSpeciesEntry {

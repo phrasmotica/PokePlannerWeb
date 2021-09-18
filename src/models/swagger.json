@@ -336,6 +336,73 @@
         }
       }
     },
+    "/MovesInfo/pokemon/{pokemonId}/versionGroup/{versionGroupId}/language/{languageId}": {
+      "get": {
+        "tags": [
+          "MovesInfo"
+        ],
+        "parameters": [
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pokemonId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonMoveInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonMoveInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PokemonMoveInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/Pokemon/{pokemonId}": {
       "get": {
         "tags": [
@@ -1348,6 +1415,22 @@
         },
         "additionalProperties": false
       },
+      "Category": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChainLink": {
         "required": [
           "evolutionDetails",
@@ -2155,6 +2238,33 @@
         },
         "additionalProperties": false
       },
+      "LearnMethodInfo": {
+        "required": [
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearnMethodNames"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LearnMethodNames": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "LocalString": {
         "required": [
           "language",
@@ -2352,6 +2462,22 @@
         },
         "additionalProperties": false
       },
+      "MoveDamageClassInfo": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "MoveEntry": {
         "required": [
           "category",
@@ -2452,6 +2578,69 @@
         },
         "additionalProperties": false
       },
+      "MoveInfo": {
+        "required": [
+          "flavorTexts",
+          "id",
+          "meta",
+          "names",
+          "priority"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "power": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "accuracy": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pp": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "damageClass": {
+            "$ref": "#/components/schemas/MoveDamageClassInfo"
+          },
+          "flavorTexts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlavorTextInfo"
+            }
+          },
+          "meta": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MoveMetaInfo"
+            }
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MoveNames"
+            }
+          },
+          "target": {
+            "$ref": "#/components/schemas/MoveTargetInfo"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MoveTypeInfo"
+          }
+        },
+        "additionalProperties": false
+      },
       "MoveLearnMethodEntry": {
         "required": [
           "creationTime",
@@ -2492,12 +2681,30 @@
         },
         "additionalProperties": false
       },
+      "MoveMetaInfo": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/Category"
+          }
+        },
+        "additionalProperties": false
+      },
       "MoveNamedApiResource": {
         "type": "object",
         "properties": {
           "url": {
             "type": "string"
           },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveNames": {
+        "type": "object",
+        "properties": {
           "name": {
             "type": "string"
           }
@@ -2533,6 +2740,35 @@
             "items": {
               "$ref": "#/components/schemas/LocalString"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveTargetInfo": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MoveTypeInfo": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2927,6 +3163,30 @@
             "items": {
               "$ref": "#/components/schemas/MoveLearnMethodEntry"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonMoveInfo": {
+        "required": [
+          "id",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "learnMethod": {
+            "$ref": "#/components/schemas/LearnMethodInfo"
+          },
+          "move": {
+            "$ref": "#/components/schemas/MoveInfo"
           }
         },
         "additionalProperties": false

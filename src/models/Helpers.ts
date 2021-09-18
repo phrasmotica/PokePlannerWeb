@@ -4,8 +4,10 @@ import {
     EvolutionChainEntry,
     FormInfo,
     GenerationInfo,
+    LearnMethodInfo,
     LocalString,
     LocalStringListWithId,
+    MoveInfo,
     PokemonEntry,
     PokemonFormEntry,
     PokemonSpeciesEntry,
@@ -41,6 +43,20 @@ export const getDisplayNameOfAbility = (ability: AbilityInfo) => {
  */
 export const getDisplayNameOfForm = (form: FormInfo) => {
     return form.names[0]?.name ?? form.formName!
+}
+
+/**
+ * Returns the given move's display name.
+ */
+export const getDisplayNameOfMove = (move: MoveInfo) => {
+    return move.names[0]?.name ?? move.name!
+}
+
+/**
+ * Returns the given learn method's display name.
+ */
+export const getDisplayNameOfLearnMethod = (method: LearnMethodInfo) => {
+    return method.names[0]?.name ?? method.name!
 }
 
 /**
@@ -148,6 +164,13 @@ export const getFlavourText = (
  */
 export const getFlavourTextOfAbility = (ability: AbilityInfo) => {
     return ability.flavorTexts[0]?.flavorText
+}
+
+/**
+ * Returns the given move's flavour text.
+ */
+export const getFlavourTextOfMove = (move: MoveInfo) => {
+    return move.flavorTexts[0]?.flavorText ?? "-"
 }
 
 /**
