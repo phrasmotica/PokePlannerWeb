@@ -14,7 +14,9 @@ import { SpeciesInfo } from "../../models/SpeciesInfo"
 import {
     FormInfo,
     GenerationInfo,
+    PokemonFormSprites,
     PokemonSpeciesInfo,
+    PokemonSprites,
     StatInfo,
     TypeInfo,
     VarietyInfo,
@@ -58,6 +60,7 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
     setSpecies: (species: PokemonSpeciesInfo | undefined) => void
 
     variety: VarietyInfo | undefined
+    varietySprites: PokemonSprites | undefined
 
     /**
      * Handler for setting the Pokemon variety in the parent component.
@@ -65,6 +68,7 @@ interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
     setVariety: (variety: VarietyInfo | undefined) => void
 
     form: FormInfo | undefined
+    formSprites: PokemonFormSprites | undefined
 
     /**
      * Handler for setting the Pokemon form in the parent component.
@@ -167,14 +171,11 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
     const renderPokemonSprite = () => {
         let spriteUrl = ""
         if (shouldShowPokemon()) {
-            let dataObject = props.form ?? props.variety
+            let dataObject = props.formSprites ?? props.varietySprites
             if (dataObject !== undefined) {
-                // TODO: fetch sprite from new API controller
-                // spriteUrl = showShinySprite
-                //     ? dataObject.shinySpriteUrl
-                //     : dataObject.spriteUrl
-
-                spriteUrl = showShinySprite ? "" : ""
+                spriteUrl = (showShinySprite
+                    ? dataObject.frontShiny
+                    : dataObject.frontDefault) ?? ""
             }
 
             if (!spriteUrl) {

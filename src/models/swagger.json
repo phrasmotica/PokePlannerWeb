@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://localhost:44347"
+      "url": "https://localhost:17895"
     }
   ],
   "paths": {
@@ -862,6 +862,86 @@
                   "items": {
                     "$ref": "#/components/schemas/PokemonSpeciesInfo"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Sprite/variety/{varietyId}": {
+      "get": {
+        "tags": [
+          "Sprite"
+        ],
+        "parameters": [
+          {
+            "name": "varietyId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonSprites"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonSprites"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonSprites"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Sprite/form/{formId}": {
+      "get": {
+        "tags": [
+          "Sprite"
+        ],
+        "parameters": [
+          {
+            "name": "formId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonFormSprites"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonFormSprites"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PokemonFormSprites"
                 }
               }
             }
@@ -2734,6 +2814,24 @@
         },
         "additionalProperties": false
       },
+      "PokemonFormSprites": {
+        "type": "object",
+        "properties": {
+          "frontDefault": {
+            "type": "string"
+          },
+          "frontShiny": {
+            "type": "string"
+          },
+          "backDefault": {
+            "type": "string"
+          },
+          "backShiny": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PokemonMoveContext": {
         "required": [
           "category",
@@ -3027,6 +3125,36 @@
           "pokedexNumber": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PokemonSprites": {
+        "type": "object",
+        "properties": {
+          "frontDefault": {
+            "type": "string"
+          },
+          "frontShiny": {
+            "type": "string"
+          },
+          "frontFemale": {
+            "type": "string"
+          },
+          "frontShinyFemale": {
+            "type": "string"
+          },
+          "backDefault": {
+            "type": "string"
+          },
+          "backShiny": {
+            "type": "string"
+          },
+          "backFemale": {
+            "type": "string"
+          },
+          "backShinyFemale": {
+            "type": "string"
           }
         },
         "additionalProperties": false

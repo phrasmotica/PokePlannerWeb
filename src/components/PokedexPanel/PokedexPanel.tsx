@@ -11,7 +11,9 @@ import { getEffectiveTypes } from "../../models/Helpers"
 import {
     FormInfo,
     GenerationInfo,
+    PokemonFormSprites,
     PokemonSpeciesInfo,
+    PokemonSprites,
     StatInfo,
     TypeInfo,
     VarietyInfo,
@@ -55,9 +57,25 @@ interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
 export const PokedexPanel = (props: PokedexPanelProps) => {
     const [species, setSpecies] = useState<PokemonSpeciesInfo>()
     const [variety, setVariety] = useState<VarietyInfo>()
+    const [varietySprites, setVarietySprites] = useState<PokemonSprites>()
     const [form, setForm] = useState<FormInfo>()
+    const [formSprites, setFormSprites] = useState<PokemonFormSprites>()
 
     const [showShinySprite, setShowShinySprite] = useState(false)
+
+    const fetchVarietySprites = (varietyId: number) => {
+        fetch(`${process.env.REACT_APP_API_URL}/sprite/variety/${varietyId}`)
+            .then(response => response.json())
+            .catch(error => console.log(error))
+            .then((sprites: PokemonSprites) => setVarietySprites(sprites))
+    }
+
+    const fetchFormSprites = (formId: number) => {
+        fetch(`${process.env.REACT_APP_API_URL}/sprite/form/${formId}`)
+            .then(response => response.json())
+            .catch(error => console.log(error))
+            .then((sprites: PokemonFormSprites) => setFormSprites(sprites))
+    }
 
     useEffect(() => {
         if (species !== undefined && species.varieties.length > 0) {
@@ -68,12 +86,27 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
     }, [species, setVariety])
 
     useEffect(() => {
-        if (variety !== undefined && variety.forms.length > 0) {
-            setForm(variety.forms[0])
+        if (variety !== undefined) {
+            fetchVarietySprites(variety.id)
+
+            if (variety.forms.length > 0) {
+                setForm(variety.forms[0])
+            }
         }
 
-        return () => setForm(undefined)
+        return () => {
+            setForm(undefined)
+            setVarietySprites(undefined)
+        }
     }, [variety, setForm])
+
+    useEffect(() => {
+        if (form !== undefined) {
+            fetchFormSprites(form.id)
+        }
+
+        return () => setFormSprites(undefined)
+    }, [form, setFormSprites])
 
     let shouldShowPokemon = species !== undefined && form !== undefined
 
@@ -95,8 +128,10 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     species={species}
                     setSpecies={setSpecies}
                     variety={variety}
+                    varietySprites={varietySprites}
                     setVariety={setVariety}
                     form={form}
+                    formSprites={formSprites}
                     setForm={setForm}
                     toggleShowShinySprite={() => setShowShinySprite(!showShinySprite)} />
 

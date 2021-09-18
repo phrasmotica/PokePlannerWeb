@@ -564,6 +564,13 @@ export interface PokemonFormEntryListWithId {
   data: PokemonFormEntry[];
 }
 
+export interface PokemonFormSprites {
+  frontDefault?: string;
+  frontShiny?: string;
+  backDefault?: string;
+  backShiny?: string;
+}
+
 export interface PokemonMoveContext {
   id: string;
   name: string;
@@ -659,6 +666,17 @@ export interface PokemonSpeciesPokedexInfo {
 
   /** @format int32 */
   pokedexNumber: number;
+}
+
+export interface PokemonSprites {
+  frontDefault?: string;
+  frontShiny?: string;
+  frontFemale?: string;
+  frontShinyFemale?: string;
+  backDefault?: string;
+  backShiny?: string;
+  backFemale?: string;
+  backShinyFemale?: string;
 }
 
 export interface StatEntry {
