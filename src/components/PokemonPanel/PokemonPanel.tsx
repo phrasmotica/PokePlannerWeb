@@ -114,7 +114,10 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
             displayName = getDisplayNameOfSpecies(props.species)
 
             if (props.form !== undefined) {
-                displayName = getDisplayNameOfForm(props.form)
+                let formName = getDisplayNameOfForm(props.form)
+                if (formName.length > 0) {
+                    displayName = formName
+                }
             }
         }
 
