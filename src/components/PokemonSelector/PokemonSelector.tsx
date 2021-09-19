@@ -1,7 +1,6 @@
-﻿import React, { useState } from "react"
-import { Rating } from "@material-ui/lab"
+﻿import React from "react"
 import { Button } from "reactstrap"
-import { TiArrowShuffle, TiDelete, TiHeartOutline, TiHeartFullOutline } from "react-icons/ti"
+import { TiArrowShuffle, TiDelete } from "react-icons/ti"
 
 import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
@@ -88,18 +87,10 @@ interface PokemonSelectorProps extends IHasIndex, IHasHideTooltips {
     toggleSpeciesFilter: () => void
 }
 
-type SpeciesRatingsDict = {
-    id: number
-    rating: number
-}[]
-
 /**
  * Component for selecting a Pokemon.
  */
 export const PokemonSelector = (props: PokemonSelectorProps) => {
-    const [speciesRatings, setSpeciesRatings] = useState<SpeciesRatingsDict>([])
-    const [favouriteSpecies, setFavouriteSpecies] = useState<number[]>([])
-
     /**
      * Renders the species select box.
      */
@@ -156,18 +147,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
         let species = props.species
         let speciesIsReady = species !== undefined
         let clearStyle = CssHelper.defaultCursorIf(!speciesIsReady)
-        let faveStyle = CssHelper.defaultCursorIf(!speciesIsReady)
-
-        let isFavourite = species !== undefined && favouriteSpecies.includes(species?.pokemonSpeciesId)
-
-        let faveTooltip = "Add Pokemon to favourites"
-        let faveIcon = <TiHeartOutline className="selector-button-icon" />
-        if (speciesIsReady && isFavourite) {
-            faveTooltip = "Remove Pokemon from favourites"
-            faveIcon = <TiHeartFullOutline className="selector-button-icon" />
-        }
-
-        // TODO: move rating component/fave button to their own component
 
         return (
             <div className="flex margin-bottom-small">
@@ -193,27 +172,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
                         onMouseUp={() => clearPokemon()}>
                         <span title={speciesIsReady ? "Clear" : undefined}>
                             <TiDelete className="selector-button-icon" />
-                        </span>
-                    </Button>
-                </div>
-
-                <div className="flex-center margin-right-small">
-                    <Rating
-                        size="large"
-                        disabled={!speciesIsReady}
-                        value={getSpeciesRating()}
-                        onChange={(_, newRating) => setSpeciesRating(newRating)} />
-                </div>
-
-                <div className="flex-center margin-right-small">
-                    <Button
-                        color="primary"
-                        style={faveStyle}
-                        className="selector-button"
-                        disabled={!speciesIsReady}
-                        onMouseUp={() => toggleFavouriteSpecies(species?.pokemonSpeciesId)}>
-                        <span title={species?.pokemonSpeciesId ? faveTooltip : undefined}>
-                            {faveIcon}
                         </span>
                     </Button>
                 </div>
@@ -269,78 +227,6 @@ export const PokemonSelector = (props: PokemonSelectorProps) => {
      * Empty this selector.
      */
     const clearPokemon = () => props.setSpecies(undefined)
-
-    /**
-     * Returns the rating of the selected species.
-     */
-    const getSpeciesRating = () => {
-        let speciesId = props.species?.pokemonSpeciesId
-        if (speciesId === undefined) {
-            return null
-        }
-
-        return speciesRatings.find(r => r.id === speciesId)?.rating ?? null
-    }
-
-    /**
-     * Sets a new rating for the selected species.
-     */
-    const setSpeciesRating = (newRating: number | null) => {
-        let speciesId = props.species?.pokemonSpeciesId
-        if (speciesId === undefined) {
-            return
-        }
-
-        let ratings = speciesRatings
-        let current = ratings.findIndex(r => r.id === speciesId)
-
-        // TODO: write to a real DB somewhere. This will require user auth first since we
-        // need a unique token for each user
-
-        if (current >= 0 && newRating === null) {
-            // remove existing rating
-            ratings.splice(current, 1)
-
-            console.log(ratings)
-            setSpeciesRatings(ratings)
-        }
-        else if (newRating !== null) {
-            if (current >= 0) {
-                // amend existing rating
-                ratings[current].rating = newRating
-            }
-            else {
-                // add new rating
-                ratings.push({ id: speciesId, rating: newRating })
-            }
-
-            console.log(ratings)
-            setSpeciesRatings(ratings)
-        }
-    }
-
-    /**
-     * Toggles the favourite status of the species with the given ID.
-     */
-    const toggleFavouriteSpecies = (pokemonSpeciesId: number | undefined) => {
-        if (pokemonSpeciesId === undefined) {
-            return
-        }
-
-        let i = favouriteSpecies.indexOf(pokemonSpeciesId)
-
-        // TODO: write to a real DB somewhere. This will require user auth first since we
-        // need a unique token for each user
-
-        if (i < 0) {
-            favouriteSpecies.push(pokemonSpeciesId)
-        }
-        else {
-            favouriteSpecies.splice(i, 1)
-        }
-
-        setFavouriteSpecies(favouriteSpecies)
-    }
 
     return (
         <div className="margin-right">
