@@ -1,7 +1,7 @@
 import React from "react"
-import { Button } from "reactstrap"
-import { SpeciesInfo } from "../../models/SpeciesInfo"
+import { Button } from "semantic-ui-react"
 
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 import { PokemonSpeciesInfo } from "../../models/swagger"
 
 import "./SelectorOptions.scss"
@@ -23,24 +23,24 @@ export const SelectorOptions = (props: SelectorOptionsProps) => {
         <div className="flex">
             <Button
                 block
-                size="sm"
-                color={props.filterOpen ? "success" : "info"}
+                size="small"
+                color={props.filterOpen ? "green" : "blue"}
                 onClick={props.toggleSpeciesFilter}>
                 Filter
             </Button>
 
             <Button
                 block
-                size="sm"
-                color="warning"
+                size="small"
+                color="yellow"
                 onClick={setRandomSpecies}>
                 Random
             </Button>
 
             <Button
                 block
-                size="sm"
-                color="danger"
+                size="small"
+                color="red"
                 onClick={() => props.setSpecies(undefined)}>
                 Clear
             </Button>
