@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 
-import { IHasHideTooltips, IHasIndex } from "../CommonMembers"
-
 import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
+import { SelectorOptions } from "../SelectorOptions/SelectorOptions"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
@@ -25,7 +24,9 @@ import {
 
 import "./PokemonPanel.scss"
 
-interface PokemonPanelProps extends IHasIndex, IHasHideTooltips {
+interface PokemonPanelProps {
+    index: number
+
     /**
      * The ID of the species to be selected by default.
      */
@@ -308,25 +309,34 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
 
     return (
         <div className="flex debug-border hhalf">
+
             <div className="flex-center w60 debug-border">
-                <PokemonSelector
-                    index={props.index}
-                    versionGroup={props.versionGroup}
-                    speciesInfo={props.speciesInfo}
-                    loadingSpeciesInfo={props.loadingSpeciesInfo}
-                    defaultSpeciesId={props.defaultSpeciesId}
-                    generations={props.generations}
-                    hideTooltips={props.hideTooltips}
-                    species={props.species}
-                    setSpecies={props.setSpecies}
-                    variety={props.variety}
-                    setVariety={props.setVariety}
-                    form={props.form}
-                    setForm={props.setForm}
-                    generationFilter={generationFilter}
-                    typeFilter={typeFilter}
-                    baseStatFilter={baseStatFilter}
-                    toggleSpeciesFilter={() => setShowSpeciesFilter(!showSpeciesFilter)} />
+                <div>
+                    <div className="margin-bottom">
+                        <SelectorOptions
+                            speciesInfo={props.speciesInfo}
+                            setSpecies={props.setSpecies}
+                            filterOpen={showSpeciesFilter}
+                            toggleSpeciesFilter={() => setShowSpeciesFilter(!showSpeciesFilter)} />
+                    </div>
+
+                    <PokemonSelector
+                        index={props.index}
+                        versionGroup={props.versionGroup}
+                        speciesInfo={props.speciesInfo}
+                        loadingSpeciesInfo={props.loadingSpeciesInfo}
+                        defaultSpeciesId={props.defaultSpeciesId}
+                        generations={props.generations}
+                        species={props.species}
+                        setSpecies={props.setSpecies}
+                        variety={props.variety}
+                        setVariety={props.setVariety}
+                        form={props.form}
+                        setForm={props.setForm}
+                        generationFilter={generationFilter}
+                        typeFilter={typeFilter}
+                        baseStatFilter={baseStatFilter} />
+                </div>
             </div>
 
             <div className="flex-center w40 debug-border">

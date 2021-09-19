@@ -4,7 +4,7 @@ import { ActionPanel } from "../ActionPanel/ActionPanel"
 import { InfoPanel } from "../InfoPanel/InfoPanel"
 import { PokemonPanel } from "../PokemonPanel/PokemonPanel"
 
-import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
+import { IHasHideTooltips } from "../CommonMembers"
 
 import { getEffectiveTypes } from "../../models/Helpers"
 
@@ -25,7 +25,9 @@ import "./../TeamBuilder/TeamBuilder.scss"
 import "../../styles/types.scss"
 import { SpeciesInfo } from "../../models/SpeciesInfo"
 
-interface PokedexPanelProps extends IHasIndex, IHasHideTooltips {
+interface PokedexPanelProps extends IHasHideTooltips {
+    index: number
+
     /**
      * The version group.
      */
@@ -124,7 +126,6 @@ export const PokedexPanel = (props: PokedexPanelProps) => {
                     generations={props.generations}
                     types={props.types}
                     baseStats={props.baseStats}
-                    hideTooltips={props.hideTooltips}
                     species={species}
                     setSpecies={setSpecies}
                     variety={variety}

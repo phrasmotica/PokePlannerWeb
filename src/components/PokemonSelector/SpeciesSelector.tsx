@@ -1,7 +1,5 @@
-import React, { useState } from "react"
+import React from "react"
 import Select from "react-select"
-import { Button } from "reactstrap"
-import { FaFilter } from "react-icons/fa"
 
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
@@ -59,24 +57,12 @@ interface SpeciesSelectorProps {
      * Handler for setting the Pokemon species in the parent component.
      */
     setSpecies: (species: PokemonSpeciesInfo | undefined) => void
-
-    /**
-     * Handler for toggling the species filter in the parent component.
-     */
-    toggleFilter: () => void
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
 }
 
 /**
  * Component for selecting a Pokemon species.
  */
 export const SpeciesSelector = (props: SpeciesSelectorProps) => {
-    const [filterOpen, setFilterOpen] = useState(false)
-
     /**
      * Renders the species select.
      */
@@ -111,29 +97,12 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
                 options={options} />
         )
 
-        let filterButton = renderFilterButton()
-
         return (
             <div className="flex margin-bottom-small">
                 {searchBox}
-                {filterButton}
             </div>
         )
     }
-
-    /**
-     * Renders the filter button.
-     */
-    const renderFilterButton = () => (
-        <span title="Filter species">
-            <Button
-                color={filterOpen ? "success" : "info"}
-                className="filter-button"
-                onMouseUp={toggleFilter}>
-                <FaFilter className="selector-button-icon" />
-            </Button>
-        </span>
-    )
 
     /**
      * Returns options for the species select.
@@ -150,7 +119,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
 
             return {
                 label: pokedexName,
-                options: a.speciesInfo.map(species => ({
+                options: a.speciesInfo.filter(isPresent).map(species => ({
                     label: `#${getPokedexNumberOfSpecies(species, a.pokedexId)} ${getDisplayNameOfSpecies(species)}`,
                     value: species.pokemonSpeciesId,
                 }))
@@ -221,14 +190,6 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
         let passesBaseStatFilter = props.baseStatFilter.passesFilter(speciesBaseStats)
 
         return passesGenerationFilter && passesTypeFilter && passesBaseStatFilter
-    }
-
-    /**
-     * Toggles the species filter.
-     */
-    const toggleFilter = () => {
-        setFilterOpen(!filterOpen)
-        props.toggleFilter()
     }
 
     return renderSpeciesSelect()

@@ -31,11 +31,6 @@ interface FormSelectorProps {
      * Handler for setting the form in the parent component.
      */
     setForm: (form: FormInfo) => void
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
 }
 
 /**

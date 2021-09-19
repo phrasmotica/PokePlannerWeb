@@ -1,3 +1,4 @@
+import { NumberHelper } from "../util/NumberHelper"
 import { PokemonSpeciesInfo } from "./swagger"
 
 type PokedexDictionary = {
@@ -23,6 +24,13 @@ export class SpeciesInfo {
 
     getById(id: number) {
         return this.getAllSpecies().find(si => si.pokemonSpeciesId === id)
+    }
+
+    getRandom() {
+        let allSpecies = this.getAllSpecies()
+        let max = allSpecies.length
+        let randomIndex = NumberHelper.randomInt(0, max)
+        return allSpecies[randomIndex]
     }
 
     clear() {

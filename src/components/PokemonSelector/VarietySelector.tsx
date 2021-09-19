@@ -31,11 +31,6 @@ interface VarietySelectorProps {
      * Handler for setting the variety in the parent component.
      */
     setVariety: (variety: VarietyInfo) => void
-
-    /**
-     * Whether tooltips should be hidden.
-     */
-    hideTooltips: boolean
 }
 
 /**

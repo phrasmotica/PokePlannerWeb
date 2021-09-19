@@ -3,6 +3,13 @@
  */
 export class NumberHelper {
     /**
+     * Returns a random integer between the min (inclusive) and the max (exclusive).
+     */
+    static randomInt(min: number, max: number) {
+        return Math.floor(Math.random() * (max - min) + min)
+    }
+
+    /**
      * Merges the given integer intervals into a minimal spanning set of intervals.
      * Differs from mergeIntervals() s.t. [x, y] and [y + 1, z] are merged into [x, z].
      */
