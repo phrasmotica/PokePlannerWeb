@@ -1,5 +1,5 @@
 import React from "react"
-import Select from "react-select"
+import { Dropdown } from "semantic-ui-react"
 
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
@@ -69,31 +69,20 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     const renderSpeciesSelect = () => {
         let options = createOptions()
 
-        let selectedOption = null
-        let species = props.species
-        if (species !== undefined) {
-            // undefined doesn't clear stored state so coalesce to null
-            // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.flatMap(o => o.options).find(o => o.value === species!.pokemonSpeciesId) ?? null
-        }
-
-        // attach red border if necessary
-        let customStyles = createSelectStyles()
+        let selectedOption = options.find(o => o.value === props.species?.pokemonSpeciesId)
 
         let selectId = "speciesSelect" + props.index
         let searchBox = (
-            <Select
-                isSearchable
-                blurInputOnSelect
-                width="230px"
-                isLoading={props.loading}
-                isDisabled={isDisabled()}
-                className="margin-right-small"
-                id={selectId}
-                styles={customStyles}
+            <Dropdown
+                search
+                fluid
+                selection
                 placeholder={isDisabled() ? "-" : "Select a species!"}
-                onChange={(option: any) => onChange(option)}
-                value={selectedOption}
+                loading={props.loading}
+                disabled={isDisabled()}
+                id={selectId}
+                onChange={(_, { value }) => onChange(value as number)}
+                value={selectedOption?.value}
                 options={options} />
         )
 
@@ -108,44 +97,22 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
      * Returns options for the species select.
      */
     const createOptions = () => {
+        let menuItems = []
+
         if (props.versionGroup === undefined) {
             return []
         }
 
-        return props.speciesInfo.speciesInfo.map(a => {
-            let pokedexName = props.versionGroup!.versionGroupPokedexes.map(p => p.pokedex!)
-                                                                       .find(p => p.pokedexId === a.pokedexId)
-                                                                       ?.names[0]?.name
+        menuItems = props.speciesInfo.speciesInfo.map(a => {
+            return a.speciesInfo.filter(isPresent).map(species => ({
+                key: `pokedex${a.pokedexId}species${species.pokemonSpeciesId}`,
+                text: `#${getPokedexNumberOfSpecies(species, a.pokedexId)} ${getDisplayNameOfSpecies(species)}`,
+                value: species.pokemonSpeciesId
+            }))
+        }).flatMap(arr => arr)
 
-            return {
-                label: pokedexName,
-                options: a.speciesInfo.filter(isPresent).map(species => ({
-                    label: `#${getPokedexNumberOfSpecies(species, a.pokedexId)} ${getDisplayNameOfSpecies(species)}`,
-                    value: species.pokemonSpeciesId,
-                }))
-            }
-        })
+        return menuItems
     }
-
-    /**
-     * Returns a custom style for the select box.
-     */
-    const createSelectStyles = () => ({
-        container: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width
-        }),
-
-        control: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width,
-        }),
-
-        menu: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width
-        })
-    })
 
     /**
      * Returns whether the select box should be disabled.
@@ -155,8 +122,7 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
     /**
      * Handler for when the selected species changes.
      */
-    const onChange = (option: any) => {
-        let speciesId = option.value as number
+    const onChange = (speciesId: number) => {
         let newSpecies = props.speciesInfo.getById(speciesId)
         props.setSpecies(newSpecies)
     }

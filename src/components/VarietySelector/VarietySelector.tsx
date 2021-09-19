@@ -1,5 +1,5 @@
 import React from "react"
-import Select from "react-select"
+import { Dropdown } from "semantic-ui-react"
 
 import { getDisplayNameOfVariety } from "../../models/Helpers"
 
@@ -48,31 +48,21 @@ export const VarietySelector = (props: VarietySelectorProps) => {
             options = []
         }
 
-        let selectedOption = null
-        if (props.variety !== undefined) {
-            // undefined doesn't clear stored state so coalesce to null
-            // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.find(o => o.value === props.variety!.id) ?? null
-        }
-
-        // attach red border if necessary
-        let customStyles = createSelectStyles()
+        let selectedOption = options.find(o => o.value === props.variety?.id)
 
         let selectDisabled = isDisabled() || options.length <= 0
 
         let selectId = "varietySelect" + props.index
         let searchBox = (
-            <Select
-                isSearchable
-                blurInputOnSelect
-                width="230px"
-                isDisabled={selectDisabled}
-                className="margin-right-small"
-                id={selectId}
-                styles={customStyles}
+            <Dropdown
+                search
+                fluid
+                selection
                 placeholder={selectDisabled ? "-" : "Select a variety!"}
-                onChange={(option: any) => onChange(option)}
-                value={selectedOption}
+                disabled={selectDisabled}
+                id={selectId}
+                onChange={(_, { value }) => onChange(value as number)}
+                value={selectedOption?.value}
                 options={options} />
         )
 
@@ -92,34 +82,20 @@ export const VarietySelector = (props: VarietySelectorProps) => {
         }
 
         return getVarieties().map(variety => {
-            let label = getDisplayNameOfVariety(variety)
+            let text = "Default"
+
+            let varietyName = getDisplayNameOfVariety(variety)
+            if (varietyName !== "") {
+                text = varietyName
+            }
 
             return {
-                label: label,
+                key: variety.id,
+                text: text,
                 value: variety.id
             }
         })
     }
-
-    /**
-     * Returns a custom style for the select box.
-     */
-    const createSelectStyles = () => ({
-        container: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width
-        }),
-
-        control: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width,
-        }),
-
-        menu: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width
-        })
-    })
 
     /**
      * Returns whether the select box should be disabled.
@@ -129,8 +105,7 @@ export const VarietySelector = (props: VarietySelectorProps) => {
     /**
      * Handler for when the selected variety changes.
      */
-    const onChange = (option: any) => {
-        let varietyId = option.value
+    const onChange = (varietyId: number) => {
         let variety = getVariety(varietyId)
         props.setVariety(variety)
     }
