@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { FormGroup, CustomInput } from "reactstrap"
 
-import { PokemonSelector } from "../PokemonSelector/PokemonSelector"
+import { FormSelector } from "../FormSelector/FormSelector"
+import { SpeciesSelector } from "../SpeciesSelector/SpeciesSelector"
+import { VarietySelector } from "../VarietySelector/VarietySelector"
+
 import { SelectorOptions } from "../SelectorOptions/SelectorOptions"
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { SpeciesFilter } from "../SpeciesFilter/SpeciesFilter"
@@ -320,22 +323,30 @@ export const PokemonPanel = (props: PokemonPanelProps) => {
                             toggleSpeciesFilter={() => setShowSpeciesFilter(!showSpeciesFilter)} />
                     </div>
 
-                    <PokemonSelector
+                    <SpeciesSelector
                         index={props.index}
                         versionGroup={props.versionGroup}
                         speciesInfo={props.speciesInfo}
-                        loadingSpeciesInfo={props.loadingSpeciesInfo}
-                        defaultSpeciesId={props.defaultSpeciesId}
-                        generations={props.generations}
                         species={props.species}
-                        setSpecies={props.setSpecies}
-                        variety={props.variety}
-                        setVariety={props.setVariety}
-                        form={props.form}
-                        setForm={props.setForm}
+                        loading={props.loadingSpeciesInfo}
                         generationFilter={generationFilter}
                         typeFilter={typeFilter}
-                        baseStatFilter={baseStatFilter} />
+                        baseStatFilter={baseStatFilter}
+                        setSpecies={props.setSpecies} />
+
+                    <VarietySelector
+                        index={props.index}
+                        versionGroup={props.versionGroup}
+                        species={props.species}
+                        variety={props.variety}
+                        setVariety={props.setVariety} />
+
+                    <FormSelector
+                        index={props.index}
+                        versionGroup={props.versionGroup}
+                        variety={props.variety}
+                        form={props.form}
+                        setForm={props.setForm} />
                 </div>
             </div>
 
