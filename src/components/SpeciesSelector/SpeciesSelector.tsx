@@ -1,5 +1,5 @@
-import React from "react"
-import { Dropdown } from "semantic-ui-react"
+import React, { useEffect } from "react"
+import { Select } from "semantic-ui-react"
 
 import { BaseStatFilterModel } from "../SpeciesFilter/BaseStatFilterModel"
 import { TypeFilterModel, GenerationFilterModel } from "../SpeciesFilter/IdFilterModel"
@@ -73,16 +73,15 @@ export const SpeciesSelector = (props: SpeciesSelectorProps) => {
 
         let selectId = "speciesSelect" + props.index
         let searchBox = (
-            <Dropdown
+            <Select
                 search
                 fluid
-                selection
                 placeholder={isDisabled() ? "-" : "Select a species!"}
                 loading={props.loading}
                 disabled={isDisabled()}
                 id={selectId}
                 onChange={(_, { value }) => onChange(value as number)}
-                value={selectedOption?.value}
+                value={selectedOption?.value ?? ""}
                 options={options} />
         )
 

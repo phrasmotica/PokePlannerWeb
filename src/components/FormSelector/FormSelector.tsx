@@ -1,5 +1,5 @@
 import React from "react"
-import { Dropdown } from "semantic-ui-react"
+import { Select } from "semantic-ui-react"
 
 import { getDisplayNameOfForm } from "../../models/Helpers"
 
@@ -54,15 +54,14 @@ export const FormSelector = (props: FormSelectorProps) => {
 
         let selectId = "formSelect" + props.index
         let searchBox = (
-            <Dropdown
+            <Select
                 search
                 fluid
-                selection
                 placeholder={selectDisabled ? "-" : "Select a form!"}
                 disabled={selectDisabled}
                 id={selectId}
                 onChange={(_, { value }) => onChange(value as number)}
-                value={selectedOption?.value}
+                value={selectedOption?.value ?? ""}
                 options={options} />
         )
 
