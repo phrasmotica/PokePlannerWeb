@@ -19,10 +19,11 @@ export const SelectorOptions = (props: SelectorOptionsProps) => {
         props.setSpecies(species)
     }
 
+    const clearSpecies = () => props.setSpecies(undefined)
+
     return (
         <div className="flex">
             <Button
-                block
                 size="small"
                 color={props.filterOpen ? "green" : "blue"}
                 onClick={props.toggleSpeciesFilter}>
@@ -30,7 +31,6 @@ export const SelectorOptions = (props: SelectorOptionsProps) => {
             </Button>
 
             <Button
-                block
                 size="small"
                 color="yellow"
                 onClick={setRandomSpecies}>
@@ -38,10 +38,9 @@ export const SelectorOptions = (props: SelectorOptionsProps) => {
             </Button>
 
             <Button
-                block
                 size="small"
                 color="red"
-                onClick={() => props.setSpecies(undefined)}>
+                onClick={clearSpecies}>
                 Clear
             </Button>
         </div>

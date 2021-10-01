@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Input, FormGroup, Label } from 'reactstrap'
-import Select from 'react-select'
+import React, { useEffect, useState } from "react"
+import { Checkbox, Form, Select } from "semantic-ui-react"
 
-import { PokedexPanel } from '../PokedexPanel/PokedexPanel'
+import { PokedexPanel } from "../PokedexPanel/PokedexPanel"
 
-import { getDisplayNameOfVersionGroup, getPokedexNumberOfSpecies } from '../../models/Helpers'
-import { SpeciesInfo } from '../../models/SpeciesInfo'
+import { getDisplayNameOfVersionGroup, getPokedexNumberOfSpecies } from "../../models/Helpers"
+import { SpeciesInfo } from "../../models/SpeciesInfo"
 
 import {
     GenerationInfo,
@@ -13,7 +12,7 @@ import {
     StatInfo,
     TypeInfo,
     VersionGroupInfo
-} from '../../models/swagger'
+} from "../../models/swagger"
 
 /**
  * The number of Pokemon panels to show.
@@ -194,39 +193,44 @@ export const TeamBuilder = () => {
 
     const renderVersionGroupMenu = () => {
         let options = versionGroups.map(vg => ({
-            label: getDisplayNameOfVersionGroup(vg),
+            key: vg.versionGroupId,
+            text: getDisplayNameOfVersionGroup(vg),
             value: vg.versionGroupId
         }))
 
-        let defaultOption = options.filter(o => o.value === versionGroupId)
+        let defaultOption = options.find(o => o.value === versionGroupId)
 
         return (
-            <FormGroup>
-                <Label for="versionGroupSelect">Game Version</Label>
+            <Form className="margin-bottom">
+                <Form.Field>
+                    <label>Game Version</label>
 
-                <Select
-                    id="versionGroupSelect"
-                    className="version-group-select"
-                    defaultValue={defaultOption}
-                    onChange={(option: any) => setVersionGroupId(option.value)}
-                    options={options} />
-            </FormGroup>
+                    <Select
+                        search
+                        id="versionGroupSelect"
+                        className="version-group-select"
+                        defaultValue={defaultOption?.value ?? ""}
+                        onChange={(_, { value }) => setVersionGroupId(value as number)}
+                        options={options} />
+                </Form.Field>
+            </Form>
         )
     }
+
+    const toggleHideTooltips = () => setHideTooltips(!hideTooltips)
 
     // returns the set of toggles for the menu
     const toggleSet = (
         <div>
-            <FormGroup check>
-                <Input
-                    type="checkbox"
-                    id="hideTooltipsCheckbox"
-                    checked={hideTooltips}
-                    onChange={() => toggleHideTooltips()} />
-                <Label for="hideTooltipsCheckbox" check>
-                    Hide tooltips
-                </Label>
-            </FormGroup>
+            <Form className="margin-bottom">
+                <Form.Field>
+                    <Checkbox
+                        id="hideTooltipsCheckbox"
+                        checked={hideTooltips}
+                        label="Hide tooltips"
+                        onChange={toggleHideTooltips} />
+                </Form.Field>
+            </Form>
         </div>
     )
 
@@ -256,8 +260,6 @@ export const TeamBuilder = () => {
     }
 
     const versionGroup = versionGroups.find(g => g.versionGroupId === versionGroupId)
-
-    const toggleHideTooltips = () => setHideTooltips(!hideTooltips)
 
     const pageIsLoading = loadingBaseStats
                     || loadingVersionGroups
