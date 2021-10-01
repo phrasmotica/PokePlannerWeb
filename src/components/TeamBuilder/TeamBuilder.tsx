@@ -70,10 +70,7 @@ export const TeamBuilder = () => {
                 .then(response => response.json())
                 .then((versionGroups: VersionGroupInfo[]) => {
                     setVersionGroups(versionGroups)
-
-                    let versionGroupId = versionGroups[versionGroups.length - 1].versionGroupId
-
-                    setVersionGroupId(versionGroupId)
+                    setVersionGroupId(versionGroups[0].versionGroupId)
                 })
                 .catch(error => console.error(error))
                 .finally(() => setLoadingVersionGroups(false))
