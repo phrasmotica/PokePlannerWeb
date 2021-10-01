@@ -1,5 +1,5 @@
 import React from "react"
-import Select from "react-select"
+import { Select } from "semantic-ui-react"
 
 import { getDisplayNameOfForm } from "../../models/Helpers"
 
@@ -48,31 +48,20 @@ export const FormSelector = (props: FormSelectorProps) => {
             options = []
         }
 
-        let selectedOption = null
-        if (props.form !== undefined) {
-            // undefined doesn't clear stored state so coalesce to null
-            // https://github.com/JedWatson/react-select/issues/3066
-            selectedOption = options.find(o => o.value === props.form!.id) ?? null
-        }
-
-        // attach red border if necessary
-        let customStyles = createSelectStyles()
+        let selectedOption = options.find(o => o.value === props.form?.id)
 
         let selectDisabled = isDisabled() || options.length <= 0
 
         let selectId = "formSelect" + props.index
         let searchBox = (
             <Select
-                isSearchable
-                blurInputOnSelect
-                width="230px"
-                isDisabled={selectDisabled}
-                className="margin-right-small"
-                id={selectId}
-                styles={customStyles}
+                search
+                fluid
                 placeholder={selectDisabled ? "-" : "Select a form!"}
-                onChange={onChange}
-                value={selectedOption}
+                disabled={selectDisabled}
+                id={selectId}
+                onChange={(_, { value }) => onChange(value as number)}
+                value={selectedOption?.value ?? ""}
                 options={options} />
         )
 
@@ -92,34 +81,15 @@ export const FormSelector = (props: FormSelectorProps) => {
         }
 
         return getForms().map(form => {
-            let label = getDisplayNameOfForm(form)
+            let text = getDisplayNameOfForm(form)
 
             return {
-                label: label,
+                key: form.id,
+                text: text,
                 value: form.id
             }
         })
     }
-
-    /**
-     * Returns a custom style for the select box.
-     */
-    const createSelectStyles = () => ({
-        container: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width
-        }),
-
-        control: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width,
-        }),
-
-        menu: (provided: any, state: any) => ({
-            ...provided,
-            minWidth: state.selectProps.width
-        })
-    })
 
     /**
      * Returns whether the select box should be disabled.
@@ -129,8 +99,7 @@ export const FormSelector = (props: FormSelectorProps) => {
     /**
      * Handler for when the selected form changes.
      */
-    const onChange = (option: any) => {
-        let formId = option.value
+    const onChange = (formId: number) => {
         let form = getForm(formId)
         props.setForm(form)
     }

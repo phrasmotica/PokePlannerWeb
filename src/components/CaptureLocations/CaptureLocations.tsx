@@ -3,7 +3,7 @@ import fuzzysort from "fuzzysort"
 import { ListGroup, ListGroupItem, Button, Collapse, Input } from "reactstrap"
 import key from "weak-key"
 
-import { IHasIndex, IHasHideTooltips, IsOpenDict } from "../CommonMembers"
+import { IHasIndex, IHasHideTooltips } from "../CommonMembers"
 
 import { getDisplayName, getDisplayNameOfVersion } from "../../models/Helpers"
 
@@ -50,7 +50,7 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
     const [loadingLocations, setLoadingLocations] = useState(false)
     const [locationTooltipOpen, setLocationTooltipOpen] = useState<boolean[]>([])
     const [searchTerm, setSearchTerm] = useState("")
-    const [encountersAreOpen, setEncountersAreOpen] = useState<IsOpenDict>([])
+    const [encountersAreOpen, setEncountersAreOpen] = useState<number[]>([])
 
     // refresh capture locations if the Pokemon ID changed
     useEffect(() => {
@@ -81,9 +81,7 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
                     )?.data ?? []
 
                     setLocations(encounters)
-                    setEncountersAreOpen(relevantEncounters.map(
-                        e => ({ id: e.locationAreaId, data: false })
-                    ))
+                    setEncountersAreOpen(relevantEncounters.map(e => e.locationAreaId))
                 })
                 .catch(error => console.error(error))
                 .then(() => setLoadingLocations(false))
@@ -96,18 +94,9 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
 
     // close all encounters components if the version group ID changes
     useEffect(() => {
-        const closeEncounterComponents = () => {
-            let encounters = locations?.encounters?.find(
-                e => e.id === props.versionGroup?.versionGroupId
-            )?.data ?? []
-
-            setEncountersAreOpen(encounters.map(e => ({ id: e.locationAreaId, data: false })))
-        }
-
-        closeEncounterComponents()
-
+        setEncountersAreOpen([])
         return () => setEncountersAreOpen([])
-    }, [props.versionGroup, locations])
+    }, [props.versionGroup])
 
     /**
      * Renders the species' catch rate.
@@ -241,7 +230,7 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
                             )
                         })
 
-                        let isOpen = encountersAreOpen.find(e => e.id === encounterId)?.data ?? false
+                        let isOpen = encountersAreOpen.includes(encounterId)
                         let infoPane = (
                             <Collapse isOpen={isOpen}>
                                 <div className="flex encounterInfo">
@@ -379,13 +368,15 @@ export const CaptureLocations = (props: CaptureLocationsProps) => {
      * Toggles the encounter info pane with the given index.
      */
     const toggleEncounterOpen = (id: number) => {
-        let newEncountersAreOpen = encountersAreOpen.map(item => {
-            if (item.id === id) {
-                return { id: id, data: !item.data }
-            }
+        let newEncountersAreOpen = [...encountersAreOpen]
 
-            return item
-        })
+        let index = newEncountersAreOpen.findIndex(i => i === id)
+        if (index >= 0) {
+            newEncountersAreOpen.splice(index, 1)
+        }
+        else {
+            newEncountersAreOpen.push(id)
+        }
 
         setEncountersAreOpen(newEncountersAreOpen)
     }
