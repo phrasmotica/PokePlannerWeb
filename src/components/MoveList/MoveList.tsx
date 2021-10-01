@@ -4,7 +4,7 @@ import { ListGroup, ListGroupItem, Button, Collapse, Input, Label, ButtonGroup }
 import { TiStarburstOutline, TiSpiral, TiWaves } from "react-icons/ti"
 import key from "weak-key"
 
-import { IHasCommon, IsOpenDict } from "../CommonMembers"
+import { IHasCommon } from "../CommonMembers"
 
 import { getDisplayNameOfLearnMethod, getDisplayNameOfMove, getFlavourTextOfMove } from "../../models/Helpers"
 
@@ -75,7 +75,7 @@ export const MoveList = (props: MoveListProps) => {
 
     const [moves, setMoves] = useState<PokemonMoveInfo[]>([])
     const [loadingMoves, setLoadingMoves] = useState(false)
-    const [movesAreOpen, setMovesAreOpen] = useState<IsOpenDict>([])
+    const [movesAreOpen, setMovesAreOpen] = useState<number[]>([])
     const [searchTerm, setSearchTerm] = useState("")
 
     useEffect(() => {
@@ -100,10 +100,7 @@ export const MoveList = (props: MoveListProps) => {
                         throw new Error(`Move list ${props.index}: tried to get moves for Pokemon ${pokemonId} but failed with status ${response.status}!`)
                     })
                     .then(response => response.json())
-                    .then((moves: PokemonMoveInfo[]) => {
-                        setMoves(moves)
-                        setMovesAreOpen(moves.map(m => ({ id: m.move!.id, data: false })))
-                    })
+                    .then((moves: PokemonMoveInfo[]) => setMoves(moves))
                     .catch(error => console.error(error))
                     .then(() => setLoadingMoves(false))
             }
@@ -340,7 +337,9 @@ export const MoveList = (props: MoveListProps) => {
                 //     moveMethod = `(${methodsSummary})`
                 // }
 
-                const openInfoPane = () => toggleMoveOpen(moveId)
+                let moveInfoId = moveInfo.id
+                const openInfoPane = () => toggleMoveOpen(moveInfoId)
+
                 let moveNameButton = (
                     <div className="flex">
                         <Button
@@ -366,7 +365,7 @@ export const MoveList = (props: MoveListProps) => {
 
                 let damageClassIcon = getDamageClassIcon(move.damageClass!.id)
 
-                let isOpen = movesAreOpen.find(e => e.id === moveId)?.data ?? false
+                let isOpen = movesAreOpen.includes(moveInfoId)
 
                 let power = move.power
                 let powerElement = <div>Power: {power ?? "-"}</div>
@@ -616,13 +615,15 @@ export const MoveList = (props: MoveListProps) => {
      * Toggles the move info pane with the given index.
      */
     const toggleMoveOpen = (id: number) => {
-        let newMovesAreOpen = movesAreOpen.map(item => {
-            if (item.id === id) {
-                return ({ id: id, data: !item.data })
-            }
+        let newMovesAreOpen = [...movesAreOpen]
 
-            return item
-        })
+        let index = newMovesAreOpen.findIndex(i => i === id)
+        if (index >= 0) {
+            newMovesAreOpen.splice(index, 1)
+        }
+        else {
+            newMovesAreOpen.push(id)
+        }
 
         setMovesAreOpen(newMovesAreOpen)
     }
