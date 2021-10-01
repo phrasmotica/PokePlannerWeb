@@ -14,7 +14,7 @@
     "dart-sass": "^1.25.0",
     "fuzzysort": "^1.1.4",
     "jquery": "^3.4.1",
-    "merge": "^1.2.1",
+    "merge": "^2.1.1",
     "oidc-client": "^1.10.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
