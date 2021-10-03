@@ -17,20 +17,18 @@ export const VersionGroupSelector = (props: VersionGroupSelectorProps) => {
         value: vg.versionGroupId
     }))
 
-    let defaultOption = options.find(o => o.value === props.versionGroupId)
+    let selectedOption = options.find(o => o.value === props.versionGroupId)
 
     return (
-        <Form className="margin-bottom">
-            <Form.Field>
-                <label>Game Version</label>
+        <Form.Field>
+            <label>Game Version</label>
 
-                <Select
-                    search
-                    className="version-group-select"
-                    value={defaultOption?.value ?? ""}
-                    onChange={(_, { value }) => props.setVersionGroupId(value as number)}
-                    options={options} />
-            </Form.Field>
-        </Form>
+            <Select
+                search
+                className="version-group-select"
+                value={selectedOption?.value ?? ""}
+                onChange={(_, { value }) => props.setVersionGroupId(value as number)}
+                options={options} />
+        </Form.Field>
     )
 }

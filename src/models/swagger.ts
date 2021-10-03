@@ -74,6 +74,10 @@ export interface ChainLinkEntry {
   evolvesTo: ChainLinkEntry[];
 }
 
+export interface Condition {
+  encounterConditionValue?: EncounterConditionValue;
+}
+
 export interface ConditionValuesDetail {
   conditionValues: EncounterConditionValueEntry[];
   encounterDetails: EncounterDetailEntry[];
@@ -107,6 +111,12 @@ export interface EfficacySetWithId {
   /** @format int32 */
   id: number;
   data: EfficacySet;
+}
+
+export interface EncounterConditionValue {
+  /** @format int32 */
+  id: number;
+  name?: string;
 }
 
 export interface EncounterConditionValueEntry {
@@ -181,6 +191,35 @@ export interface EncountersEntry {
   /** @format int32 */
   pokemonId: number;
   encounters: EncounterEntryListWithId[];
+}
+
+export interface EncountersInfo {
+  /** @format int32 */
+  locationAreaId: number;
+
+  /** @format int32 */
+  pokemonId: number;
+
+  /** @format int32 */
+  minLevel: number;
+
+  /** @format int32 */
+  maxLevel: number;
+
+  /** @format int32 */
+  versionId: number;
+  conditions: Condition[];
+  encounterSlot?: EncounterSlot;
+}
+
+export interface EncounterSlot {
+  method?: LearnMethod;
+
+  /** @format int32 */
+  rarity: number;
+
+  /** @format int32 */
+  slot: number;
 }
 
 export interface EvolutionChain {
@@ -353,9 +392,20 @@ export interface ItemNamedApiResource {
   name?: string;
 }
 
+export interface LearnMethod {
+  /** @format int32 */
+  id: number;
+  name?: string;
+  names: LearnMethodName[];
+}
+
 export interface LearnMethodInfo {
   name?: string;
   names: LearnMethodNames[];
+}
+
+export interface LearnMethodName {
+  name?: string;
 }
 
 export interface LearnMethodNames {
@@ -373,6 +423,17 @@ export interface LocalStringListWithId {
   data: LocalString[];
 }
 
+export interface LocationAreaInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+  names: LocationAreaName[];
+}
+
+export interface LocationAreaName {
+  name?: string;
+}
+
 export interface LocationEntry {
   id: string;
   name: string;
@@ -383,6 +444,18 @@ export interface LocationEntry {
   /** @format int32 */
   locationId: number;
   displayNames: LocalString[];
+}
+
+export interface LocationInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+  names: LocationName[];
+  locationAreas: LocationAreaInfo[];
+}
+
+export interface LocationName {
+  name?: string;
 }
 
 export interface LocationNamedApiResource {
@@ -753,6 +826,17 @@ export interface PokemonSprites {
   backShinyFemale?: string;
 }
 
+export interface RegionInfo {
+  /** @format int32 */
+  id: number;
+  name?: string;
+  names: RegionNamesInfo[];
+}
+
+export interface RegionNamesInfo {
+  name?: string;
+}
+
 export interface StatEntry {
   id: string;
   name: string;
@@ -888,10 +972,15 @@ export interface VersionGroupInfo {
   generationId: number;
   versionInfo: VersionInfo[];
   versionGroupPokedexes: VersionGroupPokedexInfo[];
+  versionGroupRegions: VersionGroupRegionInfo[];
 }
 
 export interface VersionGroupPokedexInfo {
   pokedex?: PokedexInfo;
+}
+
+export interface VersionGroupRegionInfo {
+  region?: RegionInfo;
 }
 
 export interface VersionHeldItemContext {

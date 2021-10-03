@@ -175,10 +175,12 @@ export const TeamBuilder = () => {
         return (
             <div className="flex">
                 <div className="margin-right">
-                    <VersionGroupSelector
-                        versionGroups={versionGroups}
-                        setVersionGroupId={setVersionGroupId}
-                        versionGroupId={versionGroupId} />
+                    <Form className="margin-bottom">
+                        <VersionGroupSelector
+                            versionGroups={versionGroups}
+                            setVersionGroupId={setVersionGroupId}
+                            versionGroupId={versionGroupId} />
+                    </Form>
                 </div>
                 <div className="margin-right">
                     {toggleSet}

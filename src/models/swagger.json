@@ -140,6 +140,80 @@
         }
       }
     },
+    "/EncountersInfo/locationArea/{locationAreaId}/versionGroup/{versionGroupId}/language/{languageId}": {
+      "get": {
+        "tags": [
+          "EncountersInfo"
+        ],
+        "parameters": [
+          {
+            "name": "locationAreaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "versionGroupId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EncountersInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EncountersInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EncountersInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/EvolutionChain/{speciesId}": {
       "get": {
         "tags": [
@@ -329,6 +403,64 @@
               "text/json": {
                 "schema": {
                   "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/LocationInfo/region/{regionId}/language/{languageId}": {
+      "get": {
+        "tags": [
+          "LocationInfo"
+        ],
+        "parameters": [
+          {
+            "name": "languageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "regionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocationInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocationInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LocationInfo"
+                  }
                 }
               }
             }
@@ -1490,6 +1622,15 @@
         },
         "additionalProperties": false
       },
+      "Condition": {
+        "type": "object",
+        "properties": {
+          "encounterConditionValue": {
+            "$ref": "#/components/schemas/EncounterConditionValue"
+          }
+        },
+        "additionalProperties": false
+      },
       "ConditionValuesDetail": {
         "required": [
           "conditionValues",
@@ -1591,6 +1732,22 @@
           },
           "data": {
             "$ref": "#/components/schemas/EfficacySet"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterConditionValue": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1804,6 +1961,70 @@
             "items": {
               "$ref": "#/components/schemas/EncounterEntryListWithId"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncountersInfo": {
+        "required": [
+          "conditions",
+          "locationAreaId",
+          "maxLevel",
+          "minLevel",
+          "pokemonId",
+          "versionId"
+        ],
+        "type": "object",
+        "properties": {
+          "locationAreaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pokemonId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "minLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxLevel": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "versionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Condition"
+            }
+          },
+          "encounterSlot": {
+            "$ref": "#/components/schemas/EncounterSlot"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterSlot": {
+        "required": [
+          "rarity",
+          "slot"
+        ],
+        "type": "object",
+        "properties": {
+          "method": {
+            "$ref": "#/components/schemas/LearnMethod"
+          },
+          "rarity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "slot": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2238,6 +2459,29 @@
         },
         "additionalProperties": false
       },
+      "LearnMethod": {
+        "required": [
+          "id",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LearnMethodName"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "LearnMethodInfo": {
         "required": [
           "names"
@@ -2252,6 +2496,15 @@
             "items": {
               "$ref": "#/components/schemas/LearnMethodNames"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LearnMethodName": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2301,6 +2554,38 @@
         },
         "additionalProperties": false
       },
+      "LocationAreaInfo": {
+        "required": [
+          "id",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationAreaName"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationAreaName": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "LocationEntry": {
         "required": [
           "creationTime",
@@ -2330,6 +2615,45 @@
             "items": {
               "$ref": "#/components/schemas/LocalString"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationInfo": {
+        "required": [
+          "id",
+          "locationAreas",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationName"
+            }
+          },
+          "locationAreas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LocationAreaInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "LocationName": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -3419,6 +3743,38 @@
         },
         "additionalProperties": false
       },
+      "RegionInfo": {
+        "required": [
+          "id",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RegionNamesInfo"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegionNamesInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "StatEntry": {
         "required": [
           "creationTime",
@@ -3805,6 +4161,7 @@
           "generationId",
           "versionGroupId",
           "versionGroupPokedexes",
+          "versionGroupRegions",
           "versionInfo"
         ],
         "type": "object",
@@ -3828,6 +4185,12 @@
             "items": {
               "$ref": "#/components/schemas/VersionGroupPokedexInfo"
             }
+          },
+          "versionGroupRegions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VersionGroupRegionInfo"
+            }
           }
         },
         "additionalProperties": false
@@ -3837,6 +4200,15 @@
         "properties": {
           "pokedex": {
             "$ref": "#/components/schemas/PokedexInfo"
+          }
+        },
+        "additionalProperties": false
+      },
+      "VersionGroupRegionInfo": {
+        "type": "object",
+        "properties": {
+          "region": {
+            "$ref": "#/components/schemas/RegionInfo"
           }
         },
         "additionalProperties": false

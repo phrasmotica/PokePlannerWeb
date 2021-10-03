@@ -7,6 +7,8 @@ import {
     LearnMethodInfo,
     LocalString,
     LocalStringListWithId,
+    LocationAreaInfo,
+    LocationInfo,
     MoveInfo,
     PokemonEntry,
     PokemonFormEntry,
@@ -57,6 +59,20 @@ export const getDisplayNameOfMove = (move: MoveInfo) => {
  */
 export const getDisplayNameOfLearnMethod = (method: LearnMethodInfo) => {
     return method.names[0]?.name ?? method.name!
+}
+
+/**
+ * Returns the given location's display name.
+ */
+export const getDisplayNameOfLocation = (location: LocationInfo) => {
+    return location.names[0]?.name ?? location.name!
+}
+
+/**
+ * Returns the given location area's display name.
+ */
+export const getDisplayNameOfLocationArea = (locationArea: LocationAreaInfo) => {
+    return locationArea.names[0]?.name ?? locationArea.name!
 }
 
 /**

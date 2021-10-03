@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { Route } from "react-router"
 import { Layout } from "./components/Layout"
+
+import { AreaChecker } from "./components/AreaChecker/AreaChecker"
 import { TeamBuilder } from "./components/TeamBuilder/TeamBuilder"
 
 import "./custom.css"
@@ -13,6 +15,7 @@ export default class App extends Component {
         return (
             <Layout>
                 <Route exact path="/" component={TeamBuilder} />
+                <Route exact path="/area-checker" component={AreaChecker} />
             </Layout>
         )
     }
