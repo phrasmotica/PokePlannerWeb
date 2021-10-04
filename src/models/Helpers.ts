@@ -1,6 +1,7 @@
 import {
     AbilityInfo,
     ChainLinkEntry,
+    EncountersInfo,
     EvolutionChainEntry,
     FormInfo,
     GenerationInfo,
@@ -393,4 +394,8 @@ export const size = (chain: ChainLinkEntry): number => {
     }
 
     return 1 + chain.evolvesTo.map(size).reduce((x, y) => x + y)
+}
+
+export const sortEncounters = (encounters: EncountersInfo[]) => {
+    return encounters.sort((a, b) => (a.pokemonId - b.pokemonId) || (a.minLevel - b.minLevel))
 }

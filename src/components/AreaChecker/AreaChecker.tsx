@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { Form } from "semantic-ui-react"
+import { sortEncounters } from "../../models/Helpers"
 
-import { LocationInfo, VersionGroupInfo } from "../../models/swagger"
+import { EncountersInfo, LocationInfo, VersionGroupInfo } from "../../models/swagger"
 import { LocationAreaSelector } from "../LocationAreaSelector/LocationAreaSelector"
 import { LocationSelector } from "../LocationSelector/LocationSelector"
 import { VersionGroupSelector } from "../VersionGroupSelector/VersionGroupSelector"
@@ -21,6 +22,9 @@ export const AreaChecker = (props: AreaCheckerProps) => {
     const [loadingLocations, setLoadingLocations] = useState(false)
     const [locationId, setLocationId] = useState<number>()
     const [locationAreaId, setLocationAreaId] = useState<number>()
+
+    const [encounters, setEncounters] = useState<EncountersInfo[]>([])
+    const [loadingEncounters, setLoadingEncounters] = useState(false)
 
     useEffect(() => {
         const fetchVersionGroups = () => {
@@ -93,6 +97,39 @@ export const AreaChecker = (props: AreaCheckerProps) => {
         return () => setLocationAreaId(undefined)
     }, [locationId])
 
+    useEffect(() => {
+        const fetchEncounters = () => {
+            let versionGroup = versionGroups.find(v => v.versionGroupId === versionGroupId)
+            let versions = versionGroup?.versionInfo ?? []
+            if (versions.length <= 0) {
+                return
+            }
+
+            setLoadingEncounters(true)
+
+            let languageId = 9
+
+            Promise.all(
+                versions.map(v => {
+                    let versionId = v.versionId
+
+                    fetch(`${process.env.REACT_APP_API_URL}/encountersInfo/locationArea/${locationAreaId}/version/${versionId}/language/${languageId}`)
+                        .then(response => response.json())
+                        .then((newEncounters: EncountersInfo[]) => {
+                            let totalEncounters = [...encounters, ...newEncounters]
+                            setEncounters(totalEncounters)
+                        })
+                        .catch(error => console.error(error))
+                })
+            )
+            .then(() => setLoadingEncounters(false))
+        }
+
+        fetchEncounters()
+
+        return() => setEncounters([])
+    }, [locationAreaId, setEncounters])
+
     const renderMenu = () => {
         let selectedLocation = locations.find(l => l.id === locationId)
 
@@ -118,10 +155,34 @@ export const AreaChecker = (props: AreaCheckerProps) => {
         )
     }
 
+    const renderEncounters = () => {
+        if (loadingEncounters) {
+            return (
+                <div className="area-checker-encounters">
+                    <p>Loading encounters...</p>
+                </div>
+            )
+        }
+
+        let sortedEncounters = sortEncounters(encounters)
+
+        return (
+            <div className="area-checker-encounters">
+                {sortedEncounters.map(e => (
+                    <p>Pokemon {e.pokemonId}, levels {e.minLevel} to {e.maxLevel}, {e.encounterSlot!.rarity}% chance</p>
+                ))}
+            </div>
+        )
+    }
+
     return (
         <div>
             <p>Check what can be found in an area!</p>
-            {renderMenu()}
+
+            <div className="flex">
+                {renderMenu()}
+                {renderEncounters()}
+            </div>
         </div>
     )
 }
