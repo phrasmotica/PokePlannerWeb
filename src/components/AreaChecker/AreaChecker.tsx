@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Form, List } from "semantic-ui-react"
 
-import { EncountersInfo, LocationInfo, VersionGroupInfo } from "../../models/swagger"
+import { EncounterCard } from "../EncounterCard/EncounterCard"
 import { LocationAreaSelector } from "../LocationAreaSelector/LocationAreaSelector"
 import { LocationSelector } from "../LocationSelector/LocationSelector"
 import { VersionGroupSelector } from "../VersionGroupSelector/VersionGroupSelector"
 
-import { getDisplayNameOfEncounterMethod, groupBy, sortEncounters } from "../../models/Helpers"
+import { groupBy } from "../../models/Helpers"
+import { EncountersInfo, LocationInfo, VersionGroupInfo } from "../../models/swagger"
 
 import "./AreaChecker.css"
 
@@ -168,43 +169,16 @@ export const AreaChecker = (props: AreaCheckerProps) => {
         // TODO: group encounters by method, then by pokemon
         let groupedEncounters = groupBy(encounters, e => e.pokemonId)
 
-        const renderEncountersGroup = (pokemonId: number, encounters: EncountersInfo[]) => {
-            let sortedEncounters = sortEncounters(encounters)
-
-            return (
-                <List.Item>
-                    <List.Header>
-                        Pokemon {pokemonId}
-                    </List.Header>
-                    <List.Content>
-                        {sortedEncounters.map(e => {
-                            let levelsText = `level ${e.minLevel}`
-                            if (e.minLevel !== e.maxLevel) {
-                                levelsText = `levels ${e.minLevel} to ${e.maxLevel}`
-                            }
-
-                            let rarityText = `${e.encounterSlot!.rarity}% chance`
-                            let methodText = getDisplayNameOfEncounterMethod(e.encounterSlot!.method!)
-                            let conditions = e.conditions.map(c => c.encounterConditionValue?.name).join(", ")
-
-                            return (
-                                <div>
-                                    <p>{levelsText}, {rarityText}, {methodText}</p>
-                                    <p>{conditions}</p>
-                                </div>
-                            )
-                        })}
-                    </List.Content>
-                </List.Item>
-            )
-        }
-
         let pokemonIds = Object.keys(groupedEncounters).map(k => Number(k))
 
         return (
             <div className="area-checker-encounters">
                 <List divided>
-                    {pokemonIds.map(id => renderEncountersGroup(id, groupedEncounters[id]))}
+                    {pokemonIds.map(id => (
+                        <EncounterCard
+                            pokemonId={id}
+                            encounters={groupedEncounters[id]} />
+                    ))}
                 </List>
             </div>
         )
