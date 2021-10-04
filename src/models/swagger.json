@@ -140,7 +140,7 @@
         }
       }
     },
-    "/EncountersInfo/locationArea/{locationAreaId}/versionGroup/{versionGroupId}/language/{languageId}": {
+    "/EncountersInfo/locationArea/{locationAreaId}/version/{versionId}/language/{languageId}": {
       "get": {
         "tags": [
           "EncountersInfo"
@@ -157,7 +157,8 @@
           },
           {
             "name": "versionId",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -170,14 +171,6 @@
             "schema": {
               "type": "integer",
               "format": "int32"
-            }
-          },
-          {
-            "name": "versionGroupId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
             }
           }
         ],
@@ -1855,6 +1848,29 @@
         },
         "additionalProperties": false
       },
+      "EncounterMethod": {
+        "required": [
+          "id",
+          "names"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "names": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EncounterMethodName"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "EncounterMethodDetails": {
         "required": [
           "conditionValuesDetails",
@@ -1928,6 +1944,15 @@
             "items": {
               "$ref": "#/components/schemas/LocalString"
             }
+          }
+        },
+        "additionalProperties": false
+      },
+      "EncounterMethodName": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -2010,13 +2035,12 @@
       },
       "EncounterSlot": {
         "required": [
-          "rarity",
-          "slot"
+          "rarity"
         ],
         "type": "object",
         "properties": {
           "method": {
-            "$ref": "#/components/schemas/LearnMethod"
+            "$ref": "#/components/schemas/EncounterMethod"
           },
           "rarity": {
             "type": "integer",
@@ -2459,29 +2483,6 @@
         },
         "additionalProperties": false
       },
-      "LearnMethod": {
-        "required": [
-          "id",
-          "names"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "names": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LearnMethodName"
-            }
-          }
-        },
-        "additionalProperties": false
-      },
       "LearnMethodInfo": {
         "required": [
           "names"
@@ -2496,15 +2497,6 @@
             "items": {
               "$ref": "#/components/schemas/LearnMethodNames"
             }
-          }
-        },
-        "additionalProperties": false
-      },
-      "LearnMethodName": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
           }
         },
         "additionalProperties": false

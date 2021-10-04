@@ -155,6 +155,13 @@ export interface EncounterEntryListWithId {
   data: EncounterEntry[];
 }
 
+export interface EncounterMethod {
+  /** @format int32 */
+  id: number;
+  name?: string;
+  names: EncounterMethodName[];
+}
+
 export interface EncounterMethodDetails {
   method: EncounterMethodEntry;
   conditionValuesDetails: ConditionValuesDetail[];
@@ -179,6 +186,10 @@ export interface EncounterMethodEntry {
   /** @format int32 */
   order: number;
   displayNames: LocalString[];
+}
+
+export interface EncounterMethodName {
+  name?: string;
 }
 
 export interface EncountersEntry {
@@ -213,13 +224,13 @@ export interface EncountersInfo {
 }
 
 export interface EncounterSlot {
-  method?: LearnMethod;
+  method?: EncounterMethod;
 
   /** @format int32 */
   rarity: number;
 
   /** @format int32 */
-  slot: number;
+  slot?: number;
 }
 
 export interface EvolutionChain {
@@ -392,20 +403,9 @@ export interface ItemNamedApiResource {
   name?: string;
 }
 
-export interface LearnMethod {
-  /** @format int32 */
-  id: number;
-  name?: string;
-  names: LearnMethodName[];
-}
-
 export interface LearnMethodInfo {
   name?: string;
   names: LearnMethodNames[];
-}
-
-export interface LearnMethodName {
-  name?: string;
 }
 
 export interface LearnMethodNames {
