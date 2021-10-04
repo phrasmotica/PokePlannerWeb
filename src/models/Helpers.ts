@@ -1,6 +1,7 @@
 import {
     AbilityInfo,
     ChainLinkEntry,
+    EncounterMethod,
     EncountersInfo,
     EvolutionChainEntry,
     FormInfo,
@@ -39,6 +40,13 @@ export const getDisplayName = (
  */
 export const getDisplayNameOfAbility = (ability: AbilityInfo) => {
     return ability.names[0]?.name ?? ability.name!
+}
+
+/**
+ * Returns the given encounter method's display name.
+ */
+export const getDisplayNameOfEncounterMethod = (method: EncounterMethod) => {
+    return method.names[0]?.name ?? method.name!
 }
 
 /**
@@ -398,4 +406,20 @@ export const size = (chain: ChainLinkEntry): number => {
 
 export const sortEncounters = (encounters: EncountersInfo[]) => {
     return encounters.sort((a, b) => (a.pokemonId - b.pokemonId) || (a.minLevel - b.minLevel))
+}
+
+export const groupBy = <T>(list: T[], getKey: (item: T) => number) => {
+    return list.reduce(
+        (previous, currentItem) => {
+            const group = getKey(currentItem)
+            if (!previous[group]) {
+                previous[group] = []
+            }
+
+            previous[group].push(currentItem)
+            return previous
+        },
+        // {} as Record<K, T[]>
+        {} as { [id: number] : T[] }
+    )
 }
