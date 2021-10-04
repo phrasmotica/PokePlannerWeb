@@ -408,7 +408,7 @@ export const sortEncounters = (encounters: EncountersInfo[]) => {
     return encounters.sort((a, b) => (a.pokemonId - b.pokemonId) || (a.minLevel - b.minLevel))
 }
 
-export const groupBy = <T>(list: T[], getKey: (item: T) => number) => {
+export const groupBy = <T>(list: T[], getKey: (item: T) => string) => {
     return list.reduce(
         (previous, currentItem) => {
             const group = getKey(currentItem)
@@ -419,7 +419,6 @@ export const groupBy = <T>(list: T[], getKey: (item: T) => number) => {
             previous[group].push(currentItem)
             return previous
         },
-        // {} as Record<K, T[]>
-        {} as { [id: number] : T[] }
+        {} as { [id: string] : T[] }
     )
 }

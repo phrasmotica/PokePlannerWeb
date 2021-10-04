@@ -166,18 +166,21 @@ export const AreaChecker = (props: AreaCheckerProps) => {
             )
         }
 
-        // TODO: group encounters by method, then by pokemon
-        let groupedEncounters = groupBy(encounters, e => e.pokemonId)
+        // TODO: group encounters by method, then by version, then by pokemon
+        let methods = encounters.map(e => e.encounterSlot!.method!)
 
-        let pokemonIds = Object.keys(groupedEncounters).map(k => Number(k))
+        // https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript#comment91613359_34199330
+        let uniqueMethods = methods.filter((value, index, self) => self.map(x => x.id).indexOf(value.id) === index)
+
+        let groupedEncounters = groupBy(encounters, e => e.encounterSlot!.method!.name!)
 
         return (
             <div className="area-checker-encounters">
                 <List divided>
-                    {pokemonIds.map(id => (
+                    {uniqueMethods.map(m => (
                         <EncounterCard
-                            pokemonId={id}
-                            encounters={groupedEncounters[id]} />
+                            method={m}
+                            encounters={groupedEncounters[m.name!]} />
                     ))}
                 </List>
             </div>
