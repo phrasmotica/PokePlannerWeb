@@ -408,7 +408,7 @@ export const sortEncounters = (encounters: EncountersInfo[]) => {
     return encounters.sort((a, b) => (a.pokemonId - b.pokemonId) || (a.minLevel - b.minLevel))
 }
 
-export const groupBy = <T>(list: T[], getKey: (item: T) => string) => {
+export const groupBy = <T>(list: T[], getKey: (item: T) => string | number) => {
     return list.reduce(
         (previous, currentItem) => {
             const group = getKey(currentItem)
@@ -422,3 +422,10 @@ export const groupBy = <T>(list: T[], getKey: (item: T) => string) => {
         {} as { [id: string] : T[] }
     )
 }
+
+// https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript#comment91613359_34199330
+export const uniqueBy = <T, K>(list: T[], getKey: (item: T) => K) =>
+    list.filter(
+        (value, index, self) =>
+            self.map(getKey).indexOf(getKey(value)) === index
+    )

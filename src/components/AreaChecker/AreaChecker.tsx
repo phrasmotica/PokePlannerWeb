@@ -6,7 +6,7 @@ import { LocationAreaSelector } from "../LocationAreaSelector/LocationAreaSelect
 import { LocationSelector } from "../LocationSelector/LocationSelector"
 import { VersionGroupSelector } from "../VersionGroupSelector/VersionGroupSelector"
 
-import { groupBy } from "../../models/Helpers"
+import { groupBy, uniqueBy } from "../../models/Helpers"
 import { EncountersInfo, LocationInfo, VersionGroupInfo } from "../../models/swagger"
 
 import "./AreaChecker.css"
@@ -166,11 +166,9 @@ export const AreaChecker = (props: AreaCheckerProps) => {
             )
         }
 
-        // TODO: group encounters by method, then by version, then by pokemon
         let methods = encounters.map(e => e.encounterSlot!.method!)
 
-        // https://stackoverflow.com/questions/15125920/how-to-get-distinct-values-from-an-array-of-objects-in-javascript#comment91613359_34199330
-        let uniqueMethods = methods.filter((value, index, self) => self.map(x => x.id).indexOf(value.id) === index)
+        let uniqueMethods = uniqueBy(methods, x => x.id)
 
         let groupedEncounters = groupBy(encounters, e => e.encounterSlot!.method!.name!)
 

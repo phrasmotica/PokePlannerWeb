@@ -1,8 +1,10 @@
-import React from "react"
-import { List } from "semantic-ui-react"
+import React, { useState } from "react"
+import { Collapse } from "reactstrap"
+import { Button, List } from "semantic-ui-react"
 
-import { getDisplayNameOfEncounterMethod, sortEncounters } from "../../models/Helpers"
+import { getDisplayNameOfEncounterMethod, groupBy, sortEncounters } from "../../models/Helpers"
 import { EncounterMethod, EncountersInfo } from "../../models/swagger"
+import { PokemonEncountersCard } from "./PokemonEncountersCard"
 
 interface EncounterCardProps {
     method: EncounterMethod
@@ -10,35 +12,33 @@ interface EncounterCardProps {
 }
 
 export const EncounterCard = (props: EncounterCardProps) => {
+    const [isOpen, setIsOpen] = useState(false)
+
     let sortedEncounters = sortEncounters(props.encounters)
+
+    let uniquePokemonIds = [...new Set(sortedEncounters.map(e => e.pokemonId))]
+
+    let groupedEncounters = groupBy(sortedEncounters, x => x.pokemonId)
+
+    let toggleOpen = () => setIsOpen(!isOpen)
 
     return (
         <List.Item>
             <List.Header>
-                {getDisplayNameOfEncounterMethod(props.method)}
+                <Button onClick={toggleOpen}>
+                    {getDisplayNameOfEncounterMethod(props.method)} ({uniquePokemonIds.length})
+                </Button>
             </List.Header>
             <List.Content>
-                {sortedEncounters.map(e => {
-                    let pokemonText = `Pokemon ${e.pokemonId}`
-                    let versionText = `Version ${e.versionId}`
-
-                    let levelsText = `level ${e.minLevel}`
-                    if (e.minLevel !== e.maxLevel) {
-                        levelsText = `levels ${e.minLevel} to ${e.maxLevel}`
-                    }
-
-                    let rarityText = `${e.encounterSlot!.rarity}% chance`
-                    let conditions = e.conditions.map(c => c.encounterConditionValue?.name).join(", ")
-
-                    return (
-                        <div>
-                            <p>{pokemonText}</p>
-                            <p>{versionText}</p>
-                            <p>{levelsText}, {rarityText}</p>
-                            <p>{conditions}</p>
-                        </div>
-                    )
-                })}
+                <Collapse isOpen={isOpen}>
+                    <List divided>
+                        {uniquePokemonIds.map(id => (
+                            <PokemonEncountersCard
+                                pokemonId={id}
+                                encounters={groupedEncounters[id]} />
+                        ))}
+                    </List>
+                </Collapse>
             </List.Content>
         </List.Item>
     )
