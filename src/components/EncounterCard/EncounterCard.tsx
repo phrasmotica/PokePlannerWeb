@@ -21,11 +21,12 @@ export const EncounterCard = (props: EncounterCardProps) => {
     let groupedEncounters = groupBy(sortedEncounters, x => x.pokemonId)
 
     let toggleOpen = () => setIsOpen(!isOpen)
+    let disabled = uniquePokemonIds.length <= 0
 
     return (
         <List.Item>
             <List.Header>
-                <Button onClick={toggleOpen}>
+                <Button onClick={toggleOpen} disabled={disabled}>
                     {getDisplayNameOfEncounterMethod(props.method)} ({uniquePokemonIds.length})
                 </Button>
             </List.Header>

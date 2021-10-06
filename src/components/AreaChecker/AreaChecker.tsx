@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { Form, List } from "semantic-ui-react"
 
 import { EncounterCard } from "../EncounterCard/EncounterCard"
+import { EncountersOptions } from "./EncountersOptions"
 import { LocationAreaSelector } from "../LocationAreaSelector/LocationAreaSelector"
 import { LocationSelector } from "../LocationSelector/LocationSelector"
 import { VersionGroupSelector } from "../VersionGroupSelector/VersionGroupSelector"
@@ -15,6 +16,9 @@ interface AreaCheckerProps {
 
 }
 
+export type EncounterFilter = (e: EncountersInfo) => boolean
+const defaultEncounterFilter: EncounterFilter = _ => true
+
 export const AreaChecker = (props: AreaCheckerProps) => {
     const [versionGroups, setVersionGroups] = useState<VersionGroupInfo[]>([])
     const [loadingVersionGroups, setLoadingVersionGroups] = useState(false)
@@ -27,6 +31,7 @@ export const AreaChecker = (props: AreaCheckerProps) => {
 
     const [encounters, setEncounters] = useState<EncountersInfo[]>([])
     const [loadingEncounters, setLoadingEncounters] = useState(false)
+    const [encounterFilter, setEncounterFilter] = useState(() => defaultEncounterFilter)
 
     useEffect(() => {
         const fetchVersionGroups = () => {
@@ -174,11 +179,14 @@ export const AreaChecker = (props: AreaCheckerProps) => {
 
         return (
             <div className="area-checker-encounters">
+                <EncountersOptions
+                    setFilter={setEncounterFilter} />
+
                 <List divided>
                     {uniqueMethods.map(m => (
                         <EncounterCard
                             method={m}
-                            encounters={groupedEncounters[m.name!]} />
+                            encounters={groupedEncounters[m.name!].filter(encounterFilter)} />
                     ))}
                 </List>
             </div>
